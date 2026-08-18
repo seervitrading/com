@@ -2373,14 +2373,36 @@ body:not(.admin-quote-mode) .cart-note{
 .inventory-stock-switch input:checked ~ .inventory-stock-state{color:#49e58a}
 .inventory-stock-switch input:not(:checked) ~ .inventory-stock-state{color:#e88989}
 .inventory-stock-empty{padding:18px;text-align:center;color:#77818c;font-size:10px;border:1px dashed #ffffff18;border-radius:10px}
+.inventory-stock-category{border:1px solid #ffffff12;background:#0b1016;border-radius:12px;padding:12px;margin-bottom:12px}
+.inventory-category-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 2px 12px;border-bottom:1px solid #ffffff0d;margin-bottom:10px}
+.inventory-category-kicker{display:block;color:#7f8994;font-size:8px;font-weight:900;letter-spacing:1.2px}
+.inventory-category-head h5{margin:3px 0 2px;color:#fff;font-size:15px}
+.inventory-category-count{color:#69737e;font-size:8px;font-weight:800;letter-spacing:.7px}
+.inventory-category-switch{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none}
+.inventory-category-switch input{position:absolute;opacity:0;pointer-events:none}
+.inventory-category-switch .inventory-stock-slider{width:46px;height:24px}
+.inventory-category-switch .inventory-stock-slider:before{width:18px;height:18px}
+.inventory-category-switch input:checked + .inventory-stock-slider{background:#1d5b38;border-color:#35c87866}
+.inventory-category-switch input:checked + .inventory-stock-slider:before{transform:translateX(22px);background:#49e58a}
+.inventory-category-switch input:indeterminate + .inventory-stock-slider{background:#6b5520;border-color:#f0c66a66}
+.inventory-category-switch input:indeterminate + .inventory-stock-slider:before{transform:translateX(11px);background:#f0c66a}
+.inventory-category-state{min-width:54px;text-align:right;font-size:8px;font-weight:900;letter-spacing:.7px;color:#78818d}
+.inventory-category-switch input:checked ~ .inventory-category-state{color:#49e58a}
+.inventory-category-switch input:indeterminate ~ .inventory-category-state{color:#f0c66a}
+.inventory-category-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.inventory-category-grid .inventory-stock-card{margin:0}
 .inventory-stock-saving{opacity:.55;pointer-events:none}
-@media(max-width:900px){.inventory-stock-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){
+  .inventory-stock-grid{grid-template-columns:1fr}
+  .inventory-category-grid{grid-template-columns:repeat(2,1fr)}
+}
 @media(max-width:600px){
   .inventory-stock-head{display:block}
   .inventory-stock-meta{display:block;margin-top:8px}
-  .inventory-stock-grid{grid-template-columns:1fr}
+  .inventory-category-grid{grid-template-columns:1fr}
   .inventory-stock-card{grid-template-columns:58px 1fr auto}
   .inventory-stock-image{width:58px;height:58px}
+  .inventory-category-head{align-items:flex-start}
 }
 </style><style id="earth-auger-section-style">
 .earth-auger-section{position:relative}
@@ -5871,25 +5893,95 @@ function inventoryRenderAdmin(){
     return;
   }
 
-  grid.innerHTML=items.map((item,index)=>{
-    const stock=seerviInventoryState[item.key]!==false;
-    const id='inventorySwitch_'+index;
-    const spec=item.spec ? `<span class="inventory-stock-spec">${esc(item.spec)}</span>` : '';
-    return `<div class="inventory-stock-card" data-inventory-card="${esc(item.key)}">
-      <div class="inventory-stock-image"><img src="${item.image}" alt="${esc(item.model)}"></div>
-      <div class="inventory-stock-info">
-        <span class="inventory-stock-type">${esc(item.type)}</span>
-        <strong class="inventory-stock-name" title="${esc(item.model)}">${esc(item.model)}</strong>
-        ${spec}
+  const groups={};
+  items.forEach(item=>{
+    const type=item.type||'Item';
+    (groups[type] ||= []).push(item);
+  });
+
+  let switchIndex=0;
+  grid.innerHTML=Object.keys(groups).map(type=>{
+    const group=groups[type];
+    const groupId='inventoryCategory_'+String(type).replace(/[^a-z0-9]+/gi,'_');
+    const allStock=group.every(item=>seerviInventoryState[item.key]!==false);
+    const noneStock=group.every(item=>seerviInventoryState[item.key]===false);
+    const categoryState=allStock?'STOCK':(noneStock?'NO STOCK':'MIXED');
+    const cards=group.map(item=>{
+      const stock=seerviInventoryState[item.key]!==false;
+      const id='inventorySwitch_'+(switchIndex++);
+      const spec=item.spec ? `<span class="inventory-stock-spec">${esc(item.spec)}</span>` : '';
+      return `<div class="inventory-stock-card" data-inventory-card="${esc(item.key)}">
+        <div class="inventory-stock-image"><img src="${item.image}" alt="${esc(item.model)}"></div>
+        <div class="inventory-stock-info">
+          <span class="inventory-stock-type">${esc(item.type)}</span>
+          <strong class="inventory-stock-name" title="${esc(item.model)}">${esc(item.model)}</strong>
+          ${spec}
+        </div>
+        <label class="inventory-stock-switch" for="${id}">
+          <input id="${id}" type="checkbox" ${stock?'checked':''} onchange="setInventoryStock('${esc(item.key)}',this.checked,this)">
+          <span class="inventory-stock-slider"></span>
+          <span class="inventory-stock-state">${stock?'STOCK':'NO STOCK'}</span>
+        </label>
+      </div>`;
+    }).join('');
+    return `<section class="inventory-stock-category" data-inventory-category="${esc(type)}">
+      <div class="inventory-category-head">
+        <div>
+          <span class="inventory-category-kicker">CATEGORY</span>
+          <h5>${esc(type)}</h5>
+          <span class="inventory-category-count">${group.length} ITEM${group.length===1?'':'S'}</span>
+        </div>
+        <label class="inventory-category-switch" for="${groupId}">
+          <input id="${groupId}" type="checkbox" ${allStock?'checked':''} data-category-state="${categoryState}" onchange="setInventoryCategoryStock('${esc(type)}',this.checked,this)">
+          <span class="inventory-stock-slider"></span>
+          <span class="inventory-category-state">${categoryState}</span>
+        </label>
       </div>
-      <label class="inventory-stock-switch" for="${id}">
-        <input id="${id}" type="checkbox" ${stock?'checked':''} onchange="setInventoryStock('${esc(item.key)}',this.checked,this)">
-        <span class="inventory-stock-slider"></span>
-        <span class="inventory-stock-state">${stock?'STOCK':'NO STOCK'}</span>
-      </label>
-    </div>`;
+      <div class="inventory-category-grid">${cards}</div>
+    </section>`;
   }).join('');
+
+  grid.querySelectorAll('.inventory-category-switch input').forEach(input=>{
+    const type=input.closest('.inventory-stock-category')?.dataset.inventoryCategory;
+    const group=groups[type]||[];
+    input.indeterminate=group.some(item=>seerviInventoryState[item.key]!==false) &&
+                         group.some(item=>seerviInventoryState[item.key]===false);
+  });
 }
+
+window.setInventoryCategoryStock=async function(type,stock,input){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){
+    if(input) input.checked=!stock;
+    alert('Admin login required.');
+    return;
+  }
+  const items=seerviInventoryItems.filter(item=>item.type===type);
+  if(!items.length) return;
+  const category=input?.closest('.inventory-stock-category');
+  if(category) category.classList.add('inventory-stock-saving');
+  if(input) input.disabled=true;
+
+  try{
+    await Promise.all(items.map(item=>setDoc(doc(db,'inventory',item.key),{
+      key:item.key,
+      type:item.type,
+      model:item.model,
+      spec:item.spec||'',
+      stock:!!stock,
+      public:true,
+      updatedBy:crmUser.email||crmUser.uid,
+      updatedAt:serverTimestamp()
+    },{merge:true})));
+    items.forEach(item=>{seerviInventoryState[item.key]=!!stock;});
+    inventoryApplyToHome();
+    inventoryRenderAdmin();
+  }catch(e){
+    alert('Category stock update failed: '+(e?.message||'Check Firebase rules.'));
+    inventoryRenderAdmin();
+  }finally{
+    if(input) input.disabled=false;
+  }
+};
 
 window.toggleInventoryStock=function(force){
   if(!crmUser){
