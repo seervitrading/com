@@ -2526,21 +2526,13 @@ body:not(.admin-quote-mode) .cart-note{
 }
 </style>
 
-<style id="seervi-mobile-safe-area-fix">
-/* Mobile status bar / notch safe spacing */
-@media (max-width:800px){
-  body{
-    padding-top: env(safe-area-inset-top, 0px)!important;
-  }
-  nav, header{
-    padding-top: calc(env(safe-area-inset-top, 0px) + 8px)!important;
-  }
-  nav .wrap, header .wrap{
-    min-height:64px;
-  }
-  .hero-pro, .dark-industrial-hero, .bw-hero{
-    margin-top:0!important;
-  }
+<style id="seervi-final-mobile-status-fix">
+@media(max-width:800px){
+  body{padding-top:0!important;}
+  nav{top:0!important;height:76px!important;margin-top:env(safe-area-inset-top)!important;}
+  nav .wrap{height:76px!important;padding-top:0!important;padding-bottom:0!important;}
+  .bw-nav-overlay{top:calc(76px + env(safe-area-inset-top))!important;}
+  .hero-pro,.dark-industrial-hero,.bw-hero{margin-top:0!important;}
 }
 </style>
 </head>
