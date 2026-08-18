@@ -3979,7 +3979,7 @@ window.customerSaveProfile=async function(){
 window.customerPortalTab=function(tab){
   const q=$('customerQuotesList'),r=$('customerRatesList'),l=$('customerLedgerList');if(!q||!r||!l)return;
   q.hidden=tab!=='quotes';r.hidden=tab!=='rates';l.hidden=tab!=='ledger';
-  document.querySelectorAll('.customer-tab').forEach((b,i)=>b.classList.toggle('active',(tab==='quotes'&&i===0)||(tab==='rates'&&i===1)||(tab==='ledger'&&i===2)));
+  document.querySelectorAll('.customer-tab').forEach((b,i)=>b.classList.toggle('active',(tab==='quotes'&&i===0)||(tab==='ledger'&&i===1)||(tab==='rates'&&i===2)));
 };
 window.customerViewQuote=function(id){
   const q=customerQuotes.find(x=>x.id===id);if(!q)return;
