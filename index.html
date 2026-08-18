@@ -3717,8 +3717,10 @@ function closeProfile(e){
       <div class="customer-portal-tabs">
         <button class="customer-tab active" type="button" onclick="customerPortalTab('quotes')">MY QUOTATIONS</button>
         <button class="customer-tab" type="button" onclick="customerPortalTab('ledger')">MY LEDGER</button>
+        <button class="customer-tab" type="button" onclick="customerPortalTab('rates')">RATE HISTORY</button>
       </div>
       <div id="customerQuotesList" class="customer-portal-list"></div>
+      <div id="customerRatesList" class="customer-portal-list" hidden></div>
       <div id="customerLedgerList" class="customer-portal-list" hidden></div>
       <div id="customerProfileEdit" class="customer-profile-edit" hidden></div>
     </div>
@@ -3740,6 +3742,8 @@ function closeProfile(e){
 .customer-profile-card{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;font-size:10px;color:#aeb7c2}
 .customer-profile-card strong{display:block;color:#fff;font-size:11px;margin-top:3px}
 .customer-portal-tabs{display:flex;gap:6px;border-bottom:1px solid #ffffff12;margin:14px 0 10px}
+.customer-rate-history-card{border:1px solid #ffffff12;background:#10161d;border-radius:10px;padding:13px;margin-bottom:9px}.customer-rate-history-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}.customer-rate-history-product{font-weight:900;color:#fff;font-size:12px}.customer-rate-history-meta{color:#7f8995;font-size:9px;margin-top:4px}.customer-rate-history-latest{font-weight:900;color:#f0c66a;font-size:15px;text-align:right}.customer-rate-history-latest small{display:block;color:#7f8995;font-size:8px;letter-spacing:.8px;margin-bottom:3px}.customer-rate-history-details{margin-top:10px;border-top:1px solid #ffffff0b;padding-top:9px}.customer-rate-history-row{display:grid;grid-template-columns:1fr 1.2fr auto;gap:8px;padding:7px 0;border-bottom:1px solid #ffffff08;color:#aeb7c0;font-size:9px}.customer-rate-history-row:last-child{border-bottom:0}.customer-rate-history-row strong{color:#fff}.customer-rate-history-empty{color:#7f8995;font-size:10px;padding:8px 0}
+@media(max-width:600px){.customer-rate-history-top{grid-template-columns:1fr}.customer-rate-history-latest{text-align:left}.customer-rate-history-row{grid-template-columns:1fr 1fr}.customer-rate-history-row strong{grid-column:2;text-align:right}}
 .customer-tab{border:0;background:transparent;color:#8b95a0;padding:10px 12px;font:inherit;font-size:9px;font-weight:900;letter-spacing:.8px;cursor:pointer;border-bottom:2px solid transparent}
 .customer-tab.active{color:#fff;border-bottom-color:#f0c66a}
 .customer-quote-row,.customer-rate-row{display:grid;grid-template-columns:1.2fr 1fr .8fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #ffffff0d;font-size:10px}
@@ -5258,7 +5262,7 @@ window.openCustomerLogin=function(){
   setTimeout(()=>{if(panel)panel.scrollTop=0;$('customerLoginEmail')?.focus();},40);
 };
 window.closeCustomerLogin=function(){const m=$('customerLoginModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');const panel=m.querySelector('.crm-panel');if(panel)panel.scrollTop=0;};
-let customerUser=null, customerParty=null, customerQuotes=[], customerLedger=[];
+let customerUser=null, customerParty=null, customerQuotes=[], customerRates=[], customerLedger=[];
 function customerErr(msg){if($('customerLoginError'))$('customerLoginError').textContent=msg||'';}
 function customerShowLogin(){if($('customerLoginView'))$('customerLoginView').hidden=false;if($('customerDashboardView'))$('customerDashboardView').hidden=true;customerErr('');}
 function customerShowDashboard(){
@@ -5366,7 +5370,7 @@ window.customerSignOut=async function(){
     await signOut(auth).catch(()=>{});
   }finally{
     crmUser=null;
-    customerUser=null;customerParty=null;customerQuotes=[];customerLedger=[];
+    customerUser=null;customerParty=null;customerQuotes=[];customerRates=[];customerLedger=[];
     hideCustomerHomeProfile();customerShowLogin();updateAuthNav();closeCustomerLogin();goHomeAfterAuth();
     if(typeof syncQuotationModeWithAuth==='function') syncQuotationModeWithAuth(false);
   }
@@ -5406,17 +5410,19 @@ async function customerLoadDashboard(){
     customerParty=snap.docs.map(d=>({id:d.id,...d.data()}))[0]||null;
   }
   if(!customerParty)throw new Error('No party profile is linked to this account yet. Please complete your party details.');
-  const [qs,ls]=await Promise.all([
+  const [qs,rs,ls]=await Promise.all([
     seerviCachedRead('customer:'+customerParty.id+':quotes:200',()=>getDocs(query(collection(publicSignupDb,'quotations'),where('partyId','==',customerParty.id),limit(200))),8000),
+    seerviCachedRead('customer:'+customerParty.id+':rates:500',()=>getDocs(query(collection(publicSignupDb,'rateHistory'),where('partyId','==',customerParty.id),limit(500))),8000),
     seerviCachedRead('customer:'+customerParty.id+':ledger:1000',()=>getDocs(query(collection(publicSignupDb,'ledger'),where('partyId','==',customerParty.id),limit(1000))),8000)
   ]);
   customerQuotes=qs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+  customerRates=rs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   customerLedger=ls.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   $('customerWelcomeName').textContent=customerParty.name||'Customer';
   $('customerWelcomeMeta').textContent=(customerParty.company||'')+' • '+(customerParty.email||customerUser.email||'');
   renderCustomerProfileCard($('customerProfileCard'));
   renderCustomerHomeProfile();
-  customerRenderQuotes();customerRenderLedger();customerPortalTab('quotes');
+  customerRenderQuotes();customerRenderRates();customerRenderLedger();customerPortalTab('quotes');
 }
 function customerProfileFieldsHtml(p){
   return `<div>PARTY NAME<strong>${esc(p.name||'—')}</strong></div><div>COMPANY<strong>${esc(p.company||'—')}</strong></div><div>PHONE / WHATSAPP<strong>${esc(p.phone||'—')}</strong></div><div>CITY<strong>${esc(p.city||'—')}</strong></div><div>EMAIL<strong>${esc(p.email||customerUser?.email||'—')}</strong></div><div>ADDRESS<strong>${esc(p.address||'—')}</strong></div>`;
@@ -5432,6 +5438,26 @@ function customerRenderQuotes(){
   const el=$('customerQuotesList');if(!el)return;
   if(!customerQuotes.length){el.innerHTML='<div class="crm-list-empty">No quotations available yet.</div>';return;}
   el.innerHTML=customerQuotes.map(q=>`<div class="customer-quote-row"><strong>${esc(q.quoteNo||'Quotation')}</strong><span>${esc(q.dateISO||'')}</span><span>${money(q.grandTotal||0)}</span><button class="customer-portal-btn" type="button" onclick="customerViewQuote('${esc(q.id)}')">VIEW</button></div>`).join('');
+}
+function customerRenderRates(){
+  const el=$('customerRatesList');if(!el)return;
+  if(!customerRates.length){el.innerHTML='<div class="customer-rate-history-empty">No previous item-wise rates are available yet.</div>';return;}
+  const groups=new Map();
+  customerRates.forEach(r=>{
+    const model=String(r.productModel||r.model||r.item||'Item');
+    const spec=String(r.spec||r.thickness||'');
+    const key=model+'|'+spec;
+    if(!groups.has(key))groups.set(key,[]);
+    groups.get(key).push(r);
+  });
+  const lists=[...groups.values()].map(list=>list.sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')))).sort((a,b)=>String(b[0]?.dateISO||'').localeCompare(String(a[0]?.dateISO||'')));
+  el.innerHTML=lists.map((list,idx)=>{
+    const latest=list[0]||{};
+    const model=String(latest.productModel||latest.model||latest.item||'Item');
+    const spec=String(latest.spec||latest.thickness||'');
+    const details=list.map(r=>`<div class="customer-rate-history-row"><span>${esc(r.dateISO||'—')}</span><span>${esc(r.note||r.source||'Rate quoted')}</span><strong>${money(r.rate)}</strong></div>`).join('');
+    return `<div class="customer-rate-history-card"><div class="customer-rate-history-top"><div><div class="customer-rate-history-product">${esc(model)}</div><div class="customer-rate-history-meta">${esc(spec||'Standard specification')} · ${list.length} saved rate${list.length===1?'':'s'}</div></div><div class="customer-rate-history-latest"><small>LATEST RATE</small>${money(latest.rate)}</div></div>${list.length>1?`<details class="customer-rate-history-details" ${idx===0?'open':''}><summary>VIEW PREVIOUS RATES</summary>${details}</details>`:`<div class="customer-rate-history-details"><div class="customer-rate-history-row"><span>${esc(latest.dateISO||'—')}</span><span>${esc(latest.note||latest.source||'Rate quoted')}</span><strong>${money(latest.rate)}</strong></div></div>`}</div>`;
+  }).join('');
 }
 function customerRenderLedger(){
   const el=$('customerLedgerList');if(!el)return;
@@ -5455,9 +5481,9 @@ window.customerSaveProfile=async function(){
   try{await updateDoc(doc(publicSignupDb,'parties',customerParty.id),payload);await customerLoadDashboard();$('customerProfileEdit').hidden=true;seerviShowSaveSuccess('Profile updated successfully.');}catch(e){alert('Profile update failed: '+(e?.message||'Check Firebase rules.'));}
 };
 window.customerPortalTab=function(tab){
-  const q=$('customerQuotesList'),l=$('customerLedgerList');if(!q||!l)return;
-  q.hidden=tab!=='quotes';l.hidden=tab!=='ledger';
-  document.querySelectorAll('.customer-tab').forEach((b,i)=>b.classList.toggle('active',(tab==='quotes'&&i===0)||(tab==='ledger'&&i===1)));
+  const q=$('customerQuotesList'),r=$('customerRatesList'),l=$('customerLedgerList');if(!q||!r||!l)return;
+  q.hidden=tab!=='quotes';r.hidden=tab!=='rates';l.hidden=tab!=='ledger';
+  document.querySelectorAll('.customer-tab').forEach((b,i)=>b.classList.toggle('active',(tab==='quotes'&&i===0)||(tab==='rates'&&i===1)||(tab==='ledger'&&i===2)));
 };
 window.customerViewQuote=function(id){
   const q=customerQuotes.find(x=>x.id===id);if(!q)return;
