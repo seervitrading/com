@@ -1586,6 +1586,28 @@ body.admin-quote-mode .quote-actions{display:grid!important}
   font-size:10px!important;
   font-weight:500!important;
 }
+
+.cart-drawer .cart-item-qty .cart-qty-input{
+  width:58px!important;
+  min-width:58px!important;
+  height:27px!important;
+  padding:4px 5px!important;
+  text-align:center!important;
+  border:1px solid #ffffff20!important;
+  border-radius:4px!important;
+  background:#11161c!important;
+  color:#f0f2f4!important;
+  font-size:11px!important;
+  font-weight:800!important;
+  outline:none!important;
+  -moz-appearance:textfield;
+}
+.cart-drawer .cart-item-qty .cart-qty-input:focus{border-color:#ffffff66!important;box-shadow:0 0 0 2px #ffffff10!important}
+.cart-drawer .cart-item-qty .cart-qty-input::-webkit-outer-spin-button,
+.cart-drawer .cart-item-qty .cart-qty-input::-webkit-inner-spin-button{margin:0;-webkit-appearance:none}
+@media(max-width:430px){
+  .cart-drawer .cart-item-qty .cart-qty-input{width:52px!important;min-width:52px!important}
+}
 .cart-drawer .cart-item-remove{
   width:28px!important;height:28px!important;
   display:flex!important;
@@ -3881,6 +3903,29 @@ function changeCartQty(index, delta){
   saveCart();
 }
 
+// Manual quantity entry for both customers and admin users.
+// Empty/invalid input is kept temporarily while typing; blur/Enter normalizes it.
+function setCartQty(index, value){
+  if(!seerviCart[index]) return;
+  const raw=String(value ?? '').trim();
+  if(raw === '') return;
+  const n=parseInt(raw,10);
+  if(!Number.isFinite(n) || n < 1) return;
+  seerviCart[index].qty=Math.min(n, 1000000);
+  // Do not rerender while the user is typing; commit on blur/Enter.
+}
+
+function normalizeCartQty(index, value){
+  if(!seerviCart[index]) return;
+  const n=parseInt(String(value ?? '').trim(),10);
+  if(!Number.isFinite(n) || n < 1){
+    renderCart();
+    return;
+  }
+  seerviCart[index].qty=Math.min(n, 1000000);
+  saveCart();
+}
+
 function removeCartItem(index){
   seerviCart.splice(index,1);
   saveCart();
@@ -4282,7 +4327,10 @@ function renderCart(){
 
       <div class="cart-item-qty">
         <button type="button" onclick="changeCartQty(${i},-1)" aria-label="Decrease quantity">−</button>
-        <b>${item.qty}</b>
+        <input class="cart-qty-input" type="number" min="1" max="1000000" step="1" inputmode="numeric"
+               value="${Number(item.qty||1)}" aria-label="Quantity for ${escapeHtml(item.model||'product')}"
+               oninput="setCartQty(${i},this.value)" onblur="normalizeCartQty(${i},this.value)"
+               onkeydown="if(event.key==='Enter'){event.preventDefault();normalizeCartQty(${i},this.value);this.blur();}">
         <button type="button" onclick="changeCartQty(${i},1)" aria-label="Increase quantity">+</button>
       </div>
 
