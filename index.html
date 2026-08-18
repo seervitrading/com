@@ -5450,12 +5450,12 @@ function customerRenderRates(){
     if(!groups.has(key))groups.set(key,[]);
     groups.get(key).push(r);
   });
-  const lists=[...groups.values()].map(list=>list.sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')))).sort((a,b)=>String(b[0]?.dateISO||'').localeCompare(String(a[0]?.dateISO||'')));
+  const lists=[...groups.values()].map(list=>list.sort((a,b)=>String(b.historyAt||b.dateISO||'').localeCompare(String(a.historyAt||a.dateISO||'')))).sort((a,b)=>String(b[0]?.historyAt||b[0]?.dateISO||'').localeCompare(String(a[0]?.historyAt||a[0]?.dateISO||'')));
   el.innerHTML=lists.map((list,idx)=>{
     const latest=list[0]||{};
     const model=String(latest.productModel||latest.model||latest.item||'Item');
     const spec=String(latest.spec||latest.thickness||'');
-    const details=list.map(r=>`<div class="customer-rate-history-row"><span>${esc(r.dateISO||'—')}</span><span>${esc(r.note||r.source||'Rate quoted')}</span><strong>${money(r.rate)}</strong></div>`).join('');
+    const details=list.map(r=>`<div class="customer-rate-history-row"><span>${esc(r.dateISO||'—')}</span><span>${esc(r.quoteNo ? ('Quotation '+r.quoteNo) : (r.note||r.source||'Rate quoted'))}</span><strong>${money(r.rate)}</strong></div>`).join('');
     return `<div class="customer-rate-history-card"><div class="customer-rate-history-top"><div><div class="customer-rate-history-product">${esc(model)}</div><div class="customer-rate-history-meta">${esc(spec||'Standard specification')} · ${list.length} saved rate${list.length===1?'':'s'}</div></div><div class="customer-rate-history-latest"><small>LATEST RATE</small>${money(latest.rate)}</div></div>${list.length>1?`<details class="customer-rate-history-details" ${idx===0?'open':''}><summary>VIEW PREVIOUS RATES</summary>${details}</details>`:`<div class="customer-rate-history-details"><div class="customer-rate-history-row"><span>${esc(latest.dateISO||'—')}</span><span>${esc(latest.note||latest.source||'Rate quoted')}</span><strong>${money(latest.rate)}</strong></div></div>`}</div>`;
   }).join('');
 }
@@ -5873,7 +5873,7 @@ function crmRenderRates(){
     const details=list.map(r=>`
       <div class="rate-history-detail">
         <span>${esc(r.dateISO||'—')}</span>
-        <span>${esc(r.note||r.source||'Rate quoted')}</span>
+        <span>${esc(r.quoteNo ? ('Quotation '+r.quoteNo) : (r.note||r.source||'Rate quoted'))}</span>
         <strong class="amount">${money(r.rate)}</strong>
       </div>`).join('');
 
@@ -7081,9 +7081,9 @@ window.crmSaveCurrentQuote = async function(){
         updatedAt:serverTimestamp()
       });
 
-      // Replace rate history for this quotation.
-      const oldRates=await getDocs(query(collection(db,'rateHistory'),where('quoteId','==',crmEditingQuoteId),limit(2000)));
-      for(const d of oldRates.docs) await deleteDoc(d.ref);
+      // IMPORTANT: Never delete previous rate-history records when a quotation is edited.
+      // Each save creates a new historical snapshot, so admin and customer can see
+      // the old rate as well as the latest rate for the same item.
       for(const item of items){
         if(Number(item.rate)>0){
           await addDoc(collection(db,'rateHistory'),{
