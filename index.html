@@ -2463,7 +2463,7 @@ body:not(.admin-quote-mode) .cart-note{
 .seervi-watermark-modal-image img{position:relative;z-index:1;display:block;max-width:100%;max-height:calc(100vh - 210px);object-fit:contain;}
 </style>
 <style id="customer-home-profile-hide">#customerHomeProfile{display:none!important}</style></head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="logo">SEERVI <span>TRADING</span></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a></div><a class="btn" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
- CART <span id="cartCount">0</span></button> <button id="bwNotificationBell" class="bw-notification-bell" type="button" onclick="openNotifications()" aria-label="Notifications" title="Notifications"><span class="bw-bell-icon" aria-hidden="true">🔔</span><span id="bwNotificationBadge" class="bw-notification-badge" hidden>0</span></button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url("images/product-image-001-055cde1217d3c801.webp")"images/product-image-001-055cde1217d3c801.webp")"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="bw-nav-overlay"><div class="bw-brand"><button id="bwAccountIdentity" class="bw-account-identity" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><div class="bw-nav-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
+ CART <span id="cartCount">0</span></button> <button id="bwNotificationBell" class="bw-notification-bell nav-notification-bell" type="button" onclick="openNotifications()" aria-label="Notifications" title="Notifications"><span class="bw-bell-icon" aria-hidden="true">🔔</span><span id="bwNotificationBadge" class="bw-notification-badge" hidden>0</span></button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url("images/product-image-001-055cde1217d3c801.webp")"images/product-image-001-055cde1217d3c801.webp")"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="bw-nav-overlay"><div class="bw-brand"><button id="bwAccountIdentity" class="bw-account-identity" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><div class="bw-nav-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
   <button type="button" class="product-category-btn category-card active" data-category="all" onclick="showProductCategory('all')">
     <span class="category-card-image"><img src="images/category-all.webp" alt="All Seervi products"></span>
     <span class="category-card-name">ALL PRODUCTS</span>
@@ -3730,6 +3730,7 @@ function addManualQuoteItem(){
 .bw-notification-bell{position:relative;width:40px;height:40px;border:1px solid #ffffff35;background:#111;color:#f0c66a;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex:0 0 auto;box-shadow:none}
 .bw-nav-actions .bw-notification-bell{margin-left:2px}
 
+.nav-notification-bell{margin-left:8px;z-index:5;}
 .bw-notification-bell:hover{border-color:#f0c66a;background:#171717}
 .bw-bell-icon{font-size:20px;line-height:1;display:block;filter:grayscale(.15)}
 .bw-notification-bell.has-unread{animation:seerviBellPulse 1.8s ease-in-out infinite}
@@ -4391,7 +4392,8 @@ window.accountDashboardCustomerSignOut=function(){closeAccountDashboard();custom
 let seerviNotifications=[];
 let seerviNotificationPhotoData='';
 let seerviNotificationUnsubscribe=null;
-const SEERVI_NOTIFICATION_READ_KEY='seervi_notification_read_v2';
+const SEERVI_NOTIFICATION_READ_KEY='seervi_notification_read_v3';
+const SEERVI_NOTIFICATION_TTL_MS=7*24*60*60*1000;
 function notificationReaderKey(){
   const admin=auth?.currentUser?.uid;
   const customer=publicSignupAuth?.currentUser?.uid;
@@ -4410,6 +4412,15 @@ function notificationDateValue(n){
   if(typeof ts?.seconds==='number') return new Date(ts.seconds*1000);
   return new Date(n?.dateISO||0);
 }
+function notificationIsActive(n,now=Date.now()){
+  const expires=n?.expiresAt;
+  if(expires?.toDate) return expires.toDate().getTime()>now;
+  if(typeof expires==='string'){const d=new Date(expires);if(!Number.isNaN(d.getTime()))return d.getTime()>now;}
+  if(typeof expires?.seconds==='number') return expires.seconds*1000>now;
+  const created=notificationDateValue(n).getTime();
+  return Number.isFinite(created) && now-created<SEERVI_NOTIFICATION_TTL_MS;
+}
+function filterActiveNotifications(list){return (list||[]).filter(n=>notificationIsActive(n));}
 function notificationFormatDate(n){
   const d=notificationDateValue(n);
   if(!d || Number.isNaN(d.getTime())) return '';
@@ -4443,6 +4454,13 @@ function renderNotifications(){
     return `<article class="notification-card${isNew?' notification-card-new':' notification-card-read'}" data-notification-id="${esc(id)}"><div class="notification-card-head"><div class="notification-card-title">${title}</div><div class="notification-card-time">${esc(notificationFormatDate(n))}${isNew?' · NEW':' · READ'}</div></div>${text?`<div class="notification-card-text">${text}</div>`:''}${image}<div class="notification-card-actions">${isNew?`<button class="notification-mark-read" type="button" onclick="markNotificationRead('${esc(id)}')">MARK READ</button>`:''}</div></article>`;
   }).join('');
 }
+function pruneExpiredNotifications(){
+  const active=filterActiveNotifications(seerviNotifications);
+  if(active.length!==seerviNotifications.length){
+    seerviNotifications=active;renderNotificationBadge();
+    if(document.getElementById('notificationsModal')?.classList.contains('show')) renderNotifications();
+  }
+}
 function markNotificationReadLocal(id){const read=notificationReadIds();read.add(String(id));saveNotificationReadIds(read);}
 window.markNotificationRead=function(id){markNotificationReadLocal(id);renderNotificationBadge();renderNotifications();};
 window.markAllNotificationsRead=function(){
@@ -4452,7 +4470,7 @@ window.markAllNotificationsRead=function(){
 async function loadNotifications(){
   try{
     const snap=await getDocs(query(collection(publicSignupDb,'notifications'),orderBy('createdAt','desc'),limit(30)));
-    seerviNotifications=snap.docs.map(d=>({id:d.id,...d.data()}));
+    seerviNotifications=filterActiveNotifications(snap.docs.map(d=>({id:d.id,...d.data()})));
     renderNotifications();renderNotificationBadge();
   }catch(e){
     console.warn('Could not load notifications',e);
@@ -4465,7 +4483,7 @@ async function startNotificationListener(){
     if(seerviNotificationUnsubscribe) return;
     const q=query(collection(publicSignupDb,'notifications'),orderBy('createdAt','desc'),limit(30));
     seerviNotificationUnsubscribe=onSnapshot(q,(snap)=>{
-      seerviNotifications=snap.docs.map(d=>({id:d.id,...d.data()}));
+      seerviNotifications=filterActiveNotifications(snap.docs.map(d=>({id:d.id,...d.data()})));
       renderNotificationBadge();
       if(document.getElementById('notificationsModal')?.classList.contains('show')) renderNotifications();
     },(e)=>{
@@ -4543,9 +4561,10 @@ window.submitNotificationPost=async function(){
   setNotificationPostStatus('Publishing notification…');
   try{
     const now=new Date();
+    const expiresAt=new Date(now.getTime()+SEERVI_NOTIFICATION_TTL_MS);
     await addDoc(collection(db,'notifications'),{
       title:title||'Important Update',text,imageData:seerviNotificationPhotoData||'',
-      dateISO:now.toISOString(),createdAt:serverTimestamp(),createdBy:crmUser.uid,createdByEmail:crmUser.email||''
+      dateISO:now.toISOString(),createdAt:serverTimestamp(),expiresAt,createdBy:crmUser.uid,createdByEmail:crmUser.email||''
     });
     setNotificationPostStatus('Notification posted successfully.','ok');
     await loadNotifications();
@@ -4556,6 +4575,7 @@ window.submitNotificationPost=async function(){
   }finally{if(btn){btn.disabled=false;btn.textContent='POST NOTIFICATION';}}
 };
 setTimeout(()=>startNotificationListener(),700);
+setInterval(pruneExpiredNotifications,60000);
 
 onAuthStateChanged(publicSignupAuth,user=>{
   customerUser=(user&&!user.isAnonymous)?user:null;
