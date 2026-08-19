@@ -2462,7 +2462,92 @@ body:not(.admin-quote-mode) .cart-note{
 .seervi-watermark-modal-image{position:relative;display:flex;align-items:center;justify-content:center;max-height:calc(100vh - 210px);border-radius:14px;}
 .seervi-watermark-modal-image img{position:relative;z-index:1;display:block;max-width:100%;max-height:calc(100vh - 210px);object-fit:contain;}
 </style>
-<style id="customer-home-profile-hide">#customerHomeProfile{display:none!important}</style><style id="dashboard-child-view-style">#accountDashboardModal{z-index:650}#crmModal,#customerLoginModal,#adminNewPartyModal,#adminStockModal,#notificationPostModal{z-index:760}</style></head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="logo">SEERVI <span>TRADING</span></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a></div><a class="btn" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
+<style id="customer-home-profile-hide">#customerHomeProfile{display:none!important}</style><style id="dashboard-child-view-style">#accountDashboardModal{z-index:650}#crmModal,#customerLoginModal,#adminNewPartyModal,#adminStockModal,#notificationPostModal{z-index:760}</style>
+<style id="stock-layout-mobile-fix">
+/* Stock page layout fix — visual/layout only. No stock logic or Firebase behaviour changed. */
+#adminStockModal .inventory-stock-panel{
+  width:100%;max-width:100%;box-sizing:border-box;overflow-x:hidden;
+}
+#adminStockModal .inventory-stock-grid,
+#adminStockModal .inventory-stock-category,
+#adminStockModal .inventory-category-grid{
+  width:100%;max-width:100%;min-width:0;
+}
+#adminStockModal .inventory-stock-category{overflow:hidden;}
+#adminStockModal .inventory-category-grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;
+}
+@media(min-width:1400px){
+  #adminStockModal .inventory-category-grid{grid-template-columns:repeat(5,minmax(0,1fr));}
+}
+@media(min-width:1800px){
+  #adminStockModal .inventory-category-grid{grid-template-columns:repeat(6,minmax(0,1fr));}
+}
+#adminStockModal .inventory-stock-card{
+  width:100%;min-width:0;max-width:100%;min-height:150px;
+  display:grid;grid-template-columns:72px minmax(0,1fr);
+  grid-template-rows:auto auto auto;align-items:start;
+  column-gap:12px;row-gap:10px;padding:12px;overflow:hidden;
+}
+#adminStockModal .inventory-stock-image{
+  grid-column:1;grid-row:1 / span 2;width:72px;height:72px;flex:none;
+}
+#adminStockModal .inventory-stock-info{
+  grid-column:2;grid-row:1;min-width:0;align-self:center;
+}
+#adminStockModal .inventory-stock-name,
+#adminStockModal .inventory-stock-spec{
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;
+}
+#adminStockModal .inventory-available-qty{
+  grid-column:2;grid-row:2;min-width:0;width:100%;
+  display:grid;grid-template-columns:minmax(0,1fr) 92px;
+  align-items:center;gap:8px;
+}
+#adminStockModal .inventory-available-qty label{
+  min-width:0;color:#7f8994;font-size:8px;font-weight:900;
+  letter-spacing:.8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+#adminStockModal .inventory-available-qty input{
+  width:100%;min-width:0;height:34px;box-sizing:border-box;
+  padding:0 9px;background:#0d131a;color:#fff;border:1px solid #ffffff16;
+  border-radius:8px;outline:none;font:inherit;font-size:11px;font-weight:800;text-align:center;
+}
+#adminStockModal .inventory-available-qty input:focus{
+  border-color:#f0c66a66;box-shadow:0 0 0 2px #f0c66a12;
+}
+#adminStockModal .inventory-stock-switch{
+  grid-column:1 / -1;grid-row:3;width:100%;min-width:0;
+  justify-content:flex-start;padding-top:2px;
+}
+#adminStockModal .inventory-stock-state{min-width:0;}
+
+@media(max-width:1100px) and (min-width:601px){
+  #adminStockModal .inventory-category-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+}
+@media(max-width:600px){
+  #adminStockModal .inventory-stock-panel{padding:16px 12px 28px;}
+  #adminStockModal .inventory-stock-head{margin-bottom:12px;}
+  #adminStockModal .inventory-category-grid{
+    grid-template-columns:1fr !important;gap:10px;
+  }
+  #adminStockModal .inventory-stock-card{
+    grid-template-columns:64px minmax(0,1fr);min-height:142px;padding:11px;column-gap:11px;
+  }
+  #adminStockModal .inventory-stock-image{width:64px;height:64px;}
+  #adminStockModal .inventory-available-qty{grid-template-columns:minmax(0,1fr) 96px;}
+  #adminStockModal .inventory-stock-switch{padding-top:1px;}
+}
+@media(max-width:360px){
+  #adminStockModal .inventory-stock-card{grid-template-columns:58px minmax(0,1fr);}
+  #adminStockModal .inventory-stock-image{width:58px;height:58px;}
+  #adminStockModal .inventory-available-qty{grid-template-columns:1fr;gap:5px;}
+  #adminStockModal .inventory-available-qty input{width:110px;}
+}
+</style>
+</head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="logo">SEERVI <span>TRADING</span></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a></div><a class="btn" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
 </button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url("images/product-image-001-055cde1217d3c801.webp")"images/product-image-001-055cde1217d3c801.webp")"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="bw-nav-overlay"><div class="bw-brand"><button id="bwAccountIdentity" class="bw-account-identity" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><div class="bw-nav-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
