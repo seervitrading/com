@@ -2581,7 +2581,7 @@ function closeProfile(e){
       <button class="account-dashboard-option danger" type="button" onclick="accountDashboardCustomerSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your customer session</small></button>
     </div>
   </div>
-</div><div id="customerLoginModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCustomerLogin()"></div><div class="crm-panel customer-portal-panel" role="dialog" aria-modal="true" aria-labelledby="customerPortalTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / SECURE LOGIN</div><h3 id="customerPortalTitle">Login</h3><div id="customerAuthStatus" class="crm-auth-status">Admin and customers can log in here. You will be taken to your own dashboard.</div></div><button class="crm-close" type="button" onclick="closeCustomerLogin()">×</button></div><div id="customerLoginView" class="crm-login"><div class="crm-section-title">LOGIN</div><p>Use your Seervi Trading email and password. Admin accounts open the Admin Dashboard; customer accounts open the Customer Dashboard.</p><div class="crm-login-grid"><input id="customerLoginEmail" type="email" placeholder="Email" autocomplete="username"><input id="customerLoginPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="customerSignIn()">LOGIN</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('customer')">FORGOT PASSWORD?</button></div><div id="customerLoginError" class="crm-error"></div><div class="customer-login-help">Don't have an account? <button type="button" onclick="closeCustomerLogin();openPartySignup();">SIGN UP</button></div></div><div id="customerDashboardView" class="customer-dashboard" hidden><div class="customer-dashboard-head"><div><div class="crm-section-title">WELCOME</div><h4 id="customerWelcomeName">Customer</h4><div id="customerWelcomeMeta" class="crm-auth-status"></div></div><button class="crm-secondary danger" type="button" onclick="customerSignOut()">SIGN OUT</button></div><div id="customerProfileCard" class="customer-profile-card"></div><div class="customer-portal-tabs"><button class="customer-tab active" type="button" onclick="customerPortalTab('quotes')">MY ORDER</button><button class="customer-tab" type="button" onclick="customerPortalTab('ledger')">MY LEDGER</button><button class="customer-tab" type="button" onclick="customerPortalTab('rates')">RATE HISTORY</button></div><div id="customerQuotesList" class="customer-portal-list"></div><div id="customerRatesList" class="customer-portal-list" hidden></div><div id="customerLedgerList" class="customer-portal-list" hidden></div><div id="customerProfileEdit" class="customer-profile-edit" hidden></div></div></div></div><style id="customer-home-profile-style">
+</div><div id="customerLoginModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCustomerLogin()"></div><div class="crm-panel customer-portal-panel" role="dialog" aria-modal="true" aria-labelledby="customerPortalTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / SECURE LOGIN</div><h3 id="customerPortalTitle">Login</h3><div id="customerAuthStatus" class="crm-auth-status">Admin and customers can log in here. You will be taken to your own dashboard.</div></div><button class="crm-close" type="button" onclick="closeCustomerLogin()">×</button></div><div id="customerLoginView" class="crm-login"><div class="crm-section-title">LOGIN</div><p>Use your Seervi Trading email and password. Admin accounts open the Admin Dashboard; customer accounts open the Customer Dashboard.</p><div class="crm-login-grid"><input id="customerLoginEmail" type="email" placeholder="Email" autocomplete="username"><input id="customerLoginPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="customerSignIn()">LOGIN</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('customer')">FORGOT PASSWORD?</button></div><div id="customerLoginError" class="crm-error"></div><div class="customer-login-help">Don't have an account? <button type="button" onclick="closeCustomerLogin();openPartySignup();">SIGN UP</button></div></div><div id="customerDashboardView" class="customer-dashboard" hidden><div class="customer-dashboard-head"><div><div class="crm-section-title">WELCOME</div><h4 id="customerWelcomeName">Customer</h4><div id="customerWelcomeMeta" class="crm-auth-status"></div></div><button class="crm-secondary danger" type="button" onclick="customerSignOut()">SIGN OUT</button></div><div id="customerProfileCard" class="customer-profile-card"></div><div id="customerPortalContent" class="customer-portal-content"><div id="customerPortalHome" class="customer-portal-home"><div class="customer-portal-home-title">MY ACCOUNT</div><p>Select an option from the dashboard.</p></div><div id="customerOrderContent" hidden><div class="customer-portal-tabs"><button class="customer-tab active" type="button" onclick="customerPortalTab('quotes')">MY ORDER</button><button class="customer-tab" type="button" onclick="customerPortalTab('ledger')">MY LEDGER</button><button class="customer-tab" type="button" onclick="customerPortalTab('rates')">RATE HISTORY</button></div><div id="customerQuotesList" class="customer-portal-list"></div><div id="customerRatesList" class="customer-portal-list" hidden></div><div id="customerLedgerList" class="customer-portal-list" hidden></div></div><div id="customerProfileEdit" class="customer-profile-edit" hidden></div></div></div></div></div><style id="customer-home-profile-style">
 .customer-home-profile{margin:18px auto 28px;width:min(1180px,calc(100% - 32px));background:#151a20;border:1px solid #ffffff14;border-radius:16px;padding:22px;box-sizing:border-box}
 .customer-home-profile-inner{max-width:1100px;margin:auto}.customer-home-profile-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}.customer-home-profile-head h2{margin:5px 0;font-size:28px}.customer-home-profile-head p{margin:0;color:#8f99a4;font-size:12px}.customer-home-profile-actions{display:flex;gap:8px}.customer-home-profile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:18px}.customer-home-profile-grid>div{background:#0b1016;border:1px solid #ffffff12;border-radius:10px;padding:12px;color:#89939d;font-size:9px;text-transform:uppercase;letter-spacing:.8px}.customer-home-profile-grid strong{display:block;color:#fff;font-size:12px;text-transform:none;letter-spacing:0;margin-top:4px}.customer-profile-edit{margin-top:12px;border:1px solid #ffffff12;background:#0b1016;border-radius:10px;padding:14px}.customer-profile-edit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.customer-profile-edit-grid input,.customer-profile-edit-grid textarea{width:100%;box-sizing:border-box;background:#080c11;color:#fff;border:1px solid #303840;border-radius:8px;padding:10px;font:inherit;font-size:11px}.customer-profile-edit-grid textarea{min-height:70px;resize:vertical}.customer-profile-edit-actions{display:flex;gap:8px;margin-top:10px}.customer-ledger-row{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #ffffff0c;font-size:10px}.customer-ledger-row:last-child{border-bottom:0}.customer-ledger-type{font-weight:900}.customer-ledger-type.debit{color:#ffaaa3}.customer-ledger-type.credit{color:#7ee2a4}.customer-ledger-amount.debit{color:#ffaaa3}.customer-ledger-amount.credit{color:#7ee2a4}.customer-ledger-summary{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px;padding:10px;background:#121820;border-radius:8px;font-size:10px}.customer-ledger-summary strong{color:#fff;font-size:12px}
 @media(max-width:700px){.customer-home-profile{width:calc(100% - 20px);padding:16px}.customer-home-profile-head{display:block}.customer-home-profile-actions{margin-top:12px}.customer-home-profile-grid{grid-template-columns:1fr 1fr}.customer-profile-edit-grid{grid-template-columns:1fr}.customer-ledger-row{grid-template-columns:70px 1fr auto}}
@@ -2604,7 +2604,7 @@ function closeProfile(e){
 .admin-utility-modal .crm-panel{max-height:92vh;overflow:auto}
 </style><style id="customer-portal-style">
 .customer-portal-panel{width:min(820px,100%)}
-.customer-dashboard{padding:18px 20px 24px}
+.customer-dashboard{padding:18px 20px 24px}.customer-portal-content{margin-top:12px}.customer-portal-home{border:1px solid #ffffff12;background:#0b1016;border-radius:10px;padding:22px;text-align:center}.customer-portal-home-title{font-size:12px;font-weight:900;letter-spacing:1px;color:#fff}.customer-portal-home p{margin:7px 0 0;color:#7f8995;font-size:10px}.customer-edit-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.customer-edit-note{margin:4px 0 0;color:#7f8995;font-size:9px}
 .customer-dashboard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
 .customer-dashboard-head h4{margin:4px 0;font-size:18px}
 .customer-profile-card,.customer-portal-list{border:1px solid #ffffff12;background:#0b1016;border-radius:10px;padding:14px;margin-bottom:12px}
@@ -3885,31 +3885,11 @@ window.closeCustomerLogin=function(){const m=$('customerLoginModal');if(!m)retur
 let customerUser=null, customerParty=null, customerQuotes=[], customerRates=[], customerLedger=[];
 function customerErr(msg){if($('customerLoginError'))$('customerLoginError').textContent=msg||'';}
 function customerShowLogin(){if($('customerLoginView'))$('customerLoginView').hidden=false;if($('customerDashboardView'))$('customerDashboardView').hidden=true;customerErr('');}
-function customerShowDashboard(mode='order'){
+function customerShowDashboard(){
   if($('customerLoginView'))$('customerLoginView').hidden=true;
   if($('customerDashboardView'))$('customerDashboardView').hidden=false;
-  customerLoadDashboard().then(()=>customerSetPortalMode(mode)).catch(e=>{console.error(e);customerErr((e?.message||'Could not load your customer data.').replace('Firebase: ',''));});
+  customerLoadDashboard().catch(e=>{console.error(e);customerErr((e?.message||'Could not load your customer data.').replace('Firebase: ',''));});
 }
-function customerSetPortalMode(mode){
-  const profile=$('customerProfileCard');
-  const tabs=document.querySelector('.customer-portal-tabs');
-  const quotes=$('customerQuotesList'), rates=$('customerRatesList'), ledger=$('customerLedgerList');
-  const edit=$('customerProfileEdit');
-  const isEdit=mode==='edit';
-  if(profile) profile.hidden=isEdit;
-  if(tabs) tabs.hidden=isEdit;
-  if(edit){ edit.hidden=!isEdit; }
-  if(isEdit){
-    customerEditProfile();
-    if(quotes) quotes.hidden=true;
-    if(rates) rates.hidden=true;
-    if(ledger) ledger.hidden=true;
-  }else{
-    if(edit) edit.hidden=true;
-    customerPortalTab('quotes');
-  }
-}
-
 window.sendSeerviPasswordReset=async function(source){
   const emailEl=source==='admin' ? $('crmEmail') : $('customerLoginEmail');
   const statusEl=source==='admin' ? $('crmLoginError') : $('customerLoginError');
@@ -4108,16 +4088,22 @@ function customerRenderLedger(){
   el.innerHTML=`<div class="customer-ledger-summary"><span>DEBIT <strong>${money(debit)}</strong></span><span>CREDIT <strong>${money(credit)}</strong></span><span>OUTSTANDING <strong>${money(outstanding)}</strong></span></div>`+
     customerLedger.map(x=>{const t=x.type==='credit'?'credit':'debit';return `<div class="customer-ledger-row"><span class="customer-ledger-type ${t}">${t.toUpperCase()}</span><span>${esc(x.dateISO||'')} · ${esc(x.note||x.quoteNo||'Payment')}</span><strong class="customer-ledger-amount ${t}">${t==='credit'?'+':'-'}${money(x.amount||0)}</strong></div>`;}).join('');
 }
+window.customerPortalHome=function(){
+  const home=$('customerPortalHome'),order=$('customerOrderContent'),edit=$('customerProfileEdit'),card=$('customerProfileCard');
+  if(home)home.hidden=false;if(order)order.hidden=true;if(edit)edit.hidden=true;if(card)card.hidden=false;
+};
+window.customerOpenMyOrder=function(){
+  const home=$('customerPortalHome'),order=$('customerOrderContent'),edit=$('customerProfileEdit'),card=$('customerProfileCard');
+  if(home)home.hidden=true;if(edit)edit.hidden=true;if(card)card.hidden=true;if(order)order.hidden=false;
+  customerPortalTab('quotes');
+};
 window.customerEditProfile=function(){
   if(!customerParty)return;
-  const profile=$('customerProfileCard'),tabs=document.querySelector('.customer-portal-tabs');
-  if(profile)profile.hidden=true;
-  if(tabs)tabs.hidden=true;
-  const q=$('customerQuotesList'),r=$('customerRatesList'),l=$('customerLedgerList');
-  if(q)q.hidden=true;if(r)r.hidden=true;if(l)l.hidden=true;
-  const el=$('customerProfileEdit');if(!el)return;
-  el.hidden=false;
-  el.innerHTML=`<div class="crm-section-title">EDIT MY PROFILE</div><div class="customer-profile-edit-grid"><input id="custEditName" value="${esc(customerParty.name||'')}" placeholder="Party / Customer Name"><input id="custEditCompany" value="${esc(customerParty.company||'')}" placeholder="Shop / Company"><input id="custEditPhone" value="${esc(customerParty.phone||'')}" placeholder="Phone / WhatsApp"><input id="custEditCity" value="${esc(customerParty.city||'')}" placeholder="City"><input id="custEditEmail" value="${esc(customerParty.email||customerUser?.email||'')}" placeholder="Email" disabled><textarea id="custEditAddress" placeholder="Address">${esc(customerParty.address||'')}</textarea></div><div class="customer-profile-edit-actions"><button class="crm-primary" type="button" onclick="customerSaveProfile()">SAVE PROFILE</button><button class="crm-secondary" type="button" onclick="$('customerProfileEdit').hidden=true">CANCEL</button></div>`;
+  const home=$('customerPortalHome'),order=$('customerOrderContent'),edit=$('customerProfileEdit'),card=$('customerProfileCard');
+  if(home)home.hidden=true;if(order)order.hidden=true;if(card)card.hidden=true;
+  if(!edit)return;
+  edit.hidden=false;
+  edit.innerHTML=`<div class="customer-edit-head"><div><div class="crm-section-title">EDIT MY PROFILE</div><p class="customer-edit-note">Update your business and contact details.</p></div><button class="crm-secondary" type="button" onclick="customerPortalHome()">BACK</button></div><div class="customer-profile-edit-grid"><input id="custEditName" value="${esc(customerParty.name||'')}" placeholder="Party / Customer Name"><input id="custEditCompany" value="${esc(customerParty.company||'')}" placeholder="Shop / Company"><input id="custEditPhone" value="${esc(customerParty.phone||'')}" placeholder="Phone / WhatsApp"><input id="custEditCity" value="${esc(customerParty.city||'')}" placeholder="City"><input id="custEditEmail" value="${esc(customerParty.email||customerUser?.email||'')}" placeholder="Email" disabled><textarea id="custEditAddress" placeholder="Address">${esc(customerParty.address||'')}</textarea></div><div class="customer-profile-edit-actions"><button class="crm-primary" type="button" onclick="customerSaveProfile()">SAVE PROFILE</button><button class="crm-secondary" type="button" onclick="customerPortalHome()">CANCEL</button></div>`;
 };
 window.customerSaveProfile=async function(){
   if(!customerUser||!customerParty)return;
@@ -4127,6 +4113,8 @@ window.customerSaveProfile=async function(){
 };
 window.customerPortalTab=function(tab){
   const q=$('customerQuotesList'),r=$('customerRatesList'),l=$('customerLedgerList');if(!q||!r||!l)return;
+  const order=$('customerOrderContent'),home=$('customerPortalHome'),edit=$('customerProfileEdit'),card=$('customerProfileCard');
+  if(order)order.hidden=false;if(home)home.hidden=true;if(edit)edit.hidden=true;if(card)card.hidden=true;
   q.hidden=tab!=='quotes';r.hidden=tab!=='rates';l.hidden=tab!=='ledger';
   document.querySelectorAll('.customer-tab').forEach((b,i)=>b.classList.toggle('active',(tab==='quotes'&&i===0)||(tab==='ledger'&&i===1)||(tab==='rates'&&i===2)));
 };
@@ -4226,13 +4214,15 @@ window.accountDashboardEditProfile=function(){
   closeAccountDashboard();
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
-  customerShowDashboard('edit');
+  customerShowDashboard();
+  setTimeout(()=>customerEditProfile(),180);
 };
 window.accountDashboardMyOrder=function(){
   closeAccountDashboard();
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
-  customerShowDashboard('order');
+  customerShowDashboard();
+  setTimeout(()=>customerOpenMyOrder(),180);
 };
 window.accountDashboardCustomerSignOut=function(){closeAccountDashboard();customerSignOut();};
 
