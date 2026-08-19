@@ -2568,14 +2568,14 @@ function closeProfile(e){
       <div><div class="crm-kicker">SEERVI TRADING / MY DASHBOARD</div><h3 id="accountDashboardTitle">My Dashboard</h3><div id="accountDashboardMeta" class="crm-auth-status"></div></div>
       <button class="crm-close" type="button" onclick="closeAccountDashboard()">×</button>
     </div>
-    <div id="adminDashboardOptions" class="account-dashboard-options" hidden>
+    <div id="adminDashboardOptions" class="account-dashboard-options" hidden aria-label="Admin dashboard options">
       <button class="account-dashboard-option" type="button" onclick="accountDashboardAdminPanel()"><span>▣</span><strong>ADMIN PANEL</strong><small>Manage quotations, parties & ledger</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardNewParty()"><span>＋</span><strong>NEW PARTY</strong><small>Create a new customer / party</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardBackup()"><span>⇩</span><strong>BACKUP DATA</strong><small>Download your CRM business backup</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardStock()"><span>▤</span><strong>STOCK</strong><small>Control catalogue item availability</small></button>
       <button class="account-dashboard-option danger" type="button" onclick="accountDashboardSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your admin session</small></button>
     </div>
-    <div id="customerDashboardOptions" class="account-dashboard-options" hidden>
+    <div id="customerDashboardOptions" class="account-dashboard-options" hidden aria-label="Customer dashboard options">
       <button class="account-dashboard-option" type="button" onclick="accountDashboardEditProfile()"><span>✎</span><strong>EDIT PROFILE</strong><small>Update your business & contact details</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardMyOrder()"><span>▣</span><strong>MY ORDER</strong><small>View your quotations & order requests</small></button>
       <button class="account-dashboard-option danger" type="button" onclick="accountDashboardCustomerSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your customer session</small></button>
@@ -2596,6 +2596,11 @@ function closeProfile(e){
 .account-dashboard-option.danger span{color:#ff8b8b}
 .account-dashboard-option.danger:hover{border-color:#7d3434;background:#35191b}
 @media(max-width:600px){.account-dashboard-options{grid-template-columns:1fr}.account-dashboard-option{min-height:76px;display:grid;grid-template-columns:28px 1fr;column-gap:10px;align-content:center;padding:13px}.account-dashboard-option span{grid-row:1 / span 2;margin:0;align-self:center}.account-dashboard-option small{grid-column:2;margin-top:4px}}
+</style><style id="admin-utility-modal-style">
+.admin-utility-panel{width:min(900px,100%);max-height:92vh;overflow:auto}
+.admin-utility-panel .crm-party-card{margin:0}
+.admin-utility-panel .inventory-stock-panel{margin:0;border:0;box-shadow:none;background:transparent;padding:0}
+.admin-utility-modal .crm-panel{max-height:92vh;overflow:auto}
 </style><style id="customer-portal-style">
 .customer-portal-panel{width:min(820px,100%)}
 .customer-dashboard{padding:18px 20px 24px}
@@ -4156,10 +4161,16 @@ window.openMyDashboard=function(){
 };
 window.openAccountDashboard=function(role){
   const m=$('accountDashboardModal');if(!m)return;
-  $('adminDashboardOptions').hidden=role!=='admin';
-  $('customerDashboardOptions').hidden=role!=='customer';
-  $('accountDashboardTitle').textContent=role==='admin'?'Admin Dashboard':'Customer Dashboard';
-  $('accountDashboardMeta').textContent=role==='admin' ? (crmUser?.email||'Admin account') : (customerUser?.email||'Customer account');
+  const isAdminRole=role==='admin' && !!crmUser && isAuthorisedAdmin(crmUser);
+  const isCustomerRole=role==='customer' && !!customerUser && !crmUser;
+  if(!isAdminRole && !isCustomerRole){
+    if(role==='admin') openAdminPanel(); else openCustomerLogin();
+    return;
+  }
+  $('adminDashboardOptions').hidden=!isAdminRole;
+  $('customerDashboardOptions').hidden=!isCustomerRole;
+  $('accountDashboardTitle').textContent=isAdminRole?'Admin Dashboard':'Customer Dashboard';
+  $('accountDashboardMeta').textContent=isAdminRole ? (crmUser.email||'Admin account') : (customerUser.email||'Customer account');
   m.classList.add('show');m.setAttribute('aria-hidden','false');
 };
 window.closeAccountDashboard=function(){
@@ -4170,23 +4181,21 @@ window.accountDashboardAdminPanel=function(){
   openAdminPanel();
 };
 window.accountDashboardNewParty=function(){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){closeAccountDashboard();openAdminPanel();return;}
   closeAccountDashboard();
-  openAdminPanel();
-  setTimeout(()=>{
-    if(crmUser && $('crmWorkspace') && !$('crmWorkspace').hidden) crmNewParty();
-  },120);
+  crmNewParty();
 };
 window.accountDashboardBackup=function(){
-  if(!crmUser){closeAccountDashboard();crmShowLogin?.();return;}
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){closeAccountDashboard();openAdminPanel();return;}
   closeAccountDashboard();
   crmDownloadBusinessBackup();
 };
 window.accountDashboardStock=function(){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){closeAccountDashboard();openAdminPanel();return;}
   closeAccountDashboard();
-  openAdminPanel();
-  setTimeout(()=>{ if(crmUser && $('crmWorkspace') && !$('crmWorkspace').hidden) toggleInventoryStock(true); },120);
+  toggleInventoryStock(true);
 };
-window.accountDashboardSignOut=function(){closeAccountDashboard();crmSignOut();};
+window.accountDashboardSignOut=function(){closeAccountDashboard();closeAdminNewParty();closeAdminStock();crmSignOut();};
 window.accountDashboardEditProfile=function(){
   closeAccountDashboard();
   const m=$('customerLoginModal');if(!m)return;
@@ -4214,6 +4223,54 @@ onAuthStateChanged(publicSignupAuth,user=>{
 function crmErr(msg){
   if($('crmLoginError')) $('crmLoginError').textContent = msg || '';
 }
+
+function ensureAdminUtilityModals(){
+  if(document.getElementById('adminNewPartyModal') && document.getElementById('adminStockModal')) return;
+
+  const party=document.getElementById('crmPartyMaster');
+  const stock=document.getElementById('inventoryStockPanel');
+  if(!party || !stock) return;
+
+  const partyModal=document.createElement('div');
+  partyModal.id='adminNewPartyModal';
+  partyModal.className='crm-modal admin-utility-modal';
+  partyModal.setAttribute('aria-hidden','true');
+  partyModal.innerHTML='<div class="crm-backdrop" onclick="closeAdminNewParty()"></div><div class="crm-panel admin-utility-panel" role="dialog" aria-modal="true" aria-labelledby="adminNewPartyTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / PARTY</div><h3 id="adminNewPartyTitle">New Party</h3><div class="crm-auth-status">Create a new customer / party without opening the main Admin Panel.</div></div><button class="crm-close" type="button" onclick="closeAdminNewParty()">×</button></div></div>';
+  document.body.appendChild(partyModal);
+  partyModal.querySelector('.crm-panel').appendChild(party);
+
+  const stockModal=document.createElement('div');
+  stockModal.id='adminStockModal';
+  stockModal.className='crm-modal admin-utility-modal';
+  stockModal.setAttribute('aria-hidden','true');
+  stockModal.innerHTML='<div class="crm-backdrop" onclick="closeAdminStock()"></div><div class="crm-panel admin-utility-panel" role="dialog" aria-modal="true" aria-labelledby="adminStockTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / STOCK</div><h3 id="adminStockTitle">Stock</h3><div class="crm-auth-status">Control catalogue availability without opening the main Admin Panel.</div></div><button class="crm-close" type="button" onclick="closeAdminStock()">×</button></div></div>';
+  document.body.appendChild(stockModal);
+  stockModal.querySelector('.crm-panel').appendChild(stock);
+}
+
+window.closeAdminNewParty=function(){
+  const m=document.getElementById('adminNewPartyModal');
+  if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');}
+};
+window.closeAdminStock=function(){
+  const m=document.getElementById('adminStockModal');
+  if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');}
+};
+window.openAdminNewParty=function(){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+  ensureAdminUtilityModals();
+  const m=document.getElementById('adminNewPartyModal');
+  if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}
+};
+window.openAdminStock=function(){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+  ensureAdminUtilityModals();
+  const m=document.getElementById('adminStockModal');
+  if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}
+};
+
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ensureAdminUtilityModals);
+else ensureAdminUtilityModals();
 
 window.openAdminPanel = function(){
   $('crmModal')?.setAttribute('aria-hidden','false');
@@ -4360,10 +4417,11 @@ window.crmRefresh = async function(){
 };
 
 window.crmNewParty = function(){
-  if(!crmUser){crmShowLogin();return;}
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){crmShowLogin();return;}
+  ensureAdminUtilityModals();
   crmPartyId='';
   if($('crmPartyMaster')) $('crmPartyMaster').hidden=false;
-  $('crmPartySelect').value='';
+  if($('crmPartySelect')) $('crmPartySelect').value='';
   if(typeof renderCartPartySelector==='function') renderCartPartySelector();
   ['crmPartyName','crmPartyCompany','crmPartyPhone','crmPartyEmail','crmPartyCity','crmPartyAddress'].forEach(id=>{if($(id)) $(id).value='';});
   if($('crmPartyMeta')) $('crmPartyMeta').textContent='New party — enter details and save.';
@@ -4371,6 +4429,7 @@ window.crmNewParty = function(){
   crmRateSearchText='';
   if($('crmRateSearch')) $('crmRateSearch').value='';
   crmRenderAll();
+  openAdminNewParty();
 };
 
 window.crmSelectParty = async function(id){
@@ -6113,17 +6172,23 @@ window.setInventoryCategoryStock=async function(type,stock,input){
 };
 
 window.toggleInventoryStock=function(force){
-  if(!crmUser){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){
     openAdminPanel();
     return;
   }
+  ensureAdminUtilityModals();
   const panel=document.getElementById('inventoryStockPanel');
-  if(!panel) return;
-  const show=typeof force==='boolean' ? force : panel.hidden;
-  panel.hidden=!show;
+  const modal=document.getElementById('adminStockModal');
+  if(!panel || !modal) return;
+  const show=typeof force==='boolean' ? force : !modal.classList.contains('show');
   if(show){
+    panel.hidden=false;
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden','false');
     inventoryRenderAdmin();
-    panel.scrollIntoView({behavior:'smooth',block:'start'});
+  }else{
+    closeAdminStock();
+    panel.hidden=true;
   }
 };
 
