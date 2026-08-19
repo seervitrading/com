@@ -4042,7 +4042,7 @@ window.openCustomerLogin=function(){
   customerShowLogin();
   setTimeout(()=>{if(panel)panel.scrollTop=0;$('customerLoginEmail')?.focus();},40);
 };
-window.closeCustomerLogin=function(){const m=$('customerLoginModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');const panel=m.querySelector('.crm-panel');if(panel)panel.scrollTop=0;};
+window.closeCustomerLogin=function(){const m=$('customerLoginModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');const panel=m.querySelector('.crm-panel');if(panel)panel.scrollTop=0;returnToRoleDashboard();};
 let customerUser=null, customerParty=null, customerQuotes=[], customerRates=[], customerLedger=[];
 let customerDashboardRequestedView='orders';
 function customerErr(msg){if($('customerLoginError'))$('customerLoginError').textContent=msg||'';}
@@ -4373,12 +4373,20 @@ window.openAccountDashboard=function(role){
 window.closeAccountDashboard=function(){
   const m=$('accountDashboardModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');
 };
+let dashboardReturnAfterChildClose=false;
+function returnToRoleDashboard(){
+  if(!dashboardReturnAfterChildClose)return;
+  dashboardReturnAfterChildClose=false;
+  setTimeout(()=>{ if(crmUser) openAccountDashboard('admin'); else if(customerUser) openAccountDashboard('customer'); },0);
+}
 window.accountDashboardAdminPanel=function(){
+  dashboardReturnAfterChildClose=true;
   closeAccountDashboard();
   openAdminPanel();
 };
 window.accountDashboardNewParty=function(){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){closeAccountDashboard();openAdminPanel();return;}
+  dashboardReturnAfterChildClose=true;
   closeAccountDashboard();
   crmNewParty();
 };
@@ -4386,19 +4394,23 @@ window.accountDashboardBackup=function(){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){closeAccountDashboard();openAdminPanel();return;}
   closeAccountDashboard();
   crmDownloadBusinessBackup();
+  setTimeout(()=>openAccountDashboard('admin'),80);
 };
 window.accountDashboardStock=function(){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){closeAccountDashboard();openAdminPanel();return;}
+  dashboardReturnAfterChildClose=true;
   closeAccountDashboard();
   toggleInventoryStock(true);
 };
 window.accountDashboardNotificationPost=function(){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){closeAccountDashboard();openAdminPanel();return;}
+  dashboardReturnAfterChildClose=true;
   closeAccountDashboard();
   openNotificationPost();
 };
 window.accountDashboardSignOut=function(){closeAccountDashboard();closeAdminNewParty();closeAdminStock();crmSignOut();};
 window.accountDashboardEditProfile=function(){
+  dashboardReturnAfterChildClose=true;
   closeAccountDashboard();
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
@@ -4406,6 +4418,7 @@ window.accountDashboardEditProfile=function(){
   customerShowDashboard();
 };
 window.accountDashboardMyOrder=function(){
+  dashboardReturnAfterChildClose=true;
   closeAccountDashboard();
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
@@ -4453,10 +4466,12 @@ function ensureAdminUtilityModals(){
 window.closeAdminNewParty=function(){
   const m=document.getElementById('adminNewPartyModal');
   if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');}
+  returnToRoleDashboard();
 };
 window.closeAdminStock=function(){
   const m=document.getElementById('adminStockModal');
   if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');}
+  returnToRoleDashboard();
 };
 window.openAdminNewParty=function(){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
@@ -4492,6 +4507,7 @@ window.openCRM = window.openAdminPanel;
 window.closeCRM = function(){
   $('crmModal')?.classList.remove('show');
   $('crmModal')?.setAttribute('aria-hidden','true');
+  returnToRoleDashboard();
 };
 
 function crmShowLogin(){
@@ -6567,14 +6583,16 @@ function seerviRenderNotificationBadge(){
 function seerviRenderNotificationList(){
   const list=document.getElementById('notificationList');
   if(!list)return;
-  const active=seerviActiveNotifications();
+  // The notification inbox is an UNREAD inbox: once a notification is marked
+  // read, remove it from the visible list immediately.
+  const active=seerviActiveNotifications().filter(n=>!seerviNotificationIsRead(n));
   if(!active.length){
-    list.innerHTML='<div class="notification-empty">No notifications right now.</div>';
+    list.innerHTML='<div class="notification-empty">No unread notifications right now.</div>';
     seerviRenderNotificationBadge();
     return;
   }
   list.innerHTML=active.map(n=>{
-    const read=seerviNotificationIsRead(n);
+    const read=false;
     const title=seerviNotificationSafeText(n.title);
     const msg=seerviNotificationSafeText(n.message);
     const date=seerviNotificationFormatDate(n.createdAt);
@@ -6582,7 +6600,7 @@ function seerviRenderNotificationList(){
     return `<article class="notification-card ${read?'':'unread'}" data-notification-id="${seerviNotificationSafeText(n.id)}">
       <div class="notification-card-head"><div class="notification-card-title">${title}</div><div class="notification-card-date">${date}</div></div>
       <div class="notification-card-message">${msg}</div>${image}
-      <button class="notification-read-btn" type="button" onclick="event.stopPropagation();markNotificationRead('${seerviNotificationSafeText(n.id)}')">${read?'READ':'MARK READ'}</button>
+      <button class="notification-read-btn" type="button" onclick="event.stopPropagation();markNotificationRead('${seerviNotificationSafeText(n.id)}')">MARK READ</button>
     </article>`;
   }).join('');
   seerviRenderNotificationBadge();
@@ -6642,6 +6660,7 @@ window.openNotificationPost=function(){
 window.closeNotificationPost=function(){
   const m=document.getElementById('notificationPostModal');if(!m)return;
   m.classList.remove('show');m.setAttribute('aria-hidden','true');
+  returnToRoleDashboard();
 };
 async function seerviCompressNotificationImage(file){
   if(!file)return '';
