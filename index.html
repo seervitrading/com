@@ -2462,7 +2462,7 @@ body:not(.admin-quote-mode) .cart-note{
 .seervi-watermark-modal-image{position:relative;display:flex;align-items:center;justify-content:center;max-height:calc(100vh - 210px);border-radius:14px;}
 .seervi-watermark-modal-image img{position:relative;z-index:1;display:block;max-width:100%;max-height:calc(100vh - 210px);object-fit:contain;}
 </style>
-<style id="customer-home-profile-hide">#customerHomeProfile{display:none!important}</style></head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="logo">SEERVI <span>TRADING</span></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a></div><a class="btn" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
+<style id="customer-home-profile-hide">#customerHomeProfile{display:none!important}</style><style id="dashboard-child-view-style">#accountDashboardModal{z-index:650}#crmModal,#customerLoginModal,#adminNewPartyModal,#adminStockModal,#notificationPostModal{z-index:760}</style></head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="logo">SEERVI <span>TRADING</span></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a></div><a class="btn" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
 </button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url("images/product-image-001-055cde1217d3c801.webp")"images/product-image-001-055cde1217d3c801.webp")"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="bw-nav-overlay"><div class="bw-brand"><button id="bwAccountIdentity" class="bw-account-identity" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><div class="bw-nav-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
@@ -4042,7 +4042,7 @@ window.openCustomerLogin=function(){
   customerShowLogin();
   setTimeout(()=>{if(panel)panel.scrollTop=0;$('customerLoginEmail')?.focus();},40);
 };
-window.closeCustomerLogin=function(){const m=$('customerLoginModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');const panel=m.querySelector('.crm-panel');if(panel)panel.scrollTop=0;returnToRoleDashboard();};
+window.closeCustomerLogin=function(){const m=$('customerLoginModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');const panel=m.querySelector('.crm-panel');if(panel)panel.scrollTop=0;};
 let customerUser=null, customerParty=null, customerQuotes=[], customerRates=[], customerLedger=[];
 let customerDashboardRequestedView='orders';
 function customerErr(msg){if($('customerLoginError'))$('customerLoginError').textContent=msg||'';}
@@ -4373,53 +4373,33 @@ window.openAccountDashboard=function(role){
 window.closeAccountDashboard=function(){
   const m=$('accountDashboardModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');
 };
-let dashboardReturnAfterChildClose=false;
-function returnToRoleDashboard(){
-  if(!dashboardReturnAfterChildClose)return;
-  dashboardReturnAfterChildClose=false;
-  setTimeout(()=>{ if(crmUser) openAccountDashboard('admin'); else if(customerUser) openAccountDashboard('customer'); },0);
-}
 window.accountDashboardAdminPanel=function(){
-  dashboardReturnAfterChildClose=true;
-  closeAccountDashboard();
   openAdminPanel();
 };
 window.accountDashboardNewParty=function(){
-  if(!crmUser || !isAuthorisedAdmin(crmUser)){closeAccountDashboard();openAdminPanel();return;}
-  dashboardReturnAfterChildClose=true;
-  closeAccountDashboard();
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
   crmNewParty();
 };
 window.accountDashboardBackup=function(){
-  if(!crmUser || !isAuthorisedAdmin(crmUser)){closeAccountDashboard();openAdminPanel();return;}
-  closeAccountDashboard();
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
   crmDownloadBusinessBackup();
-  setTimeout(()=>openAccountDashboard('admin'),80);
 };
 window.accountDashboardStock=function(){
-  if(!crmUser || !isAuthorisedAdmin(crmUser)){closeAccountDashboard();openAdminPanel();return;}
-  dashboardReturnAfterChildClose=true;
-  closeAccountDashboard();
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
   toggleInventoryStock(true);
 };
 window.accountDashboardNotificationPost=function(){
-  if(!crmUser || !isAuthorisedAdmin(crmUser)){closeAccountDashboard();openAdminPanel();return;}
-  dashboardReturnAfterChildClose=true;
-  closeAccountDashboard();
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
   openNotificationPost();
 };
 window.accountDashboardSignOut=function(){closeAccountDashboard();closeAdminNewParty();closeAdminStock();crmSignOut();};
 window.accountDashboardEditProfile=function(){
-  dashboardReturnAfterChildClose=true;
-  closeAccountDashboard();
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
   customerDashboardRequestedView='profile';
   customerShowDashboard();
 };
 window.accountDashboardMyOrder=function(){
-  dashboardReturnAfterChildClose=true;
-  closeAccountDashboard();
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
   customerDashboardRequestedView='orders';
@@ -4466,12 +4446,10 @@ function ensureAdminUtilityModals(){
 window.closeAdminNewParty=function(){
   const m=document.getElementById('adminNewPartyModal');
   if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');}
-  returnToRoleDashboard();
 };
 window.closeAdminStock=function(){
   const m=document.getElementById('adminStockModal');
   if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');}
-  returnToRoleDashboard();
 };
 window.openAdminNewParty=function(){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
@@ -4507,7 +4485,6 @@ window.openCRM = window.openAdminPanel;
 window.closeCRM = function(){
   $('crmModal')?.classList.remove('show');
   $('crmModal')?.setAttribute('aria-hidden','true');
-  returnToRoleDashboard();
 };
 
 function crmShowLogin(){
@@ -6533,8 +6510,8 @@ function seerviNotificationGuestReadKey(id){
 }
 function seerviNotificationIsRead(n){
   if(!n || !n.id) return false;
-  if(customerUser || crmUser) return seerviNotificationReads.has(n.id);
-  return localStorage.getItem(seerviNotificationGuestReadKey(n.id))==='1';
+  const localRead = localStorage.getItem(seerviNotificationGuestReadKey(n.id))==='1';
+  return seerviNotificationReads.has(n.id) || localRead;
 }
 function seerviNotificationNow(){
   return Date.now();
@@ -6660,7 +6637,6 @@ window.openNotificationPost=function(){
 window.closeNotificationPost=function(){
   const m=document.getElementById('notificationPostModal');if(!m)return;
   m.classList.remove('show');m.setAttribute('aria-hidden','true');
-  returnToRoleDashboard();
 };
 async function seerviCompressNotificationImage(file){
   if(!file)return '';
