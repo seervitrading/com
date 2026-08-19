@@ -2611,7 +2611,38 @@ function closeProfile(e){
 @media(min-width:1400px){#adminStockModal .inventory-category-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}}
 @media(min-width:1800px){#adminStockModal .inventory-category-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}}
 @media(max-width:1100px){#adminStockModal .inventory-category-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-</style><style id="customer-portal-style">
+</style>
+<style id="inventory-stock-search-filter-style">
+/* Stable PC stock scrolling: one scroll owner, no nested magnetic/rubber-band feeling. */
+#adminStockModal .crm-panel{overscroll-behavior:none;}
+#adminStockModal .inventory-stock-panel{overscroll-behavior:contain;scroll-behavior:auto;-webkit-overflow-scrolling:auto;}
+#adminStockModal .inventory-stock-head{position:relative!important;top:auto!important;backdrop-filter:none;-webkit-backdrop-filter:none;}
+#adminStockModal .inventory-stock-head-copy{min-width:0;}
+.inventory-stock-tools{display:grid;grid-template-columns:minmax(260px,1fr) 220px auto;gap:10px;align-items:center;margin:0 0 18px;padding:12px;border:1px solid #ffffff12;background:#0a0f14;border-radius:12px;position:relative;z-index:3;}
+.inventory-stock-search-wrap{position:relative;min-width:0;}
+.inventory-stock-search{width:100%;box-sizing:border-box;padding:11px 38px 11px 34px!important;border-radius:8px!important;background:#0d131a!important;border:1px solid #ffffff16!important;color:#fff!important;font-size:11px!important;outline:none!important;}
+.inventory-stock-search:focus{border-color:#f0c66a66!important;box-shadow:0 0 0 2px #f0c66a12;}
+.inventory-stock-search::placeholder{color:#68737e;}
+.inventory-stock-search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#f0c66a;font-size:18px;pointer-events:none;z-index:1;}
+.inventory-stock-search-clear{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:25px;height:25px;border:0;border-radius:6px;background:#ffffff08;color:#9ca5ae;cursor:pointer;font-size:16px;line-height:1;}
+.inventory-stock-filter{height:38px!important;padding:0 10px!important;background:#0d131a!important;color:#fff!important;border:1px solid #ffffff16!important;border-radius:8px!important;font-size:9px!important;font-weight:900!important;letter-spacing:.5px;outline:none!important;}
+.inventory-stock-status-filter{display:flex;gap:5px;justify-content:flex-end;flex-wrap:wrap;}
+.inventory-filter-btn{height:38px;padding:0 11px;border:1px solid #ffffff14;border-radius:8px;background:#11171e;color:#78828d;font-size:8px;font-weight:900;letter-spacing:.7px;cursor:pointer;white-space:nowrap;}
+.inventory-filter-btn:hover{border-color:#ffffff30;color:#fff;}
+.inventory-filter-btn.active{background:#f0c66a;color:#111;border-color:#f0c66a;}
+.inventory-stock-no-results{min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;}
+.inventory-stock-no-results strong{font-size:13px;color:#fff;}
+.inventory-stock-no-results span{font-size:9px;color:#737d87;}
+@media(max-width:900px){
+  .inventory-stock-tools{grid-template-columns:1fr 1fr;}
+  .inventory-stock-status-filter{grid-column:1/-1;justify-content:flex-start;}
+}
+@media(max-width:600px){
+  .inventory-stock-tools{grid-template-columns:1fr;padding:10px;}
+  .inventory-stock-status-filter{grid-column:auto;}
+}
+</style>
+<style id="customer-portal-style">
 .customer-portal-panel{width:min(820px,100%)}
 .customer-dashboard{padding:18px 20px 24px}
 .customer-dashboard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
@@ -2631,7 +2662,32 @@ function closeProfile(e){
 .customer-portal-btn:hover{border-color:#f0c66a}
 .customer-login-help{margin-top:12px;color:#7f8995;font-size:9px}.customer-login-help button{border:0;background:none;color:#f0c66a;font:inherit;font-weight:900;cursor:pointer}
 @media(max-width:600px){.customer-profile-card{grid-template-columns:1fr}.customer-quote-row,.customer-rate-row{grid-template-columns:1fr 1fr}.customer-quote-row .customer-portal-btn,.customer-rate-row .customer-portal-btn{grid-column:1/-1;width:100%}.customer-dashboard{padding:14px}.customer-dashboard-head{align-items:center}}
-</style><div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Admin Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-close" type="button" onclick="closeCRM()">×</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div><div id="adminGlobalArea" class="admin-global-area"><div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, all quotations and complete party ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span>QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div><div id="inventoryStockPanel" class="inventory-stock-panel" hidden><div class="inventory-stock-head"><div><div class="crm-section-title">ITEM STOCK CONTROL</div><h4>Catalogue Availability</h4><p>Turn an item OFF when it is out of stock. OFF items disappear from the customer Home / Products catalogue until you turn them back ON.</p></div><div id="inventoryStockMeta" class="inventory-stock-meta">Loading catalogue…</div></div><div id="inventoryStockGrid" class="inventory-stock-grid"></div></div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs"><button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button><button class="crm-tab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button><button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button><button class="crm-tab" data-tab="ledger" onclick="crmTab('ledger')">PAYMENT ENTRY</button></div><div id="crmOverview" class="crm-tab-panel"><div class="crm-stat-grid"><div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div><div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div><div><span>LEDGER BALANCE</span><strong id="crmLedgerBalance">₹0.00</strong></div></div></div><div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div><div id="crmRates" class="crm-tab-panel" hidden><div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div><div id="crmRatesList" class="crm-list"></div></div><div id="crmLedger" class="crm-tab-panel" hidden><div class="crm-ledger-help">Quotation amounts are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.</div><div class="crm-ledger-add"><select id="crmLedgerType"><option value="debit">Debit / Sale</option><option value="credit">Credit / Payment Received</option></select><input id="crmLedgerAmount" type="number" min="0" step="0.01" placeholder="Amount ₹"><input id="crmLedgerNote" placeholder="Note / Reference"><button class="crm-primary small" type="button" onclick="crmAddLedgerEntry()">ADD ENTRY</button></div><div id="crmLedgerList" class="crm-list"></div></div></div></div></div><script>
+</style><div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Admin Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-close" type="button" onclick="closeCRM()">×</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div><div id="adminGlobalArea" class="admin-global-area"><div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, all quotations and complete party ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span>QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div><div id="inventoryStockPanel" class="inventory-stock-panel" hidden>
+  <div class="inventory-stock-head">
+    <div class="inventory-stock-head-copy">
+      <div class="crm-section-title">ITEM STOCK CONTROL</div>
+      <h4>Catalogue Availability</h4>
+      <p>Turn an item OFF when it is out of stock. OFF items disappear from the customer Home / Products catalogue until you turn them back ON.</p>
+    </div>
+    <div id="inventoryStockMeta" class="inventory-stock-meta">Loading catalogue…</div>
+  </div>
+  <div class="inventory-stock-tools" aria-label="Stock search and filters">
+    <div class="inventory-stock-search-wrap">
+      <span class="inventory-stock-search-icon">⌕</span>
+      <input id="inventoryStockSearch" class="inventory-stock-search" type="search" placeholder="Search item / model / specification…" autocomplete="off">
+      <button id="inventoryStockSearchClear" class="inventory-stock-search-clear" type="button" aria-label="Clear search" hidden>×</button>
+    </div>
+    <select id="inventoryStockCategoryFilter" class="inventory-stock-filter" aria-label="Filter by category">
+      <option value="all">ALL CATEGORIES</option>
+    </select>
+    <div class="inventory-stock-status-filter" role="group" aria-label="Filter by stock status">
+      <button type="button" class="inventory-filter-btn active" data-stock-filter="all">ALL</button>
+      <button type="button" class="inventory-filter-btn" data-stock-filter="in">IN STOCK</button>
+      <button type="button" class="inventory-filter-btn" data-stock-filter="out">OUT OF STOCK</button>
+    </div>
+  </div>
+  <div id="inventoryStockGrid" class="inventory-stock-grid"></div>
+</div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs"><button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button><button class="crm-tab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button><button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button><button class="crm-tab" data-tab="ledger" onclick="crmTab('ledger')">PAYMENT ENTRY</button></div><div id="crmOverview" class="crm-tab-panel"><div class="crm-stat-grid"><div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div><div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div><div><span>LEDGER BALANCE</span><strong id="crmLedgerBalance">₹0.00</strong></div></div></div><div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div><div id="crmRates" class="crm-tab-panel" hidden><div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div><div id="crmRatesList" class="crm-list"></div></div><div id="crmLedger" class="crm-tab-panel" hidden><div class="crm-ledger-help">Quotation amounts are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.</div><div class="crm-ledger-add"><select id="crmLedgerType"><option value="debit">Debit / Sale</option><option value="credit">Credit / Payment Received</option></select><input id="crmLedgerAmount" type="number" min="0" step="0.01" placeholder="Amount ₹"><input id="crmLedgerNote" placeholder="Note / Reference"><button class="crm-primary small" type="button" onclick="crmAddLedgerEntry()">ADD ENTRY</button></div><div id="crmLedgerList" class="crm-list"></div></div></div></div></div><script>
 let seerviCart = JSON.parse(localStorage.getItem('seerviCart') || '[]');
 
 function saveCart(){
@@ -6111,13 +6167,41 @@ function inventoryRenderAdmin(){
   const inStock=items.filter(item=>seerviInventoryState[item.key]!==false).length;
   if(meta) meta.textContent=`${inStock} IN STOCK · ${items.length-inStock} OUT OF STOCK · ${items.length} TOTAL`;
 
+  const searchEl=document.getElementById('inventoryStockSearch');
+  const categoryEl=document.getElementById('inventoryStockCategoryFilter');
+  const search=String(searchEl?.value||'').trim().toLowerCase();
+  const category=String(categoryEl?.value||'all');
+  const status=document.querySelector('.inventory-filter-btn.active')?.dataset.stockFilter || 'all';
+
+  // Keep filter controls stable while the stock cards are refreshed.
+  if(categoryEl){
+    const current=categoryEl.value || 'all';
+    const categories=[...new Set(items.map(item=>item.type||'Item'))].sort((a,b)=>a.localeCompare(b));
+    categoryEl.innerHTML='<option value="all">ALL CATEGORIES</option>'+categories.map(type=>`<option value="${esc(type)}">${esc(type.toUpperCase())}</option>`).join('');
+    categoryEl.value=categories.includes(current)?current:'all';
+  }
+
+  const matches=item=>{
+    const stock=seerviInventoryState[item.key]!==false;
+    const hay=[item.type,item.model,item.spec].filter(Boolean).join(' ').toLowerCase();
+    const searchOk=!search || hay.includes(search);
+    const categoryOk=category==='all' || item.type===category;
+    const statusOk=status==='all' || (status==='in' ? stock : !stock);
+    return searchOk && categoryOk && statusOk;
+  };
+
+  const filtered=items.filter(matches);
   if(!items.length){
     grid.innerHTML='<div class="inventory-stock-empty">No catalogue items found.</div>';
     return;
   }
+  if(!filtered.length){
+    grid.innerHTML='<div class="inventory-stock-empty inventory-stock-no-results"><strong>No matching items</strong><span>Try a different search or filter.</span></div>';
+    return;
+  }
 
   const groups={};
-  items.forEach(item=>{
+  filtered.forEach(item=>{
     const type=item.type||'Item';
     (groups[type] ||= []).push(item);
   });
@@ -6125,9 +6209,11 @@ function inventoryRenderAdmin(){
   let switchIndex=0;
   grid.innerHTML=Object.keys(groups).map(type=>{
     const group=groups[type];
+    // Category switch always represents the complete category, not only the filtered results.
+    const fullGroup=items.filter(item=>item.type===type);
     const groupId='inventoryCategory_'+String(type).replace(/[^a-z0-9]+/gi,'_');
-    const allStock=group.every(item=>seerviInventoryState[item.key]!==false);
-    const noneStock=group.every(item=>seerviInventoryState[item.key]===false);
+    const allStock=fullGroup.every(item=>seerviInventoryState[item.key]!==false);
+    const noneStock=fullGroup.every(item=>seerviInventoryState[item.key]===false);
     const categoryState=allStock?'STOCK':(noneStock?'NO STOCK':'MIXED');
     const cards=group.map(item=>{
       const stock=seerviInventoryState[item.key]!==false;
@@ -6152,7 +6238,7 @@ function inventoryRenderAdmin(){
         <div>
           <span class="inventory-category-kicker">CATEGORY</span>
           <h5>${esc(type)}</h5>
-          <span class="inventory-category-count">${group.length} ITEM${group.length===1?'':'S'}</span>
+          <span class="inventory-category-count">${fullGroup.length} ITEM${fullGroup.length===1?'':'S'}${group.length!==fullGroup.length?' · '+group.length+' SHOWN':''}</span>
         </div>
         <label class="inventory-category-switch" for="${groupId}">
           <input id="${groupId}" type="checkbox" ${allStock?'checked':''} data-category-state="${categoryState}" onchange="setInventoryCategoryStock('${esc(type)}',this.checked,this)">
@@ -6166,12 +6252,46 @@ function inventoryRenderAdmin(){
 
   grid.querySelectorAll('.inventory-category-switch input').forEach(input=>{
     const type=input.closest('.inventory-stock-category')?.dataset.inventoryCategory;
-    const group=groups[type]||[];
+    const group=items.filter(item=>item.type===type);
     input.indeterminate=group.some(item=>seerviInventoryState[item.key]!==false) &&
                          group.some(item=>seerviInventoryState[item.key]===false);
   });
 }
 
+function inventoryInitFilters(){
+  const search=document.getElementById('inventoryStockSearch');
+  const category=document.getElementById('inventoryStockCategoryFilter');
+  const clear=document.getElementById('inventoryStockSearchClear');
+  if(search && !search.dataset.bound){
+    search.dataset.bound='1';
+    const refresh=()=>{
+      if(clear) clear.hidden=!search.value;
+      inventoryRenderAdmin();
+    };
+    search.addEventListener('input',refresh);
+    search.addEventListener('search',refresh);
+  }
+  if(category && !category.dataset.bound){
+    category.dataset.bound='1';
+    category.addEventListener('change',()=>inventoryRenderAdmin());
+  }
+  if(clear && !clear.dataset.bound){
+    clear.dataset.bound='1';
+    clear.addEventListener('click',()=>{
+      if(search){search.value='';search.focus();}
+      clear.hidden=true;
+      inventoryRenderAdmin();
+    });
+  }
+  document.querySelectorAll('.inventory-filter-btn').forEach(btn=>{
+    if(btn.dataset.bound) return;
+    btn.dataset.bound='1';
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.inventory-filter-btn').forEach(b=>b.classList.toggle('active',b===btn));
+      inventoryRenderAdmin();
+    });
+  });
+}
 window.setInventoryCategoryStock=async function(type,stock,input){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){
     if(input) input.checked=!stock;
@@ -6220,6 +6340,7 @@ window.toggleInventoryStock=function(force){
     panel.hidden=false;
     modal.classList.add('show');
     modal.setAttribute('aria-hidden','false');
+    inventoryInitFilters();
     inventoryRenderAdmin();
   }else{
     closeAdminStock();
