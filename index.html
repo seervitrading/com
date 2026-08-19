@@ -2463,7 +2463,7 @@ body:not(.admin-quote-mode) .cart-note{
 .seervi-watermark-modal-image img{position:relative;z-index:1;display:block;max-width:100%;max-height:calc(100vh - 210px);object-fit:contain;}
 </style>
 <style id="customer-home-profile-hide">#customerHomeProfile{display:none!important}</style></head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="logo">SEERVI <span>TRADING</span></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a></div><a class="btn" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
- CART <span id="cartCount">0</span></button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url("images/product-image-001-055cde1217d3c801.webp")"images/product-image-001-055cde1217d3c801.webp")"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="bw-nav-overlay"><div class="bw-brand"><button id="bwAccountIdentity" class="bw-account-identity" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><div class="bw-nav-actions" id="bwNavActions"><button id="bwNotificationBell" class="bw-notification-bell" type="button" onclick="openNotifications()" aria-label="Notifications" title="Notifications"><span class="bw-bell-icon" aria-hidden="true">🔔</span><span id="bwNotificationBadge" class="bw-notification-badge" hidden>0</span></button><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
+ CART <span id="cartCount">0</span></button> <button id="bwNotificationBell" class="bw-notification-bell" type="button" onclick="openNotifications()" aria-label="Notifications" title="Notifications"><span class="bw-bell-icon" aria-hidden="true">🔔</span><span id="bwNotificationBadge" class="bw-notification-badge" hidden>0</span></button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url("images/product-image-001-055cde1217d3c801.webp")"images/product-image-001-055cde1217d3c801.webp")"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="bw-nav-overlay"><div class="bw-brand"><button id="bwAccountIdentity" class="bw-account-identity" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><div class="bw-nav-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
   <button type="button" class="product-category-btn category-card active" data-category="all" onclick="showProductCategory('all')">
     <span class="category-card-image"><img src="images/category-all.webp" alt="All Seervi products"></span>
     <span class="category-card-name">ALL PRODUCTS</span>
@@ -3728,6 +3728,8 @@ function addManualQuoteItem(){
 }
 </script><div id="crmDeleteConfirmModal" class="crm-delete-confirm-modal" aria-hidden="true" onclick="crmCancelDeleteParty(event)"><div class="crm-delete-confirm-card" role="dialog" aria-modal="true" aria-labelledby="crmDeleteConfirmTitle" onclick="event.stopPropagation()"><h3 id="crmDeleteConfirmTitle">DELETE PARTY</h3><p id="crmDeleteConfirmText">This action will permanently remove the party and its linked cloud records.</p><div class="crm-delete-confirm-warning"><strong>Transaction data will be deleted.</strong> Quotations, rate history and ledger/payment entries linked to this party will be removed. The <strong>party profile and login account will remain</strong>, so the customer can log in again and still see/edit their profile.</div><input id="crmDeleteConfirmInput" class="crm-delete-confirm-input" type="text" autocomplete="off" placeholder="Type DELETE to confirm" oninput="crmDeleteConfirmInputChanged(this.value)" onkeydown="if(event.key==='Enter') crmConfirmDeleteParty()"><div class="crm-delete-confirm-actions"><button class="crm-delete-confirm-cancel" type="button" onclick="crmCancelDeleteParty()">CANCEL</button><button id="crmDeleteConfirmSubmit" class="crm-delete-confirm-submit" type="button" disabled onclick="crmConfirmDeleteParty()">DELETE</button></div></div></div><style id="seervi-notifications-style">
 .bw-notification-bell{position:relative;width:40px;height:40px;border:1px solid #ffffff35;background:#111;color:#f0c66a;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex:0 0 auto;box-shadow:none}
+.bw-nav-actions .bw-notification-bell{margin-left:2px}
+
 .bw-notification-bell:hover{border-color:#f0c66a;background:#171717}
 .bw-bell-icon{font-size:20px;line-height:1;display:block;filter:grayscale(.15)}
 .bw-notification-bell.has-unread{animation:seerviBellPulse 1.8s ease-in-out infinite}
@@ -3769,7 +3771,7 @@ function addManualQuoteItem(){
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import {
-  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously, createUserWithEmailAndPassword, sendPasswordResetEmail
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 import {
   getFirestore, collection, addDoc, setDoc, updateDoc, doc, getDoc, getDocs, deleteDoc,
@@ -4447,13 +4449,8 @@ window.markAllNotificationsRead=function(){
   if(!seerviNotifications.length)return;
   const read=notificationReadIds();seerviNotifications.forEach(n=>read.add(String(n.id)));saveNotificationReadIds(read);renderNotificationBadge();renderNotifications();
 };
-async function ensureNotificationReader(){
-  if(publicSignupAuth.currentUser) return;
-  try{await signInAnonymously(publicSignupAuth);}catch(e){console.warn('Notification reader auth unavailable',e);}
-}
 async function loadNotifications(){
   try{
-    await ensureNotificationReader();
     const snap=await getDocs(query(collection(publicSignupDb,'notifications'),orderBy('createdAt','desc'),limit(30)));
     seerviNotifications=snap.docs.map(d=>({id:d.id,...d.data()}));
     renderNotifications();renderNotificationBadge();
@@ -4465,7 +4462,6 @@ async function loadNotifications(){
 }
 async function startNotificationListener(){
   try{
-    await ensureNotificationReader();
     if(seerviNotificationUnsubscribe) return;
     const q=query(collection(publicSignupDb,'notifications'),orderBy('createdAt','desc'),limit(30));
     seerviNotificationUnsubscribe=onSnapshot(q,(snap)=>{
