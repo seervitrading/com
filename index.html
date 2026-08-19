@@ -3773,7 +3773,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 import {
   getFirestore, collection, addDoc, setDoc, updateDoc, doc, getDoc, getDocs, deleteDoc,
-  query, where, orderBy, limit, serverTimestamp
+  query, where, orderBy, limit, serverTimestamp, onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -4388,6 +4388,7 @@ window.accountDashboardCustomerSignOut=function(){closeAccountDashboard();custom
 \n/* SEERVI NOTIFICATION CENTER */
 let seerviNotifications=[];
 let seerviNotificationPhotoData='';
+let seerviNotificationUnsubscribe=null;
 const SEERVI_NOTIFICATION_READ_KEY='seervi_notification_read_v2';
 function notificationReaderKey(){
   const admin=auth?.currentUser?.uid;
@@ -4460,6 +4461,23 @@ async function loadNotifications(){
     console.warn('Could not load notifications',e);
     const box=$('notificationsList');if(box)box.innerHTML='<div class="notifications-empty">Notifications are temporarily unavailable.</div>';
     const summary=$('notificationsUnreadSummary');if(summary)summary.textContent='Notifications unavailable';
+  }
+}
+async function startNotificationListener(){
+  try{
+    await ensureNotificationReader();
+    if(seerviNotificationUnsubscribe) return;
+    const q=query(collection(publicSignupDb,'notifications'),orderBy('createdAt','desc'),limit(30));
+    seerviNotificationUnsubscribe=onSnapshot(q,(snap)=>{
+      seerviNotifications=snap.docs.map(d=>({id:d.id,...d.data()}));
+      renderNotificationBadge();
+      if(document.getElementById('notificationsModal')?.classList.contains('show')) renderNotifications();
+    },(e)=>{
+      console.warn('Notification live listener unavailable',e);
+      seerviNotificationUnsubscribe=null;
+    });
+  }catch(e){
+    console.warn('Could not start notification listener',e);
   }
 }
 window.openNotifications=async function(){
@@ -4541,7 +4559,7 @@ window.submitNotificationPost=async function(){
     setNotificationPostStatus((e?.message||'Could not post notification.').replace('Firebase: ',''),'err');
   }finally{if(btn){btn.disabled=false;btn.textContent='POST NOTIFICATION';}}
 };
-setTimeout(()=>loadNotifications(),700);
+setTimeout(()=>startNotificationListener(),700);
 
 onAuthStateChanged(publicSignupAuth,user=>{
   customerUser=(user&&!user.isAnonymous)?user:null;
