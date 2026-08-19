@@ -3885,11 +3885,31 @@ window.closeCustomerLogin=function(){const m=$('customerLoginModal');if(!m)retur
 let customerUser=null, customerParty=null, customerQuotes=[], customerRates=[], customerLedger=[];
 function customerErr(msg){if($('customerLoginError'))$('customerLoginError').textContent=msg||'';}
 function customerShowLogin(){if($('customerLoginView'))$('customerLoginView').hidden=false;if($('customerDashboardView'))$('customerDashboardView').hidden=true;customerErr('');}
-function customerShowDashboard(){
+function customerShowDashboard(mode='order'){
   if($('customerLoginView'))$('customerLoginView').hidden=true;
   if($('customerDashboardView'))$('customerDashboardView').hidden=false;
-  customerLoadDashboard().catch(e=>{console.error(e);customerErr((e?.message||'Could not load your customer data.').replace('Firebase: ',''));});
+  customerLoadDashboard().then(()=>customerSetPortalMode(mode)).catch(e=>{console.error(e);customerErr((e?.message||'Could not load your customer data.').replace('Firebase: ',''));});
 }
+function customerSetPortalMode(mode){
+  const profile=$('customerProfileCard');
+  const tabs=document.querySelector('.customer-portal-tabs');
+  const quotes=$('customerQuotesList'), rates=$('customerRatesList'), ledger=$('customerLedgerList');
+  const edit=$('customerProfileEdit');
+  const isEdit=mode==='edit';
+  if(profile) profile.hidden=isEdit;
+  if(tabs) tabs.hidden=isEdit;
+  if(edit){ edit.hidden=!isEdit; }
+  if(isEdit){
+    customerEditProfile();
+    if(quotes) quotes.hidden=true;
+    if(rates) rates.hidden=true;
+    if(ledger) ledger.hidden=true;
+  }else{
+    if(edit) edit.hidden=true;
+    customerPortalTab('quotes');
+  }
+}
+
 window.sendSeerviPasswordReset=async function(source){
   const emailEl=source==='admin' ? $('crmEmail') : $('customerLoginEmail');
   const statusEl=source==='admin' ? $('crmLoginError') : $('customerLoginError');
@@ -4090,6 +4110,11 @@ function customerRenderLedger(){
 }
 window.customerEditProfile=function(){
   if(!customerParty)return;
+  const profile=$('customerProfileCard'),tabs=document.querySelector('.customer-portal-tabs');
+  if(profile)profile.hidden=true;
+  if(tabs)tabs.hidden=true;
+  const q=$('customerQuotesList'),r=$('customerRatesList'),l=$('customerLedgerList');
+  if(q)q.hidden=true;if(r)r.hidden=true;if(l)l.hidden=true;
   const el=$('customerProfileEdit');if(!el)return;
   el.hidden=false;
   el.innerHTML=`<div class="crm-section-title">EDIT MY PROFILE</div><div class="customer-profile-edit-grid"><input id="custEditName" value="${esc(customerParty.name||'')}" placeholder="Party / Customer Name"><input id="custEditCompany" value="${esc(customerParty.company||'')}" placeholder="Shop / Company"><input id="custEditPhone" value="${esc(customerParty.phone||'')}" placeholder="Phone / WhatsApp"><input id="custEditCity" value="${esc(customerParty.city||'')}" placeholder="City"><input id="custEditEmail" value="${esc(customerParty.email||customerUser?.email||'')}" placeholder="Email" disabled><textarea id="custEditAddress" placeholder="Address">${esc(customerParty.address||'')}</textarea></div><div class="customer-profile-edit-actions"><button class="crm-primary" type="button" onclick="customerSaveProfile()">SAVE PROFILE</button><button class="crm-secondary" type="button" onclick="$('customerProfileEdit').hidden=true">CANCEL</button></div>`;
@@ -4201,15 +4226,13 @@ window.accountDashboardEditProfile=function(){
   closeAccountDashboard();
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
-  customerShowDashboard();
-  setTimeout(()=>customerEditProfile(),180);
+  customerShowDashboard('edit');
 };
 window.accountDashboardMyOrder=function(){
   closeAccountDashboard();
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
-  customerShowDashboard();
-  setTimeout(()=>customerPortalTab('quotes'),180);
+  customerShowDashboard('order');
 };
 window.accountDashboardCustomerSignOut=function(){closeAccountDashboard();customerSignOut();};
 
