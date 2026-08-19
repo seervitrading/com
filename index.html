@@ -1300,6 +1300,10 @@ body.admin-quote-mode .quote-actions{display:grid!important}
 .bw-nav-login{border:0;background:#111;color:#fff}
 .bw-nav-signup{border:1px solid #111;background:#fff;color:#111}
 .bw-nav-login:hover,.bw-nav-signup:hover{opacity:.88}
+/* Login / Sign Up — keep these controls above all hero layers and always clickable. */
+.bw-nav-actions,.bw-nav-login,.bw-nav-signup{pointer-events:auto !important;position:relative;z-index:20 !important}
+.bw-nav-login,.bw-nav-signup{touch-action:manipulation}
+
 .bw-nav-dashboard{border:1px solid #fff;background:#fff;color:#111;border-radius:4px;padding:11px 14px;font-size:9px;font-weight:900;letter-spacing:.3px;cursor:pointer;white-space:nowrap}
 .bw-nav-dashboard:hover{opacity:.88}
 @media(max-width:900px){.bw-nav-dashboard{padding:9px 10px;font-size:8px}}
@@ -7054,3 +7058,29 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
   });
 })();
 </script></body></html>
+<script id="seervi-auth-nav-click-bridge">
+(function(){
+  function bind(){
+    const login=document.getElementById('bwNavLogin');
+    const signup=document.getElementById('bwNavSignup');
+    if(login && !login.dataset.seerviAuthBound){
+      login.dataset.seerviAuthBound='1';
+      login.removeAttribute('onclick');
+      login.addEventListener('click',function(e){
+        e.preventDefault();
+        if(typeof window.openCustomerLogin==='function') window.openCustomerLogin();
+      });
+    }
+    if(signup && !signup.dataset.seerviAuthBound){
+      signup.dataset.seerviAuthBound='1';
+      signup.removeAttribute('onclick');
+      signup.addEventListener('click',function(e){
+        e.preventDefault();
+        if(typeof window.openPartySignup==='function') window.openPartySignup();
+      });
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind,{once:true}); else bind();
+  window.addEventListener('load',bind,{once:true});
+})();
+</script>
