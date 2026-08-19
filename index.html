@@ -3796,7 +3796,7 @@ import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously, createUserWithEmailAndPassword, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 import {
-  getFirestore, collection, addDoc, setDoc, updateDoc, doc, getDoc, getDocs, deleteDoc,
+  getFirestore, collection, addDoc, setDoc, updateDoc, doc, getDoc, getDocs, deleteDoc, runTransaction,
   query, where, orderBy, limit, serverTimestamp, onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
@@ -5898,6 +5898,8 @@ window.crmDeleteQuote=async function(id){
   if(!q)return;
   if(!confirm('Delete quotation '+(q.quoteNo||'this quote')+'? Its rate-history records will also be deleted.')) return;
   try{
+    const restoreDeltas=inventoryQuoteDeltas(q.items||[],[]);
+    if(restoreDeltas.length) await adjustInventoryForQuoteDeltas(restoreDeltas,{strict:false});
     const rs=await getDocs(query(collection(db,'rateHistory'),where('quoteId','==',id),limit(2000)));
     for(const d of rs.docs) await deleteDoc(d.ref);
 
@@ -5962,11 +5964,15 @@ window.crmSaveCurrentQuote = async function(){
     manual:!!x.manual
   }));
 
+  let stockApplied=[];
   try{
     // EDIT EXISTING QUOTATION
     if(crmEditingQuoteId){
       const oldQ=crmQuotes.find(q=>q.id===crmEditingQuoteId) || adminGlobalQuotes.find(q=>q.id===crmEditingQuoteId);
       if(!oldQ){alert('Original quotation could not be found. Refresh and try again.');return;}
+
+      const editStockDeltas=inventoryQuoteDeltas(oldQ.items||[],items);
+      stockApplied=await adjustInventoryForQuoteDeltas(editStockDeltas,{strict:true});
 
       await updateDoc(doc(db,'quotations',crmEditingQuoteId),{
         partyId:crmPartyId,
@@ -6052,12 +6058,16 @@ window.crmSaveCurrentQuote = async function(){
         crmModal.setAttribute('aria-hidden','false');
       }
       if(typeof updateAuthNav==='function') updateAuthNav();
+      inventoryApplyToHome();
+      if(document.getElementById('inventoryStockPanel') && !document.getElementById('inventoryStockPanel').hidden) inventoryRenderAdmin();
       seerviShowSaveSuccess('Quotation saved successfully.');
       return;
     }
 
     // CREATE NEW QUOTATION
     const qNo=quotationNumber();
+    const newStockDeltas=inventoryQuoteDeltas([],items);
+    stockApplied=await adjustInventoryForQuoteDeltas(newStockDeltas,{strict:true});
     const qRef=await addDoc(collection(db,'quotations'),{
       partyId:crmPartyId,
       quoteNo:qNo,
@@ -6116,8 +6126,11 @@ window.crmSaveCurrentQuote = async function(){
     clearCart();
     renderCart();
     crmTab('quotes');
+    inventoryApplyToHome();
+    if(document.getElementById('inventoryStockPanel') && !document.getElementById('inventoryStockPanel').hidden) inventoryRenderAdmin();
     seerviShowSaveSuccess('Saved successfully.');
   }catch(e){
+    if(stockApplied.length) await rollbackInventoryQuoteDeltas(stockApplied);
     alert('Quotation save failed: '+(e?.message||'Check Firestore rules/database.'));
   }
 };
@@ -6177,6 +6190,7 @@ window.crmAddLedgerEntry = async function(){
    - public: true (allows catalogue availability reads)
 */
 let seerviInventoryState = Object.create(null);
+let seerviInventoryQty = Object.create(null);
 let seerviInventoryItems = [];
 
 function inventoryNormaliseKey(value){
@@ -6251,7 +6265,7 @@ async function inventoryLoadPublic(){
     const next=Object.create(null);
     snap.forEach(d=>{
       const data=d.data()||{};
-      if(data.public!==false) next[d.id]=data.stock!==false;
+      if(data.public!==false){ next[d.id]=data.stock!==false; if(Number.isFinite(Number(data.availableQty))) seerviInventoryQty[d.id]=Math.max(0,Number(data.availableQty)); }
     });
     seerviInventoryState=next;
   }catch(e){
@@ -6259,6 +6273,7 @@ async function inventoryLoadPublic(){
     // available by default. Admin can create the first stock documents.
     console.warn('Inventory availability load skipped:',e?.message||e);
     seerviInventoryState=Object.create(null);
+    seerviInventoryQty=Object.create(null);
   }
   inventoryApplyToHome();
 }
@@ -6329,6 +6344,10 @@ function inventoryRenderAdmin(){
           <span class="inventory-stock-type">${esc(item.type)}</span>
           <strong class="inventory-stock-name" title="${esc(item.model)}">${esc(item.model)}</strong>
           ${spec}
+        </div>
+        <div class="inventory-available-qty">
+          <label for="inventoryQty_${switchIndex}">AVAILABLE QTY</label>
+          <input id="inventoryQty_${switchIndex}" type="number" min="0" step="1" value="${Number.isFinite(Number(seerviInventoryQty[item.key]))?Math.max(0,Number(seerviInventoryQty[item.key])):''}" placeholder="SET" onchange="setInventoryQuantity('${esc(item.key)}',this.value,this)" onkeydown="if(event.key==='Enter')this.blur()">
         </div>
         <label class="inventory-stock-switch" for="${id}">
           <input id="${id}" type="checkbox" ${stock?'checked':''} onchange="setInventoryStock('${esc(item.key)}',this.checked,this)">
@@ -6415,6 +6434,7 @@ window.setInventoryCategoryStock=async function(type,stock,input){
       model:item.model,
       spec:item.spec||'',
       stock:!!stock,
+      ...(Number.isFinite(Number(seerviInventoryQty[item.key])) ? {availableQty:Math.max(0,Number(seerviInventoryQty[item.key])),qtyTracking:true} : {}),
       public:true,
       updatedBy:crmUser.email||crmUser.uid,
       updatedAt:serverTimestamp()
@@ -6429,6 +6449,57 @@ window.setInventoryCategoryStock=async function(type,stock,input){
     if(input) input.disabled=false;
   }
 };
+
+window.setInventoryQuantity=async function(key,value,input){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){alert('Admin login required.');return;}
+  const qty=Math.max(0,Math.floor(Number(value)));
+  if(!Number.isFinite(qty)){inventoryRenderAdmin();return;}
+  const item=seerviInventoryItems.find(x=>x.key===key); if(!item)return;
+  if(input)input.disabled=true;
+  try{
+    await setDoc(doc(db,'inventory',key),{key,type:item.type,model:item.model,spec:item.spec||'',stock:seerviInventoryState[key]!==false,availableQty:qty,qtyTracking:true,public:true,updatedBy:crmUser.email||crmUser.uid,updatedAt:serverTimestamp()},{merge:true});
+    seerviInventoryQty[key]=qty;
+  }catch(e){alert('Available quantity update failed: '+(e?.message||'Check Firebase rules.'));inventoryRenderAdmin();}
+  finally{if(input)input.disabled=false;}
+};
+
+function inventoryQuoteDeltas(oldItems,newItems){
+  const map=Object.create(null);
+  (oldItems||[]).forEach(x=>{if(x.manual)return;const key=inventoryItemKey(x.type||'',x.model||x.name||'',x.spec||x.thickness||'');map[key]=(map[key]||0)-Math.max(0,Number(x.qty||0));});
+  (newItems||[]).forEach(x=>{if(x.manual)return;const key=inventoryItemKey(x.type||'',x.model||x.name||'',x.spec||x.thickness||'');map[key]=(map[key]||0)+Math.max(0,Number(x.qty||0));});
+  return Object.entries(map).filter(([,delta])=>delta!==0).map(([key,delta])=>({key,delta}));
+}
+
+async function adjustInventoryForQuoteDeltas(deltas,{strict=true}={}){
+  const changes=(deltas||[]).filter(x=>Number(x.delta)!==0); if(!changes.length)return [];
+  inventoryCollectItems(); const itemMap=new Map(seerviInventoryItems.map(x=>[x.key,x]));
+  const applied=[];
+  await runTransaction(db,async(tx)=>{
+    const pending=[];
+    for(const ch of changes){
+      const item=itemMap.get(ch.key); if(!item)continue;
+      const ref=doc(db,'inventory',ch.key); const snap=await tx.get(ref);
+      if(!snap.exists()){if(strict)throw new Error(`Stock quantity is not set for ${item.model}. Please set AVAILABLE QTY first.`);continue;}
+      const data=snap.data()||{}; const current=Number(data.availableQty);
+      if(!Number.isFinite(current)){if(strict)throw new Error(`Stock quantity is not set for ${item.model}. Please set AVAILABLE QTY first.`);continue;}
+      const delta=Number(ch.delta); const next=current-delta;
+      if(next<0)throw new Error(`Insufficient stock for ${item.model}. Available: ${current}, required: ${delta}.`);
+      pending.push({ref,item,data,next,ch});
+    }
+    pending.forEach(({ref,item,data,next,ch})=>{
+      tx.set(ref,{key:item.key,type:item.type,model:item.model,spec:item.spec||'',availableQty:next,qtyTracking:true,stock:next>0 ? data.stock!==false : false,public:true,updatedBy:crmUser.email||crmUser.uid,updatedAt:serverTimestamp()},{merge:true});
+      applied.push(ch);
+    });
+  });
+  for(const ch of applied){seerviInventoryQty[ch.key]=Math.max(0,Number(seerviInventoryQty[ch.key]||0)-Number(ch.delta));if(seerviInventoryQty[ch.key]===0)seerviInventoryState[ch.key]=false;}
+  return applied;
+}
+
+async function rollbackInventoryQuoteDeltas(applied){
+  if(!applied?.length)return;
+  const reverse=applied.map(x=>({key:x.key,delta:-Number(x.delta)}));
+  try{await adjustInventoryForQuoteDeltas(reverse,{strict:false});}catch(e){console.warn('Inventory rollback failed:',e);}
+}
 
 window.toggleInventoryStock=function(force){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){
@@ -6471,6 +6542,7 @@ window.setInventoryStock=async function(key,stock,input){
       model:item.model,
       spec:item.spec||'',
       stock:!!stock,
+      ...(Number.isFinite(Number(seerviInventoryQty[key])) ? {availableQty:Math.max(0,Number(seerviInventoryQty[key])),qtyTracking:true} : {}),
       public:true,
       updatedBy:crmUser.email||crmUser.uid,
       updatedAt:serverTimestamp()
