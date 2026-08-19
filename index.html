@@ -2463,7 +2463,7 @@ body:not(.admin-quote-mode) .cart-note{
 .seervi-watermark-modal-image img{position:relative;z-index:1;display:block;max-width:100%;max-height:calc(100vh - 210px);object-fit:contain;}
 </style>
 <style id="customer-home-profile-hide">#customerHomeProfile{display:none!important}</style></head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="logo">SEERVI <span>TRADING</span></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a></div><a class="btn" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
- CART <span id="cartCount">0</span></button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url("images/product-image-001-055cde1217d3c801.webp")"images/product-image-001-055cde1217d3c801.webp")"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="bw-nav-overlay"><div class="bw-brand"><button id="bwAccountIdentity" class="bw-account-identity" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><div class="bw-nav-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
+ CART <span id="cartCount">0</span></button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url("images/product-image-001-055cde1217d3c801.webp")"images/product-image-001-055cde1217d3c801.webp")"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="bw-nav-overlay"><div class="bw-brand"><button id="bwAccountIdentity" class="bw-account-identity" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><div class="bw-nav-actions" id="bwNavActions"><button id="bwNotificationBell" class="bw-notification-bell" type="button" onclick="openNotifications()" aria-label="Notifications" title="Notifications"><span class="bw-bell-icon" aria-hidden="true">🔔</span><span id="bwNotificationBadge" class="bw-notification-badge" hidden>0</span></button><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
   <button type="button" class="product-category-btn category-card active" data-category="all" onclick="showProductCategory('all')">
     <span class="category-card-image"><img src="images/category-all.webp" alt="All Seervi products"></span>
     <span class="category-card-name">ALL PRODUCTS</span>
@@ -2573,12 +2573,39 @@ function closeProfile(e){
       <button class="account-dashboard-option" type="button" onclick="accountDashboardNewParty()"><span>＋</span><strong>NEW PARTY</strong><small>Create a new customer / party</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardBackup()"><span>⇩</span><strong>BACKUP DATA</strong><small>Download your CRM business backup</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardStock()"><span>▤</span><strong>STOCK</strong><small>Control catalogue item availability</small></button>
+      <button class="account-dashboard-option" type="button" onclick="accountDashboardNotifications()"><span>🔔</span><strong>NOTIFICATION POST</strong><small>Send an important notice to everyone</small></button>
       <button class="account-dashboard-option danger" type="button" onclick="accountDashboardSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your admin session</small></button>
     </div>
     <div id="customerDashboardOptions" class="account-dashboard-options" hidden aria-label="Customer dashboard options">
       <button class="account-dashboard-option" type="button" onclick="accountDashboardEditProfile()"><span>✎</span><strong>EDIT PROFILE</strong><small>Update your business & contact details</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardMyOrder()"><span>▣</span><strong>MY ORDER</strong><small>View your quotations & order requests</small></button>
       <button class="account-dashboard-option danger" type="button" onclick="accountDashboardCustomerSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your customer session</small></button>
+    </div>
+  </div>
+</div><div id="notificationsModal" class="crm-modal" aria-hidden="true">
+  <div class="crm-backdrop" onclick="closeNotifications()"></div>
+  <div class="crm-panel notifications-panel" role="dialog" aria-modal="true" aria-labelledby="notificationsTitle">
+    <div class="crm-head">
+      <div><div class="crm-kicker">SEERVI TRADING / NOTIFICATIONS</div><h3 id="notificationsTitle">Notifications</h3><div id="notificationsStatus" class="crm-auth-status">Important updates from Seervi Trading.</div></div>
+      <button class="crm-close" type="button" onclick="closeNotifications()">×</button>
+    </div>
+    <div class="notifications-toolbar"><div id="notificationsUnreadSummary" class="notifications-unread-summary">No unread notifications</div><button id="notificationsMarkAllRead" class="notifications-mark-all" type="button" onclick="markAllNotificationsRead()">MARK ALL READ</button></div>
+    <div id="notificationsList" class="notifications-list"><div class="notifications-empty">Loading notifications…</div></div>
+  </div>
+</div><div id="notificationPostModal" class="crm-modal" aria-hidden="true">
+  <div class="crm-backdrop" onclick="closeNotificationPost()"></div>
+  <div class="crm-panel notification-post-panel" role="dialog" aria-modal="true" aria-labelledby="notificationPostTitle">
+    <div class="crm-head">
+      <div><div class="crm-kicker">SEERVI ADMIN / NOTIFICATION POST</div><h3 id="notificationPostTitle">Post Notification</h3><div class="crm-auth-status">This notice will appear in the notification bell for everyone.</div></div>
+      <button class="crm-close" type="button" onclick="closeNotificationPost()">×</button>
+    </div>
+    <div class="notification-post-body">
+      <input id="notificationPostTitleInput" class="notification-post-input" type="text" maxlength="120" placeholder="Title (optional)">
+      <textarea id="notificationPostText" class="notification-post-text" maxlength="3000" placeholder="Write the important notice here…"></textarea>
+      <div class="notification-photo-row"><label class="notification-photo-btn" for="notificationPostImage">＋ ADD PHOTO</label><input id="notificationPostImage" type="file" accept="image/*" hidden onchange="previewNotificationPhoto(event)"><button id="notificationPhotoRemove" class="notification-photo-remove" type="button" onclick="removeNotificationPhoto()" hidden>REMOVE</button></div>
+      <div id="notificationPhotoPreview" class="notification-photo-preview" hidden></div>
+      <div id="notificationPostStatus" class="notification-post-status"></div>
+      <button id="notificationPostSubmit" class="crm-primary" type="button" onclick="submitNotificationPost()">POST NOTIFICATION</button>
     </div>
   </div>
 </div><div id="customerLoginModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCustomerLogin()"></div><div class="crm-panel customer-portal-panel" role="dialog" aria-modal="true" aria-labelledby="customerPortalTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / SECURE LOGIN</div><h3 id="customerPortalTitle">Login</h3><div id="customerAuthStatus" class="crm-auth-status">Admin and customers can log in here. You will be taken to your own dashboard.</div></div><button class="crm-close" type="button" onclick="closeCustomerLogin()">×</button></div><div id="customerLoginView" class="crm-login"><div class="crm-section-title">LOGIN</div><p>Use your Seervi Trading email and password. Admin accounts open the Admin Dashboard; customer accounts open the Customer Dashboard.</p><div class="crm-login-grid"><input id="customerLoginEmail" type="email" placeholder="Email" autocomplete="username"><input id="customerLoginPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="customerSignIn()">LOGIN</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('customer')">FORGOT PASSWORD?</button></div><div id="customerLoginError" class="crm-error"></div><div class="customer-login-help">Don't have an account? <button type="button" onclick="closeCustomerLogin();openPartySignup();">SIGN UP</button></div></div><div id="customerDashboardView" class="customer-dashboard" hidden><div class="customer-dashboard-head"><div><div class="crm-section-title">WELCOME</div><h4 id="customerWelcomeName">Customer</h4><div id="customerWelcomeMeta" class="crm-auth-status"></div></div><button class="crm-secondary danger" type="button" onclick="customerSignOut()">SIGN OUT</button></div><div id="customerProfileCard" class="customer-profile-card"></div><div class="customer-portal-tabs"><button class="customer-tab active" type="button" onclick="customerPortalTab('quotes')">MY ORDER</button><button class="customer-tab" type="button" onclick="customerPortalTab('ledger')">MY LEDGER</button><button class="customer-tab" type="button" onclick="customerPortalTab('rates')">RATE HISTORY</button></div><div id="customerQuotesList" class="customer-portal-list"></div><div id="customerRatesList" class="customer-portal-list" hidden></div><div id="customerLedgerList" class="customer-portal-list" hidden></div><div id="customerProfileEdit" class="customer-profile-edit" hidden></div></div></div></div><style id="customer-home-profile-style">
@@ -3699,7 +3726,47 @@ function addManualQuoteItem(){
 
   toggleManualQuoteItem(false);
 }
-</script><div id="crmDeleteConfirmModal" class="crm-delete-confirm-modal" aria-hidden="true" onclick="crmCancelDeleteParty(event)"><div class="crm-delete-confirm-card" role="dialog" aria-modal="true" aria-labelledby="crmDeleteConfirmTitle" onclick="event.stopPropagation()"><h3 id="crmDeleteConfirmTitle">DELETE PARTY</h3><p id="crmDeleteConfirmText">This action will permanently remove the party and its linked cloud records.</p><div class="crm-delete-confirm-warning"><strong>Transaction data will be deleted.</strong> Quotations, rate history and ledger/payment entries linked to this party will be removed. The <strong>party profile and login account will remain</strong>, so the customer can log in again and still see/edit their profile.</div><input id="crmDeleteConfirmInput" class="crm-delete-confirm-input" type="text" autocomplete="off" placeholder="Type DELETE to confirm" oninput="crmDeleteConfirmInputChanged(this.value)" onkeydown="if(event.key==='Enter') crmConfirmDeleteParty()"><div class="crm-delete-confirm-actions"><button class="crm-delete-confirm-cancel" type="button" onclick="crmCancelDeleteParty()">CANCEL</button><button id="crmDeleteConfirmSubmit" class="crm-delete-confirm-submit" type="button" disabled onclick="crmConfirmDeleteParty()">DELETE</button></div></div></div><script type="module">
+</script><div id="crmDeleteConfirmModal" class="crm-delete-confirm-modal" aria-hidden="true" onclick="crmCancelDeleteParty(event)"><div class="crm-delete-confirm-card" role="dialog" aria-modal="true" aria-labelledby="crmDeleteConfirmTitle" onclick="event.stopPropagation()"><h3 id="crmDeleteConfirmTitle">DELETE PARTY</h3><p id="crmDeleteConfirmText">This action will permanently remove the party and its linked cloud records.</p><div class="crm-delete-confirm-warning"><strong>Transaction data will be deleted.</strong> Quotations, rate history and ledger/payment entries linked to this party will be removed. The <strong>party profile and login account will remain</strong>, so the customer can log in again and still see/edit their profile.</div><input id="crmDeleteConfirmInput" class="crm-delete-confirm-input" type="text" autocomplete="off" placeholder="Type DELETE to confirm" oninput="crmDeleteConfirmInputChanged(this.value)" onkeydown="if(event.key==='Enter') crmConfirmDeleteParty()"><div class="crm-delete-confirm-actions"><button class="crm-delete-confirm-cancel" type="button" onclick="crmCancelDeleteParty()">CANCEL</button><button id="crmDeleteConfirmSubmit" class="crm-delete-confirm-submit" type="button" disabled onclick="crmConfirmDeleteParty()">DELETE</button></div></div></div><style id="seervi-notifications-style">
+.bw-notification-bell{position:relative;width:40px;height:40px;border:1px solid #ffffff35;background:#111;color:#f0c66a;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex:0 0 auto;box-shadow:none}
+.bw-notification-bell:hover{border-color:#f0c66a;background:#171717}
+.bw-bell-icon{font-size:20px;line-height:1;display:block;filter:grayscale(.15)}
+.bw-notification-bell.has-unread{animation:seerviBellPulse 1.8s ease-in-out infinite}
+@keyframes seerviBellPulse{0%,100%{box-shadow:0 0 0 0 #f0c66a00}45%{box-shadow:0 0 0 6px #f0c66a18}}
+.bw-notification-badge{position:absolute;right:-4px;top:-5px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;background:#ef6b67;color:#fff;font-size:8px;font-weight:900;display:flex;align-items:center;justify-content:center;border:2px solid #111}
+.notifications-panel{width:min(720px,96vw);max-height:min(82vh,760px);overflow:hidden}
+.notifications-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;border-bottom:1px solid #ffffff0c;background:#0b1016}
+.notifications-unread-summary{font-size:9px;color:#8f99a4;font-weight:700}
+.notifications-mark-all{border:1px solid #ffffff18;background:#11171e;color:#f0c66a;border-radius:7px;padding:7px 9px;font-size:8px;font-weight:900;letter-spacing:.5px;cursor:pointer}
+.notifications-mark-all:hover{border-color:#f0c66a66;background:#151c23}
+.notifications-mark-all:disabled{opacity:.45;cursor:default}
+.notifications-list{padding:16px;max-height:calc(min(82vh,760px) - 138px);overflow:auto;display:flex;flex-direction:column;gap:10px}
+.notification-card{border:1px solid #ffffff12;background:#0b1016;border-radius:11px;padding:14px 15px}
+.notification-card-new{border-color:#f0c66a55;box-shadow:0 0 0 1px #f0c66a12 inset}
+.notification-card-read{opacity:.72;border-color:#ffffff0d}
+.notification-card-actions{display:flex;justify-content:flex-end;margin-top:10px}
+.notification-mark-read{border:1px solid #ffffff18;background:#11171e;color:#d8b45a;border-radius:7px;padding:7px 9px;font-size:8px;font-weight:900;letter-spacing:.45px;cursor:pointer}
+.notification-mark-read:hover{border-color:#f0c66a66;background:#151c23}
+.notification-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:7px}
+.notification-card-title{font-size:13px;font-weight:900;color:#fff;letter-spacing:.2px}
+.notification-card-time{font-size:8px;color:#7f8994;white-space:nowrap}
+.notification-card-text{font-size:11px;line-height:1.65;color:#c6ced7;white-space:pre-wrap}
+.notification-card-image{display:block;width:100%;max-height:330px;object-fit:contain;background:#070b10;border-radius:8px;margin-top:10px;border:1px solid #ffffff0d}
+.notifications-empty{padding:35px 15px;text-align:center;color:#7f8994;font-size:11px}
+.notification-post-panel{width:min(650px,96vw)}
+.notification-post-body{padding:16px;display:flex;flex-direction:column;gap:10px}
+.notification-post-input,.notification-post-text{width:100%;box-sizing:border-box;background:#090e14;border:1px solid #ffffff18;color:#fff;border-radius:8px;padding:11px;font:inherit;font-size:11px;outline:none}
+.notification-post-input:focus,.notification-post-text:focus{border-color:#f0c66a66}
+.notification-post-text{min-height:150px;resize:vertical;line-height:1.55}
+.notification-photo-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.notification-photo-btn,.notification-photo-remove{border:1px solid #ffffff20;background:#11171d;color:#f0c66a;border-radius:7px;padding:9px 11px;font-size:9px;font-weight:900;letter-spacing:.5px;cursor:pointer}
+.notification-photo-remove{color:#ffaaa3}
+.notification-photo-preview{border:1px solid #ffffff12;background:#070b10;border-radius:9px;padding:7px;max-height:300px;overflow:hidden}
+.notification-photo-preview img{display:block;width:100%;max-height:285px;object-fit:contain;border-radius:6px}
+.notification-post-status{min-height:18px;font-size:10px;color:#7f8994}
+.notification-post-status.ok{color:#7ee2a4}.notification-post-status.err{color:#ffaaa3}
+@media(max-width:560px){.bw-notification-bell{width:36px;height:36px}.bw-bell-icon{font-size:20px}.notifications-list{padding:11px}.notification-card{padding:12px}.notification-card-head{display:block}.notification-card-time{display:block;margin-top:4px}}
+</style>
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously, createUserWithEmailAndPassword, sendPasswordResetEmail
@@ -4317,6 +4384,164 @@ window.accountDashboardMyOrder=function(){
   customerShowDashboard();
 };
 window.accountDashboardCustomerSignOut=function(){closeAccountDashboard();customerSignOut();};
+
+\n/* SEERVI NOTIFICATION CENTER */
+let seerviNotifications=[];
+let seerviNotificationPhotoData='';
+const SEERVI_NOTIFICATION_READ_KEY='seervi_notification_read_v2';
+function notificationReaderKey(){
+  const admin=auth?.currentUser?.uid;
+  const customer=publicSignupAuth?.currentUser?.uid;
+  return `${SEERVI_NOTIFICATION_READ_KEY}_${admin||customer||'device'}`;
+}
+function notificationReadIds(){
+  try{const raw=JSON.parse(localStorage.getItem(notificationReaderKey())||'[]');return new Set(Array.isArray(raw)?raw.map(String):[]);}catch(_){return new Set();}
+}
+function saveNotificationReadIds(set){
+  try{localStorage.setItem(notificationReaderKey(),JSON.stringify(Array.from(set).slice(-500)));}catch(_){}
+}
+function notificationDateValue(n){
+  const ts=n?.createdAt;
+  if(ts?.toDate) return ts.toDate();
+  if(typeof ts==='string'){const d=new Date(ts);if(!Number.isNaN(d.getTime()))return d;}
+  if(typeof ts?.seconds==='number') return new Date(ts.seconds*1000);
+  return new Date(n?.dateISO||0);
+}
+function notificationFormatDate(n){
+  const d=notificationDateValue(n);
+  if(!d || Number.isNaN(d.getTime())) return '';
+  return d.toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+function notificationIsRead(id){return notificationReadIds().has(String(id));}
+function renderNotificationBadge(){
+  const badge=$('bwNotificationBadge'),bell=$('bwNotificationBell'); if(!badge)return;
+  const read=notificationReadIds();
+  const count=seerviNotifications.filter(n=>!read.has(String(n.id))).length;
+  badge.textContent=count>99?'99+':String(count);
+  badge.hidden=count===0;
+  if(bell)bell.classList.toggle('has-unread',count>0);
+}
+function renderNotifications(){
+  const box=$('notificationsList');if(!box)return;
+  if(!seerviNotifications.length){
+    box.innerHTML='<div class="notifications-empty">No notifications yet.</div>';
+    const summary=$('notificationsUnreadSummary');if(summary)summary.textContent='No notifications';
+    return;
+  }
+  const read=notificationReadIds();
+  const unread=seerviNotifications.filter(n=>!read.has(String(n.id))).length;
+  const summary=$('notificationsUnreadSummary');if(summary)summary.textContent=unread?`${unread} unread notification${unread===1?'':'s'}`:'All notifications read';
+  const markAll=$('notificationsMarkAllRead');if(markAll)markAll.disabled=unread===0;
+  box.innerHTML=seerviNotifications.map(n=>{
+    const id=String(n.id), isNew=!read.has(id);
+    const title=esc(n.title||'Important Update');
+    const text=esc(n.text||'');
+    const image=n.imageData?`<img class="notification-card-image" src="${n.imageData}" alt="Notification image" loading="lazy">`:'';
+    return `<article class="notification-card${isNew?' notification-card-new':' notification-card-read'}" data-notification-id="${esc(id)}"><div class="notification-card-head"><div class="notification-card-title">${title}</div><div class="notification-card-time">${esc(notificationFormatDate(n))}${isNew?' · NEW':' · READ'}</div></div>${text?`<div class="notification-card-text">${text}</div>`:''}${image}<div class="notification-card-actions">${isNew?`<button class="notification-mark-read" type="button" onclick="markNotificationRead('${esc(id)}')">MARK READ</button>`:''}</div></article>`;
+  }).join('');
+}
+function markNotificationReadLocal(id){const read=notificationReadIds();read.add(String(id));saveNotificationReadIds(read);}
+window.markNotificationRead=function(id){markNotificationReadLocal(id);renderNotificationBadge();renderNotifications();};
+window.markAllNotificationsRead=function(){
+  if(!seerviNotifications.length)return;
+  const read=notificationReadIds();seerviNotifications.forEach(n=>read.add(String(n.id)));saveNotificationReadIds(read);renderNotificationBadge();renderNotifications();
+};
+async function ensureNotificationReader(){
+  if(publicSignupAuth.currentUser) return;
+  try{await signInAnonymously(publicSignupAuth);}catch(e){console.warn('Notification reader auth unavailable',e);}
+}
+async function loadNotifications(){
+  try{
+    await ensureNotificationReader();
+    const snap=await getDocs(query(collection(publicSignupDb,'notifications'),orderBy('createdAt','desc'),limit(30)));
+    seerviNotifications=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderNotifications();renderNotificationBadge();
+  }catch(e){
+    console.warn('Could not load notifications',e);
+    const box=$('notificationsList');if(box)box.innerHTML='<div class="notifications-empty">Notifications are temporarily unavailable.</div>';
+    const summary=$('notificationsUnreadSummary');if(summary)summary.textContent='Notifications unavailable';
+  }
+}
+window.openNotifications=async function(){
+  const m=$('notificationsModal');if(!m)return;
+  m.classList.add('show');m.setAttribute('aria-hidden','false');
+  await loadNotifications();
+  // Opening the bell does NOT mark notifications as read. Each notice stays unread
+  // until the user explicitly presses MARK READ (or MARK ALL READ).
+  renderNotificationBadge();renderNotifications();
+};
+window.closeNotifications=function(){const m=$('notificationsModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');};
+window.accountDashboardNotifications=function(){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){closeAccountDashboard();openAdminPanel();return;}
+  closeAccountDashboard();
+  const m=$('notificationPostModal');if(!m)return;
+  m.classList.add('show');m.setAttribute('aria-hidden','false');
+  $('notificationPostTitleInput').value='';$('notificationPostText').value='';
+  removeNotificationPhoto();
+  setNotificationPostStatus('');
+};
+window.closeNotificationPost=function(){const m=$('notificationPostModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');};
+function setNotificationPostStatus(msg,type=''){const el=$('notificationPostStatus');if(!el)return;el.textContent=msg||'';el.className='notification-post-status'+(type?' '+type:'');}
+function notificationCompressImage(file){
+  return new Promise((resolve,reject)=>{
+    if(!file){resolve('');return;}
+    if(file.size>8*1024*1024){reject(new Error('Please choose an image below 8 MB.'));return;}
+    const fr=new FileReader();
+    fr.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        const max=1200, scale=Math.min(1,max/Math.max(img.width,img.height));
+        const c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));
+        const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);
+        let q=.78,data=c.toDataURL('image/jpeg',q);
+        while(data.length>720000 && q>.45){q-=.06;data=c.toDataURL('image/jpeg',q);}
+        if(data.length>760000){reject(new Error('This photo is still too large after compression. Please choose a smaller photo.'));return;}
+        resolve(data);
+      };
+      img.onerror=()=>reject(new Error('Could not read this image.'));img.src=fr.result;
+    };
+    fr.onerror=()=>reject(new Error('Could not read this file.'));fr.readAsDataURL(file);
+  });
+}
+window.previewNotificationPhoto=async function(event){
+  const file=event?.target?.files?.[0];if(!file)return;
+  setNotificationPostStatus('Compressing photo…');
+  try{
+    seerviNotificationPhotoData=await notificationCompressImage(file);
+    const preview=$('notificationPhotoPreview');
+    if(preview){preview.hidden=false;preview.innerHTML=`<img src="${seerviNotificationPhotoData}" alt="Photo preview">`;}
+    if($('notificationPhotoRemove'))$('notificationPhotoRemove').hidden=false;
+    setNotificationPostStatus('Photo ready.');
+  }catch(e){removeNotificationPhoto();setNotificationPostStatus(e?.message||'Could not prepare photo.','err');}
+};
+window.removeNotificationPhoto=function(){
+  seerviNotificationPhotoData='';
+  const input=$('notificationPostImage');if(input)input.value='';
+  const preview=$('notificationPhotoPreview');if(preview){preview.hidden=true;preview.innerHTML='';}
+  const btn=$('notificationPhotoRemove');if(btn)btn.hidden=true;
+};
+window.submitNotificationPost=async function(){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){setNotificationPostStatus('Admin access required.','err');return;}
+  const title=($('notificationPostTitleInput')?.value||'').trim();
+  const text=($('notificationPostText')?.value||'').trim();
+  if(!title && !text && !seerviNotificationPhotoData){setNotificationPostStatus('Add some text or a photo first.','err');return;}
+  const btn=$('notificationPostSubmit');if(btn){btn.disabled=true;btn.textContent='POSTING…';}
+  setNotificationPostStatus('Publishing notification…');
+  try{
+    const now=new Date();
+    await addDoc(collection(db,'notifications'),{
+      title:title||'Important Update',text,imageData:seerviNotificationPhotoData||'',
+      dateISO:now.toISOString(),createdAt:serverTimestamp(),createdBy:crmUser.uid,createdByEmail:crmUser.email||''
+    });
+    setNotificationPostStatus('Notification posted successfully.','ok');
+    await loadNotifications();
+    setTimeout(()=>closeNotificationPost(),500);
+  }catch(e){
+    console.error(e);
+    setNotificationPostStatus((e?.message||'Could not post notification.').replace('Firebase: ',''),'err');
+  }finally{if(btn){btn.disabled=false;btn.textContent='POST NOTIFICATION';}}
+};
+setTimeout(()=>loadNotifications(),700);
 
 onAuthStateChanged(publicSignupAuth,user=>{
   customerUser=(user&&!user.isAnonymous)?user:null;
