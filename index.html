@@ -2553,7 +2553,7 @@ body:not(.admin-quote-mode) .cart-note{
 .seervi-ai-fab:hover{border-color:#f0c66a;background:#171e27;transform:translateY(-1px)}
 .seervi-ai-fab[hidden]{display:none!important}
 .seervi-ai-panel{width:min(760px,100%);max-height:92vh;overflow:auto}.seervi-ai-panel~*{}
-#customerAIModal,#adminAIModal{z-index:920}
+#customerAIModal,#adminAIModal{z-index:1200!important}
 .seervi-ai-body{padding:18px 20px 24px}
 .seervi-ai-kicker{color:#f0c66a;font-size:9px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase}
 .seervi-ai-body h4{margin:5px 0 6px;color:#fff;font-size:22px}
@@ -2625,6 +2625,20 @@ body:not(.admin-quote-mode) .cart-note{
 }
 </style>
 
+<style id="seervi-stage-c-controls-fix">
+.seervi-stage-c-search-box{border:1px solid #ffffff12;background:#0b1016;border-radius:11px;padding:12px;margin-bottom:12px}
+.seervi-stage-c-search-title{font-size:8px;font-weight:900;letter-spacing:1px;color:#f0c66a;margin-bottom:7px}
+.seervi-stage-c-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px}
+.seervi-stage-c-search-row input{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #ffffff16;border-radius:8px;background:#080d12;color:#fff;outline:none;font-size:10px}
+.seervi-stage-c-search-row input:focus{border-color:#f0c66a66;box-shadow:0 0 0 2px #f0c66a12}
+.seervi-stage-c-search-row button{border:1px solid #f0c66a;background:#f0c66a;color:#111;border-radius:8px;padding:0 14px;font-size:8px;font-weight:900;letter-spacing:.6px;cursor:pointer}
+.seervi-stage-c-search-hint{margin-top:7px;color:#68737e;font-size:8px;line-height:1.4}
+.seervi-stage-c-divider{display:flex;align-items:center;gap:8px;color:#68737e;font-size:8px;font-weight:900;letter-spacing:.8px;margin:10px 0}
+.seervi-stage-c-divider:before,.seervi-stage-c-divider:after{content:"";height:1px;background:#ffffff0d;flex:1}
+.seervi-stage-c-file-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.seervi-stage-c-file.camera{border-color:#f0c66a55}
+@media(max-width:500px){.seervi-stage-c-search-row{grid-template-columns:1fr}.seervi-stage-c-search-row button{height:38px}.seervi-stage-c-file-actions{display:grid;grid-template-columns:1fr 1fr}.seervi-stage-c-file{width:auto!important}}
+</style>
 <style id="seervi-stage-c-style">
 .seervi-stage-c-fab{position:fixed;right:22px;bottom:92px;z-index:620;display:none;border:1px solid #ffffff22;background:#11171e;color:#fff;border-radius:999px;padding:11px 15px;font-size:10px;font-weight:900;letter-spacing:.7px;box-shadow:0 10px 28px #0008;cursor:pointer}.seervi-stage-c-fab:hover{border-color:#f0c66a;color:#f0c66a}
 .seervi-stage-c-modal{position:fixed;inset:0;z-index:900;display:none;align-items:center;justify-content:center;padding:18px}.seervi-stage-c-modal.show{display:flex}.seervi-stage-c-backdrop{position:absolute;inset:0;background:#000b;backdrop-filter:blur(3px)}.seervi-stage-c-panel{position:relative;width:min(920px,96vw);max-height:90vh;overflow:auto;background:#0b1016;border:1px solid #ffffff18;border-radius:16px;box-shadow:0 25px 80px #000c;color:#fff}.seervi-stage-c-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #ffffff10}.seervi-stage-c-head h3{margin:2px 0;font-size:18px}.seervi-stage-c-kicker{font-size:8px;font-weight:900;letter-spacing:1.2px;color:#7f8994}.seervi-stage-c-close{border:0;background:#ffffff0b;color:#fff;border-radius:7px;width:32px;height:32px;font-size:20px;cursor:pointer}.seervi-stage-c-body{padding:18px 20px 22px}.seervi-stage-c-drop{border:1px dashed #ffffff25;border-radius:13px;padding:24px;text-align:center;background:#0a0f14}.seervi-stage-c-drop strong{display:block;font-size:13px}.seervi-stage-c-drop span{display:block;color:#7f8994;font-size:9px;margin:6px 0 14px}.seervi-stage-c-file{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:7px;background:#f0c66a;color:#111;font-size:9px;font-weight:900;cursor:pointer}.seervi-stage-c-file input{display:none}.seervi-stage-c-preview{display:none;grid-template-columns:150px 1fr;gap:14px;margin-top:14px}.seervi-stage-c-preview.show{display:grid}.seervi-stage-c-preview img{width:150px;height:150px;object-fit:contain;border-radius:10px;background:#05080b;border:1px solid #ffffff12}.seervi-stage-c-status{padding:12px;border:1px solid #ffffff12;border-radius:9px;background:#0a0f14;color:#9aa4af;font-size:10px;line-height:1.5}.seervi-stage-c-results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}.seervi-stage-c-card{border:1px solid #ffffff12;background:#10161d;border-radius:10px;overflow:hidden}.seervi-stage-c-card img{width:100%;height:135px;object-fit:contain;background:#0a0f14}.seervi-stage-c-card-body{padding:10px}.seervi-stage-c-card-name{font-size:11px;font-weight:900;color:#fff}.seervi-stage-c-card-meta{font-size:8px;color:#7f8994;margin-top:4px;line-height:1.45}.seervi-stage-c-score{font-size:8px;font-weight:900;color:#f0c66a;margin-top:7px}.seervi-stage-c-view{margin-top:8px;width:100%;border:1px solid #ffffff16;background:#151c24;color:#fff;border-radius:6px;padding:7px;font-size:8px;font-weight:900;cursor:pointer}.seervi-stage-c-view:hover{border-color:#f0c66a}.seervi-stage-c-recs{margin-top:18px}.seervi-stage-c-recs h4{font-size:11px;margin:0 0 8px}.seervi-stage-c-note{font-size:8px;color:#69737e;line-height:1.5;margin-top:10px}
@@ -2745,7 +2759,7 @@ function closeProfile(e){
       <button class="account-dashboard-option" type="button" onclick="accountDashboardBackup()"><span>⇩</span><strong>BACKUP DATA</strong><small>Download your CRM business backup</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardStock()"><span>▤</span><strong>STOCK</strong><small>Control catalogue item availability</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardNotificationPost()"><span>🔔</span><strong>NOTIFICATION POST</strong><small>Send an important notice to everyone</small></button>
-      <button class="account-dashboard-option" type="button" onclick="accountDashboardAIAssistant()"><span>✦</span><strong>SEERVI AI</strong><small>Stock insights & supplier message assistant</small></button>
+      <button class="account-dashboard-option" type="button" onclick="openAdminAI()"><span>✦</span><strong>SEERVI AI</strong><small>Stock insights & supplier message assistant</small></button>
       <button class="account-dashboard-option danger" type="button" onclick="accountDashboardSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your admin session</small></button>
     </div>
     <div id="customerDashboardOptions" class="account-dashboard-options" hidden aria-label="Customer dashboard options">
@@ -7633,7 +7647,22 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
   <div class="seervi-stage-c-panel" role="dialog" aria-modal="true" aria-labelledby="stageCTitle" onclick="event.stopPropagation()">
     <div class="seervi-stage-c-head"><div><div class="seervi-stage-c-kicker">SEERVI TRADING / VISUAL PRODUCT FINDER</div><h3 id="stageCTitle">Find a Product by Photo</h3></div><button class="seervi-stage-c-close" type="button" onclick="closeStageCImageFinder()">×</button></div>
     <div class="seervi-stage-c-body">
-      <div class="seervi-stage-c-drop"><strong>Upload a product photo</strong><span>I'll compare the photo with Seervi catalogue images and suggest the closest matches.</span><label class="seervi-stage-c-file">📷 CHOOSE PHOTO<input id="seerviStageCFile" type="file" accept="image/*"></label></div>
+      <div class="seervi-stage-c-search-box">
+        <div class="seervi-stage-c-search-title">SEARCH BY TEXT</div>
+        <div class="seervi-stage-c-search-row">
+          <input id="seerviStageCText" type="search" placeholder="Type model, category or requirement…" autocomplete="off">
+          <button id="seerviStageCTextBtn" type="button">SEARCH</button>
+        </div>
+        <div class="seervi-stage-c-search-hint">Example: 55 inch TV mount, concealed profile, cutting blade, earth auger</div>
+      </div>
+      <div class="seervi-stage-c-divider"><span>OR FIND BY PHOTO</span></div>
+      <div class="seervi-stage-c-drop">
+        <strong>Take a photo or choose one</strong><span>Use your camera for a live product photo, or select an existing image.</span>
+        <div class="seervi-stage-c-file-actions">
+          <label class="seervi-stage-c-file camera">📷 CAMERA<input id="seerviStageCCamera" type="file" accept="image/*" capture="environment"></label>
+          <label class="seervi-stage-c-file">🖼 CHOOSE PHOTO<input id="seerviStageCFile" type="file" accept="image/*"></label>
+        </div>
+      </div>
       <div id="seerviStageCPreview" class="seervi-stage-c-preview"><img id="seerviStageCPreviewImg" alt="Uploaded product preview"><div id="seerviStageCStatus" class="seervi-stage-c-status">Preparing visual comparison…</div></div>
       <div id="seerviStageCResults" class="seervi-stage-c-results"></div>
       <div id="seerviStageCRecs" class="seervi-stage-c-recs"></div>
@@ -7649,6 +7678,9 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
   const fab=document.getElementById('seerviStageCFab');
   const modal=document.getElementById('seerviStageCModal');
   const fileInput=document.getElementById('seerviStageCFile');
+  const cameraInput=document.getElementById('seerviStageCCamera');
+  const textInput=document.getElementById('seerviStageCText');
+  const textBtn=document.getElementById('seerviStageCTextBtn');
   const preview=document.getElementById('seerviStageCPreview');
   const previewImg=document.getElementById('seerviStageCPreviewImg');
   const status=document.getElementById('seerviStageCStatus');
@@ -7683,10 +7715,33 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
     results.querySelectorAll('.seervi-stage-c-view').forEach(btn=>btn.addEventListener('click',()=>{const x=all.find(y=>String(y.key)===String(btn.dataset.key));if(x&&x.card){closeStageCImageFinder();x.card.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>x.card.click(),120);}}));
     const best=top[0]?.item;if(best){const similar=all.filter(x=>x.key!==best.key&&x.type===best.type).slice(0,4);if(similar.length){recs.innerHTML='<h4>More from the same category</h4><div class="seervi-stage-c-results">'+similar.map(x=>`<div class="seervi-stage-c-card"><img src="${escC(imagePath(x))}" alt="${escC(x.model)}"><div class="seervi-stage-c-card-body"><div class="seervi-stage-c-card-name">${escC(x.model)}</div><div class="seervi-stage-c-card-meta">${escC(x.type||'Product')}</div><div class="seervi-stage-c-score">${stockFor(x)?'AVAILABLE':'OUT OF STOCK'}</div></div></div>`).join('')+'</div>';}}
   }
-  window.openStageCImageFinder=function(){if(!customerOnly())return;if(!modal)return;modal.classList.add('show');modal.setAttribute('aria-hidden','false');};
+  function textSearch(q){
+    const query=String(q||'').trim().toLowerCase();
+    if(!query){status.textContent='Type a product requirement first.';results.innerHTML='';recs.innerHTML='';return;}
+    const tokens=query.split(/[^a-z0-9]+/).filter(t=>t.length>1);
+    const scored=items().map(x=>{
+      const text=[x.model,x.type,x.text,x.spec].join(' ').toLowerCase(); let score=0;
+      tokens.forEach(t=>{if(text.includes(t))score+=t.length>=4?3:2;});
+      if(/tv|television|wall.?mount/.test(query)&&/tv|mount/.test(text))score+=5;
+      if(/profile|aluminium|aluminum|concealed|surface/.test(query)&&/profile/.test(text))score+=5;
+      if(/blade|cutting|diamond/.test(query)&&/blade/.test(text))score+=5;
+      if(/auger|earth|boring/.test(query)&&/auger/.test(text))score+=5;
+      return {...x,score};
+    }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,8);
+    preview.classList.remove('show');
+    if(!scored.length){status.textContent='No close catalogue match found. Try a model number or simpler requirement.';results.innerHTML='<div class="seervi-stage-c-empty">No matching products found.</div>';recs.innerHTML='';return;}
+    status.textContent=`Found ${scored.length} catalogue match${scored.length===1?'':'es'} for “${q}”.`;
+    results.innerHTML=scored.map(x=>`<div class="seervi-stage-c-card"><img src="${escC(imagePath(x))}" alt="${escC(x.model)}"><div class="seervi-stage-c-card-body"><div class="seervi-stage-c-card-name">${escC(x.model)}</div><div class="seervi-stage-c-card-meta">${escC(x.type||'Product')} · ${escC(x.text||'')}</div><div class="seervi-stage-c-score">${stockFor(x)?'AVAILABLE':'OUT OF STOCK'}</div><button class="seervi-stage-c-view" type="button" data-key="${escC(x.key)}">VIEW PRODUCT</button></div></div>`).join('');
+    results.querySelectorAll('.seervi-stage-c-view').forEach(btn=>btn.addEventListener('click',()=>{const x=scored.find(y=>String(y.key)===String(btn.dataset.key));if(x&&x.card){closeStageCImageFinder();x.card.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>x.card.click(),120);}}));
+  }
+  window.openStageCImageFinder=function(){if(!customerOnly())return;if(!modal)return;modal.classList.add('show');modal.setAttribute('aria-hidden','false');setTimeout(()=>textInput?.focus(),60);};
   window.closeStageCImageFinder=function(){if(!modal)return;modal.classList.remove('show');modal.setAttribute('aria-hidden','true');};
-  if(fileInput)fileInput.addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;if(!f.type.startsWith('image/')){status.textContent='Please choose an image file.';return;}match(f).catch(()=>{status.textContent='Could not analyse that photo. Please try another image.';});});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeStageCImageFinder();});
+  function handlePhoto(e){const f=e.target.files?.[0];if(!f)return;if(!f.type.startsWith('image/')){status.textContent='Please choose an image file.';return;}match(f).catch(()=>{status.textContent='Could not analyse that photo. Please try another image.';});}
+  if(fileInput)fileInput.addEventListener('change',handlePhoto);
+  if(cameraInput)cameraInput.addEventListener('change',handlePhoto);
+  if(textBtn)textBtn.addEventListener('click',()=>textSearch(textInput?.value||''));
+  if(textInput)textInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();textSearch(textInput.value);}});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeStageCImageFinder();closeAdminAI();}});
   function update(){if(fab)fab.style.display=customerOnly()?'inline-flex':'none';if(!customerOnly()&&modal)closeStageCImageFinder();}
   update();setInterval(update,1000);
 })();
