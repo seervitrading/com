@@ -2624,6 +2624,13 @@ body:not(.admin-quote-mode) .cart-note{
  .seervi-ai-view{grid-column:2;justify-self:start}
 }
 </style>
+
+<style id="seervi-stage-c-style">
+.seervi-stage-c-fab{position:fixed;right:22px;bottom:92px;z-index:620;display:none;border:1px solid #ffffff22;background:#11171e;color:#fff;border-radius:999px;padding:11px 15px;font-size:10px;font-weight:900;letter-spacing:.7px;box-shadow:0 10px 28px #0008;cursor:pointer}.seervi-stage-c-fab:hover{border-color:#f0c66a;color:#f0c66a}
+.seervi-stage-c-modal{position:fixed;inset:0;z-index:900;display:none;align-items:center;justify-content:center;padding:18px}.seervi-stage-c-modal.show{display:flex}.seervi-stage-c-backdrop{position:absolute;inset:0;background:#000b;backdrop-filter:blur(3px)}.seervi-stage-c-panel{position:relative;width:min(920px,96vw);max-height:90vh;overflow:auto;background:#0b1016;border:1px solid #ffffff18;border-radius:16px;box-shadow:0 25px 80px #000c;color:#fff}.seervi-stage-c-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #ffffff10}.seervi-stage-c-head h3{margin:2px 0;font-size:18px}.seervi-stage-c-kicker{font-size:8px;font-weight:900;letter-spacing:1.2px;color:#7f8994}.seervi-stage-c-close{border:0;background:#ffffff0b;color:#fff;border-radius:7px;width:32px;height:32px;font-size:20px;cursor:pointer}.seervi-stage-c-body{padding:18px 20px 22px}.seervi-stage-c-drop{border:1px dashed #ffffff25;border-radius:13px;padding:24px;text-align:center;background:#0a0f14}.seervi-stage-c-drop strong{display:block;font-size:13px}.seervi-stage-c-drop span{display:block;color:#7f8994;font-size:9px;margin:6px 0 14px}.seervi-stage-c-file{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:7px;background:#f0c66a;color:#111;font-size:9px;font-weight:900;cursor:pointer}.seervi-stage-c-file input{display:none}.seervi-stage-c-preview{display:none;grid-template-columns:150px 1fr;gap:14px;margin-top:14px}.seervi-stage-c-preview.show{display:grid}.seervi-stage-c-preview img{width:150px;height:150px;object-fit:contain;border-radius:10px;background:#05080b;border:1px solid #ffffff12}.seervi-stage-c-status{padding:12px;border:1px solid #ffffff12;border-radius:9px;background:#0a0f14;color:#9aa4af;font-size:10px;line-height:1.5}.seervi-stage-c-results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}.seervi-stage-c-card{border:1px solid #ffffff12;background:#10161d;border-radius:10px;overflow:hidden}.seervi-stage-c-card img{width:100%;height:135px;object-fit:contain;background:#0a0f14}.seervi-stage-c-card-body{padding:10px}.seervi-stage-c-card-name{font-size:11px;font-weight:900;color:#fff}.seervi-stage-c-card-meta{font-size:8px;color:#7f8994;margin-top:4px;line-height:1.45}.seervi-stage-c-score{font-size:8px;font-weight:900;color:#f0c66a;margin-top:7px}.seervi-stage-c-view{margin-top:8px;width:100%;border:1px solid #ffffff16;background:#151c24;color:#fff;border-radius:6px;padding:7px;font-size:8px;font-weight:900;cursor:pointer}.seervi-stage-c-view:hover{border-color:#f0c66a}.seervi-stage-c-recs{margin-top:18px}.seervi-stage-c-recs h4{font-size:11px;margin:0 0 8px}.seervi-stage-c-note{font-size:8px;color:#69737e;line-height:1.5;margin-top:10px}
+@media(max-width:700px){.seervi-stage-c-fab{right:14px;bottom:84px}.seervi-stage-c-results{grid-template-columns:1fr 1fr}.seervi-stage-c-preview{grid-template-columns:1fr}.seervi-stage-c-preview img{width:100%;height:190px}.seervi-stage-c-panel{max-height:94vh}.seervi-stage-c-body{padding:14px}}
+@media(max-width:480px){.seervi-stage-c-results{grid-template-columns:1fr}}
+</style>
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="logo">SEERVI <span>TRADING</span></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a></div><a class="btn" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -7344,12 +7351,20 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
     <div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / AI ASSISTANT</div><h3 id="adminAITitle">Seervi AI</h3><div class="crm-auth-status">Private admin workspace — stock insights & supplier drafts.</div></div><button class="crm-close" type="button" onclick="closeAdminAI()">×</button></div>
     <div class="seervi-ai-body">
       <div class="seervi-ai-kicker">ADMIN ASSISTANT</div><h4>Business & Stock Assistant</h4><p class="seervi-ai-sub">This private assistant reads the current catalogue/stock data in this browser. It cannot change stock, prices or publish anything.</p>
-      <div class="seervi-ai-chips"><button class="seervi-ai-chip" type="button" onclick="adminAIStockSummary()">STOCK SUMMARY</button><button class="seervi-ai-chip" type="button" onclick="adminAILowStock()">LOW STOCK</button><button class="seervi-ai-chip" type="button" onclick="adminAIOutStock()">OUT OF STOCK</button></div>
+      <div class="seervi-ai-chips"><button class="seervi-ai-chip" type="button" onclick="adminAIStockSummary()">STOCK SUMMARY</button><button class="seervi-ai-chip" type="button" onclick="adminAILowStock()">LOW STOCK</button><button class="seervi-ai-chip" type="button" onclick="adminAIOutStock()">OUT OF STOCK</button></div><div class="seervi-stage-b-grid"><button class="seervi-stage-b-card" type="button" onclick="adminAIQuoteDraft()">📋 QUOTATION DRAFT</button><button class="seervi-stage-b-card" type="button" onclick="adminAIBusinessInsights()">📊 BUSINESS INSIGHTS</button><button class="seervi-stage-b-card" type="button" onclick="adminAISupplierMessage()">✉ SUPPLIER MESSAGE</button><button class="seervi-stage-b-card" type="button" onclick="adminAIReorderList()">📦 REORDER LIST</button></div>
       <div class="seervi-ai-input-row"><input id="adminAIInput" class="seervi-ai-input" type="text" placeholder="e.g. best price for DZ43, 20 pcs" autocomplete="off"><button class="seervi-ai-submit" type="button" onclick="runAdminAI()">GENERATE</button></div>
       <div id="adminAIResult" class="seervi-ai-result"><strong>Admin only.</strong><p>Use the buttons above for stock insights or enter a supplier requirement to draft a message.</p></div>
     </div>
   </div>
 </div>
+<style id="seervi-stage-b-style">
+.seervi-stage-b-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+.seervi-stage-b-card{border:1px solid #ffffff12;background:#0d131a;border-radius:9px;padding:10px;text-align:left;color:#fff;cursor:pointer;font-size:9px;font-weight:900;letter-spacing:.6px}
+.seervi-stage-b-card:hover{border-color:#f0c66a66;background:#111920}
+.seervi-stage-b-note{font-size:9px;color:#7f8994;line-height:1.5;margin:8px 0}
+.seervi-stage-b-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:9px}.seervi-stage-b-table th,.seervi-stage-b-table td{padding:7px;border-bottom:1px solid #ffffff0d;text-align:left}.seervi-stage-b-table th{color:#7f8994;font-size:8px;letter-spacing:.6px}.seervi-stage-b-table td strong{color:#fff}.seervi-stage-b-copy{width:100%;min-height:150px;box-sizing:border-box;background:#080d12;color:#dfe5eb;border:1px solid #ffffff12;border-radius:8px;padding:10px;font-size:10px;line-height:1.55;resize:vertical;margin-top:10px}
+@media(max-width:600px){.seervi-stage-b-grid{grid-template-columns:1fr}}
+</style>
 <script id="seervi-ai-features-script">
 (function(){
   const $=id=>document.getElementById(id);
@@ -7438,6 +7453,44 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
     const names=matches.slice(0,5).map(x=>x.model).join(', ');
     const msg=`Hello,\n\nPlease provide your best MOQ price for ${names||'the following items'}.${qty?' Required quantity: '+qty+' pcs.':''}\n\nPlease also share packing details, net weight, carton dimensions and lead time.\n\nThank you.`;
     showAdmin(`<strong>Supplier message draft</strong><div class="seervi-ai-message">${esc(msg)}</div><p>You can copy this draft and send it after checking the model/quantity.</p>`);
+  };
+  function adminCartItems(){
+    try{return Array.isArray(window.seerviCart)?window.seerviCart.filter(x=>Number(x.qty)>0):[];}catch(e){return []}
+  }
+  window.adminAIQuoteDraft=function(){
+    if(!isAdmin())return;
+    const items=adminCartItems();
+    if(!items.length){showAdmin('<strong>Quotation draft is ready.</strong><p>Admin cart is empty. Add/select products in the quotation cart first, then generate the draft.</p>');return;}
+    const rows=items.map((x,i)=>`<tr><td>${i+1}</td><td><strong>${esc(x.name||x.model||'Item')}</strong><br><span style="color:#7f8994">${esc(x.model||'')}${x.thickness?' · '+esc(x.thickness):''}</span></td><td>${Number(x.qty||0)}</td><td>₹${Number(x.rate||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}</td><td>₹${(Number(x.qty||0)*Number(x.rate||0)).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}</td></tr>`).join('');
+    const total=items.reduce((a,x)=>a+Number(x.qty||0)*Number(x.rate||0),0);
+    showAdmin(`<strong>Quotation draft — admin review required</strong><p class="seervi-stage-b-note">AI only prepared this draft from the current quotation cart. Nothing has been saved, sent or changed.</p><table class="seervi-stage-b-table"><thead><tr><th>#</th><th>ITEM</th><th>QTY</th><th>RATE</th><th>AMOUNT</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td colspan="4"><strong>SUBTOTAL</strong></td><td><strong>₹${total.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}</strong></td></tr></tfoot></table><p class="seervi-stage-b-note">Final quotation, GST, stock deduction and saving remain under the existing Admin controls.</p>`);
+  };
+  window.adminAISupplierMessage=function(){
+    if(!isAdmin())return;
+    const items=adminCartItems();
+    const source=items.length?items:adminItems().slice(0,5);
+    if(!source.length){showAdmin('<strong>No products available.</strong><p>Load the catalogue first.</p>');return;}
+    const lines=source.map(x=>`• ${x.model||x.name||'Item'}${x.spec||x.thickness?' — '+(x.spec||x.thickness):''}${x.qty?' — Qty '+x.qty+' pcs':''}`).join('\n');
+    const msg=`Hello,\n\nPlease share your best factory/MOQ price for the following items:\n\n${lines}\n\nPlease also share packing details, net weight, carton dimensions, lead time and available shipping terms.\n\nThank you.`;
+    showAdmin(`<strong>Supplier message draft</strong><textarea class="seervi-stage-b-copy" readonly>${esc(msg)}</textarea><p class="seervi-stage-b-note">Copy, review and send manually. No supplier message is sent automatically.</p>`);
+  };
+  window.adminAIReorderList=function(){
+    if(!isAdmin())return;
+    const s=adminStats();
+    const list=s.items.map(x=>({...x,qty:qtyFor(x),stock:stockFor(x)})).filter(x=>x.stock && x.qty!==null && x.qty<=10).sort((a,b)=>(a.qty??999)-(b.qty??999));
+    if(!list.length){showAdmin('<strong>No immediate reorder candidates.</strong><p>Current rule: available quantity 10 or less.</p>');return;}
+    showAdmin('<strong>Suggested reorder list</strong><p class="seervi-stage-b-note">This is a suggestion only. AI does not create purchase orders.</p><table class="seervi-stage-b-table"><thead><tr><th>MODEL</th><th>CATEGORY</th><th>AVAILABLE</th><th>ACTION</th></tr></thead><tbody>'+list.map(x=>`<tr><td><strong>${esc(x.model)}</strong></td><td>${esc(x.type)}</td><td>${x.qty}</td><td>${x.qty<=3?'URGENT':'REVIEW'}</td></tr>`).join('')+'</tbody></table>');
+  };
+  window.adminAIBusinessInsights=function(){
+    if(!isAdmin())return;
+    const s=adminStats();
+    const quotes=Array.isArray(window.crmQuotes)?window.crmQuotes:[];
+    const parties=Array.isArray(window.crmParties)?window.crmParties:[];
+    const billed=quotes.reduce((sum,q)=>sum+Number(q.grandTotal??q.total??q.amount??0),0);
+    const quoteCount=quotes.length;
+    const partyCount=parties.length;
+    const noRate=adminItems().filter(x=>Number(qtyFor(x))>=0 && !Number(x.rate||0)).length;
+    showAdmin(`<strong>Business snapshot</strong><div class="seervi-ai-stat-grid"><div class="seervi-ai-stat"><b>${partyCount}</b><span>PARTIES LOADED</span></div><div class="seervi-ai-stat"><b>${quoteCount}</b><span>QUOTATIONS LOADED</span></div><div class="seervi-ai-stat"><b>₹${billed.toLocaleString('en-IN',{maximumFractionDigits:0})}</b><span>QUOTE VALUE</span></div><div class="seervi-ai-stat"><b>${s.low}</b><span>LOW STOCK</span></div></div><p class="seervi-stage-b-note">Catalogue: ${s.items.length} items · ${s.inStock} in stock · ${s.out} out of stock. ${noRate} catalogue items have no rate attached in the current cart/catalogue context.</p><p class="seervi-stage-b-note">Insights are based only on data currently loaded in this admin session. No data was modified.</p>`);
   };
   window.accountDashboardAIAssistant=function(){if(!isAdmin()){return;}openAdminAI();};
   function installRoleGuards(){updateAIVisibility();}
@@ -7571,6 +7624,71 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
   window.askSeerviAI=function(){const q=document.getElementById('seerviAiQuery')?.value.trim();if(!q){setStatus('Type a product requirement first.');return;}render(q);};
   window.seerviAiUseChip=function(q){const e=document.getElementById('seerviAiQuery');if(e)e.value=q;render(q);};
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSeerviAI();});
+})();
+</script>
+
+<button id="seerviStageCFab" class="seervi-stage-c-fab" type="button" onclick="openStageCImageFinder()">✦ FIND BY PHOTO</button>
+<div id="seerviStageCModal" class="seervi-stage-c-modal" aria-hidden="true">
+  <div class="seervi-stage-c-backdrop" onclick="closeStageCImageFinder()"></div>
+  <div class="seervi-stage-c-panel" role="dialog" aria-modal="true" aria-labelledby="stageCTitle" onclick="event.stopPropagation()">
+    <div class="seervi-stage-c-head"><div><div class="seervi-stage-c-kicker">SEERVI TRADING / VISUAL PRODUCT FINDER</div><h3 id="stageCTitle">Find a Product by Photo</h3></div><button class="seervi-stage-c-close" type="button" onclick="closeStageCImageFinder()">×</button></div>
+    <div class="seervi-stage-c-body">
+      <div class="seervi-stage-c-drop"><strong>Upload a product photo</strong><span>I'll compare the photo with Seervi catalogue images and suggest the closest matches.</span><label class="seervi-stage-c-file">📷 CHOOSE PHOTO<input id="seerviStageCFile" type="file" accept="image/*"></label></div>
+      <div id="seerviStageCPreview" class="seervi-stage-c-preview"><img id="seerviStageCPreviewImg" alt="Uploaded product preview"><div id="seerviStageCStatus" class="seervi-stage-c-status">Preparing visual comparison…</div></div>
+      <div id="seerviStageCResults" class="seervi-stage-c-results"></div>
+      <div id="seerviStageCRecs" class="seervi-stage-c-recs"></div>
+      <div class="seervi-stage-c-note">Visual matching is a catalogue-assistance feature. It does not change stock, prices, quotations, accounts or any Firebase data.</div>
+    </div>
+  </div>
+</div>
+
+<script id="seervi-stage-c-script">
+/* ===== SEERVI STAGE C — CUSTOMER VISUAL FINDER / RECOMMENDATIONS =====
+   Customer-facing only. No admin actions and no Firebase writes. */
+(function(){
+  const fab=document.getElementById('seerviStageCFab');
+  const modal=document.getElementById('seerviStageCModal');
+  const fileInput=document.getElementById('seerviStageCFile');
+  const preview=document.getElementById('seerviStageCPreview');
+  const previewImg=document.getElementById('seerviStageCPreviewImg');
+  const status=document.getElementById('seerviStageCStatus');
+  const results=document.getElementById('seerviStageCResults');
+  const recs=document.getElementById('seerviStageCRecs');
+  function customerOnly(){return typeof isAdmin==='function' ? !isAdmin() : true;}
+  function escC(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  function items(){
+    try{return (typeof seerviInventoryItems!=='undefined'&&Array.isArray(seerviInventoryItems)?seerviInventoryItems:[]).filter(x=>x&&x.image&&x.model);}
+    catch(e){return [];}
+  }
+  function stockFor(x){try{return typeof seerviInventoryState!=='undefined' ? seerviInventoryState[x.key]!==false : true}catch(e){return true}}
+  function imagePath(x){return String(x.image||'').replace(/^\.\//,'');}
+  function openImg(src){return new Promise((resolve,reject)=>{const im=new Image();im.crossOrigin='anonymous';im.onload=()=>resolve(im);im.onerror=()=>reject(new Error('image'));im.src=src+(src.includes('?')?'&':'?')+'v=1';});}
+  function hist(img){
+    const c=document.createElement('canvas'),n=48;c.width=n;c.height=n;const ctx=c.getContext('2d',{willReadFrequently:true});
+    ctx.drawImage(img,0,0,n,n);const d=ctx.getImageData(0,0,n,n).data;const bins=new Array(18).fill(0), bright=new Array(6).fill(0), edges=new Array(6).fill(0);let total=0;
+    for(let i=0;i<d.length;i+=4){const r=d[i],g=d[i+1],b=d[i+2],a=d[i+3]/255;if(a<.15)continue;const mx=Math.max(r,g,b),mn=Math.min(r,g,b);const v=mx/255;const h=(mx===mn?0:mx===r?((g-b)/(mx-mn)+6)%6:mx===g?(b-r)/(mx-mn)+2:(r-g)/(mx-mn)+4);bins[Math.min(17,Math.floor(h/6*18))]++;bright[Math.min(5,Math.floor(v*6))]++;total++;}
+    if(total){for(let i=0;i<bins.length;i++)bins[i]/=total;for(let i=0;i<bright.length;i++)bright[i]/=total;}
+    return bins.concat(bright);
+  }
+  function distance(a,b){let s=0,n=Math.min(a.length,b.length);for(let i=0;i<n;i++){const d=a[i]-b[i];s+=d*d;}return Math.sqrt(s);}
+  async function match(file){
+    results.innerHTML='';recs.innerHTML='';preview.classList.add('show');status.textContent='Analysing the uploaded photo and comparing catalogue images…';
+    const local=URL.createObjectURL(file);previewImg.src=local;
+    const uploaded=await openImg(local);const uh=hist(uploaded);const all=items();const scored=[];
+    for(const item of all){try{const im=await openImg(imagePath(item));const d=distance(uh,hist(im));scored.push({item,d});}catch(e){/* skip images that cannot be read */}}
+    scored.sort((a,b)=>a.d-b.d);const top=scored.slice(0,6);
+    if(!top.length){status.textContent='I could not compare the catalogue images in this browser. Try a clearer photo or use Ask Seervi AI.';return;}
+    const max=top[top.length-1].d||1;status.textContent=`Found ${top.length} closest catalogue matches. Results are visual suggestions, not an exact model certification.`;
+    results.innerHTML=top.map((r,i)=>{const x=r.item;const pct=Math.max(1,Math.round(100-(r.d/max)*48));return `<div class="seervi-stage-c-card"><img src="${escC(imagePath(x))}" alt="${escC(x.model)}"><div class="seervi-stage-c-card-body"><div class="seervi-stage-c-card-name">${escC(x.model)}</div><div class="seervi-stage-c-card-meta">${escC(x.type||'Product')} · ${escC(x.text||'')}</div><div class="seervi-stage-c-score">VISUAL MATCH ${pct}% · ${stockFor(x)?'AVAILABLE':'OUT OF STOCK'}</div><button class="seervi-stage-c-view" type="button" data-key="${escC(x.key)}">VIEW PRODUCT</button></div></div>`}).join('');
+    results.querySelectorAll('.seervi-stage-c-view').forEach(btn=>btn.addEventListener('click',()=>{const x=all.find(y=>String(y.key)===String(btn.dataset.key));if(x&&x.card){closeStageCImageFinder();x.card.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>x.card.click(),120);}}));
+    const best=top[0]?.item;if(best){const similar=all.filter(x=>x.key!==best.key&&x.type===best.type).slice(0,4);if(similar.length){recs.innerHTML='<h4>More from the same category</h4><div class="seervi-stage-c-results">'+similar.map(x=>`<div class="seervi-stage-c-card"><img src="${escC(imagePath(x))}" alt="${escC(x.model)}"><div class="seervi-stage-c-card-body"><div class="seervi-stage-c-card-name">${escC(x.model)}</div><div class="seervi-stage-c-card-meta">${escC(x.type||'Product')}</div><div class="seervi-stage-c-score">${stockFor(x)?'AVAILABLE':'OUT OF STOCK'}</div></div></div>`).join('')+'</div>';}}
+  }
+  window.openStageCImageFinder=function(){if(!customerOnly())return;if(!modal)return;modal.classList.add('show');modal.setAttribute('aria-hidden','false');};
+  window.closeStageCImageFinder=function(){if(!modal)return;modal.classList.remove('show');modal.setAttribute('aria-hidden','true');};
+  if(fileInput)fileInput.addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;if(!f.type.startsWith('image/')){status.textContent='Please choose an image file.';return;}match(f).catch(()=>{status.textContent='Could not analyse that photo. Please try another image.';});});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeStageCImageFinder();});
+  function update(){if(fab)fab.style.display=customerOnly()?'inline-flex':'none';if(!customerOnly()&&modal)closeStageCImageFinder();}
+  update();setInterval(update,1000);
 })();
 </script>
 </body></html>
