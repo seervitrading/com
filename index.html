@@ -7247,4 +7247,132 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
     }
   });
 })();
-</script></body></html>
+</script>
+<style id="seervi-smart-ai-style">
+/* SEERVI SMART AI — client-side assistant, no new Firebase collection required */
+.seervi-ai-fab{position:fixed;right:22px;bottom:88px;z-index:980;width:52px;height:52px;border:1px solid #f0c66a66;border-radius:50%;background:linear-gradient(145deg,#171b20,#0b0f13);color:#f0c66a;font-weight:1000;font-size:11px;letter-spacing:.7px;box-shadow:0 12px 30px #0008;cursor:pointer}
+.seervi-ai-fab:hover{transform:translateY(-2px);border-color:#f0c66a}
+.seervi-ai-modal{position:fixed;inset:0;z-index:1100;display:none;align-items:center;justify-content:center;padding:18px;background:#0009;backdrop-filter:blur(7px)}
+.seervi-ai-modal.open{display:flex}
+.seervi-ai-card{width:min(760px,100%);max-height:88vh;overflow:auto;border:1px solid #ffffff18;border-radius:16px;background:#0b1016;box-shadow:0 28px 90px #000c}
+.seervi-ai-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding:18px 20px;border-bottom:1px solid #ffffff10}
+.seervi-ai-kicker{font-size:8px;font-weight:1000;letter-spacing:1.4px;color:#f0c66a}
+.seervi-ai-head h3{margin:5px 0 3px;color:#fff;font-size:21px}
+.seervi-ai-head p{margin:0;color:#7f8994;font-size:10px}
+.seervi-ai-close{width:36px;height:36px;border:1px solid #ffffff16;border-radius:50%;background:#11171e;color:#fff;font-size:20px;cursor:pointer}
+.seervi-ai-body{padding:18px 20px 20px}
+.seervi-ai-actions{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.seervi-ai-action{border:1px solid #ffffff14;background:#11171e;color:#aeb7c2;border-radius:8px;padding:8px 10px;font-size:8px;font-weight:1000;letter-spacing:.6px;cursor:pointer}
+.seervi-ai-action.active,.seervi-ai-action:hover{background:#f0c66a;color:#111;border-color:#f0c66a}
+.seervi-ai-input-row{display:grid;grid-template-columns:1fr auto;gap:8px}
+.seervi-ai-input{width:100%;box-sizing:border-box;border:1px solid #ffffff16;background:#0d131a;color:#fff;border-radius:9px;padding:12px;font:inherit;font-size:10px;outline:none}
+.seervi-ai-input:focus{border-color:#f0c66a66}
+.seervi-ai-send{border:1px solid #f0c66a;background:#f0c66a;color:#111;border-radius:9px;padding:0 16px;font-size:9px;font-weight:1000;cursor:pointer}
+.seervi-ai-output{margin-top:12px;border:1px solid #ffffff10;background:#0a0f14;border-radius:10px;padding:14px;min-height:150px;color:#aeb7c2;font-size:10px;line-height:1.6;white-space:normal}
+.seervi-ai-output h4{margin:0 0 8px;color:#fff;font-size:12px}
+.seervi-ai-output strong{color:#fff}
+.seervi-ai-output .ai-muted{color:#737d87}
+.seervi-ai-output .ai-good{color:#49e58a;font-weight:900}
+.seervi-ai-output .ai-warn{color:#f0c66a;font-weight:900}
+.seervi-ai-list{margin:7px 0 0;padding-left:18px}
+.seervi-ai-list li{margin:4px 0}
+.seervi-ai-copy{margin-top:10px;border:1px solid #ffffff14;background:#11171e;color:#f0c66a;border-radius:7px;padding:7px 10px;font-size:8px;font-weight:1000;cursor:pointer}
+@media(max-width:600px){.seervi-ai-fab{right:14px;bottom:78px;width:48px;height:48px}.seervi-ai-card{max-height:92vh}.seervi-ai-head,.seervi-ai-body{padding:15px}.seervi-ai-input-row{grid-template-columns:1fr}.seervi-ai-send{height:38px}}
+</style>
+<button id="seerviAiFab" class="seervi-ai-fab" type="button" onclick="openSeerviAI()" aria-label="Open Seervi Smart AI">AI</button>
+<div id="seerviAiModal" class="seervi-ai-modal" aria-hidden="true">
+  <div class="seervi-ai-card" role="dialog" aria-modal="true" aria-labelledby="seerviAiTitle">
+    <div class="seervi-ai-head">
+      <div><div class="seervi-ai-kicker">SEERVI TRADING / SMART ASSISTANT</div><h3 id="seerviAiTitle">Ask Seervi AI</h3><p>Search products, inspect admin stock, draft supplier messages and prepare enquiry text.</p></div>
+      <button class="seervi-ai-close" type="button" onclick="closeSeerviAI()" aria-label="Close">×</button>
+    </div>
+    <div class="seervi-ai-body">
+      <div class="seervi-ai-actions">
+        <button class="seervi-ai-action active" type="button" data-ai-mode="product" onclick="setSeerviAIMode('product',this)">PRODUCT SEARCH</button>
+        <button class="seervi-ai-action admin-only" type="button" data-ai-mode="stock" onclick="setSeerviAIMode('stock',this)">STOCK INSIGHT</button>
+        <button class="seervi-ai-action admin-only" type="button" data-ai-mode="supplier" onclick="setSeerviAIMode('supplier',this)">SUPPLIER MESSAGE</button>
+        <button class="seervi-ai-action" type="button" data-ai-mode="quote" onclick="setSeerviAIMode('quote',this)">ENQUIRY / QUOTE DRAFT</button>
+      </div>
+      <div class="seervi-ai-input-row">
+        <input id="seerviAiInput" class="seervi-ai-input" type="text" placeholder="Try: 65 inch TV mount / 1707A / cutting blade…" autocomplete="off" onkeydown="if(event.key==='Enter')runSeerviAI()">
+        <button class="seervi-ai-send" type="button" onclick="runSeerviAI()">ASK AI</button>
+      </div>
+      <div id="seerviAiOutput" class="seervi-ai-output"><h4>Ready.</h4><span class="ai-muted">Ask about a product or choose one of the tools above.</span></div>
+    </div>
+  </div>
+</div>
+<script id="seervi-smart-ai-script">
+(function(){
+  let aiMode='product';
+  const $=id=>document.getElementById(id);
+  const escAi=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const norm=v=>String(v||'').toLowerCase().replace(/[^a-z0-9.]+/g,' ').trim();
+  function allProductCards(){
+    return [...document.querySelectorAll('#profiles .profile-product-card,#products .home-product-card,#tvMounts .tv-mount-product-card,#earthAugers .earth-auger-product-card')];
+  }
+  function cardText(card){return norm((card.innerText||'')+' '+[...card.attributes].map(a=>a.value).join(' '));}
+  function cardLabel(card){
+    const model=card.dataset.model||card.querySelector('h3')?.textContent?.trim()||card.querySelector('h4')?.textContent?.trim()||'Product';
+    const type=card.dataset.type||card.querySelector('.tag')?.textContent?.trim()||'';
+    const text=(card.innerText||'').replace(/\s+/g,' ').trim();
+    return {model,type,text};
+  }
+  function open(){
+    const m=$('seerviAiModal'); if(!m)return; m.classList.add('open');m.setAttribute('aria-hidden','false');
+    const input=$('seerviAiInput'); if(input){input.focus();}
+  }
+  window.openSeerviAI=open;
+  window.closeSeerviAI=function(){const m=$('seerviAiModal');if(m){m.classList.remove('open');m.setAttribute('aria-hidden','true')}};
+  window.setSeerviAIMode=function(mode,btn){
+    aiMode=mode;document.querySelectorAll('.seervi-ai-action').forEach(b=>b.classList.toggle('active',b===btn));
+    const input=$('seerviAiInput');
+    const hints={product:'Try: 65 inch TV mount / 1707A / cutting blade…',stock:'Try: low stock / empty stock / TV mounts…',supplier:'Try: DZ43 / DZ52 / DZ63 best MOQ price',quote:'Try: draft enquiry for my current cart'};
+    if(input) input.placeholder=hints[mode]||hints.product;
+    if(mode==='stock' && !document.body.classList.contains('admin-session')){ /* UI visibility remains controlled by existing admin-only rules */ }
+  };
+  function productSearch(q){
+    const tokens=norm(q).split(/\s+/).filter(Boolean);
+    const cards=allProductCards();
+    const scored=cards.map(card=>{const t=cardText(card);let score=0;tokens.forEach(x=>{if(t.includes(x))score+=x.length>3?3:1});return {card,score}}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,8);
+    if(!scored.length)return '<h4>No close match found.</h4><span class="ai-muted">Try a model number, category, size or application such as “TV mount”, “1707A”, “blade” or “earth auger”.</span>';
+    return '<h4>Best catalogue matches</h4><ul class="seervi-ai-list">'+scored.map(x=>{const p=cardLabel(x.card);const available=window.seerviInventoryState&&p.model?Object.keys(window.seerviInventoryState).some(k=>k.toLowerCase().includes(norm(p.model))&&window.seerviInventoryState[k]!==false):true;return '<li><strong>'+escAi(p.model)+'</strong> <span class="ai-muted">'+escAi(p.type)+'</span> — '+(available?'<span class="ai-good">AVAILABLE</span>':'<span class="ai-warn">CHECK STOCK</span>')+'</li>'}).join('')+'</ul>';
+  }
+  function stockInsight(q){
+    const state=(typeof seerviInventoryState!=='undefined'&&seerviInventoryState)||{};const qty=(typeof seerviInventoryQty!=='undefined'&&seerviInventoryQty)||{};
+    const keys=Object.keys(state);if(!keys.length)return '<h4>Stock data not loaded yet.</h4><span class="ai-muted">Open Stock once and try again.</span>';
+    const rows=keys.map(k=>({key:k,stock:state[k]!==false,qty:Number.isFinite(Number(qty[k]))?Number(qty[k]):null}));
+    const low=rows.filter(x=>x.qty!==null&&x.qty>0&&x.qty<=10).sort((a,b)=>a.qty-b.qty).slice(0,12);
+    const out=rows.filter(x=>x.qty===0||x.stock===false);
+    const text=norm(q);
+    let list=low;
+    let title='Low stock (10 or less)';
+    if(text.includes('empty')||text.includes('out')){list=out;title='Out of stock / OFF';}
+    if(text.includes('all')) list=rows.filter(x=>x.qty!==null).sort((a,b)=>a.qty-b.qty).slice(0,15);
+    if(!list.length)return '<h4>'+escAi(title)+'</h4><span class="ai-good">Nothing matching that condition right now.</span>';
+    return '<h4>'+escAi(title)+'</h4><ul class="seervi-ai-list">'+list.map(x=>'<li><strong>'+escAi(x.key)+'</strong> — '+(x.qty===null?'Qty not set':escAi(x.qty))+' '+(x.stock?'':' · OFF')+'</li>').join('')+'</ul>';
+  }
+  function supplierMessage(q){
+    const items=q.trim()||'the selected models';
+    const msg='Hello, please share your best factory price and MOQ for '+items+'. Also confirm packing details, net/gross weight, carton quantity, lead time and available specifications. We are looking for a long-term business relationship, so please give your best possible quotation.';
+    return '<h4>Supplier message draft</h4><div id="seerviAiCopyText" data-copy="'+escAi(msg)+'">'+escAi(msg)+'</div><button class="seervi-ai-copy" type="button" onclick="copySeerviAIText()">COPY MESSAGE</button>';
+  }
+  function quoteDraft(){
+    const cart=(typeof seerviCart!=='undefined'&&Array.isArray(seerviCart))?seerviCart:[];
+    if(!cart.length)return '<h4>Cart is empty.</h4><span class="ai-muted">Add products to the cart first, then ask for an enquiry draft.</span>';
+    const lines=cart.map(x=>'• '+(x.model||x.name||'Product')+' × '+(x.qty||1)).join('\n');
+    const msg='Hello Seervi Trading,\n\nPlease share your quotation for the following items:\n'+lines+'\n\nKindly provide your best wholesale price and availability.';
+    return '<h4>Enquiry / quote draft</h4><div id="seerviAiCopyText" data-copy="'+escAi(msg)+'" style="white-space:pre-line">'+escAi(msg)+'</div><button class="seervi-ai-copy" type="button" onclick="copySeerviAIText()">COPY DRAFT</button>';
+  }
+  window.copySeerviAIText=function(){const el=$('seerviAiCopyText');if(!el)return;const t=el.dataset.copy||el.textContent||'';navigator.clipboard?.writeText(t).then(()=>{const b=document.querySelector('.seervi-ai-copy');if(b){const old=b.textContent;b.textContent='COPIED ✓';setTimeout(()=>b.textContent=old,1200)}}).catch(()=>alert(t));};
+  window.runSeerviAI=function(){
+    const q=$('seerviAiInput')?.value||'';const out=$('seerviAiOutput');if(!out)return;
+    if((aiMode==='stock'||aiMode==='supplier') && (typeof crmUser==='undefined' || !crmUser || (typeof isAuthorisedAdmin==='function' && !isAuthorisedAdmin(crmUser)))){out.innerHTML='<h4>Admin access required.</h4><span class="ai-muted">This tool is available only inside the authorised Admin session.</span>';return;}
+    if(aiMode==='product')out.innerHTML=productSearch(q);
+    else if(aiMode==='stock')out.innerHTML=stockInsight(q);
+    else if(aiMode==='supplier')out.innerHTML=supplierMessage(q);
+    else out.innerHTML=quoteDraft();
+  };
+  document.addEventListener('click',e=>{const m=$('seerviAiModal');if(e.target===m)window.closeSeerviAI();});
+})();
+</script>
+</body></html>
