@@ -3197,6 +3197,75 @@ html, body { width:100%; max-width:100%; overflow-x:hidden !important; }
   }
 }
 </style>
+
+<style id="seervi-mobile-hero-photo-above-content-final">
+@media (max-width: 600px){
+  .bw-hero{
+    min-height:0 !important;
+    height:auto !important;
+    max-height:none !important;
+    display:flex !important;
+    flex-direction:column !important;
+    overflow:hidden !important;
+    background:#070a0d !important;
+  }
+  .bw-hero .bw-hero-image{
+    position:relative !important;
+    inset:auto !important;
+    width:100% !important;
+    height:285px !important;
+    flex:0 0 285px !important;
+    background-size:cover !important;
+    background-position:right center !important;
+    transform:none !important;
+  }
+  .bw-hero .bw-hero-wash,
+  .bw-hero .bw-hero-vignette{
+    top:0 !important;
+    left:0 !important;
+    right:0 !important;
+    bottom:auto !important;
+    height:285px !important;
+    pointer-events:none !important;
+  }
+  .bw-hero .bw-hero-content{
+    position:relative !important;
+    width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    box-sizing:border-box !important;
+    display:block !important;
+    order:2 !important;
+    padding:46px 20px 70px !important;
+    margin:0 !important;
+    z-index:3 !important;
+  }
+  .bw-hero .bw-hero-copy{
+    width:100% !important;
+    max-width:none !important;
+    padding:0 !important;
+  }
+  .bw-hero .bw-hero-copy h1{
+    font-size:clamp(50px,13vw,68px) !important;
+    line-height:.9 !important;
+    letter-spacing:-3px !important;
+    margin:18px 0 24px !important;
+  }
+  .bw-hero .bw-hero-copy p{
+    width:100% !important;
+    max-width:none !important;
+    font-size:16px !important;
+    line-height:1.65 !important;
+    margin:0 0 28px !important;
+  }
+  .bw-hero .bw-cta{
+    width:auto !important;
+    min-width:275px !important;
+    display:inline-flex !important;
+    justify-content:space-between !important;
+  }
+}
+</style>
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
