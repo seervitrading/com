@@ -643,7 +643,25 @@ a:active,
   .bw-hero-copy{width:88%;max-width:650px}
   .bw-hero-copy h1{font-size:clamp(50px,10vw,72px)}
 }
-</style><style id="seervi-monochrome-final">
+<style id="seervi-hero-left-shift-final">
+/* Hero copy moved into the open left-side area; no other hero elements changed. */
+.bw-hero-content{
+  width:100% !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding-left:32px !important;
+  padding-right:32px !important;
+}
+.bw-hero-copy{
+  width:min(760px,55%) !important;
+  max-width:760px !important;
+  padding-left:0 !important;
+}
+@media(max-width:900px){
+  .bw-hero-content{padding-left:20px !important;padding-right:20px !important}
+  .bw-hero-copy{width:88% !important;max-width:650px !important}
+}
+</style></style><style id="seervi-monochrome-final">
 /* SEERVI MONOCHROME: no gold/amber UI accents */
 :root{
   --accent:#ffffff !important;
