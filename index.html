@@ -7745,3 +7745,189 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
 })();
 </script>
 </body></html>
+<style id="seervi-unified-grey-black-theme">
+/* V-GREY-BLACK: unify the entire site into one charcoal / grey visual system. */
+:root{
+  --ref-bg:#090c10;
+  --ref-shell:#11161b;
+  --ref-ink:#e7ebef;
+  --ref-muted:#929ba5;
+  --ref-line:#2a3139;
+  --ref-soft:#171c22;
+  --ref-accent:#c7cdd3;
+  --ref-gold:#aeb6be;
+}
+html,body{background:#090c10!important;color:#e7ebef!important}
+body{padding:18px 0!important;background:linear-gradient(135deg,#080b0f 0%,#10151a 52%,#090c10 100%)!important}
+#seerviReferenceShell{
+  background:#11161b!important;
+  border:1px solid #2b333b!important;
+  box-shadow:0 28px 90px rgba(0,0,0,.55)!important;
+}
+#seerviReferenceShell nav{
+  background:rgba(17,22,27,.96)!important;
+  color:#e7ebef!important;
+  border-bottom:1px solid #2a3139!important;
+}
+#seerviReferenceShell .logo,
+#seerviReferenceShell .logo span,
+#seerviReferenceShell .navlinks a,
+#seerviReferenceShell .nav-admin-link{color:#dfe4e8!important}
+#seerviReferenceShell .logo:before{background:#aeb6be!important;box-shadow:0 0 10px rgba(174,182,190,.25)!important}
+#seerviReferenceShell .navlinks a:hover,
+#seerviReferenceShell .nav-admin-link:hover{color:#fff!important}
+#seerviReferenceShell .btn,
+#seerviReferenceShell .bw-nav-login,
+#seerviReferenceShell .bw-nav-dashboard{
+  background:#2b333b!important;color:#f1f3f5!important;border-color:#454e58!important;box-shadow:none!important
+}
+#seerviReferenceShell .cart-nav-btn,
+#seerviReferenceShell .notification-bell{
+  background:#1a2026!important;color:#c7cdd3!important;border-color:#39424b!important
+}
+#seerviReferenceShell .cart-nav-btn span{background:#c7cdd3!important;color:#11161b!important}
+#seerviReferenceShell .notification-unread-badge{border-color:#11161b!important}
+
+#seerviReferenceShell main{background:#11161b!important;color:#e7ebef!important}
+#seerviReferenceShell section:not(#home){border-top-color:#252c34!important}
+#seerviReferenceShell #productCategoryBar{background:transparent!important}
+#seerviReferenceShell .section-head h2,
+#seerviReferenceShell .product-info h3,
+#seerviReferenceShell .home-product-meta h3,
+#seerviReferenceShell .profile-product-body h3{color:#e7ebef!important}
+#seerviReferenceShell .section-head p,
+#seerviReferenceShell .product-info p,
+#seerviReferenceShell .home-product-meta p{color:#929ba5!important}
+#seerviReferenceShell .profile-product-card,
+#seerviReferenceShell .home-product-card,
+#seerviReferenceShell .application-card,
+#seerviReferenceShell .why-card,
+#seerviReferenceShell .about-panel,
+#seerviReferenceShell .contact-card,
+#seerviReferenceShell .product-feature,
+#seerviReferenceShell .card{
+  background:linear-gradient(145deg,#171c22,#11161b)!important;
+  border-color:#2b333b!important;
+  box-shadow:0 14px 35px rgba(0,0,0,.28)!important;
+}
+#seerviReferenceShell .profile-product-image{background:#0d1115!important}
+#seerviReferenceShell .profile-mini-specs span{color:#b7bec6!important;border-color:#252c34!important}
+#seerviReferenceShell .profile-mini-specs b{color:#7f8994!important}
+#seerviReferenceShell .product-cart-control .product-qty,
+#seerviReferenceShell .product-cart-control button{background:#171c22!important;color:#d8dde2!important;border-color:#39424b!important}
+#seerviReferenceShell .catalog-controls{background:#151a20!important;border-color:#2b333b!important}
+#seerviReferenceShell .catalog-search input,
+#seerviReferenceShell .catalog-controls select{background:#0e1318!important;color:#e7ebef!important;border-color:#343d46!important}
+#seerviReferenceShell .filter-clear{color:#aeb6be!important;border-color:#343d46!important;background:#151a20!important}
+
+/* Home is part of the same charcoal theme. */
+#seerviReferenceShell #home{border-color:#303841!important;box-shadow:0 20px 55px rgba(0,0,0,.45)!important}
+#seerviReferenceShell #home .bw-nav-overlay{
+  background:rgba(17,22,27,.94)!important;color:#e7ebef!important;border-color:#343d46!important;box-shadow:0 14px 35px rgba(0,0,0,.45)!important
+}
+#seerviReferenceShell #home .bw-brand,
+#seerviReferenceShell #home .bw-account-identity{color:#e7ebef!important}
+#seerviReferenceShell #home .bw-nav-signup{background:#1b2127!important;color:#c7cdd3!important;border-color:#414a54!important}
+#seerviReferenceShell #home .bw-cta{background:#2b333b!important;color:#eef1f3!important;box-shadow:none!important}
+
+/* Cart and support surfaces. */
+#seerviReferenceShell .cart-panel,
+#seerviReferenceShell .support-card{background:linear-gradient(180deg,#171c22,#0d1115)!important;color:#e7ebef!important;border-color:#343d46!important}
+#seerviReferenceShell .cart-head,
+#seerviReferenceShell .cart-footer{border-color:#29313a!important;background:#10151a!important}
+#seerviReferenceShell .cart-close,
+#seerviReferenceShell .clear-cart-btn{background:#171c22!important;color:#c7cdd3!important;border-color:#343d46!important}
+
+/* Dashboard and all modals: no white panels anywhere. */
+#accountDashboardModal .crm-panel,
+#crmModal .crm-panel,
+#customerLoginModal .crm-panel,
+#partySignupModal .crm-panel,
+#notificationModal .crm-panel,
+#adminNewPartyModal .crm-panel,
+#adminStockModal .crm-panel{
+  background:#141a20!important;color:#e7ebef!important;border-color:#343d46!important;box-shadow:0 35px 100px rgba(0,0,0,.65)!important
+}
+#accountDashboardModal .crm-head,
+#crmModal .crm-head,
+#customerLoginModal .crm-head,
+#partySignupModal .crm-head,
+#notificationModal .crm-head,
+#adminNewPartyModal .crm-head,
+#adminStockModal .crm-head{
+  background:#11161b!important;border-bottom-color:#29313a!important
+}
+#accountDashboardModal .crm-head h3,
+#crmModal .crm-head h3,
+#customerLoginModal .crm-head h3,
+#partySignupModal .crm-head h3,
+#notificationModal .crm-head h3,
+#adminNewPartyModal .crm-head h3,
+#adminStockModal .crm-head h3{color:#e7ebef!important}
+#accountDashboardModal .crm-kicker,
+#accountDashboardModal .crm-section-title,
+#crmModal .crm-kicker,
+#customerLoginModal .crm-kicker,
+#partySignupModal .crm-kicker,
+#notificationModal .crm-kicker,
+#adminNewPartyModal .crm-kicker,
+#adminStockModal .crm-kicker{color:#8d98a3!important}
+#accountDashboardModal .crm-auth-status,
+#crmModal .crm-auth-status,
+#customerLoginModal .crm-auth-status,
+#partySignupModal .crm-auth-status,
+#notificationModal .crm-auth-status,
+#adminNewPartyModal .crm-auth-status,
+#adminStockModal .crm-auth-status{color:#7f8994!important}
+#accountDashboardModal .crm-close,
+#crmModal .crm-close,
+#customerLoginModal .crm-close,
+#partySignupModal .crm-close,
+#notificationModal .crm-close,
+#adminNewPartyModal .crm-close,
+#adminStockModal .crm-close{background:#1b2127!important;color:#d8dde2!important;border-color:#3a434c!important}
+#accountDashboardModal .account-dashboard-options{background:#10151a!important;border-right-color:#29313a!important}
+#accountDashboardModal .account-dashboard-option{color:#9da6af!important}
+#accountDashboardModal .account-dashboard-option:hover{background:#20262d!important}
+#accountDashboardModal .account-dashboard-option strong{color:#d8dde2!important}
+#accountDashboardModal .account-dashboard-option small{color:#747f8a!important}
+#accountDashboardModal .account-dashboard-option span{color:#aeb6be!important}
+#accountDashboardModal .account-dashboard-option.danger:hover{background:#302020!important}
+#accountDashboardModal .crm-panel:after{color:#59636d!important}
+
+#accountDashboardModal input,#accountDashboardModal textarea,#accountDashboardModal select,
+#crmModal input,#crmModal textarea,#crmModal select,
+#customerLoginModal input,#customerLoginModal textarea,#customerLoginModal select,
+#partySignupModal input,#partySignupModal textarea,#partySignupModal select{
+  background:#0d1217!important;color:#e7ebef!important;border-color:#343d46!important
+}
+#crmModal .admin-kpi,
+#crmModal .admin-global-list,
+#crmModal .admin-global-panel,
+#crmModal .inventory-stock-panel,
+#notificationModal .notification-card{background:#171c22!important;color:#dfe4e8!important;border-color:#2b333b!important}
+#notificationModal .notification-card-title{color:#e7ebef!important}
+#notificationModal .notification-card-message{color:#9aa4ae!important}
+#notificationModal .notification-card-date{color:#727d88!important}
+#notificationModal .notification-read-btn{background:#20262d!important;color:#c7cdd3!important;border-color:#3a434c!important}
+
+/* Buttons use grey/black only. */
+#seerviReferenceShell .crm-primary,
+#seerviReferenceShell .manual-item-add-btn,
+#seerviReferenceShell .crm-save-btn:hover,
+#seerviReferenceShell .add-cart-btn,
+#seerviReferenceShell .float-support,
+#seerviReferenceShell .support-head-icon{
+  background:#c7cdd3!important;color:#101419!important;border-color:#c7cdd3!important;box-shadow:none!important
+}
+#seerviReferenceShell .crm-secondary,
+#seerviReferenceShell .manual-item-cancel-btn{background:#1a2026!important;color:#b8c0c8!important;border-color:#343d46!important}
+
+/* Remove the old light reference-theme overrides. */
+#seerviReferenceShell *{scrollbar-color:#343d46 #10151a}
+@media(max-width:800px){
+  body{padding:8px 0!important}
+  #seerviReferenceShell{width:calc(100% - 16px)!important;border-radius:20px!important}
+  #seerviReferenceShell #home{margin:12px 12px 0!important;border-radius:18px!important}
+}
+</style>
