@@ -2548,48 +2548,7 @@ body:not(.admin-quote-mode) .cart-note{
   #adminStockModal .inventory-available-qty input{width:110px;}
 }
 </style>
-<style id="seervi-gold-account-theme">
-/* SEERVI — black & gold luxury account strip inspired by the supplied reference */
-.bw-nav-overlay{
-  background:linear-gradient(135deg,rgba(7,9,12,.96),rgba(17,16,13,.94)) !important;
-  color:#f5f1e8 !important;
-  border:1px solid rgba(216,180,90,.48) !important;
-  border-radius:10px !important;
-  box-shadow:0 14px 40px rgba(0,0,0,.55),0 0 0 1px rgba(216,180,90,.08) inset,0 0 26px rgba(216,180,90,.08) !important;
-  backdrop-filter:blur(12px);
-}
-.bw-nav-overlay:before{
-  content:"";position:absolute;left:20px;right:20px;bottom:0;height:1px;
-  background:linear-gradient(90deg,transparent,#d8b45a,transparent);opacity:.7;
-}
-.bw-brand{color:#fff !important;}
-.bw-account-identity{
-  color:#f2cf73 !important;
-  text-shadow:0 0 18px rgba(216,180,90,.16);
-}
-.bw-account-identity::first-letter{color:#d8b45a}
-.bw-nav-login{
-  background:transparent !important;color:#f2cf73 !important;
-  border:1px solid rgba(216,180,90,.5) !important;
-}
-.bw-nav-signup,.bw-nav-dashboard{
-  background:linear-gradient(135deg,#f4d37a,#d8b45a) !important;
-  color:#111 !important;border:1px solid #f4d37a !important;
-  box-shadow:0 6px 18px rgba(216,180,90,.18);
-}
-.bw-nav-login:hover,.bw-nav-signup:hover,.bw-nav-dashboard:hover{
-  opacity:1 !important;transform:translateY(-1px);filter:brightness(1.05);
-}
-@media(max-width:900px){
-  .bw-nav-overlay{border-radius:9px !important;}
-}
-@media(max-width:560px){
-  .bw-nav-overlay{border-radius:8px !important;}
-}
-</style></head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="logo">SEERVI <span>TRADING</span></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a></div><a class="btn" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
- CART <span id="cartCount">0</span></button><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
-  <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
-</button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url("images/product-image-001-055cde1217d3c801.webp")"images/product-image-001-055cde1217d3c801.webp")"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="bw-nav-overlay"><div class="bw-brand"><button id="bwAccountIdentity" class="bw-account-identity" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><div class="bw-nav-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
+</head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav id="seerviMainNav"><div class="wrap seervi-main-nav-inner"><div class="seervi-brand-lockup"><div class="logo">SEERVI <span>TRADING</span></div><button id="bwAccountIdentity" class="seervi-account-chip" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks seervi-top-links"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a><a class="seervi-quote-link" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">CART <span id="cartCount">0</span></button><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal"><span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span></button><button id="bwNavLogin" class="seervi-auth-link" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="seervi-auth-link seervi-auth-primary" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="seervi-auth-link seervi-auth-primary" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url('images/product-image-001-055cde1217d3c801.webp')"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="bw-nav-overlay" aria-hidden="true"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
   <button type="button" class="product-category-btn category-card active" data-category="all" onclick="showProductCategory('all')">
     <span class="category-card-image"><img src="images/category-all.webp" alt="All Seervi products"></span>
     <span class="category-card-name">ALL PRODUCTS</span>
@@ -3750,69 +3709,34 @@ function aiFindProduct(q){
     return needle.split(/\s+/).filter(x=>x.length>2).some(x=>hay.includes(x));
   });
 }
-function aiDetectLanguage(text){
-  const l=String(text||'').toLowerCase();
-  const devanagari=/[\u0900-\u097F]/.test(text||'');
-  if(devanagari) return 'hi';
-  const kannada=/[\u0C80-\u0CFF]/.test(text||'');
-  if(kannada) return 'kn';
-  const tamil=/[\u0B80-\u0BFF]/.test(text||'');
-  if(tamil) return 'ta';
-  const telugu=/[\u0C00-\u0C7F]/.test(text||'');
-  if(telugu) return 'te';
-  const hinglish=/\b(bhai|bhaiya|paaji|paji|haan|nahi|nahin|kya|kiya|milega|mil(e|ega|enge)|chahiye|hai|ho|hoga|karna|karo|batao|bolo|kitna|kaisa|kaise|mera|meri|aap|tum|tussi|sir|ji|acha|achha|theek|thik|abhi|yaha|waha|kuch|sab|sirf|owner|contact|number|rate|maal|item|saman)\b/.test(l);
-  if(hinglish) return 'hinglish';
-  return 'en';
-}
-function aiOwnerAnswer(lang){
-  if(lang==='hi') return 'Seervi Trading ke owner Kailash Seervi hain 😊';
-  if(lang==='kn') return 'Seervi Trading owner Kailash Seervi 😊';
-  if(lang==='ta') return 'Seervi Trading-oda owner Kailash Seervi 😊';
-  if(lang==='te') return 'Seervi Trading owner Kailash Seervi 😊';
-  if(lang==='hinglish') return 'Seervi Trading ke owner Kailash Seervi hain bhai 😊';
-  return 'Seervi Trading is owned by Kailash Seervi 😊';
-}
-function aiContactAnswer(lang){
-  if(lang==='hi') return 'Bilkul 😊 Seervi Trading se contact karne ke liye WhatsApp: +91 70737 41650\nEmail: info@seervitrading.com\nAddress: Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072';
-  if(lang==='hinglish') return 'Bilkul bhai 😊 WhatsApp: +91 70737 41650\nEmail: info@seervitrading.com\nAddress: Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072';
-  if(lang==='kn') return 'Seervi Trading contact 😊 WhatsApp: +91 70737 41650 | Email: info@seervitrading.com | Bengaluru – 566072';
-  if(lang==='ta') return 'Seervi Trading contact 😊 WhatsApp: +91 70737 41650 | Email: info@seervitrading.com | Bengaluru – 566072';
-  if(lang==='te') return 'Seervi Trading contact 😊 WhatsApp: +91 70737 41650 | Email: info@seervitrading.com | Bengaluru – 566072';
-  return 'Sure 😊 You can contact Seervi Trading on WhatsApp: +91 70737 41650\nEmail: info@seervitrading.com\nAddress: Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072';
-}
 function aiReply(q){
   const x=String(q||'').trim();
   const l=x.toLowerCase();
-  const lang=aiDetectLanguage(x);
-  if(!x){
-    return lang==='en' ? 'Sure 😊 Ask me anything about Seervi Trading, products, models, stock, cart or orders.' : 'Haan bhai 😊 poochho, product, model, stock, cart ya order ke baare mein jo chahiye pooch sakte ho.';
+  if(!x)return 'Bilkul 😊 Apna question type karo — product, model, price, stock, cart, login ya order ke baare mein pooch sakte ho.';
+
+  // Greetings
+  if(/^(hi|hello|hey|hii|namaste|sat sri akal|paaji|bhai)\b/.test(l)){
+    const replies=[
+      'Haan bhai 👋 bolo, Seervi Trading mein kya dekhna hai?',
+      'Hello! 😊 Bolo kya chahiye — product, model, price ya order?',
+      'Hi bhai! 👋 Jo poochna hai seedha poochho, main guide karta hoon.'
+    ];
+    return replies[Math.floor(Math.random()*replies.length)];
   }
 
-  // Personal / company identity
-  if(/\b(owner|proprietor|founder|maalik|malik|owner\s*ka\s*naam| मालिक|मालिक|owner name)\b/.test(l) || /who\s*(is|owns)\s*(the\s*)?owner/.test(l)) return aiOwnerAnswer(lang);
-  if(/\b(contact|whatsapp|phone|mobile|number|call|email|mail|address|location|shop|office)\b/.test(l) || /कॉन्टैक्ट|नंबर|मोबाइल|पता|व्हाट्सएप/.test(l)) return aiContactAnswer(lang);
-
-  // Friendly greetings / casual conversation
-  if(/^(hi|hello|hey|hii|heyy|namaste|sat sri akal|paaji|bhai|bhaiya|good morning|good evening|good afternoon)\b/.test(l)){
-    if(lang==='hinglish'||lang==='hi') return ['Haan bhai 😄 bolo, kya scene hai?','Haan paaji 👋 bolo, main yahin hoon.','Bilkul bhai 😊 batao kya chahiye?'][Math.floor(Math.random()*3)];
-    return ['Hey! 👋 What can I help you with?','Hi 😊 Tell me what you need.','Hello! I’m here — ask me anything about Seervi Trading.'][Math.floor(Math.random()*3)];
-  }
-  if(/\b(thank|thanks|thank you|shukriya|dhanyavad|धन्यवाद)\b/.test(l)){
-    return (lang==='hinglish'||lang==='hi') ? ['Arey bhai, anytime 😄','Bilkul bhai ❤️ jab chaho pooch lena.','Koi baat nahi paaji 😊'][Math.floor(Math.random()*3)] : ['Anytime 😊','You’re welcome!','Happy to help 😊'][Math.floor(Math.random()*3)];
-  }
-  if(/\b(kya\s*haal|kaisa\s*chal|how\s*are\s*you|how.*going|what.*up|kya\s*chal)\b/.test(l)){
-    return (lang==='hinglish'||lang==='hi') ? 'Main badhiya bhai 😄 Seervi ke customers ko guide kar raha hoon. Tum batao, kya chahiye?' : 'I’m doing great 😊 Ready to help with Seervi Trading. What do you need?';
-  }
-
-  // Product / catalogue intent
-  const asksProduct=/(product|products|item|items|catalog|catalogue|model|profile|blade|cutting|mount|wall\s*mount|tv\s*(stand|mount)|auger|earth\s*auger|arrival|stock|available|mil(e|ega|enge)|hai\s*kiya|hoga|chahiye)/.test(l);
+  // Product/category questions — avoid matching every sentence containing the word "tv".
+  const asksProduct=/(product|products|item|items|catalog|catalogue|model|profile|blade|cutting|mount|wall\s*mount|tv\s*(stand|mount)|auger|earth\s*auger|arrival|stock|available|mil(e|ega|enge)|hai\s*kiya|hoga)/.test(l);
   if(asksProduct){
     const match=aiFindProduct(x);
     if(match){
       const model=String(match.dataset.model||match.querySelector('h3')?.textContent||'this product').trim();
       const details=String(match.textContent||'').replace(/\s+/g,' ').trim();
-      if(lang==='hinglish'||lang==='hi') return 'Haan bhai 👍 **'+model+'** catalogue mein listed hai.\n\n'+details.slice(0,420)+'\n\nAgar tum size, quantity ya price poochna chahte ho to woh bhi bata do — main usi product ke hisaab se guide karunga.';
-      return 'Yes 👍 **'+model+'** is listed in our catalogue.\n\n'+details.slice(0,420)+'\n\nTell me the size, quantity or price requirement and I’ll guide you for that product.';
+      const replies=[
+        'Haan, mujhe catalogue mein '+model+' mila.\n\n'+details.slice(0,420)+'\n\nIs product card ko open karke full details dekh sakte ho.',
+        model+' catalogue mein listed hai 👍\n\n'+details.slice(0,420)+'\n\nAgar chaho to model/size batao, main usi ke hisaab se guide karunga.',
+        'Yes bhai, '+model+' available catalogue item hai.\n\n'+details.slice(0,420)+'\n\nAur kisi specific model ka bhi naam bhej sakte ho.'
+      ];
+      return replies[Math.floor(Math.random()*replies.length)];
     }
     const groups=[];
     if(document.querySelectorAll('.profile-product-card').length)groups.push('Aluminium Profiles');
@@ -3820,40 +3744,41 @@ function aiReply(q){
     if(document.querySelectorAll('.tv-mount-product-card').length)groups.push('TV Wall Mounts');
     if(document.querySelectorAll('.earth-auger-product-card').length)groups.push('Earth Augers');
     if(/tv\s*(stand|mount)/.test(l) && document.querySelectorAll('.tv-mount-product-card').length){
-      return (lang==='hinglish'||lang==='hi') ? 'Haan bhai, TV Wall Mounts hain 👍 TV ka size ya model bata do, main matching option dhoondhne mein help karta hoon.' : 'Yes, we have TV Wall Mounts 👍 Tell me the TV size or mount model and I’ll help you find a matching option.';
+      return 'Haan bhai, TV Wall Mounts hain 👍\n\nAap TV ka size ya mount model bata do. Main catalogue mein matching option dhoondhne mein help karunga.';
     }
     if(groups.length){
-      return (lang==='hinglish'||lang==='hi') ? 'Haan bhai 😎 abhi catalogue mein ye categories hain:\n• '+groups.join('\n• ')+'\n\nJo category/model chahiye seedha naam batao, main wahi check karta hoon.' : 'Yes 😎 Our catalogue currently has:\n• '+groups.join('\n• ')+'\n\nTell me the category or model you want and I’ll check it for you.';
+      return 'Haan bhai, catalogue mein ye categories hain:\n• '+groups.join('\n• ')+'\n\nAap category, model, size ya application batao — main uske hisaab se guide karunga.';
     }
-    return (lang==='hinglish'||lang==='hi') ? 'Bhai product ka model, size ya photo bhej do. Main website ke catalogue ke hisaab se exact help karunga.' : 'Send me the product model, size or a photo and I’ll help using the catalogue information available on this website.';
+    return 'Product ke liye model, size ya photo bhej do. Main jo information website catalogue mein hai uske basis par guide karunga.';
   }
 
   if(/cart|basket|add\s*(an?\s*)?(item|product)|remove.*cart|quantity/.test(l)){
-    return (lang==='hinglish'||lang==='hi') ? 'Bilkul bhai 👍 Product ke + button se quantity add karo, phir CART open karke items aur quantity check kar sakte ho. Agar cart mein koi problem aa rahi hai to screenshot bhej do.' : 'Sure 👍 Use the + button on a product to add quantity, then open CART to review everything. If something is wrong, send me a screenshot.';
+    return 'Cart use karna easy hai 👍 Product card par + button se quantity add karo, phir CART open karke items aur quantity check kar sakte ho. Kisi specific cart problem ka screenshot bhej do.';
   }
   if(/login|sign[ -]?up|signup|account|password|register/.test(l)){
-    return (lang==='hinglish'||lang==='hi') ? 'Login existing account ke liye hai aur Sign Up new account ke liye. Agar koi error aa raha hai to screenshot ya exact message bhejo bhai, main dekhta hoon.' : 'LOGIN is for an existing account and SIGN UP is for a new account. If you get an error, send me the exact message or a screenshot and I’ll help.';
+    return 'Account ke liye LOGIN existing customer ke liye hai aur SIGN UP new customer account ke liye. Agar login mein error aa raha hai to exact error message bhejo, main usi issue ko explain karunga.';
   }
   if(/order|quotation|quote|pdf/.test(l)){
-    return (lang==='hinglish'||lang==='hi') ? 'Order ya quotation ke liye batao bhai kis product/model aur kitni quantity chahiye. Agar existing quotation ki baat hai to uska screenshot bhej do.' : 'For an order or quotation, tell me the product/model and quantity you need. If you mean an existing quotation, send me its screenshot.';
+    return 'Order/quotation ke case mein mujhe batao aap customer order ki baat kar rahe ho ya admin quotation ki. Agar PDF ya quotation mein problem hai, screenshot bhej do — main exact issue identify karne mein help karunga.';
+  }
+  if(/contact|whatsapp|phone|call|email|address|location|where.*(shop|office)/.test(l)){
+    return 'Seervi Trading se contact karne ke liye website ka WhatsApp option use kar sakte ho. WhatsApp: +91 70737 41650 | Email: info@seervitrading.com. Address: Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.';
   }
   if(/price|rate|cost|moq|minimum|wholesale|cheap|best\s*(rate|price)/.test(l)){
-    return (lang==='hinglish'||lang==='hi') ? 'Rate ke liye exact model/item bata do bhai. Quantity bhi bata doge to main available catalogue information ke hisaab se better guide kar paunga.' : 'For pricing, tell me the exact model/item and quantity. I’ll guide you using the available catalogue information.';
+    return 'Price/model/MOQ ke liye exact product model ya photo bhejo bhai. Wholesale rate quantity aur model par depend kar sakta hai, isliye specific item bataoge to main catalogue information ke hisaab se better guide kar paunga.';
+  }
+  if(/thank|thanks|shukriya|dhanyavad/.test(l)){
+    return ['Anytime bhai 😊','Bilkul bhai, jab chaho pooch lena 👍','You’re welcome! 😊 Aur kuch dekhna ho to bolo.'][Math.floor(Math.random()*3)];
   }
 
-  // Natural fallback: mirror language and ask one useful question, never the same canned line.
-  if(lang==='hinglish'||lang==='hi'){
-    const fall=[
-      'Samajh gaya bhai 😊 Iska sahi answer dene ke liye bas ek cheez batao — tum product ke baare mein pooch rahe ho ya website/account ke baare mein?',
-      'Haan bhai, samajh raha hoon 👍 Thoda context de do — model naam, quantity ya screenshot mein se jo easy ho bhej do.',
-      'Got it paaji 😄 Main help karta hoon. Bas batao kis item ya kis section ki baat hai, phir seedha usi point par chalte hain.'
-    ];
-    return fall[Math.floor(Math.random()*fall.length)];
-  }
-  if(lang==='kn') return 'ಸರಿ 😊 ನೀವು ಯಾವ product/model ಬಗ್ಗೆ ಕೇಳುತ್ತಿದ್ದೀರಿ ಎಂದು ಹೇಳಿ, ನಾನು ಅದಕ್ಕೆ ಸಹಾಯ ಮಾಡುತ್ತೇನೆ.';
-  if(lang==='ta') return 'சரி 😊 எந்த product/model பற்றி கேட்கிறீர்கள் என்று சொல்லுங்கள்; அதைப் பார்த்து உதவுகிறேன்.';
-  if(lang==='te') return 'సరే 😊 మీరు ఏ product/model గురించి అడుగుతున్నారో చెప్పండి, నేను దానిపై సహాయం చేస్తాను.';
-  return ['Got it 😊 Tell me the product/model or website section you mean and I’ll help from there.','Sure — give me one more detail (model, quantity or screenshot) and I’ll answer specifically.','I’m with you 👍 Tell me what you’re trying to do and I’ll guide you step by step.'][Math.floor(Math.random()*3)];
+  // Never repeat the old generic answer. Reflect the user's actual question and ask only for the missing detail.
+  const short=x.length>140 ? x.slice(0,137)+'…' : x;
+  const fallback=[
+    'Samajh gaya bhai — aap pooch rahe ho: “'+short+'”\n\nIska exact answer dene ke liye thoda context chahiye. Product/model, quantity ya screenshot bhej do.',
+    'Haan, ye question note kiya 👍 “'+short+'”\n\nAap ek detail aur bata do — kis product/model ya website section ki baat hai? Phir main usi point par answer dunga.',
+    'Got it bhai. “'+short+'” ka answer website ke available data par depend karta hai. Agar model naam, size ya photo bhej do to main specific information se guide karunga.'
+  ];
+  return fallback[Math.floor(Math.random()*fallback.length)];
 }
 function sendAIMessage(e){
   if(e)e.preventDefault();
@@ -7403,4 +7328,74 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
     }
   });
 })();
-</script></body></html>
+</script>
+<style id="seervi-reference-home-theme">
+/* V-REFERENCE HOME THEME — inspired by the supplied clean dashboard reference. */
+:root{--ref-bg:#f4f7fb;--ref-card:#ffffff;--ref-ink:#172033;--ref-muted:#718096;--ref-line:#e5eaf1;--ref-blue:#315b9b;--ref-blue-soft:#edf4ff;--ref-gold:#d8b45a}
+html{scroll-behavior:smooth}
+body{background:var(--ref-bg);color:var(--ref-ink)}
+#seerviMainNav{height:78px;position:sticky;top:0;z-index:500;background:rgba(255,255,255,.92);border-bottom:1px solid var(--ref-line);box-shadow:0 8px 28px rgba(35,55,80,.08);backdrop-filter:blur(18px)}
+.seervi-main-nav-inner{height:100%;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:22px}
+.seervi-brand-lockup{display:flex;align-items:center;gap:14px;min-width:max-content}
+#seerviMainNav .logo{color:var(--ref-ink);font-size:18px;letter-spacing:2px;font-weight:950}
+#seerviMainNav .logo span{color:var(--ref-blue);font-weight:700}
+.seervi-account-chip{border:0;background:transparent;color:#8a94a3;font:inherit;font-size:9px;letter-spacing:.7px;font-weight:800;cursor:pointer;padding:5px 0}
+.seervi-top-links{display:flex!important;align-items:center;justify-content:flex-end;gap:7px!important;position:static!important;background:none!important;border:0!important;box-shadow:none!important;padding:0!important;flex:1}
+.seervi-top-links a,.seervi-auth-link{border:0;background:transparent;color:#4c5666;text-decoration:none;font:inherit;font-size:11px;font-weight:800;padding:10px 12px;border-radius:9px;cursor:pointer;white-space:nowrap;letter-spacing:.1px}
+.seervi-top-links a:hover,.seervi-auth-link:hover{color:var(--ref-blue);background:var(--ref-blue-soft)}
+.seervi-top-links .seervi-quote-link{background:var(--ref-ink);color:#fff;padding:11px 15px}
+.seervi-top-links .seervi-quote-link:hover{background:#263d65;color:#fff}
+.seervi-auth-primary{background:var(--ref-blue)!important;color:#fff!important}
+.seervi-auth-primary:hover{background:#274b80!important}
+#seerviMainNav .cart-nav-btn{margin-left:0;border:1px solid #dfe5ee;background:#fff;color:#315b9b;border-radius:10px;padding:9px 11px;font-size:10px;box-shadow:0 3px 12px rgba(30,55,90,.06)}
+#seerviMainNav .cart-nav-btn span{background:var(--ref-blue);color:#fff}
+#seerviMainNav .notification-bell{margin-left:0;border:1px solid #dfe5ee;background:#fff;color:#315b9b;border-radius:10px;width:40px;height:38px;box-shadow:0 3px 12px rgba(30,55,90,.06)}
+#seerviMainNav .notification-bell:hover{border-color:#b9c9e2;background:#f7faff}
+#seerviMainNav .notification-unread-badge{border-color:#fff}
+#seerviMainNav .mobile-menu-btn{display:none;color:var(--ref-ink);background:#fff;border-color:#dfe5ee}
+/* Hero: clean, airy surface while preserving the existing product artwork/content. */
+#home.bw-hero{min-height:650px;background:#fff!important;border-bottom:1px solid var(--ref-line);overflow:hidden}
+#home .bw-hero-image{opacity:.34!important;filter:saturate(.65) contrast(.92);transform:scale(1.02)}
+#home .bw-hero-wash{background:linear-gradient(90deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.86) 46%,rgba(255,255,255,.34) 100%)!important}
+#home .bw-hero-vignette{background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.78))!important}
+#home .bw-hero-copy{color:var(--ref-ink);max-width:650px}
+#home .bw-kicker{color:#315b9b!important}
+#home .bw-hero-copy h1{color:var(--ref-ink)!important;text-shadow:none}
+#home .bw-hero-copy h1 span{color:var(--ref-blue)!important}
+#home .bw-hero-copy p{color:#657184!important;max-width:560px}
+#home .bw-cta{background:var(--ref-ink)!important;color:#fff!important;border-radius:9px;box-shadow:0 10px 28px rgba(28,44,70,.16)}
+#home .bw-cta:hover{background:var(--ref-blue)!important}
+/* Category/product areas become clean white cards like the reference. */
+#productCategoryBar{background:transparent!important;border:0!important;box-shadow:none!important;padding-top:28px!important}
+.product-category-btn{background:var(--ref-card)!important;color:#596477!important;border:1px solid var(--ref-line)!important;box-shadow:0 7px 24px rgba(36,57,82,.06)!important;border-radius:14px!important}
+.product-category-btn.active{background:var(--ref-blue)!important;color:#fff!important;border-color:var(--ref-blue)!important}
+section#profiles,section#products,section#tvMounts,section#earthAugers,section#about,section#contact{background:var(--ref-bg)!important;color:var(--ref-ink)!important}
+.section-head .tag,.tag{color:#315b9b!important}
+.section-head h2,section h2{color:var(--ref-ink)!important}
+.section-head p{color:var(--ref-muted)!important}
+.profile-product-card,.home-product-card,.earth-auger-product-card,.contact-card,.why-card{background:var(--ref-card)!important;color:var(--ref-ink)!important;border:1px solid var(--ref-line)!important;box-shadow:0 8px 28px rgba(36,57,82,.055)!important}
+.profile-product-body h3,.home-product-card h3,.earth-auger-product-card h3{color:var(--ref-ink)!important}
+.profile-mini-specs span,.profile-mini-specs b,.home-product-card p,.earth-auger-product-card p{color:#738094!important}
+.catalog-search,.catalog-controls select,.filter-clear{background:#fff!important;border-color:var(--ref-line)!important;color:var(--ref-ink)!important}
+footer{background:#fff!important;color:#7b8594!important;border-top:1px solid var(--ref-line)!important}
+/* Dashboard options: compact vertical left-side navigation, as requested. */
+#adminDashboardOptions[hidden],#customerDashboardOptions[hidden]{display:none!important}
+.account-dashboard-panel{width:min(1040px,calc(100vw - 36px))!important;max-width:none!important;background:#fff!important;color:var(--ref-ink)!important;border:1px solid var(--ref-line)!important;box-shadow:0 30px 80px rgba(20,35,55,.2)!important}
+.account-dashboard-panel .crm-head{background:#fff!important;border-bottom:1px solid var(--ref-line)!important}
+.account-dashboard-panel .crm-head h3{color:var(--ref-ink)!important}
+.account-dashboard-panel .crm-auth-status{color:#7a8698!important}
+.account-dashboard-options{display:flex!important;flex-direction:column!important;gap:5px!important;width:245px!important;padding:18px!important;border-right:1px solid var(--ref-line)!important;background:#f8fafd!important;min-height:320px!important;box-sizing:border-box}
+.account-dashboard-option{min-height:0!important;width:100%!important;border:1px solid transparent!important;background:transparent!important;color:#4f5b6d!important;border-radius:10px!important;padding:13px 12px!important;display:grid!important;grid-template-columns:28px 1fr!important;grid-template-rows:auto auto!important;column-gap:8px!important;transform:none!important;box-shadow:none!important}
+.account-dashboard-option span{grid-row:1/3;color:var(--ref-blue)!important;font-size:17px!important}
+.account-dashboard-option strong{color:var(--ref-ink)!important;font-size:10px!important;letter-spacing:.8px}
+.account-dashboard-option small{color:#8792a1!important;font-size:8px!important;margin-top:3px}
+.account-dashboard-option:hover{background:#fff!important;border-color:#dce6f3!important;transform:none!important;box-shadow:0 5px 18px rgba(36,57,82,.06)!important}
+.account-dashboard-option.danger strong,.account-dashboard-option.danger span{color:#d85b63!important}
+@media(max-width:900px){
+ #seerviMainNav{height:68px}.seervi-main-nav-inner{padding-left:18px!important;padding-right:18px!important}.seervi-account-chip{display:none}.seervi-top-links{gap:2px!important}.seervi-top-links a,.seervi-auth-link{font-size:10px;padding:8px}.seervi-top-links .seervi-quote-link{padding:9px 10px}.account-dashboard-panel{width:calc(100vw - 20px)!important}.account-dashboard-options{width:205px!important}
+}
+@media(max-width:650px){
+ #seerviMainNav .wrap{padding-left:14px!important;padding-right:14px!important}.seervi-brand-lockup .logo{font-size:15px}.seervi-top-links a[href="#about"],.seervi-top-links a[href="#contact"],.seervi-top-links .seervi-quote-link{display:none!important}.seervi-top-links{flex:0 0 auto}.seervi-top-links .cart-nav-btn{display:inline-flex}.seervi-top-links .notification-bell{display:inline-flex}.seervi-top-links .seervi-auth-link{font-size:9px;padding:8px}.account-dashboard-panel{width:calc(100vw - 12px)!important}.account-dashboard-options{width:100%!important;border-right:0!important;border-bottom:1px solid var(--ref-line)!important;min-height:0!important;display:grid!important;grid-template-columns:1fr 1fr!important;flex-direction:row!important;padding:10px!important}.account-dashboard-option{padding:11px!important}
+}
+</style>
+</body></html>
