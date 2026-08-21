@@ -2678,6 +2678,146 @@ nav .cart-nav-btn { font-weight: 650 !important; }
   }
 }
 </style>
+
+<style id="uniform-topbar-boxes">
+/* V — Unified top-bar controls: same box, border, background and typography. */
+nav > .wrap{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+nav > .wrap > .nav-left-group,
+nav > .wrap > .mobile-menu-btn,
+nav > .wrap > .navlinks,
+nav > .wrap > .btn,
+nav > .wrap > .cart-nav-btn,
+nav > .wrap > .notification-bell,
+nav > .wrap > .top-account-actions{
+  flex:0 0 auto;
+}
+nav .nav-left-group .bw-account-identity-top,
+nav .navlinks a,
+nav > .wrap > .btn,
+nav .cart-nav-btn,
+nav .notification-bell,
+nav .top-account-actions .bw-nav-login,
+nav .top-account-actions .bw-nav-signup,
+nav .top-account-actions .bw-nav-dashboard{
+  box-sizing:border-box;
+  height:40px;
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #ffffff35;
+  border-radius:9px;
+  background:#ffffff0c;
+  color:#e7e9ec;
+  font-family:inherit;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:.15px;
+  line-height:1;
+  text-decoration:none;
+  transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease;
+}
+nav .nav-left-group .bw-account-identity-top{
+  padding:0 14px;
+  max-width:320px;
+  color:#e7e9ec;
+  font-weight:600;
+  letter-spacing:.15px;
+}
+nav .navlinks{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+nav .navlinks a{padding:0 14px;color:#e7e9ec}
+nav .navlinks a:hover,
+nav .nav-left-group .bw-account-identity-top:hover,
+nav > .wrap > .btn:hover,
+nav .cart-nav-btn:hover,
+nav .notification-bell:hover,
+nav .top-account-actions button:hover{
+  background:#ffffff16;
+  border-color:#ffffff60;
+  color:#fff;
+  transform:translateY(-1px);
+}
+nav > .wrap > .btn{
+  padding:0 16px;
+  border-color:#ffffff35;
+  background:#ffffff0c;
+  color:#e7e9ec;
+  font-weight:600;
+  font-size:13px;
+}
+nav .cart-nav-btn{
+  margin-left:0;
+  padding:0 13px;
+  color:#e7e9ec;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:.15px;
+}
+nav .cart-nav-btn span{
+  min-width:20px;height:20px;margin-left:7px;
+  font-size:11px;background:#fff;color:#111;
+}
+nav .notification-bell{
+  width:40px;
+  padding:0;
+  margin-left:0;
+  color:#e7e9ec;
+}
+nav .notification-bell-icon{font-size:17px;line-height:1}
+nav .top-account-actions{
+  gap:8px;
+  margin-left:0;
+}
+nav .top-account-actions .bw-nav-login,
+nav .top-account-actions .bw-nav-signup,
+nav .top-account-actions .bw-nav-dashboard{
+  padding:0 14px;
+  border-color:#ffffff35;
+  background:#ffffff0c;
+  color:#e7e9ec;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:.15px;
+}
+nav .top-account-actions .bw-nav-signup,
+nav .top-account-actions .bw-nav-dashboard{
+  border-color:#ffffff35;
+  background:#ffffff0c;
+  color:#e7e9ec;
+}
+@media(max-width:900px){
+  nav > .wrap{gap:6px}
+  nav .navlinks{gap:5px}
+  nav .navlinks a,
+  nav > .wrap > .btn,
+  nav .cart-nav-btn,
+  nav .top-account-actions .bw-nav-login,
+  nav .top-account-actions .bw-nav-signup,
+  nav .top-account-actions .bw-nav-dashboard{font-size:12px;padding-left:10px;padding-right:10px}
+  nav .nav-left-group .bw-account-identity-top{font-size:12px;padding:0 10px;max-width:240px}
+}
+@media(max-width:600px){
+  nav > .wrap{gap:4px}
+  nav .nav-left-group .bw-account-identity-top{height:36px;min-height:36px;font-size:10px;padding:0 8px;max-width:34vw}
+  nav .navlinks{gap:4px}
+  nav .navlinks a{height:36px;min-height:36px;padding:0 8px;font-size:10px}
+  nav > .wrap > .btn{height:36px;min-height:36px;padding:0 9px;font-size:10px}
+  nav .cart-nav-btn{height:36px;min-height:36px;padding:0 8px;font-size:10px}
+  nav .notification-bell{width:36px;height:36px;min-height:36px}
+  nav .top-account-actions{gap:4px}
+  nav .top-account-actions .bw-nav-login,
+  nav .top-account-actions .bw-nav-signup,
+  nav .top-account-actions .bw-nav-dashboard{height:36px;min-height:36px;padding:0 8px;font-size:10px}
+}
+</style>
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><button id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a></div><a class="btn" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
