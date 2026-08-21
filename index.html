@@ -418,7 +418,7 @@ nav{border-bottom:1px solid #ffffff40;box-shadow:0 8px 30px #0007}
 .bw-account-identity{appearance:none;border:0;background:transparent;color:inherit;padding:0;margin:0;font:inherit;letter-spacing:inherit;font-weight:inherit;cursor:pointer;text-align:left;max-width:min(52vw,520px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bw-account-identity:hover{opacity:.78}.bw-account-identity:focus-visible{outline:2px solid #c7a34a;outline-offset:4px;border-radius:4px}@media(max-width:560px){.bw-account-identity{max-width:48vw;font-size:14px}.bw-brand{font-size:16px}}
 .bw-navlinks{display:flex;justify-content:center;gap:22px}.bw-navlinks a{font-size:9px;color:#303030;text-decoration:none;white-space:nowrap}.bw-navlinks a:hover{text-decoration:underline}
 .bw-nav-quote{justify-self:end;border:0;background:#111;color:#fff;border-radius:4px;padding:11px 15px;font-size:9px;font-weight:800;cursor:pointer}
-.bw-hero-content{position:relative;z-index:3;height:100%;display:flex;align-items:center;padding-top:65px}
+.bw-hero-content{position:relative;z-index:3;height:100%;display:flex;align-items:flex-start;padding-top:38px}
 .bw-hero-copy{width:min(760px,70%);padding-left:6px}.bw-kicker{font-size:9px;letter-spacing:2.5px;font-weight:900;color:#ddd;margin-bottom:18px}
 .bw-hero-copy h1{font-size:clamp(58px,7.2vw,100px);line-height:.86;letter-spacing:-5px;font-weight:300;margin:0;color:#fff}
 .bw-hero-copy h1 span{font-weight:300;color:#cfcfcf}
@@ -3021,6 +3021,96 @@ nav > .wrap > .nav-dashboard-slot .top-account-actions{margin-left:0 !important;
   nav > .wrap > .nav-dashboard-slot{margin-left:0;}
   nav > .wrap > .navlinks{gap:8px !important;}
   nav > .wrap > .nav-contact{padding:0 10px;font-size:10px;}
+}
+</style>
+
+<style id="topbar-corrected-final-v5">
+/* Final topbar correction: identity left, navigation grouped right, equal control spacing. */
+nav > .wrap {
+  width:100% !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 10px !important;
+  box-sizing:border-box !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:0 !important;
+  min-width:0 !important;
+}
+nav > .wrap > .nav-left-group {
+  order:1 !important;
+  flex:0 1 auto !important;
+  min-width:0 !important;
+  margin:0 !important;
+}
+nav > .wrap > .mobile-menu-btn { order:0 !important; }
+nav > .wrap > .nav-dashboard-slot {
+  order:2 !important;
+  flex:0 0 auto !important;
+  margin:0 14px 0 auto !important;
+  display:flex !important;
+  align-items:center !important;
+}
+nav > .wrap > .navlinks {
+  order:3 !important;
+  flex:0 0 auto !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:14px !important;
+  margin:0 !important;
+}
+nav > .wrap > .nav-contact {
+  order:4 !important;
+  flex:0 0 auto !important;
+  margin:0 0 0 24px !important;
+}
+nav > .wrap > .nav-quote {
+  order:5 !important;
+  flex:0 0 auto !important;
+  margin:0 0 0 14px !important;
+}
+nav > .wrap > .cart-nav-btn {
+  order:6 !important;
+  flex:0 0 auto !important;
+  margin:0 0 0 14px !important;
+}
+nav > .wrap > .notification-bell {
+  order:7 !important;
+  flex:0 0 auto !important;
+  margin:0 0 0 14px !important;
+}
+
+/* Same professional box treatment for every right-side control. */
+nav > .wrap > .navlinks a,
+nav > .wrap > .nav-contact,
+nav > .wrap > .nav-quote,
+nav > .wrap > .cart-nav-btn,
+nav > .wrap > .notification-bell,
+nav > .wrap > .nav-dashboard-slot .bw-nav-login,
+nav > .wrap > .nav-dashboard-slot .bw-nav-signup,
+nav > .wrap > .nav-dashboard-slot .bw-nav-dashboard {
+  box-sizing:border-box !important;
+  height:40px !important;
+  min-height:40px !important;
+}
+
+/* Keep the identity readable on the far left. */
+nav > .wrap > .nav-left-group .bw-account-identity-top {
+  max-width:min(42vw,520px) !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+@media (max-width:900px) {
+  nav > .wrap { padding:0 8px !important; }
+  nav > .wrap > .nav-dashboard-slot { margin-left:auto !important; margin-right:8px !important; }
+  nav > .wrap > .navlinks { gap:8px !important; }
+  nav > .wrap > .nav-contact { margin-left:8px !important; }
+  nav > .wrap > .nav-quote,
+  nav > .wrap > .cart-nav-btn,
+  nav > .wrap > .notification-bell { margin-left:8px !important; }
 }
 </style>
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
