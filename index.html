@@ -2650,6 +2650,34 @@ nav .bw-nav-quote { font-size: 12px !important; font-weight: 700 !important; }
   nav .nav-left-group .bw-account-identity-top { font-size: 10px !important; }
 }
 </style>
+
+<style id="topbar-font-refresh-v2">
+/* V2 — cleaner, slightly larger top-bar typography */
+nav .navlinks a,
+nav .nav-admin-link,
+nav .btn,
+nav .cart-nav-btn,
+nav .top-account-actions .bw-nav-login,
+nav .top-account-actions .bw-nav-signup,
+nav .top-account-actions .bw-nav-dashboard,
+nav .bw-account-identity-top {
+  font-family: "Segoe UI", Inter, Arial, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: .15px !important;
+  line-height: 1.2 !important;
+}
+nav .navlinks { gap: 26px !important; }
+nav .cart-nav-btn { font-weight: 650 !important; }
+@media(max-width:800px){
+  nav .navlinks a, nav .nav-admin-link, nav .btn, nav .cart-nav-btn,
+  nav .top-account-actions .bw-nav-login, nav .top-account-actions .bw-nav-signup,
+  nav .top-account-actions .bw-nav-dashboard, nav .bw-account-identity-top {
+    font-size: 12px !important;
+    letter-spacing: .1px !important;
+  }
+}
+</style>
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><button id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a></div><a class="btn" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
