@@ -2548,7 +2548,405 @@ body:not(.admin-quote-mode) .cart-note{
   #adminStockModal .inventory-available-qty input{width:110px;}
 }
 </style>
-</head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav id="seerviMainNav"><div class="wrap seervi-main-nav-inner"><div class="seervi-brand-lockup"><div class="logo">SEERVI <span>TRADING</span></div><button id="bwAccountIdentity" class="seervi-account-chip" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks seervi-top-links"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a><a class="seervi-quote-link" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">CART <span id="cartCount">0</span></button><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal"><span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span></button><button id="bwNavLogin" class="seervi-auth-link" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="seervi-auth-link seervi-auth-primary" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="seervi-auth-link seervi-auth-primary" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url('images/product-image-001-055cde1217d3c801.webp')"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="bw-nav-overlay" aria-hidden="true"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
+
+<style id="seervi-admin-font-refinement">
+/* Admin Panel desktop readability refinement — layout/functionality unchanged */
+#crmModal .crm-panel{font-size:13px}
+#crmModal .crm-kicker,#crmModal .crm-section-title{font-size:11px}
+#crmModal .crm-head h3{font-size:26px}
+#crmModal .crm-auth-status{font-size:11px}
+#crmModal .crm-toolbar label{font-size:11px}
+#crmModal .crm-party-select-wrap select,#crmModal .admin-global-search input{font-size:13px}
+#crmModal .admin-global-head p{font-size:11px}
+#crmModal .admin-kpi span{font-size:11px}
+#crmModal .admin-kpi strong{font-size:21px}
+#crmModal .admin-global-tab{font-size:11px;padding:10px 12px}
+#crmModal .admin-global-row strong{font-size:12px}
+#crmModal .admin-global-row span{font-size:11px}
+#crmModal .admin-global-delete{font-size:10px}
+#crmModal .admin-global-empty{font-size:11px}
+#crmModal .crm-secondary,#crmModal .crm-primary{font-size:11px}
+@media(max-width:700px){
+  #crmModal .crm-head h3{font-size:22px}
+  #crmModal .admin-kpi strong{font-size:18px}
+  #crmModal .admin-global-tab{font-size:10px}
+  #crmModal .admin-global-row strong{font-size:11px}
+  #crmModal .admin-global-row span{font-size:10px}
+}
+</style>
+
+<style id="seervi-reference-curved-theme">
+/* =========================================================
+   SEERVI REFERENCE THEME
+   Layout inspired by the supplied rounded dashboard reference.
+   Existing IDs, data, Firebase logic and button handlers are
+   intentionally preserved.
+   ========================================================= */
+:root{
+  --ref-bg:#eef3fb;
+  --ref-shell:#ffffff;
+  --ref-ink:#151a22;
+  --ref-muted:#707a88;
+  --ref-line:#e6eaf0;
+  --ref-soft:#f6f8fb;
+  --ref-accent:#2e3d5f;
+  --ref-gold:#d5ae5b;
+}
+
+/* Outer page / large rounded application shell */
+html{background:var(--ref-bg)!important;scroll-behavior:smooth}
+body{
+  min-height:100vh!important;
+  background:
+    radial-gradient(circle at 8% 0%,#ffffff 0,transparent 28%),
+    linear-gradient(135deg,#eef3fb 0%,#f6f8fc 52%,#e9eff8 100%)!important;
+  color:var(--ref-ink)!important;
+  padding:24px 0!important;
+}
+#seerviReferenceShell{
+  width:min(1380px,calc(100% - 48px));
+  margin:0 auto;
+  background:#fff;
+  border:1px solid #e5e9ef;
+  border-radius:30px;
+  box-shadow:0 28px 90px rgba(35,48,70,.14);
+  min-height:calc(100vh - 48px);
+  position:relative;
+}
+#seerviReferenceShell nav{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  border:0!important;
+  border-bottom:1px solid #edf0f4!important;
+  background:rgba(255,255,255,.94)!important;
+  color:var(--ref-ink)!important;
+  border-radius:30px 30px 0 0;
+  box-shadow:none!important;
+  backdrop-filter:blur(16px);
+}
+#seerviReferenceShell nav .wrap{padding:0 38px!important}
+#seerviReferenceShell .logo{
+  color:#151a22!important;
+  font-size:19px!important;
+  letter-spacing:1.2px!important;
+}
+#seerviReferenceShell .logo span{color:#6e7886!important}
+#seerviReferenceShell .logo:before{background:#2e3d5f!important;box-shadow:none!important}
+#seerviReferenceShell .navlinks{color:#586271!important;gap:30px}
+#seerviReferenceShell .navlinks a,
+#seerviReferenceShell .nav-admin-link{color:#4f5967!important}
+#seerviReferenceShell .navlinks a:hover,
+#seerviReferenceShell .nav-admin-link:hover{color:#151a22!important}
+#seerviReferenceShell .btn{
+  background:#2e3d5f!important;color:#fff!important;border-color:#2e3d5f!important;
+  box-shadow:0 8px 18px rgba(46,61,95,.18)!important;
+}
+#seerviReferenceShell .cart-nav-btn{
+  background:#f7f8fa!important;color:#2e3d5f!important;border-color:#dfe4eb!important;
+  margin-left:8px;
+}
+#seerviReferenceShell .cart-nav-btn span{background:#2e3d5f!important;color:#fff!important}
+#seerviReferenceShell .notification-bell{
+  background:#f7f8fa!important;color:#2e3d5f!important;border-color:#dfe4eb!important;
+}
+#seerviReferenceShell .notification-unread-badge{border-color:#fff!important}
+
+/* Home remains the actual Seervi home and keeps its product image fully visible. */
+#seerviReferenceShell #home{
+  margin:22px 28px 0!important;
+  min-height:680px!important;
+  border-radius:26px!important;
+  overflow:hidden!important;
+  border:1px solid #dfe4eb!important;
+  box-shadow:0 20px 55px rgba(20,28,40,.16)!important;
+}
+#seerviReferenceShell #home .bw-nav-overlay{
+  top:24px!important;
+  width:min(1120px,calc(100% - 48px))!important;
+  background:rgba(255,255,255,.94)!important;
+  color:#111!important;
+  border:1px solid rgba(20,30,45,.08);
+  box-shadow:0 14px 35px rgba(0,0,0,.14)!important;
+  backdrop-filter:blur(14px);
+}
+#seerviReferenceShell #home .bw-brand{color:#151a22!important}
+#seerviReferenceShell #home .bw-account-identity{color:#151a22!important}
+#seerviReferenceShell #home .bw-nav-login{background:#2e3d5f!important;color:#fff!important}
+#seerviReferenceShell #home .bw-nav-signup{background:#fff!important;color:#2e3d5f!important;border-color:#2e3d5f!important}
+#seerviReferenceShell #home .bw-nav-dashboard{background:#2e3d5f!important;color:#fff!important;border-color:#2e3d5f!important}
+#seerviReferenceShell #home .bw-hero-copy{padding-left:8px}
+#seerviReferenceShell #home .bw-cta{
+  background:#fff!important;color:#172033!important;
+  box-shadow:0 10px 25px rgba(0,0,0,.16)!important;
+}
+#seerviReferenceShell #home .bw-bottom-bar{
+  width:min(1120px,calc(100% - 48px))!important;
+}
+
+/* Category / content sections become rounded white "workspace cards". */
+#seerviReferenceShell main{
+  background:#fff!important;
+  border-radius:0 0 30px 30px;
+  padding-bottom:28px;
+}
+#seerviReferenceShell #productCategoryBar{
+  margin:22px 28px 0!important;
+  padding:8px 4px 12px!important;
+}
+#seerviReferenceShell section:not(#home){
+  margin-left:28px!important;
+  margin-right:28px!important;
+  border-top:1px solid #edf0f4!important;
+}
+#seerviReferenceShell section:not(#home) .card,
+#seerviReferenceShell section:not(#home) .product-feature,
+#seerviReferenceShell section:not(#home) .profile-product-card,
+#seerviReferenceShell section:not(#home) .home-product-card,
+#seerviReferenceShell section:not(#home) .application-card,
+#seerviReferenceShell section:not(#home) .why-card,
+#seerviReferenceShell section:not(#home) .about-panel,
+#seerviReferenceShell section:not(#home) .contact-card{
+  box-shadow:0 10px 28px rgba(28,40,58,.07)!important;
+}
+
+/* Keep the catalogue readable on the new light shell. */
+#seerviReferenceShell .section-head h2,
+#seerviReferenceShell .product-info h3,
+#seerviReferenceShell .home-product-meta h3,
+#seerviReferenceShell .profile-product-body h3{color:#151a22!important}
+#seerviReferenceShell .section-head p,
+#seerviReferenceShell .product-info p,
+#seerviReferenceShell .home-product-meta p{color:#6f7986!important}
+#seerviReferenceShell .profile-product-card,
+#seerviReferenceShell .home-product-card,
+#seerviReferenceShell .application-card,
+#seerviReferenceShell .why-card,
+#seerviReferenceShell .about-panel,
+#seerviReferenceShell .contact-card{
+  background:#fff!important;border-color:#e4e8ee!important;
+}
+#seerviReferenceShell .profile-product-image{background:#f4f6f9!important}
+#seerviReferenceShell .profile-mini-specs span{color:#313a47!important;border-color:#edf0f4!important}
+#seerviReferenceShell .profile-mini-specs b{color:#7b8592!important}
+#seerviReferenceShell .product-cart-control .product-qty{
+  background:#f7f8fa!important;border-color:#e0e5eb!important;color:#46515f!important
+}
+#seerviReferenceShell .product-cart-control button{background:#fff!important;color:#2e3d5f!important;border-color:#dfe4eb!important}
+#seerviReferenceShell .catalog-controls{
+  background:#f7f9fb!important;border-color:#e3e7ed!important
+}
+#seerviReferenceShell .catalog-search input,
+#seerviReferenceShell .catalog-controls select{
+  background:#fff!important;color:#1d2632!important;border-color:#dfe4eb!important
+}
+#seerviReferenceShell .filter-clear{color:#536071!important;border-color:#dfe4eb!important}
+
+/* Dashboard: same rounded "app" language as the supplied reference. */
+#accountDashboardModal .crm-panel{
+  width:min(1080px,calc(100vw - 48px))!important;
+  max-width:1080px!important;
+  background:#fff!important;
+  color:#151a22!important;
+  border:1px solid #dfe4eb!important;
+  border-radius:28px!important;
+  box-shadow:0 35px 100px rgba(23,35,52,.22)!important;
+  overflow:hidden!important;
+}
+#accountDashboardModal .crm-head{
+  background:#fff!important;
+  border-bottom:1px solid #edf0f4!important;
+  padding:25px 30px!important;
+}
+#accountDashboardModal .crm-kicker,
+#accountDashboardModal .crm-section-title{color:#6b7481!important}
+#accountDashboardModal .crm-head h3{color:#151a22!important;font-size:28px!important}
+#accountDashboardModal .crm-auth-status{color:#7b8592!important}
+#accountDashboardModal .crm-close{
+  background:#f6f8fa!important;color:#1c2532!important;border-color:#dfe4eb!important;
+}
+#accountDashboardModal .account-dashboard-options{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:6px!important;
+  width:225px!important;
+  padding:22px 16px 24px!important;
+  background:#fafbfd!important;
+  border-right:1px solid #edf0f4!important;
+  min-height:390px!important;
+  box-sizing:border-box;
+}
+#accountDashboardModal .account-dashboard-option{
+  min-height:58px!important;
+  width:100%!important;
+  border:0!important;
+  border-radius:10px!important;
+  background:transparent!important;
+  color:#4f5967!important;
+  padding:12px 13px!important;
+  display:grid!important;
+  grid-template-columns:28px 1fr!important;
+  grid-template-rows:auto auto!important;
+  column-gap:9px!important;
+  align-content:center!important;
+  text-align:left!important;
+  transform:none!important;
+  box-shadow:none!important;
+}
+#accountDashboardModal .account-dashboard-option:hover{
+  background:#eef2f7!important;
+  border:0!important;
+  transform:none!important;
+}
+#accountDashboardModal .account-dashboard-option span{
+  grid-row:1 / span 2!important;
+  align-self:center!important;
+  margin:0!important;
+  color:#2e3d5f!important;
+  font-size:17px!important;
+}
+#accountDashboardModal .account-dashboard-option strong{
+  color:#252e3b!important;
+  font-size:10px!important;
+  letter-spacing:.7px!important;
+}
+#accountDashboardModal .account-dashboard-option small{
+  color:#8a94a1!important;
+  font-size:8px!important;
+  margin-top:3px!important;
+}
+#accountDashboardModal .account-dashboard-option.danger:hover{background:#fff1f1!important}
+#accountDashboardModal .account-dashboard-option.danger span{color:#d66d6d!important}
+
+/* Put dashboard navigation at left and leave a clean workspace area beside it. */
+#accountDashboardModal .account-dashboard-options + .account-dashboard-options{border-left:1px solid #edf0f4}
+#accountDashboardModal .crm-panel{display:grid!important;grid-template-columns:225px 1fr}
+#accountDashboardModal .crm-head{grid-column:1/-1}
+#accountDashboardModal #adminDashboardOptions,
+#accountDashboardModal #customerDashboardOptions{grid-column:1}
+#accountDashboardModal:has(#adminDashboardOptions:not([hidden])) #customerDashboardOptions,
+#accountDashboardModal:has(#customerDashboardOptions:not([hidden])) #adminDashboardOptions{display:none!important}
+#accountDashboardModal .crm-panel:after{
+  content:"SEERVI TRADING  •  WORKSPACE";
+  grid-column:2;
+  align-self:center;
+  justify-self:center;
+  color:#b2bac5;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:2px;
+}
+
+/* All working modals inherit the same rounded reference style. */
+#crmModal .crm-panel,
+#customerLoginModal .crm-panel,
+#partySignupModal .crm-panel,
+#notificationModal .crm-panel,
+#adminNewPartyModal .crm-panel,
+#adminStockModal .crm-panel{
+  background:#fff!important;
+  color:#151a22!important;
+  border:1px solid #dfe4eb!important;
+  border-radius:28px!important;
+  box-shadow:0 35px 100px rgba(23,35,52,.22)!important;
+}
+#crmModal .crm-head,
+#customerLoginModal .crm-head,
+#partySignupModal .crm-head,
+#notificationModal .crm-head,
+#adminNewPartyModal .crm-head,
+#adminStockModal .crm-head{
+  background:#fff!important;
+  border-bottom:1px solid #edf0f4!important;
+}
+#crmModal .crm-head h3,
+#customerLoginModal .crm-head h3,
+#partySignupModal .crm-head h3,
+#notificationModal .crm-head h3,
+#adminNewPartyModal .crm-head h3,
+#adminStockModal .crm-head h3{color:#151a22!important}
+#crmModal .crm-kicker,
+#customerLoginModal .crm-kicker,
+#partySignupModal .crm-kicker,
+#notificationModal .crm-kicker,
+#adminNewPartyModal .crm-kicker,
+#adminStockModal .crm-kicker{color:#6b7481!important}
+#crmModal .crm-auth-status,
+#customerLoginModal .crm-auth-status,
+#partySignupModal .crm-auth-status,
+#notificationModal .crm-auth-status,
+#adminNewPartyModal .crm-auth-status,
+#adminStockModal .crm-auth-status{color:#7b8592!important}
+#crmModal .crm-close,
+#customerLoginModal .crm-close,
+#partySignupModal .crm-close,
+#notificationModal .crm-close,
+#adminNewPartyModal .crm-close,
+#adminStockModal .crm-close{
+  background:#f6f8fa!important;color:#1c2532!important;border-color:#dfe4eb!important;
+}
+
+/* Light form surfaces without changing field IDs/behavior. */
+#accountDashboardModal input,#accountDashboardModal textarea,#accountDashboardModal select,
+#crmModal input,#crmModal textarea,#crmModal select,
+#customerLoginModal input,#customerLoginModal textarea,#customerLoginModal select,
+#partySignupModal input,#partySignupModal textarea,#partySignupModal select{
+  background:#f8fafc!important;color:#17202b!important;border-color:#dfe4eb!important;
+}
+#crmModal .admin-kpi,
+#crmModal .admin-global-list,
+#crmModal .admin-global-panel,
+#crmModal .inventory-stock-panel,
+#notificationModal .notification-card{
+  background:#f8fafc!important;color:#17202b!important;border-color:#e3e7ed!important;
+}
+#notificationModal .notification-card-title{color:#17202b!important}
+#notificationModal .notification-card-message{color:#66717f!important}
+#notificationModal .notification-card-date{color:#8a94a1!important}
+#notificationModal .notification-read-btn{background:#fff!important;color:#2e3d5f!important;border-color:#dfe4eb!important}
+
+/* Admin full-screen panel keeps the working area usable, but visually matches shell. */
+#crmModal .crm-panel{border-radius:0!important}
+#crmModal .crm-head{padding:22px 28px!important}
+
+/* Responsive: sidebar becomes a compact horizontal/stacked menu like the reference. */
+@media(max-width:800px){
+  body{padding:10px 0!important}
+  #seerviReferenceShell{width:calc(100% - 20px)!important;border-radius:22px!important;min-height:calc(100vh - 20px)}
+  #seerviReferenceShell nav{border-radius:22px 22px 0 0!important}
+  #seerviReferenceShell nav .wrap{padding:0 16px!important}
+  #seerviReferenceShell #home{margin:12px 12px 0!important;border-radius:20px!important;min-height:720px!important}
+  #seerviReferenceShell #home .bw-nav-overlay{width:calc(100% - 24px)!important;top:12px!important}
+  #seerviReferenceShell section:not(#home){margin-left:12px!important;margin-right:12px!important}
+  #accountDashboardModal .crm-panel{
+    width:min(94vw,720px)!important;
+    display:flex!important;
+    flex-direction:column!important;
+    border-radius:22px!important;
+    max-height:92dvh!important;
+  }
+  #accountDashboardModal .crm-head{flex:0 0 auto!important}
+  #accountDashboardModal .account-dashboard-options{
+    width:100%!important;
+    min-height:0!important;
+    border-right:0!important;
+    border-bottom:1px solid #edf0f4!important;
+    padding:10px!important;
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  #accountDashboardModal .account-dashboard-option{min-height:66px!important}
+  #accountDashboardModal .crm-panel:after{display:none!important}
+}
+@media(max-width:520px){
+  #accountDashboardModal .account-dashboard-options{grid-template-columns:1fr!important}
+  #accountDashboardModal .crm-head{padding:18px!important}
+}
+</style>
+</head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="logo">SEERVI <span>TRADING</span></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a></div><a class="btn" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
+ CART <span id="cartCount">0</span></button><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
+  <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
+</button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url("images/product-image-001-055cde1217d3c801.webp")"images/product-image-001-055cde1217d3c801.webp")"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="bw-nav-overlay"><div class="bw-brand"><button id="bwAccountIdentity" class="bw-account-identity" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><div class="bw-nav-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
   <button type="button" class="product-category-btn category-card active" data-category="all" onclick="showProductCategory('all')">
     <span class="category-card-image"><img src="images/category-all.webp" alt="All Seervi products"></span>
     <span class="category-card-name">ALL PRODUCTS</span>
@@ -7329,120 +7727,21 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
   });
 })();
 </script>
-<style id="seervi-reference-home-theme">
-/* V-REFERENCE HOME THEME — inspired by the supplied clean dashboard reference. */
-:root{--ref-bg:#f4f7fb;--ref-card:#ffffff;--ref-ink:#172033;--ref-muted:#718096;--ref-line:#e5eaf1;--ref-blue:#315b9b;--ref-blue-soft:#edf4ff;--ref-gold:#d8b45a}
-html{scroll-behavior:smooth}
-body{background:var(--ref-bg);color:var(--ref-ink)}
-#seerviMainNav{height:78px;position:sticky;top:0;z-index:500;background:rgba(255,255,255,.92);border-bottom:1px solid var(--ref-line);box-shadow:0 8px 28px rgba(35,55,80,.08);backdrop-filter:blur(18px)}
-.seervi-main-nav-inner{height:100%;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:22px}
-.seervi-brand-lockup{display:flex;align-items:center;gap:14px;min-width:max-content}
-#seerviMainNav .logo{color:var(--ref-ink);font-size:18px;letter-spacing:2px;font-weight:950}
-#seerviMainNav .logo span{color:var(--ref-blue);font-weight:700}
-.seervi-account-chip{border:0;background:transparent;color:#8a94a3;font:inherit;font-size:9px;letter-spacing:.7px;font-weight:800;cursor:pointer;padding:5px 0}
-.seervi-top-links{display:flex!important;align-items:center;justify-content:flex-end;gap:7px!important;position:static!important;background:none!important;border:0!important;box-shadow:none!important;padding:0!important;flex:1}
-.seervi-top-links a,.seervi-auth-link{border:0;background:transparent;color:#4c5666;text-decoration:none;font:inherit;font-size:11px;font-weight:800;padding:10px 12px;border-radius:9px;cursor:pointer;white-space:nowrap;letter-spacing:.1px}
-.seervi-top-links a:hover,.seervi-auth-link:hover{color:var(--ref-blue);background:var(--ref-blue-soft)}
-.seervi-top-links .seervi-quote-link{background:var(--ref-ink);color:#fff;padding:11px 15px}
-.seervi-top-links .seervi-quote-link:hover{background:#263d65;color:#fff}
-.seervi-auth-primary{background:var(--ref-blue)!important;color:#fff!important}
-.seervi-auth-primary:hover{background:#274b80!important}
-#seerviMainNav .cart-nav-btn{margin-left:0;border:1px solid #dfe5ee;background:#fff;color:#315b9b;border-radius:10px;padding:9px 11px;font-size:10px;box-shadow:0 3px 12px rgba(30,55,90,.06)}
-#seerviMainNav .cart-nav-btn span{background:var(--ref-blue);color:#fff}
-#seerviMainNav .notification-bell{margin-left:0;border:1px solid #dfe5ee;background:#fff;color:#315b9b;border-radius:10px;width:40px;height:38px;box-shadow:0 3px 12px rgba(30,55,90,.06)}
-#seerviMainNav .notification-bell:hover{border-color:#b9c9e2;background:#f7faff}
-#seerviMainNav .notification-unread-badge{border-color:#fff}
-#seerviMainNav .mobile-menu-btn{display:none;color:var(--ref-ink);background:#fff;border-color:#dfe5ee}
-/* Hero: clean, airy surface while preserving the existing product artwork/content. */
-#home.bw-hero{min-height:650px;background:#fff!important;border-bottom:1px solid var(--ref-line);overflow:hidden}
-#home .bw-hero-image{opacity:.34!important;filter:saturate(.65) contrast(.92);transform:scale(1.02)}
-#home .bw-hero-wash{background:linear-gradient(90deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.86) 46%,rgba(255,255,255,.34) 100%)!important}
-#home .bw-hero-vignette{background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.78))!important}
-#home .bw-hero-copy{color:var(--ref-ink);max-width:650px}
-#home .bw-kicker{color:#315b9b!important}
-#home .bw-hero-copy h1{color:var(--ref-ink)!important;text-shadow:none}
-#home .bw-hero-copy h1 span{color:var(--ref-blue)!important}
-#home .bw-hero-copy p{color:#657184!important;max-width:560px}
-#home .bw-cta{background:var(--ref-ink)!important;color:#fff!important;border-radius:9px;box-shadow:0 10px 28px rgba(28,44,70,.16)}
-#home .bw-cta:hover{background:var(--ref-blue)!important}
-/* Category/product areas become clean white cards like the reference. */
-#productCategoryBar{background:transparent!important;border:0!important;box-shadow:none!important;padding-top:28px!important}
-.product-category-btn{background:var(--ref-card)!important;color:#596477!important;border:1px solid var(--ref-line)!important;box-shadow:0 7px 24px rgba(36,57,82,.06)!important;border-radius:14px!important}
-.product-category-btn.active{background:var(--ref-blue)!important;color:#fff!important;border-color:var(--ref-blue)!important}
-section#profiles,section#products,section#tvMounts,section#earthAugers,section#about,section#contact{background:var(--ref-bg)!important;color:var(--ref-ink)!important}
-.section-head .tag,.tag{color:#315b9b!important}
-.section-head h2,section h2{color:var(--ref-ink)!important}
-.section-head p{color:var(--ref-muted)!important}
-.profile-product-card,.home-product-card,.earth-auger-product-card,.contact-card,.why-card{background:var(--ref-card)!important;color:var(--ref-ink)!important;border:1px solid var(--ref-line)!important;box-shadow:0 8px 28px rgba(36,57,82,.055)!important}
-.profile-product-body h3,.home-product-card h3,.earth-auger-product-card h3{color:var(--ref-ink)!important}
-.profile-mini-specs span,.profile-mini-specs b,.home-product-card p,.earth-auger-product-card p{color:#738094!important}
-.catalog-search,.catalog-controls select,.filter-clear{background:#fff!important;border-color:var(--ref-line)!important;color:var(--ref-ink)!important}
-footer{background:#fff!important;color:#7b8594!important;border-top:1px solid var(--ref-line)!important}
-/* Dashboard options: compact vertical left-side navigation, as requested. */
-#adminDashboardOptions[hidden],#customerDashboardOptions[hidden]{display:none!important}
-.account-dashboard-panel{width:min(1040px,calc(100vw - 36px))!important;max-width:none!important;background:#fff!important;color:var(--ref-ink)!important;border:1px solid var(--ref-line)!important;box-shadow:0 30px 80px rgba(20,35,55,.2)!important}
-.account-dashboard-panel .crm-head{background:#fff!important;border-bottom:1px solid var(--ref-line)!important}
-.account-dashboard-panel .crm-head h3{color:var(--ref-ink)!important}
-.account-dashboard-panel .crm-auth-status{color:#7a8698!important}
-.account-dashboard-options{display:flex!important;flex-direction:column!important;gap:5px!important;width:245px!important;padding:18px!important;border-right:1px solid var(--ref-line)!important;background:#f8fafd!important;min-height:320px!important;box-sizing:border-box}
-.account-dashboard-option{min-height:0!important;width:100%!important;border:1px solid transparent!important;background:transparent!important;color:#4f5b6d!important;border-radius:10px!important;padding:13px 12px!important;display:grid!important;grid-template-columns:28px 1fr!important;grid-template-rows:auto auto!important;column-gap:8px!important;transform:none!important;box-shadow:none!important}
-.account-dashboard-option span{grid-row:1/3;color:var(--ref-blue)!important;font-size:17px!important}
-.account-dashboard-option strong{color:var(--ref-ink)!important;font-size:10px!important;letter-spacing:.8px}
-.account-dashboard-option small{color:#8792a1!important;font-size:8px!important;margin-top:3px}
-.account-dashboard-option:hover{background:#fff!important;border-color:#dce6f3!important;transform:none!important;box-shadow:0 5px 18px rgba(36,57,82,.06)!important}
-.account-dashboard-option.danger strong,.account-dashboard-option.danger span{color:#d85b63!important}
-@media(max-width:900px){
- #seerviMainNav{height:68px}.seervi-main-nav-inner{padding-left:18px!important;padding-right:18px!important}.seervi-account-chip{display:none}.seervi-top-links{gap:2px!important}.seervi-top-links a,.seervi-auth-link{font-size:10px;padding:8px}.seervi-top-links .seervi-quote-link{padding:9px 10px}.account-dashboard-panel{width:calc(100vw - 20px)!important}.account-dashboard-options{width:205px!important}
-}
-@media(max-width:650px){
- #seerviMainNav .wrap{padding-left:14px!important;padding-right:14px!important}.seervi-brand-lockup .logo{font-size:15px}.seervi-top-links a[href="#about"],.seervi-top-links a[href="#contact"],.seervi-top-links .seervi-quote-link{display:none!important}.seervi-top-links{flex:0 0 auto}.seervi-top-links .cart-nav-btn{display:inline-flex}.seervi-top-links .notification-bell{display:inline-flex}.seervi-top-links .seervi-auth-link{font-size:9px;padding:8px}.account-dashboard-panel{width:calc(100vw - 12px)!important}.account-dashboard-options{width:100%!important;border-right:0!important;border-bottom:1px solid var(--ref-line)!important;min-height:0!important;display:grid!important;grid-template-columns:1fr 1fr!important;flex-direction:row!important;padding:10px!important}.account-dashboard-option{padding:11px!important}
-}
-</style>
-
-<style id="seervi-curve-shell-v2">
-/* V2 — rounded workspace shell inspired by the supplied reference. */
-:root{--curve-bg:#f3f6fa;--curve-card:#fff;--curve-ink:#172033;--curve-muted:#748196;--curve-line:#e2e8f0;--curve-blue:#315b9b}
-body{background:var(--curve-bg)!important}
-#seerviMainNav{margin:16px 18px 0!important;border:1px solid var(--curve-line)!important;border-radius:24px 24px 0 0!important;box-shadow:0 8px 30px rgba(30,50,75,.08)!important}
-main{padding:0 18px 28px}
-#home.bw-hero{position:relative;min-height:700px!important;margin:0!important;border-radius:0 0 34px 34px!important;border:1px solid var(--curve-line)!important;border-top:0!important;background:#fff!important;box-shadow:0 20px 50px rgba(30,50,75,.08)!important}
-#home .bw-hero-image{opacity:.58!important;filter:saturate(.78) contrast(.98)!important;transform:none!important;background-position:center right!important;background-size:cover!important}
-#home .bw-hero-wash{background:linear-gradient(90deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.90) 34%,rgba(255,255,255,.42) 63%,rgba(255,255,255,.10) 100%)!important}
-#home .bw-hero-vignette{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.08))!important}
-#home .bw-hero-content{min-height:700px;display:flex;align-items:center}
-#home .bw-hero-copy{background:rgba(255,255,255,.82);border:1px solid rgba(226,232,240,.92);border-radius:28px;padding:34px 38px;box-shadow:0 18px 55px rgba(35,55,80,.10);backdrop-filter:blur(10px)}
-#home .bw-bottom-bar{display:none!important}
-#productCategoryBar,.home-product-grid,section#profiles,section#products,section#tvMounts,section#earthAugers,section#about,section#contact{border-radius:26px}
-section#profiles,section#products,section#tvMounts,section#earthAugers,section#about,section#contact{margin-top:22px;border:1px solid var(--curve-line);overflow:hidden}
-#productCategoryBar{padding:24px!important}
-/* Dashboard: full curved app workspace with vertical navigation on the left. */
-#accountDashboardModal .crm-backdrop{background:rgba(24,35,50,.22)!important;backdrop-filter:blur(7px)}
-#accountDashboardModal .account-dashboard-panel{width:min(1180px,calc(100vw - 44px))!important;height:min(780px,calc(100vh - 44px))!important;max-height:none!important;padding:0!important;overflow:hidden!important;display:grid!important;grid-template-columns:250px 1fr;grid-template-rows:78px 1fr!important;border-radius:30px!important;background:#fff!important;border:1px solid var(--curve-line)!important;box-shadow:0 35px 100px rgba(25,42,65,.24)!important}
-#accountDashboardModal .account-dashboard-panel>.crm-head{grid-column:1/-1;grid-row:1;margin:0!important;padding:18px 22px!important;border-bottom:1px solid var(--curve-line)!important;display:flex!important;align-items:center!important;background:#fff!important}
-#accountDashboardModal .account-dashboard-options{grid-column:1;grid-row:2;display:flex!important;flex-direction:column!important;gap:6px!important;width:auto!important;min-height:0!important;height:auto!important;padding:18px 14px!important;border:0!important;border-right:1px solid var(--curve-line)!important;background:#f8fafd!important;overflow-y:auto!important;box-sizing:border-box!important}
-#accountDashboardModal .account-dashboard-option{width:100%!important;min-height:64px!important;flex:0 0 auto!important;border:1px solid transparent!important;border-radius:12px!important;padding:12px 13px!important;background:transparent!important;display:grid!important;grid-template-columns:30px 1fr!important;grid-template-rows:auto auto!important;align-items:center!important;text-align:left!important;transform:none!important;box-shadow:none!important}
-#accountDashboardModal .account-dashboard-option span{grid-row:1/3;margin:0!important;align-self:center!important;font-size:18px!important;color:var(--curve-blue)!important}
-#accountDashboardModal .account-dashboard-option strong{font-size:11px!important;color:var(--curve-ink)!important;letter-spacing:.7px!important}
-#accountDashboardModal .account-dashboard-option small{font-size:9px!important;color:#8792a1!important;margin-top:3px!important}
-#accountDashboardModal .account-dashboard-option:hover{background:#fff!important;border-color:#d9e3f0!important;box-shadow:0 7px 22px rgba(35,55,80,.07)!important}
-#accountDashboardModal .account-dashboard-option.danger strong,#accountDashboardModal .account-dashboard-option.danger span{color:#d85b63!important}
-/* Make child panels use the same soft curved language when an option opens. */
-.crm-panel.admin-panel,.crm-panel.customer-portal-panel,.crm-panel.notification-panel,.crm-panel.party-signup-panel,.crm-panel.stock-panel,.crm-panel.admin-new-party-panel{border-radius:30px!important;border:1px solid var(--curve-line)!important;box-shadow:0 35px 100px rgba(25,42,65,.24)!important}
-@media(max-width:800px){
- main{padding:0 8px 18px}
- #seerviMainNav{margin:8px 8px 0!important;border-radius:20px 20px 0 0!important}
- #home.bw-hero{min-height:620px!important;border-radius:0 0 24px 24px!important}
- #home .bw-hero-content{min-height:620px}
- #home .bw-hero-copy{padding:25px 22px;border-radius:22px;margin:0 10px}
- #accountDashboardModal .account-dashboard-panel{width:calc(100vw - 18px)!important;height:calc(100vh - 18px)!important;border-radius:24px!important;grid-template-columns:1fr!important;grid-template-rows:78px auto 1fr!important}
- #accountDashboardModal .account-dashboard-panel>.crm-head{grid-column:1;grid-row:1}
- #accountDashboardModal .account-dashboard-options{grid-column:1;grid-row:2;height:auto!important;max-height:190px!important;border-right:0!important;border-bottom:1px solid var(--curve-line)!important;display:grid!important;grid-template-columns:1fr 1fr!important;overflow-y:auto!important;padding:10px!important}
- #accountDashboardModal .account-dashboard-option{min-height:58px!important}
-}
-@media(max-width:520px){
- #accountDashboardModal .account-dashboard-options{grid-template-columns:1fr!important;max-height:245px!important}
- #home .bw-hero-image{opacity:.45!important;background-position:62% center!important}
-}
-</style>
-
+<script id="seervi-reference-theme-bootstrap">
+(function(){
+  function mountShell(){
+    if(document.getElementById('seerviReferenceShell')) return;
+    const nav=document.querySelector('body > nav');
+    const main=document.querySelector('body > main');
+    if(!nav || !main) return;
+    const shell=document.createElement('div');
+    shell.id='seerviReferenceShell';
+    nav.parentNode.insertBefore(shell,nav);
+    shell.appendChild(nav);
+    shell.appendChild(main);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mountShell,{once:true});
+  else mountShell();
+})();
+</script>
 </body></html>
