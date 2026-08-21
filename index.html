@@ -3149,11 +3149,16 @@ html, body { width:100%; max-width:100%; overflow-x:hidden !important; }
   nav{height:108px !important; min-height:108px !important; position:sticky !important; top:0 !important;}
   nav > .wrap{height:100% !important; position:relative !important; display:flex !important; align-items:flex-start !important; padding:18px 10px 0 !important; overflow:visible !important;}
   nav > .wrap > .nav-left-group{position:absolute !important; left:10px !important; right:10px !important; bottom:8px !important; width:auto !important; margin:0 !important; height:22px !important; display:flex !important; align-items:center !important; justify-content:flex-start !important; gap:0 !important; z-index:3 !important;}
-  nav .bw-account-identity-top{width:100% !important; max-width:none !important; height:22px !important; min-height:22px !important; padding:0 !important; margin:0 !important; display:flex !important; align-items:center !important; justify-content:flex-start !important; gap:5px !important; border:0 !important; background:transparent !important; border-radius:0 !important; overflow:hidden !important; white-space:nowrap !important; font-size:10px !important; letter-spacing:0 !important; line-height:1 !important;}
-  nav .bw-account-identity-top #topGreeting{display:inline !important; flex:0 0 auto !important; font-size:10px !important; font-weight:700 !important;}
-  nav .bw-account-identity-top #topDateTime{display:inline !important; flex:0 0 auto !important; font-size:10px !important; color:#aeb6c2 !important;}
+  nav .bw-account-identity-top{width:100% !important; max-width:none !important; height:22px !important; min-height:22px !important; padding:0 !important; margin:0 !important; display:flex !important; align-items:center !important; justify-content:flex-start !important; gap:4px !important; border:0 !important; background:transparent !important; border-radius:0 !important; overflow:hidden !important; white-space:nowrap !important; font-size:9px !important; letter-spacing:0 !important; line-height:1 !important;}
+  nav .bw-account-identity-top #topGreeting{display:inline !important; flex:0 0 auto !important; font-size:9px !important; font-weight:700 !important; white-space:nowrap !important;}
+  nav .bw-account-identity-top #topDateTime{display:inline !important; flex:0 0 auto !important; min-width:max-content !important; font-size:9px !important; color:#aeb6c2 !important; white-space:nowrap !important;}
   nav .bw-account-identity-top .top-identity-sep{display:inline !important; flex:0 0 auto !important; color:#d8b45a !important;}
-  nav .bw-account-identity-top #topLoginEmail{display:inline !important; min-width:0 !important; max-width:42vw !important; overflow:hidden !important; text-overflow:ellipsis !important; white-space:nowrap !important; font-size:10px !important; font-weight:600 !important;}
+  nav .bw-account-identity-top #topLoginEmail{display:inline !important; flex:1 1 auto !important; min-width:0 !important; max-width:none !important; overflow:hidden !important; text-overflow:ellipsis !important; white-space:nowrap !important; font-size:9px !important; font-weight:600 !important;}
+}
+
+/* Mobile hero: show the right-hand side of the desktop artwork instead of the centered crop. */
+@media(max-width:600px){
+  .bw-hero .bw-hero-image{background-position:right center !important;}
 }
 </style>
 
@@ -7995,3 +8000,9 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
   });
 })();
 </script></body></html>
+<style id="mobile-hero-right-crop-final">
+@media(max-width:600px){
+  .bw-hero .bw-hero-image{background-position:right center !important;background-size:cover !important;}
+  nav .bw-account-identity-top #topDateTime{overflow:visible !important;text-overflow:clip !important;flex-shrink:0 !important;}
+}
+</style>
