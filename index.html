@@ -7398,4 +7398,51 @@ footer{background:#fff!important;color:#7b8594!important;border-top:1px solid va
  #seerviMainNav .wrap{padding-left:14px!important;padding-right:14px!important}.seervi-brand-lockup .logo{font-size:15px}.seervi-top-links a[href="#about"],.seervi-top-links a[href="#contact"],.seervi-top-links .seervi-quote-link{display:none!important}.seervi-top-links{flex:0 0 auto}.seervi-top-links .cart-nav-btn{display:inline-flex}.seervi-top-links .notification-bell{display:inline-flex}.seervi-top-links .seervi-auth-link{font-size:9px;padding:8px}.account-dashboard-panel{width:calc(100vw - 12px)!important}.account-dashboard-options{width:100%!important;border-right:0!important;border-bottom:1px solid var(--ref-line)!important;min-height:0!important;display:grid!important;grid-template-columns:1fr 1fr!important;flex-direction:row!important;padding:10px!important}.account-dashboard-option{padding:11px!important}
 }
 </style>
+
+<style id="seervi-curve-shell-v2">
+/* V2 — rounded workspace shell inspired by the supplied reference. */
+:root{--curve-bg:#f3f6fa;--curve-card:#fff;--curve-ink:#172033;--curve-muted:#748196;--curve-line:#e2e8f0;--curve-blue:#315b9b}
+body{background:var(--curve-bg)!important}
+#seerviMainNav{margin:16px 18px 0!important;border:1px solid var(--curve-line)!important;border-radius:24px 24px 0 0!important;box-shadow:0 8px 30px rgba(30,50,75,.08)!important}
+main{padding:0 18px 28px}
+#home.bw-hero{position:relative;min-height:700px!important;margin:0!important;border-radius:0 0 34px 34px!important;border:1px solid var(--curve-line)!important;border-top:0!important;background:#fff!important;box-shadow:0 20px 50px rgba(30,50,75,.08)!important}
+#home .bw-hero-image{opacity:.58!important;filter:saturate(.78) contrast(.98)!important;transform:none!important;background-position:center right!important;background-size:cover!important}
+#home .bw-hero-wash{background:linear-gradient(90deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.90) 34%,rgba(255,255,255,.42) 63%,rgba(255,255,255,.10) 100%)!important}
+#home .bw-hero-vignette{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.08))!important}
+#home .bw-hero-content{min-height:700px;display:flex;align-items:center}
+#home .bw-hero-copy{background:rgba(255,255,255,.82);border:1px solid rgba(226,232,240,.92);border-radius:28px;padding:34px 38px;box-shadow:0 18px 55px rgba(35,55,80,.10);backdrop-filter:blur(10px)}
+#home .bw-bottom-bar{display:none!important}
+#productCategoryBar,.home-product-grid,section#profiles,section#products,section#tvMounts,section#earthAugers,section#about,section#contact{border-radius:26px}
+section#profiles,section#products,section#tvMounts,section#earthAugers,section#about,section#contact{margin-top:22px;border:1px solid var(--curve-line);overflow:hidden}
+#productCategoryBar{padding:24px!important}
+/* Dashboard: full curved app workspace with vertical navigation on the left. */
+#accountDashboardModal .crm-backdrop{background:rgba(24,35,50,.22)!important;backdrop-filter:blur(7px)}
+#accountDashboardModal .account-dashboard-panel{width:min(1180px,calc(100vw - 44px))!important;height:min(780px,calc(100vh - 44px))!important;max-height:none!important;padding:0!important;overflow:hidden!important;display:grid!important;grid-template-columns:250px 1fr;grid-template-rows:78px 1fr!important;border-radius:30px!important;background:#fff!important;border:1px solid var(--curve-line)!important;box-shadow:0 35px 100px rgba(25,42,65,.24)!important}
+#accountDashboardModal .account-dashboard-panel>.crm-head{grid-column:1/-1;grid-row:1;margin:0!important;padding:18px 22px!important;border-bottom:1px solid var(--curve-line)!important;display:flex!important;align-items:center!important;background:#fff!important}
+#accountDashboardModal .account-dashboard-options{grid-column:1;grid-row:2;display:flex!important;flex-direction:column!important;gap:6px!important;width:auto!important;min-height:0!important;height:auto!important;padding:18px 14px!important;border:0!important;border-right:1px solid var(--curve-line)!important;background:#f8fafd!important;overflow-y:auto!important;box-sizing:border-box!important}
+#accountDashboardModal .account-dashboard-option{width:100%!important;min-height:64px!important;flex:0 0 auto!important;border:1px solid transparent!important;border-radius:12px!important;padding:12px 13px!important;background:transparent!important;display:grid!important;grid-template-columns:30px 1fr!important;grid-template-rows:auto auto!important;align-items:center!important;text-align:left!important;transform:none!important;box-shadow:none!important}
+#accountDashboardModal .account-dashboard-option span{grid-row:1/3;margin:0!important;align-self:center!important;font-size:18px!important;color:var(--curve-blue)!important}
+#accountDashboardModal .account-dashboard-option strong{font-size:11px!important;color:var(--curve-ink)!important;letter-spacing:.7px!important}
+#accountDashboardModal .account-dashboard-option small{font-size:9px!important;color:#8792a1!important;margin-top:3px!important}
+#accountDashboardModal .account-dashboard-option:hover{background:#fff!important;border-color:#d9e3f0!important;box-shadow:0 7px 22px rgba(35,55,80,.07)!important}
+#accountDashboardModal .account-dashboard-option.danger strong,#accountDashboardModal .account-dashboard-option.danger span{color:#d85b63!important}
+/* Make child panels use the same soft curved language when an option opens. */
+.crm-panel.admin-panel,.crm-panel.customer-portal-panel,.crm-panel.notification-panel,.crm-panel.party-signup-panel,.crm-panel.stock-panel,.crm-panel.admin-new-party-panel{border-radius:30px!important;border:1px solid var(--curve-line)!important;box-shadow:0 35px 100px rgba(25,42,65,.24)!important}
+@media(max-width:800px){
+ main{padding:0 8px 18px}
+ #seerviMainNav{margin:8px 8px 0!important;border-radius:20px 20px 0 0!important}
+ #home.bw-hero{min-height:620px!important;border-radius:0 0 24px 24px!important}
+ #home .bw-hero-content{min-height:620px}
+ #home .bw-hero-copy{padding:25px 22px;border-radius:22px;margin:0 10px}
+ #accountDashboardModal .account-dashboard-panel{width:calc(100vw - 18px)!important;height:calc(100vh - 18px)!important;border-radius:24px!important;grid-template-columns:1fr!important;grid-template-rows:78px auto 1fr!important}
+ #accountDashboardModal .account-dashboard-panel>.crm-head{grid-column:1;grid-row:1}
+ #accountDashboardModal .account-dashboard-options{grid-column:1;grid-row:2;height:auto!important;max-height:190px!important;border-right:0!important;border-bottom:1px solid var(--curve-line)!important;display:grid!important;grid-template-columns:1fr 1fr!important;overflow-y:auto!important;padding:10px!important}
+ #accountDashboardModal .account-dashboard-option{min-height:58px!important}
+}
+@media(max-width:520px){
+ #accountDashboardModal .account-dashboard-options{grid-template-columns:1fr!important;max-height:245px!important}
+ #home .bw-hero-image{opacity:.45!important;background-position:62% center!important}
+}
+</style>
+
 </body></html>
