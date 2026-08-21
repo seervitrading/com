@@ -4551,7 +4551,7 @@ function updateAuthNav(){
   const identity=$('bwAccountIdentity');
   if(identity){
     const email=(crmUser?.email||customerUser?.email||'').trim();
-    identity.textContent=loggedIn ? ('• '+(email||'CONNECTED ACCOUNT')) : '• SEERVI TRADING';
+    identity.textContent=loggedIn ? ('• '+(email||'CONNECTED ACCOUNT')+'  SEERVI TRADING') : '• SEERVI TRADING';
     identity.title=loggedIn ? ('Logged in as '+(email||'Connected account')+' — tap to open profile/dashboard') : 'SEERVI TRADING';
     identity.setAttribute('aria-label',loggedIn ? ('Logged in as '+(email||'Connected account')+'. Tap to open profile or dashboard.') : 'SEERVI TRADING');
   }
