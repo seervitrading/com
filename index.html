@@ -2823,10 +2823,116 @@ nav .top-account-actions .bw-nav-dashboard{
 #bwNavLogin[hidden],#bwNavSignup[hidden],#bwNavDashboard[hidden]{display:none!important}
 #bwNavLogin:not([hidden]),#bwNavSignup:not([hidden]),#bwNavDashboard:not([hidden]){display:inline-flex!important;align-items:center;justify-content:center}
 </style>
-</head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><button id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a></div><a class="btn" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
+
+<style id="topbar-uniform-spacing-v3">
+/* V3 — uniform spacing across the complete top navigation.
+   Keep the Seervi identity pinned left; every navigation/control group uses the same gap. */
+@media(min-width:601px){
+  nav > .wrap{
+    justify-content:flex-start !important;
+    gap:14px !important;
+  }
+  nav .nav-left-group{
+    margin-right:auto !important;
+    flex:0 0 auto;
+  }
+  nav .navlinks{
+    display:flex !important;
+    align-items:center;
+    gap:14px !important;
+    margin-left:0 !important;
+  }
+  nav .navlinks a,
+  nav > .wrap > .btn,
+  nav > .wrap > .cart-nav-btn,
+  nav > .wrap > .notification-bell,
+  nav .top-account-actions{
+    margin:0 !important;
+  }
+  nav .top-account-actions{
+    display:flex !important;
+    align-items:center;
+    gap:14px !important;
+  }
+}
+@media(max-width:600px){
+  nav > .wrap{gap:8px !important;}
+  nav .navlinks{gap:8px !important;}
+  nav .top-account-actions{gap:8px !important;}
+}
+</style>
+
+<style id="topbar-final-layout-v4">
+/* V4 — requested desktop top-bar layout: left identity/time; navigation anchored to the right. */
+@media(min-width:901px){
+  nav > .wrap{
+    width:100% !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:0 !important;
+    padding-left:22px !important;
+    padding-right:22px !important;
+    box-sizing:border-box !important;
+  }
+  nav .nav-left-group{
+    margin-right:auto !important;
+    flex:0 0 auto !important;
+    min-width:0 !important;
+  }
+  nav .bw-account-identity-top{
+    height:40px !important;
+    min-height:40px !important;
+    padding:0 !important;
+    border:0 !important;
+    background:transparent !important;
+    border-radius:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:8px !important;
+    max-width:none !important;
+    white-space:nowrap !important;
+    color:#e7e9ec !important;
+    cursor:default !important;
+  }
+  nav .bw-account-identity-top #topGreeting{font-weight:700 !important}
+  nav .bw-account-identity-top #topDateTime{font-weight:500 !important;color:#aeb6c2 !important}
+  nav .bw-account-identity-top .top-identity-sep{color:#d8b45a !important}
+  nav .bw-account-identity-top #topLoginEmail{font-weight:600 !important;color:#e7e9ec !important}
+  nav .navlinks{display:flex !important;align-items:center !important;gap:14px !important;margin:0 !important;order:10 !important}
+  nav .navlinks .nav-home{order:1 !important}
+  nav .navlinks .nav-about{order:2 !important}
+  nav .nav-dashboard-slot{order:20 !important;margin-left:14px !important;flex:0 0 auto !important}
+  nav .nav-dashboard-slot .top-account-actions{display:flex !important;align-items:center !important;gap:0 !important;margin:0 !important}
+  nav .nav-contact{order:30 !important;margin-left:24px !important}
+  nav .nav-quote{order:40 !important;margin-left:14px !important}
+  nav .cart-nav-btn{order:50 !important;margin-left:14px !important}
+  nav .notification-bell{order:60 !important;margin-left:14px !important}
+  nav .navlinks a,
+  nav .nav-contact,
+  nav .nav-quote,
+  nav .cart-nav-btn,
+  nav .notification-bell,
+  nav .nav-dashboard-slot .bw-nav-login,
+  nav .nav-dashboard-slot .bw-nav-signup,
+  nav .nav-dashboard-slot .bw-nav-dashboard{height:40px !important;min-height:40px !important}
+}
+@media(max-width:900px){
+  nav .nav-left-group{margin-right:auto !important}
+  nav .bw-account-identity-top{border:0 !important;background:transparent !important;padding:0 4px !important;display:flex !important;gap:5px !important;white-space:nowrap !important;overflow:hidden !important}
+  nav .bw-account-identity-top #topGreeting{display:none}
+  nav .bw-account-identity-top #topDateTime{font-size:10px !important}
+  nav .bw-account-identity-top #topLoginEmail{font-size:10px !important;overflow:hidden;text-overflow:ellipsis}
+  nav .top-identity-sep{display:none}
+  nav .nav-contact{display:inline-flex !important;align-items:center;justify-content:center}
+  nav .nav-dashboard-slot{display:flex;align-items:center;flex:0 0 auto}
+}
+</style>
+</head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
-</button><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url("images/product-image-001-055cde1217d3c801.webp")"images/product-image-001-055cde1217d3c801.webp")"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
+</button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url("images/product-image-001-055cde1217d3c801.webp")"images/product-image-001-055cde1217d3c801.webp")"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
   <button type="button" class="product-category-btn category-card active" data-category="all" onclick="showProductCategory('all')">
     <span class="category-card-image"><img src="images/category-all.webp" alt="All Seervi products"></span>
     <span class="category-card-name">ALL PRODUCTS</span>
@@ -4772,6 +4878,18 @@ function goHomeAfterAuth(){
   }catch(e){console.warn('Home navigation after auth failed',e);}
 }
 window.hasAnyAuthenticatedUser=function(){return !!(crmUser||customerUser);};
+function updateTopDateTime(){
+  const g=$('topGreeting'), dt=$('topDateTime');
+  if(!g || !dt) return;
+  const now=new Date();
+  const h=now.getHours();
+  g.textContent=h<12?'Good Morning':(h<17?'Good Afternoon':'Good Evening');
+  const date=now.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  const time=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
+  dt.textContent=date+' • '+time;
+}
+setInterval(updateTopDateTime,1000);
+document.addEventListener('DOMContentLoaded',updateTopDateTime);
 function updateAuthNav(){
   hideGlobalActionLoader();
   const loggedIn=!!(crmUser||customerUser);
@@ -4785,11 +4903,13 @@ function updateAuthNav(){
   ['mobileNavDashboard'].forEach(id=>{const el=$(id);if(el){el.hidden=!loggedIn;el.textContent='My Dashboard';}});
   const identity=$('bwAccountIdentity');
   if(identity){
-    const email=(crmUser?.email||customerUser?.email||'').trim();
-    identity.textContent=loggedIn ? ('• '+(email||'CONNECTED ACCOUNT')) : '• SEERVI TRADING';
-    identity.title=loggedIn ? ('Logged in as '+(email||'Connected account')+' — tap to open profile/dashboard') : 'SEERVI TRADING';
-    identity.setAttribute('aria-label',loggedIn ? ('Logged in as '+(email||'Connected account')+'. Tap to open profile or dashboard.') : 'SEERVI TRADING');
+    const email=(crmUser?.email||customerUser?.email||'seervitrading@gmail.com').trim();
+    const emailEl=$('topLoginEmail');
+    if(emailEl) emailEl.textContent=email;
+    identity.title=loggedIn ? ('Logged in as '+email+' — dashboard access') : 'Seervi Trading';
+    identity.setAttribute('aria-label',(loggedIn?'Logged in as ':'Contact email: ')+email);
   }
+  updateTopDateTime();
 }
 window.openAccountIdentity=function(){
   if(crmUser){openMyDashboard();return;}
