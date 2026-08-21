@@ -2574,10 +2574,29 @@ body:not(.admin-quote-mode) .cart-note{
   #crmModal .admin-global-row span{font-size:10px}
 }
 </style>
+
+<style id="seervi-top-account-actions">
+/* Keep account actions beside the notification bell in the main top navigation. */
+.top-account-actions{display:flex;align-items:center;gap:6px;margin-left:2px;flex:0 0 auto}
+.top-account-actions .bw-nav-login,.top-account-actions .bw-nav-signup,.top-account-actions .bw-nav-dashboard{padding:9px 11px;font-size:9px;border-radius:7px}
+.top-account-actions .bw-nav-login{border:1px solid #ffffff18;background:#11171e;color:#fff}
+.top-account-actions .bw-nav-signup{border:1px solid #d8b45a;background:#d8b45a;color:#111}
+.top-account-actions .bw-nav-dashboard{border:1px solid #d8b45a;background:#d8b45a;color:#111}
+.top-account-actions button:hover{opacity:.9}
+@media(max-width:800px){
+  nav .wrap{grid-template-columns:minmax(0,1fr) auto auto auto minmax(0,auto)!important}
+  nav .notification-bell{grid-column:4;grid-row:1;margin-left:0;width:40px;height:38px}
+  nav .top-account-actions{grid-column:5;grid-row:1;gap:4px;justify-self:end}
+  nav .top-account-actions .bw-nav-login,nav .top-account-actions .bw-nav-signup,nav .top-account-actions .bw-nav-dashboard{padding:8px 8px;font-size:8px}
+}
+@media(max-width:520px){
+  nav .top-account-actions .bw-nav-login,nav .top-account-actions .bw-nav-signup,nav .top-account-actions .bw-nav-dashboard{padding:7px 6px;font-size:7px;letter-spacing:.15px}
+}
+</style>
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="logo">SEERVI <span>TRADING</span></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a href="#home">Home</a><a href="#about">About</a><a href="#contact">Contact</a></div><a class="btn" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
-</button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url("images/product-image-001-055cde1217d3c801.webp")"images/product-image-001-055cde1217d3c801.webp")"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="bw-nav-overlay"><div class="bw-brand"><button id="bwAccountIdentity" class="bw-account-identity" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div><div class="bw-nav-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
+</button><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url("images/product-image-001-055cde1217d3c801.webp")"images/product-image-001-055cde1217d3c801.webp")"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="bw-nav-overlay"><div class="bw-brand"><button id="bwAccountIdentity" class="bw-account-identity" type="button" onclick="openAccountIdentity()">• SEERVI TRADING</button></div></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Precision-engineered cutting blades and aluminium profiles for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section><div id="productCategoryBar" class="product-category-bar" aria-label="Product categories">
   <button type="button" class="product-category-btn category-card active" data-category="all" onclick="showProductCategory('all')">
     <span class="category-card-image"><img src="images/category-all.webp" alt="All Seervi products"></span>
     <span class="category-card-name">ALL PRODUCTS</span>
