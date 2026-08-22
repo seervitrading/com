@@ -3641,7 +3641,8 @@ body.seervi-category-active #productCategoryBar{display:none!important;}
   body.mobile-products-view.mobile-mother-selected #earthAugers{
     scroll-margin-top:132px;
   }
-  body.mobile-products-view.mobile-mother-selected .seervi-mobile-category-back{display:none;width:100%;margin:0;padding:8px 12px 4px;}
+  body.mobile-products-view:not(.mobile-mother-selected) .seervi-mobile-category-back{display:none!important;}
+body.mobile-products-view.mobile-mother-selected .seervi-mobile-category-back{display:flex;width:100%;margin:0;padding:8px 12px 4px;}
 .seervi-mobile-category-back button{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.035));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#eef2f5;border-radius:999px;padding:8px 14px 8px 9px;font-size:10px;font-weight:900;letter-spacing:.08em;cursor:pointer;touch-action:manipulation;box-shadow:0 6px 18px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.16);transition:transform .18s ease,border-color .18s ease,background .18s ease;}
 .seervi-mobile-category-back button:active{transform:scale(.96);background:rgba(255,255,255,.13);}
 .seervi-mobile-category-back .back-icon{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);font-size:20px;line-height:18px;font-weight:500;}
@@ -3789,7 +3790,7 @@ body.seervi-category-active #productCategoryBar{display:none!important;}
   </button>
 </div>
 <div id="mobileSubcategoryBar" aria-label="Sub categories"></div>
-<div class="seervi-mobile-category-back"><button type="button" onclick="mobileBackToMotherCategories()" aria-label="Back to all categories"><span class="back-icon">‹</span><span class="back-label">ALL CATEGORIES</span></button></div>
+<div class="seervi-mobile-category-back"><button type="button" onclick="mobileBackToMotherCategories()"><span class="back-icon">‹</span><span class="back-label">BACK TO CATEGORIES</span></button></div>
 
 <div id="motherCategoryPanel" class="mother-category-panel" aria-hidden="true">
   <div class="mother-category-backdrop" onclick="closeMotherCategory()"></div>
