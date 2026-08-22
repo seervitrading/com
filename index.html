@@ -9199,24 +9199,57 @@ body.seervi-non-home-view nav{display:none !important;}
   }
   body.mobile-products-view.mobile-mother-selected #mobileSubcategoryBar::-webkit-scrollbar{display:none!important}
   #mobileSubcategoryBar .mobile-subcategory-tab{
-    flex:0 0 auto !important;
+    flex:0 0 104px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    justify-content:flex-start !important;
+    gap:0 !important;
+    padding:0 !important;
+    overflow:hidden !important;
     border:1px solid #ffffff22 !important;
-    border-radius:9px !important;
+    border-radius:10px !important;
     background:#11171d !important;
     color:#dfe4e8 !important;
-    padding:10px 13px !important;
-    font-size:10px !important;
-    font-weight:900 !important;
-    line-height:1 !important;
-    letter-spacing:.6px !important;
-    white-space:nowrap !important;
     cursor:pointer !important;
     touch-action:manipulation !important;
+    -webkit-tap-highlight-color:transparent !important;
+  }
+  #mobileSubcategoryBar .mobile-subcategory-tab-image{
+    display:block !important;
+    width:100% !important;
+    height:62px !important;
+    overflow:hidden !important;
+    background:#f3f4f5 !important;
+  }
+  #mobileSubcategoryBar .mobile-subcategory-tab-image img{
+    display:block !important;
+    width:100% !important;
+    height:100% !important;
+    object-fit:cover !important;
+    object-position:center !important;
+  }
+  #mobileSubcategoryBar .mobile-subcategory-tab-name{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    min-height:36px !important;
+    padding:6px 5px !important;
+    color:#eef1f3 !important;
+    font-size:8px !important;
+    font-weight:900 !important;
+    line-height:1.05 !important;
+    letter-spacing:.45px !important;
+    text-align:center !important;
+    white-space:normal !important;
   }
   #mobileSubcategoryBar .mobile-subcategory-tab.active{
-    background:#f0c66a !important;
     border-color:#f0c66a !important;
-    color:#111 !important;
+    box-shadow:0 0 0 1px #f0c66a55 inset !important;
+    background:#17191b !important;
+  }
+  #mobileSubcategoryBar .mobile-subcategory-tab.active .mobile-subcategory-tab-name{
+    color:#f0c66a !important;
   }
   body.mobile-products-view.mobile-mother-selected .seervi-mobile-category-back{
     display:flex !important;
@@ -9237,10 +9270,10 @@ body.seervi-non-home-view nav{display:none !important;}
   function mobile(){ return window.innerWidth <= 600; }
   var ids=['profiles','products','tvMounts','earthAugers','applications'];
   var keys={
-    aluminium:{items:[{title:'ALUMINIUM PROFILES',section:'profiles'}]},
-    tools:{items:[{title:'WALL CUTTER',section:'products',filter:'Wall Cutter Blade'},{title:'METAL CUTTER',section:'products',filter:'Metal Cutting Wheel'}]},
-    tv:{items:[{title:'WALL FIXED',section:'tvMounts',models:['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105']},{title:'WALL MOUNT STANDS',section:'tvMounts',models:['P4-1','P4','P5','P6','P65','DC200-1','DC200','DC200-X']}]},
-    machines:{items:[{title:'EARTH AUGER',section:'earthAugers'}]}
+    aluminium:{motherImage:'images/mother-aluminium.webp',items:[{title:'ALUMINIUM PROFILES',section:'profiles',image:'images/category-profiles.webp'}]},
+    tools:{motherImage:'images/mother-tools.webp',items:[{title:'WALL CUTTER',section:'products',filter:'Wall Cutter Blade',image:'images/category-wall-blades.webp'},{title:'METAL CUTTER',section:'products',filter:'Metal Cutting Wheel',image:'images/category-metal-blades.webp'}]},
+    tv:{motherImage:'images/mother-tv-stands.webp',items:[{title:'WALL FIXED',section:'tvMounts',models:['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105'],image:'images/category-wall-fixed.webp'},{title:'WALL MOUNT STANDS',section:'tvMounts',models:['P4-1','P4','P5','P6','P65','DC200-1','DC200','DC200-X'],image:'images/category-mounts.webp'}]},
+    machines:{motherImage:'images/mother-machines.webp',items:[{title:'EARTH AUGER',section:'earthAugers',image:'images/category-augers.webp'}]}
   };
   function hideSections(){ids.forEach(function(id){var e=document.getElementById(id);if(e)e.style.setProperty('display','none','important');});}
   function showSection(id){hideSections();var e=document.getElementById(id);if(e)e.style.setProperty('display','block','important');}
@@ -9254,8 +9287,8 @@ body.seervi-non-home-view nav{display:none !important;}
   }
   function render(key,active){
     var bar=document.getElementById('mobileSubcategoryBar'),cfg=keys[key];if(!bar||!cfg)return;
-    var h='<button type="button" class="mobile-subcategory-tab '+(active===-1?'active':'')+'" data-mother-all="'+key+'">ALL</button>';
-    cfg.items.forEach(function(it,i){h+='<button type="button" class="mobile-subcategory-tab '+(active===i?'active':'')+'" data-mother-sub="'+key+'" data-index="'+i+'">'+it.title+'</button>';});
+    var h='<button type="button" class="mobile-subcategory-tab '+(active===-1?'active':'')+'" data-mother-all="'+key+'"><span class="mobile-subcategory-tab-image"><img src="'+cfg.motherImage+'" alt="All '+key+'"></span><span class="mobile-subcategory-tab-name">ALL</span></button>';
+    cfg.items.forEach(function(it,i){h+='<button type="button" class="mobile-subcategory-tab '+(active===i?'active':'')+'" data-mother-sub="'+key+'" data-index="'+i+'"><span class="mobile-subcategory-tab-image"><img src="'+it.image+'" alt="'+it.title+'"></span><span class="mobile-subcategory-tab-name">'+it.title+'</span></button>';});
     bar.innerHTML=h;
     bar.querySelectorAll('[data-mother-all]').forEach(function(b){b.addEventListener('click',function(){selectAll(key);});});
     bar.querySelectorAll('[data-mother-sub]').forEach(function(b){b.addEventListener('click',function(){selectSub(key,Number(b.dataset.index));});});
