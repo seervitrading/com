@@ -3530,6 +3530,106 @@ body.seervi-category-active #productCategoryBar{display:none!important;}
 body:not(.seervi-category-active) .seervi-category-back-wrap{display:none!important;}
 @media(max-width:600px){.seervi-category-back-wrap{padding:8px 12px 0}.seervi-category-back{font-size:11px;padding:9px 12px;}}
 </style>
+
+<style id="seervi-mobile-mother-category-flow">
+/* Mobile Products: Mother categories first; after selection show subcategory tabs + products. */
+@media(max-width:600px){
+  body.mobile-products-view #productCategoryBar.mother-category-bar{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    width:100%;
+    padding:0 8px 12px;
+    margin:0;
+    position:relative;
+    overflow:visible;
+  }
+  body.mobile-products-view #productCategoryBar.mother-category-bar .mother-category-card{
+    width:100%;
+    min-width:0;
+    flex:none;
+  }
+  body.mobile-products-view #productCategoryBar.mother-category-bar .category-card-image{
+    height:auto;
+    aspect-ratio:1.18 / 1;
+  }
+  body.mobile-products-view #productCategoryBar.mother-category-bar .category-card-name{
+    min-height:42px;
+    padding:10px 11px;
+    font-size:9px;
+  }
+  body.mobile-products-view.mobile-mother-selected #productCategoryBar.mother-category-bar{
+    display:none !important;
+  }
+  #mobileSubcategoryBar{
+    display:none;
+  }
+  body.mobile-products-view.mobile-mother-selected #mobileSubcategoryBar{
+    display:flex !important;
+    position:sticky;
+    top:76px;
+    z-index:36;
+    width:100%;
+    margin:0 0 12px;
+    padding:7px 6px 9px;
+    gap:8px;
+    overflow-x:auto;
+    background:#090d12f2;
+    border-bottom:1px solid #ffffff12;
+    backdrop-filter:blur(12px);
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  body.mobile-products-view.mobile-mother-selected #mobileSubcategoryBar::-webkit-scrollbar{display:none}
+  #mobileSubcategoryBar .mobile-subcategory-tab{
+    flex:0 0 auto;
+    border:1px solid #ffffff20;
+    background:#10151b;
+    color:#dfe4e8;
+    border-radius:9px;
+    padding:10px 13px;
+    font-size:9px;
+    line-height:1;
+    font-weight:900;
+    letter-spacing:.55px;
+    white-space:nowrap;
+    cursor:pointer;
+  }
+  #mobileSubcategoryBar .mobile-subcategory-tab.active{
+    background:#f0c66a;
+    color:#111;
+    border-color:#f0c66a;
+  }
+  body.mobile-products-view.mobile-mother-selected #profiles,
+  body.mobile-products-view.mobile-mother-selected #products,
+  body.mobile-products-view.mobile-mother-selected #tvMounts,
+  body.mobile-products-view.mobile-mother-selected #earthAugers{
+    scroll-margin-top:132px;
+  }
+  body.mobile-products-view.mobile-mother-selected .seervi-mobile-category-back{
+    display:flex !important;
+  }
+  .seervi-mobile-category-back{
+    display:none;
+    width:100%;
+    margin:0 0 8px;
+    padding:8px 6px 0;
+  }
+  .seervi-mobile-category-back button{
+    border:0;
+    background:none;
+    color:#9ca6b2;
+    padding:6px 2px;
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:.6px;
+    cursor:pointer;
+  }
+}
+@media(min-width:601px){
+  #mobileSubcategoryBar,.seervi-mobile-category-back{display:none!important}
+}
+</style>
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -3551,6 +3651,9 @@ body:not(.seervi-category-active) .seervi-category-back-wrap{display:none!import
     <span class="category-card-name">MACHINES</span>
   </button>
 </div>
+<div id="mobileSubcategoryBar" aria-label="Sub categories"></div>
+<div class="seervi-mobile-category-back"><button type="button" onclick="mobileBackToMotherCategories()">← ALL CATEGORIES</button></div>
+
 <div id="motherCategoryPanel" class="mother-category-panel" aria-hidden="true">
   <div class="mother-category-backdrop" onclick="closeMotherCategory()"></div>
   <div class="mother-category-card-panel" role="dialog" aria-modal="true" aria-labelledby="motherCategoryTitle">
@@ -8835,6 +8938,140 @@ body.seervi-non-home-view nav{display:none !important;}
   };
 
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMotherCategory();});
+})();
+</script>
+
+<script id="seervi-mobile-mother-flow-script">
+(function(){
+  const mobileData = {
+    aluminium: {
+      title:'ALUMINIUM',
+      items:[{title:'ALUMINIUM PROFILES', section:'profiles', image:'images/category-profiles.webp'}]
+    },
+    tools: {
+      title:'TOOLS',
+      items:[
+        {title:'WALL CUTTER', section:'products', filter:'Wall Cutter Blade', image:'images/category-wall-blades.webp'},
+        {title:'METAL CUTTER', section:'products', filter:'Metal Cutting Wheel', image:'images/category-metal-blades.webp'}
+      ]
+    },
+    tv: {
+      title:'TV STANDS',
+      items:[
+        {title:'WALL FIXED', section:'tvMounts', models:['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105'], image:'images/category-wall-fixed.webp'},
+        {title:'WALL MOUNT STANDS', section:'tvMounts', models:['P4-1','P4','P5','P6','P65','DC200-1','DC200','DC200-X'], image:'images/category-mounts.webp'}
+      ]
+    },
+    machines: {
+      title:'MACHINES',
+      items:[{title:'EARTH AUGER', section:'earthAugers', image:'images/category-augers.webp'}]
+    }
+  };
+
+  function isMobile(){ return window.innerWidth <= 600; }
+
+  function resetMobileMother(){
+    document.body.classList.remove('mobile-mother-selected');
+    const bar=document.getElementById('mobileSubcategoryBar');
+    if(bar) bar.innerHTML='';
+  }
+
+  function showOnlySection(id){
+    ['profiles','products','tvMounts','earthAugers','applications'].forEach(function(x){
+      const el=document.getElementById(x);
+      if(el) el.style.display=(x===id)?'block':'none';
+    });
+  }
+
+  function clearFilters(){
+    const b=document.getElementById('bladeSearch'); if(b) b.value='';
+    const m=document.getElementById('mountSearch'); if(m) m.value='';
+    document.querySelectorAll('#products .home-product-card').forEach(c=>c.style.display='');
+    document.querySelectorAll('#tvMounts .tv-mount-product-card').forEach(c=>c.style.display='');
+    if(typeof filterBlades==='function') filterBlades();
+    if(typeof filterMounts==='function') filterMounts();
+  }
+
+  function applyItem(item){
+    clearFilters();
+    showOnlySection(item.section);
+    if(item.filter && typeof filterTools==='function') filterTools(item.filter);
+    if(item.models && typeof filterTv==='function') filterTv(item.models);
+  }
+
+  function renderTabs(key, activeIndex){
+    const bar=document.getElementById('mobileSubcategoryBar');
+    const cfg=mobileData[key];
+    if(!bar || !cfg) return;
+    bar.innerHTML =
+      '<button type="button" class="mobile-subcategory-tab '+(activeIndex===-1?'active':'')+'" onclick="mobileShowMotherAll(\''+key+'\')">ALL</button>' +
+      cfg.items.map(function(item,i){
+        return '<button type="button" class="mobile-subcategory-tab '+(i===activeIndex?'active':'')+'" onclick="mobileSelectSubcategory(\''+key+'\','+i+')">'+item.title+'</button>';
+      }).join('');
+  }
+
+  window.mobileShowMotherAll=function(key){
+    if(!isMobile()) return;
+    const cfg=mobileData[key];
+    if(!cfg) return;
+    document.body.classList.add('mobile-mother-selected');
+    renderTabs(key,-1);
+    clearFilters();
+
+    const sections=[...new Set(cfg.items.map(x=>x.section))];
+    ['profiles','products','tvMounts','earthAugers','applications'].forEach(function(id){
+      const el=document.getElementById(id);
+      if(el) el.style.display=sections.includes(id)?'block':'none';
+    });
+
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  window.mobileSelectSubcategory=function(key,index){
+    if(!isMobile()) return;
+    const cfg=mobileData[key], item=cfg&&cfg.items[index];
+    if(!item) return;
+    document.body.classList.add('mobile-mother-selected');
+    renderTabs(key,index);
+    applyItem(item);
+    const target=document.getElementById(item.section);
+    if(target) setTimeout(function(){target.scrollIntoView({behavior:'smooth',block:'start'});},30);
+  };
+
+  window.mobileBackToMotherCategories=function(){
+    if(!isMobile()) return;
+    resetMobileMother();
+    ['profiles','products','tvMounts','earthAugers','applications'].forEach(function(id){
+      const el=document.getElementById(id);
+      if(el) el.style.display='none';
+    });
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  const originalOpenMother=window.openMotherCategory;
+  window.openMotherCategory=function(key){
+    if(isMobile() && document.body.classList.contains('mobile-products-view')){
+      mobileShowMotherAll(key);
+      return;
+    }
+    if(typeof originalOpenMother==='function') originalOpenMother(key);
+  };
+
+  const originalMobileProducts=window.showMobileProducts;
+  window.showMobileProducts=function(e){
+    if(typeof originalMobileProducts==='function') originalMobileProducts(e);
+    resetMobileMother();
+    ['profiles','products','tvMounts','earthAugers','applications'].forEach(function(id){
+      const el=document.getElementById(id);
+      if(el) el.style.display='none';
+    });
+  };
+
+  const originalMobileHome=window.showMobileHome;
+  window.showMobileHome=function(e){
+    if(typeof originalMobileHome==='function') originalMobileHome(e);
+    resetMobileMother();
+  };
 })();
 </script>
 </body></html>
