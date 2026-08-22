@@ -9743,3 +9743,76 @@ body.seervi-non-home-view nav{display:none !important;}
   });
 })();
 </script>
+
+
+<style id="seervi-mobile-search-absolute-top-fix">
+@media(max-width:600px){
+  /* Selected mother/subcategory view: search block must be the first visible element. */
+  body.mobile-products-view.mobile-mother-selected #mobileCategoryFilterSlot{
+    display:block!important;
+    position:relative!important;
+    order:-10!important;
+    width:100%!important;
+    margin:0!important;
+    padding:10px 12px 8px!important;
+    box-sizing:border-box!important;
+    z-index:50!important;
+  }
+  body.mobile-products-view.mobile-mother-selected #mobileSubcategoryBar{
+    order:0!important;
+    position:relative!important;
+    top:auto!important;
+  }
+  body.mobile-products-view.mobile-mother-selected .seervi-mobile-category-back{
+    order:1!important;
+  }
+}
+</style>
+<script id="seervi-mobile-search-absolute-top-fix-script">
+(function(){
+  function isMobile(){ return window.innerWidth<=600; }
+  function getStateFromTabs(){
+    var bar=document.getElementById('mobileSubcategoryBar');
+    if(!bar) return null;
+    var active=bar.querySelector('.mobile-subcategory-tab.active');
+    if(!active) return null;
+    var mother=active.getAttribute('data-mother-all') || active.getAttribute('data-mother-sub');
+    if(!mother) return null;
+    var index=active.getAttribute('data-mother-sub') ? Number(active.getAttribute('data-index')) : -1;
+    return {key:mother,index:index};
+  }
+  function ensureTopSearch(){
+    if(!isMobile() || !document.body.classList.contains('mobile-products-view') ||
+       !document.body.classList.contains('mobile-mother-selected')) return;
+    var slot=document.getElementById('mobileCategoryFilterSlot');
+    var bar=document.getElementById('mobileSubcategoryBar');
+    if(!slot || !bar) return;
+    /* Guarantee DOM order: search -> subcategory photos -> back button. */
+    if(slot.nextElementSibling !== bar){
+      bar.parentNode.insertBefore(slot,bar);
+    }
+    /* If another script failed to render the search, trigger the public state hooks. */
+    if(!slot.querySelector('#mobileTopSearchInput')){
+      var state=getStateFromTabs();
+      if(state){
+        if(state.index>=0 && typeof window.mobileSelectSubcategory==='function'){
+          window.mobileSelectSubcategory(state.key,state.index);
+        }else if(typeof window.mobileShowMotherAll==='function'){
+          window.mobileShowMotherAll(state.key);
+        }
+      }
+    }
+  }
+  function watch(){
+    ensureTopSearch();
+  }
+  document.addEventListener('DOMContentLoaded',watch);
+  window.addEventListener('load',watch);
+  window.addEventListener('resize',watch);
+  var obs=new MutationObserver(watch);
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
+  setTimeout(watch,200);
+  setTimeout(watch,700);
+  setTimeout(watch,1500);
+})();
+</script>
