@@ -8129,3 +8129,42 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
   .bw-bottom-bar{display:none!important}
 }
 </style>
+
+<style id="seervi-sticky-topbar-one-line-on-scroll">
+/* Keep the full two-row mobile topbar at the top; collapse it to the original one-line sticky bar while scrolling. */
+@media (max-width:600px){
+  nav{transition:height .18s ease, min-height .18s ease !important;}
+  nav.nav-scrolled{height:76px !important;min-height:76px !important;}
+  nav.nav-scrolled > .wrap{height:76px !important;padding-top:18px !important;padding-bottom:0 !important;}
+  nav.nav-scrolled > .wrap > .nav-left-group{display:none !important;}
+  nav.nav-scrolled .navlinks{top:76px !important;}
+}
+</style>
+<script id="seervi-sticky-topbar-one-line-script">
+(function(){
+  function setupStickyTopbar(){
+    const nav=document.querySelector('body > nav, nav');
+    if(!nav || nav.dataset.scrollCompactBound==='1') return;
+    nav.dataset.scrollCompactBound='1';
+    let ticking=false;
+    function update(){
+      ticking=false;
+      if(window.innerWidth<=600){
+        nav.classList.toggle('nav-scrolled', window.scrollY>18);
+      }else{
+        nav.classList.remove('nav-scrolled');
+      }
+    }
+    window.addEventListener('scroll',function(){
+      if(!ticking){
+        ticking=true;
+        requestAnimationFrame(update);
+      }
+    },{passive:true});
+    window.addEventListener('resize',update);
+    update();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',setupStickyTopbar);
+  else setupStickyTopbar();
+})();
+</script>
