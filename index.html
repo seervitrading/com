@@ -3266,6 +3266,21 @@ html, body { width:100%; max-width:100%; overflow-x:hidden !important; }
   }
 }
 </style>
+
+<style id="seervi-fixed-topbar-final">
+/* FINAL: keep the top menu visible while the page scrolls. */
+body{padding-top:76px;}
+nav{position:fixed !important;left:0 !important;right:0 !important;top:0 !important;width:100% !important;}
+@media(max-width:800px){
+  body{padding-top:108px;}
+  nav{height:108px !important;min-height:108px !important;}
+  nav .navlinks{top:108px !important;}
+}
+body.nav-is-scrolled{padding-top:76px;}
+@media(max-width:800px){
+  body.nav-is-scrolled{padding-top:76px;}
+}
+</style>
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -8150,9 +8165,9 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
     function update(){
       ticking=false;
       if(window.innerWidth<=600){
-        nav.classList.toggle('nav-scrolled', window.scrollY>18);
+        nav.classList.toggle('nav-scrolled', window.scrollY>18); document.body.classList.toggle('nav-is-scrolled', window.scrollY>18);
       }else{
-        nav.classList.remove('nav-scrolled');
+        nav.classList.remove('nav-scrolled'); document.body.classList.remove('nav-is-scrolled');
       }
     }
     window.addEventListener('scroll',function(){
