@@ -9302,10 +9302,30 @@ body.seervi-non-home-view nav{display:none !important;}
   }
   function selectSub(key,index){
     if(!mobile())return;var cfg=keys[key],it=cfg&&cfg.items[index];if(!it)return;
-    document.body.classList.add('mobile-mother-selected');render(key,index);clearFilters();showSection(it.section);
-    if(it.filter&&typeof window.filterTools==='function')window.filterTools(it.filter);
-    if(it.models&&typeof window.filterTv==='function')window.filterTv(it.models);
-    var target=document.getElementById(it.section);if(target)setTimeout(function(){target.scrollIntoView({behavior:'smooth',block:'start'});},30);
+    document.body.classList.add('mobile-mother-selected');
+    render(key,index);
+    clearFilters();
+    showSection(it.section);
+
+    /* Direct filtering: the older filterTools/filterTv functions are scoped inside
+       another IIFE, so relying on window.filterTools/window.filterTv can fail. */
+    if(it.filter){
+      var wanted=String(it.filter).toLowerCase();
+      document.querySelectorAll('#products .home-product-card').forEach(function(card){
+        var model=String(card.getAttribute('data-model')||'').toLowerCase();
+        card.style.display=model===wanted?'':'none';
+      });
+    }
+    if(it.models){
+      var wantedModels=new Set(it.models.map(function(x){return String(x).toLowerCase();}));
+      document.querySelectorAll('#tvMounts .tv-mount-product-card').forEach(function(card){
+        var model=String(card.getAttribute('data-model')||'').toLowerCase();
+        card.style.display=wantedModels.has(model)?'':'none';
+      });
+    }
+
+    var target=document.getElementById(it.section);
+    if(target)setTimeout(function(){target.scrollIntoView({behavior:'smooth',block:'start'});},30);
   }
   function reset(){
     document.body.classList.remove('mobile-mother-selected');
