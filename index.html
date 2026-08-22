@@ -9229,6 +9229,59 @@ body.seervi-non-home-view nav{display:none !important;}
 })();
 </script>
 
+
+
+<!-- FINAL: mobile selected-category search stays above the subcategory photo strip. -->
+<style id="seervi-mobile-search-above-subcategory-final">
+@media (max-width:600px){
+  body.mobile-products-view.mobile-mother-selected #mobileCategoryFilterSlot{
+    display:block!important;
+    position:relative!important;
+    top:auto!important;
+    order:-20!important;
+    width:100%!important;
+    margin:0!important;
+    padding:8px 12px 6px!important;
+    box-sizing:border-box!important;
+    z-index:90!important;
+  }
+  body.mobile-products-view.mobile-mother-selected #mobileSubcategoryBar{
+    position:relative!important;
+    top:auto!important;
+    order:-10!important;
+    margin:0!important;
+    z-index:80!important;
+  }
+  body.mobile-products-view.mobile-mother-selected .seervi-mobile-category-back{
+    order:0!important;
+  }
+}
+</style>
+<script id="seervi-mobile-search-above-subcategory-final-script">
+(function(){
+  function isMobile(){return window.innerWidth<=600;}
+  function moveSearchToTop(){
+    if(!isMobile()) return;
+    var body=document.body;
+    if(!body.classList.contains('mobile-products-view') || !body.classList.contains('mobile-mother-selected')) return;
+    var slot=document.getElementById('mobileCategoryFilterSlot');
+    var bar=document.getElementById('mobileSubcategoryBar');
+    if(!slot || !bar || !bar.parentNode) return;
+    /* Exact DOM order: SEARCH -> SUBCATEGORY PHOTOS -> BACK -> PRODUCTS */
+    if(bar.previousElementSibling!==slot){
+      bar.parentNode.insertBefore(slot,bar);
+    }
+  }
+  document.addEventListener('DOMContentLoaded',moveSearchToTop);
+  window.addEventListener('load',moveSearchToTop);
+  window.addEventListener('resize',moveSearchToTop);
+  var observer=new MutationObserver(function(){moveSearchToTop();});
+  observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+  setTimeout(moveSearchToTop,100);
+  setTimeout(moveSearchToTop,500);
+  setTimeout(moveSearchToTop,1200);
+})();
+</script>
 </body></html>
 
 <style id="seervi-non-home-topspace-fix-v1">
