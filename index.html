@@ -9088,3 +9088,215 @@ body.seervi-non-home-view nav{display:none !important;}
   }
 }
 </style>
+
+
+<!-- V-MOBILE-MOTHER-FLOW-FINAL: clean mobile mother-category first screen + reliable touch navigation -->
+<style id="seervi-mobile-mother-final-fix">
+@media(max-width:600px){
+  /* Mother-category landing screen: ONLY the four mother cards. */
+  body.mobile-products-view:not(.mobile-mother-selected) #productCategoryBar.mother-category-bar{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:12px !important;
+    width:100% !important;
+    max-width:none !important;
+    margin:0 !important;
+    padding:10px 12px 18px !important;
+    position:relative !important;
+    top:auto !important;
+    overflow:visible !important;
+    background:transparent !important;
+    backdrop-filter:none !important;
+    z-index:5 !important;
+  }
+  body.mobile-products-view:not(.mobile-mother-selected) #productCategoryBar .mother-category-card{
+    display:flex !important;
+    flex-direction:column !important;
+    width:100% !important;
+    min-width:0 !important;
+    height:auto !important;
+    min-height:0 !important;
+    padding:0 !important;
+    margin:0 !important;
+    overflow:hidden !important;
+    border:1px solid #ffffff22 !important;
+    border-radius:18px !important;
+    background:#10141a !important;
+    color:#fff !important;
+    box-shadow:0 8px 24px #00000035 !important;
+    cursor:pointer !important;
+    pointer-events:auto !important;
+    -webkit-tap-highlight-color:transparent !important;
+    touch-action:manipulation !important;
+    text-align:left !important;
+  }
+  body.mobile-products-view:not(.mobile-mother-selected) #productCategoryBar .mother-category-card .category-card-image{
+    display:block !important;
+    width:100% !important;
+    height:auto !important;
+    aspect-ratio:1.28 / 1 !important;
+    overflow:hidden !important;
+    background:#f4f4f4 !important;
+    pointer-events:none !important;
+  }
+  body.mobile-products-view:not(.mobile-mother-selected) #productCategoryBar .mother-category-card .category-card-image img{
+    display:block !important;
+    width:100% !important;
+    height:100% !important;
+    object-fit:cover !important;
+    object-position:center !important;
+    pointer-events:none !important;
+    transform:none !important;
+  }
+  body.mobile-products-view:not(.mobile-mother-selected) #productCategoryBar .mother-category-card .category-card-name{
+    display:flex !important;
+    align-items:center !important;
+    min-height:54px !important;
+    padding:12px 14px !important;
+    margin:0 !important;
+    background:#10141a !important;
+    color:#f4f6f8 !important;
+    font-size:13px !important;
+    line-height:1.1 !important;
+    font-weight:900 !important;
+    letter-spacing:1.2px !important;
+    pointer-events:none !important;
+  }
+
+  /* Absolutely no product section below the mother cards until a mother is chosen. */
+  body.mobile-products-view:not(.mobile-mother-selected) #profiles,
+  body.mobile-products-view:not(.mobile-mother-selected) #products,
+  body.mobile-products-view:not(.mobile-mother-selected) #tvMounts,
+  body.mobile-products-view:not(.mobile-mother-selected) #earthAugers,
+  body.mobile-products-view:not(.mobile-mother-selected) #applications{
+    display:none !important;
+    visibility:hidden !important;
+    height:0 !important;
+    min-height:0 !important;
+    overflow:hidden !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+
+  /* Selected mother: compact sticky sub-category bar + products underneath. */
+  body.mobile-products-view.mobile-mother-selected #productCategoryBar.mother-category-bar{
+    display:none !important;
+  }
+  body.mobile-products-view.mobile-mother-selected #mobileSubcategoryBar{
+    display:flex !important;
+    position:sticky !important;
+    top:0 !important;
+    z-index:80 !important;
+    width:100% !important;
+    margin:0 !important;
+    padding:8px 10px !important;
+    gap:8px !important;
+    overflow-x:auto !important;
+    background:#090d12f5 !important;
+    border-bottom:1px solid #ffffff16 !important;
+    backdrop-filter:blur(14px) !important;
+    scrollbar-width:none !important;
+  }
+  body.mobile-products-view.mobile-mother-selected #mobileSubcategoryBar::-webkit-scrollbar{display:none!important}
+  #mobileSubcategoryBar .mobile-subcategory-tab{
+    flex:0 0 auto !important;
+    border:1px solid #ffffff22 !important;
+    border-radius:9px !important;
+    background:#11171d !important;
+    color:#dfe4e8 !important;
+    padding:10px 13px !important;
+    font-size:10px !important;
+    font-weight:900 !important;
+    line-height:1 !important;
+    letter-spacing:.6px !important;
+    white-space:nowrap !important;
+    cursor:pointer !important;
+    touch-action:manipulation !important;
+  }
+  #mobileSubcategoryBar .mobile-subcategory-tab.active{
+    background:#f0c66a !important;
+    border-color:#f0c66a !important;
+    color:#111 !important;
+  }
+  body.mobile-products-view.mobile-mother-selected .seervi-mobile-category-back{
+    display:flex !important;
+    position:relative !important;
+    z-index:50 !important;
+    width:100% !important;
+    margin:0 !important;
+    padding:7px 12px 0 !important;
+  }
+  body.mobile-products-view.mobile-mother-selected .seervi-mobile-category-back button{
+    cursor:pointer !important;
+    touch-action:manipulation !important;
+  }
+}
+</style>
+<script id="seervi-mobile-mother-final-fix">
+(function(){
+  function mobile(){ return window.innerWidth <= 600; }
+  var ids=['profiles','products','tvMounts','earthAugers','applications'];
+  var keys={
+    aluminium:{items:[{title:'ALUMINIUM PROFILES',section:'profiles'}]},
+    tools:{items:[{title:'WALL CUTTER',section:'products',filter:'Wall Cutter Blade'},{title:'METAL CUTTER',section:'products',filter:'Metal Cutting Wheel'}]},
+    tv:{items:[{title:'WALL FIXED',section:'tvMounts',models:['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105']},{title:'WALL MOUNT STANDS',section:'tvMounts',models:['P4-1','P4','P5','P6','P65','DC200-1','DC200','DC200-X']}]},
+    machines:{items:[{title:'EARTH AUGER',section:'earthAugers'}]}
+  };
+  function hideSections(){ids.forEach(function(id){var e=document.getElementById(id);if(e)e.style.setProperty('display','none','important');});}
+  function showSection(id){hideSections();var e=document.getElementById(id);if(e)e.style.setProperty('display','block','important');}
+  function clearFilters(){
+    var b=document.getElementById('bladeSearch');if(b)b.value='';
+    var m=document.getElementById('mountSearch');if(m)m.value='';
+    document.querySelectorAll('#products .home-product-card').forEach(function(c){c.style.display='';});
+    document.querySelectorAll('#tvMounts .tv-mount-product-card').forEach(function(c){c.style.display='';});
+    if(typeof window.filterBlades==='function')window.filterBlades();
+    if(typeof window.filterMounts==='function')window.filterMounts();
+  }
+  function render(key,active){
+    var bar=document.getElementById('mobileSubcategoryBar'),cfg=keys[key];if(!bar||!cfg)return;
+    var h='<button type="button" class="mobile-subcategory-tab '+(active===-1?'active':'')+'" data-mother-all="'+key+'">ALL</button>';
+    cfg.items.forEach(function(it,i){h+='<button type="button" class="mobile-subcategory-tab '+(active===i?'active':'')+'" data-mother-sub="'+key+'" data-index="'+i+'">'+it.title+'</button>';});
+    bar.innerHTML=h;
+    bar.querySelectorAll('[data-mother-all]').forEach(function(b){b.addEventListener('click',function(){selectAll(key);});});
+    bar.querySelectorAll('[data-mother-sub]').forEach(function(b){b.addEventListener('click',function(){selectSub(key,Number(b.dataset.index));});});
+  }
+  function selectAll(key){
+    if(!mobile())return;var cfg=keys[key];if(!cfg)return;
+    document.body.classList.add('mobile-mother-selected');render(key,-1);clearFilters();
+    var seen={};cfg.items.forEach(function(it){seen[it.section]=1;});
+    ids.forEach(function(id){var e=document.getElementById(id);if(e)e.style.setProperty('display',seen[id]?'block':'none','important');});
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function selectSub(key,index){
+    if(!mobile())return;var cfg=keys[key],it=cfg&&cfg.items[index];if(!it)return;
+    document.body.classList.add('mobile-mother-selected');render(key,index);clearFilters();showSection(it.section);
+    if(it.filter&&typeof window.filterTools==='function')window.filterTools(it.filter);
+    if(it.models&&typeof window.filterTv==='function')window.filterTv(it.models);
+    var target=document.getElementById(it.section);if(target)setTimeout(function(){target.scrollIntoView({behavior:'smooth',block:'start'});},30);
+  }
+  function reset(){
+    document.body.classList.remove('mobile-mother-selected');
+    var bar=document.getElementById('mobileSubcategoryBar');if(bar)bar.innerHTML='';
+    if(mobile())hideSections();
+  }
+  function bindCards(){
+    var bar=document.getElementById('productCategoryBar');if(!bar)return;
+    bar.querySelectorAll('.mother-category-card').forEach(function(card){
+      card.addEventListener('click',function(e){
+        if(!mobile()||!document.body.classList.contains('mobile-products-view'))return;
+        e.preventDefault();e.stopPropagation();
+        var m=card.getAttribute('onclick')||'';
+        var match=m.match(/openMotherCategory\(['"]([^'"]+)['"]\)/);
+        if(match)selectAll(match[1]);
+      },true);
+    });
+  }
+  window.mobileBackToMotherCategories=function(){if(!mobile())return;reset();window.scrollTo({top:0,behavior:'smooth'});};
+  window.openMotherCategory=function(key){if(mobile()&&document.body.classList.contains('mobile-products-view')){selectAll(key);return;}};
+  document.addEventListener('DOMContentLoaded',function(){
+    bindCards();
+    if(mobile()&&document.body.classList.contains('mobile-products-view')){reset();}
+  });
+  window.addEventListener('resize',function(){if(!mobile())document.body.classList.remove('mobile-mother-selected');});
+})();
+</script>
