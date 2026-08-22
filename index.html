@@ -8502,3 +8502,16 @@ body.seervi-non-home-view nav{display:none !important;}
 }
 </style>
 </body></html>
+
+<style id="seervi-non-home-topspace-fix-v1">
+/* NON-HOME VIEWS: the Home-only fixed topbar is hidden, so its reserved mobile space must also be removed. */
+@media (max-width:600px){
+  body.seervi-non-home-view,
+  body.seervi-non-home-view.nav-is-scrolled{
+    padding-top:0 !important;
+  }
+  body.seervi-non-home-view.mobile-products-view #productCategoryBar{
+    margin-top:0 !important;
+  }
+}
+</style>
