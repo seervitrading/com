@@ -8303,3 +8303,159 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
   else setupStickyTopbar();
 })();
 </script>
+
+<style id="seervi-mobile-topbar-final-stable-v3">
+/* FINAL MOBILE TOPBAR: fixed to viewport, no jump/blank offset, clean two-row top state. */
+@media (max-width:600px){
+  body{padding-top:150px !important;}
+  body.nav-is-scrolled{padding-top:76px !important;}
+
+  nav{
+    position:fixed !important;
+    top:0 !important;
+    left:0 !important;
+    right:0 !important;
+    width:100% !important;
+    height:150px !important;
+    min-height:150px !important;
+    margin:0 !important;
+    z-index:99999 !important;
+    box-sizing:border-box !important;
+    overflow:visible !important;
+    transition:height .18s ease !important;
+  }
+
+  nav > .wrap{
+    position:relative !important;
+    width:100% !important;
+    max-width:none !important;
+    height:150px !important;
+    margin:0 !important;
+    padding:18px 16px 12px !important;
+    box-sizing:border-box !important;
+    display:flex !important;
+    align-items:flex-start !important;
+    justify-content:flex-start !important;
+    gap:14px !important;
+  }
+
+  /* Top controls */
+  nav > .wrap > .mobile-menu-btn{
+    position:relative !important;
+    left:auto !important;
+    top:auto !important;
+    order:1 !important;
+    flex:0 0 auto !important;
+    width:auto !important;
+    margin:0 !important;
+  }
+  nav > .wrap > .nav-dashboard-slot{
+    position:relative !important;
+    order:2 !important;
+    flex:0 0 auto !important;
+    width:auto !important;
+    min-width:0 !important;
+    margin:0 !important;
+    display:flex !important;
+    align-items:center !important;
+  }
+  nav .top-account-actions{
+    width:auto !important;
+    min-width:0 !important;
+    margin:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:14px !important;
+  }
+  nav .top-account-actions > button{
+    flex:0 0 auto !important;
+    margin:0 !important;
+    white-space:nowrap !important;
+  }
+  nav > .wrap > #notificationBell{
+    position:relative !important;
+    order:4 !important;
+    flex:0 0 auto !important;
+    width:auto !important;
+    margin:0 0 0 auto !important;
+  }
+
+  /* These already exist in the mobile bottom bar. */
+  nav > .wrap > .nav-contact,
+  nav > .wrap > .cart-nav-btn,
+  nav > .wrap > .nav-quote,
+  nav > .wrap > .navlinks{
+    display:none !important;
+  }
+
+  /* Greeting/date/account is always a separate second row. */
+  nav > .wrap > .nav-left-group{
+    position:absolute !important;
+    left:16px !important;
+    right:16px !important;
+    bottom:12px !important;
+    width:auto !important;
+    height:34px !important;
+    min-width:0 !important;
+    margin:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    z-index:2 !important;
+  }
+  nav .bw-account-identity-top{
+    width:100% !important;
+    max-width:none !important;
+    height:34px !important;
+    min-height:34px !important;
+    min-width:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:6px !important;
+    border:0 !important;
+    background:transparent !important;
+    border-radius:0 !important;
+    overflow:hidden !important;
+    white-space:nowrap !important;
+    font-size:13px !important;
+    line-height:20px !important;
+  }
+  nav .bw-account-identity-top #topGreeting,
+  nav .bw-account-identity-top #topDateTime,
+  nav .bw-account-identity-top .top-identity-sep{
+    flex:0 0 auto !important;
+    white-space:nowrap !important;
+  }
+  nav .bw-account-identity-top #topLoginEmail{
+    flex:1 1 auto !important;
+    min-width:0 !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+    white-space:nowrap !important;
+  }
+
+  /* Hamburger menu opens below the fixed topbar. */
+  nav > .wrap > .navlinks.mobile-open{
+    display:flex !important;
+    top:150px !important;
+  }
+
+  /* Scrolling: compact one-line topbar stays fixed at the viewport top. */
+  nav.nav-scrolled{
+    height:76px !important;
+    min-height:76px !important;
+  }
+  nav.nav-scrolled > .wrap{
+    height:76px !important;
+    padding:18px 16px !important;
+    align-items:center !important;
+  }
+  nav.nav-scrolled > .wrap > .nav-left-group{
+    display:none !important;
+  }
+  nav.nav-scrolled > .wrap > .navlinks.mobile-open{
+    top:76px !important;
+  }
+}
+</style>
