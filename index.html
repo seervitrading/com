@@ -9546,3 +9546,200 @@ body.seervi-non-home-view nav{display:none !important;}
   }
 }
 </style>
+
+<!-- FINAL MOBILE SEARCH PLACEMENT: search/filter stays at the absolute top of the selected mother-category view -->
+<style id="seervi-mobile-search-top-final">
+@media(max-width:600px){
+  body.mobile-products-view.mobile-mother-selected #mobileCategoryFilterSlot{
+    display:block!important;
+    position:relative!important;
+    width:100%!important;
+    margin:0!important;
+    padding:10px 12px 8px!important;
+    box-sizing:border-box!important;
+    order:0!important;
+  }
+  body.mobile-products-view.mobile-mother-selected #mobileCategoryFilterSlot .mobile-top-search-box{
+    display:flex!important;
+    align-items:center!important;
+    gap:8px!important;
+    width:100%!important;
+    padding:10px!important;
+    box-sizing:border-box!important;
+    background:#0d1117!important;
+    border:1px solid #ffffff18!important;
+    border-radius:14px!important;
+  }
+  .mobile-top-search-input-wrap{
+    flex:1 1 auto!important;
+    min-width:0!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:8px!important;
+  }
+  .mobile-top-search-icon{font-size:21px!important;color:#fff!important;line-height:1!important;flex:0 0 auto!important;}
+  #mobileTopSearchInput{
+    width:100%!important;
+    min-width:0!important;
+    height:48px!important;
+    padding:0 12px!important;
+    border:1px solid #ffffff18!important;
+    border-radius:10px!important;
+    background:#11171d!important;
+    color:#eef1f3!important;
+    outline:none!important;
+    font-size:15px!important;
+    box-sizing:border-box!important;
+  }
+  #mobileTopSearchInput::placeholder{color:#69727c!important;opacity:1!important;}
+  #mobileTopSearchClear{
+    flex:0 0 auto!important;
+    height:48px!important;
+    padding:0 15px!important;
+    border:1px solid #ffffff20!important;
+    border-radius:10px!important;
+    background:#10161c!important;
+    color:#dfe4e8!important;
+    font-size:12px!important;
+    font-weight:900!important;
+    cursor:pointer!important;
+    touch-action:manipulation!important;
+  }
+  #mobileTopSearchCount{
+    display:block!important;
+    margin:6px 3px 0!important;
+    color:#69737e!important;
+    font-size:10px!important;
+    font-weight:800!important;
+    letter-spacing:.55px!important;
+  }
+  /* Hide the original section search/filter controls on mobile; the single top search replaces them. */
+  body.mobile-products-view.mobile-mother-selected #profiles .catalog-controls,
+  body.mobile-products-view.mobile-mother-selected #products .catalog-controls,
+  body.mobile-products-view.mobile-mother-selected #tvMounts .catalog-controls,
+  body.mobile-products-view.mobile-mother-selected #earthAugers .catalog-controls,
+  body.mobile-products-view.mobile-mother-selected #profiles .result-count,
+  body.mobile-products-view.mobile-mother-selected #products .result-count,
+  body.mobile-products-view.mobile-mother-selected #tvMounts .result-count,
+  body.mobile-products-view.mobile-mother-selected #earthAugers .result-count{
+    display:none!important;
+  }
+  /* Search is first, then photo sub-category cards. */
+  body.mobile-products-view.mobile-mother-selected #mobileSubcategoryBar{
+    position:relative!important;
+    top:auto!important;
+    margin:0!important;
+    order:1!important;
+  }
+}
+</style>
+<script id="seervi-mobile-search-top-final">
+(function(){
+  var currentKey=null;
+  var currentIndex=-1;
+  var data={
+    aluminium:{section:'profiles',allLabel:'profile options',placeholder:'Search model e.g. 1707A, 0809CC...',items:[{section:'profiles'}]},
+    tools:{section:'products',allLabel:'blade options',placeholder:'Search blade e.g. Wall Cutter, Metal Cutting Wheel...',items:[{filter:'Wall Cutter Blade'},{filter:'Metal Cutting Wheel'}]},
+    tv:{section:'tvMounts',allLabel:'mount options',placeholder:'Search model e.g. HT-101, P4, DC200...',items:[
+      {models:['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105']},
+      {models:['P4-1','P4','P5','P6','P65','DC200-1','DC200','DC200-X']}
+    ]},
+    machines:{section:'earthAugers',allLabel:'machine options',placeholder:'Search model e.g. DZ52, DZ63, AG41...',items:[{section:'earthAugers'}]}
+  };
+
+  function mobile(){return window.innerWidth<=600;}
+  function esc(v){return String(v||'').replace(/[&<>\"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[c];});}
+  function cardsFor(key){
+    var cfg=data[key]; if(!cfg)return [];
+    if(cfg.section==='profiles')return Array.from(document.querySelectorAll('#profiles .profile-product-card'));
+    if(cfg.section==='products')return Array.from(document.querySelectorAll('#products .home-product-card'));
+    if(cfg.section==='tvMounts')return Array.from(document.querySelectorAll('#tvMounts .tv-mount-product-card'));
+    if(cfg.section==='earthAugers')return Array.from(document.querySelectorAll('#earthAugers .earth-auger-product-card, #earthAugers .home-product-card'));
+    return [];
+  }
+  function baseAllowed(card,key,index){
+    var cfg=data[key]; if(!cfg)return false;
+    if(key==='tools'){
+      var wanted=cfg.items[index]&&cfg.items[index].filter;
+      if(!wanted)return true;
+      return String(card.getAttribute('data-model')||'').toLowerCase()===String(wanted).toLowerCase();
+    }
+    if(key==='tv'){
+      var models=cfg.items[index]&&cfg.items[index].models;
+      if(!models)return true;
+      var model=String(card.getAttribute('data-model')||'').toLowerCase();
+      return models.some(function(x){return String(x).toLowerCase()===model;});
+    }
+    return true;
+  }
+  function renderSearch(){
+    var slot=document.getElementById('mobileCategoryFilterSlot');
+    if(!slot||!currentKey||!mobile())return;
+    var cfg=data[currentKey];
+    slot.innerHTML='<div class="mobile-top-search-box">'+
+      '<div class="mobile-top-search-input-wrap"><span class="mobile-top-search-icon">⌕</span><input id="mobileTopSearchInput" type="search" autocomplete="off" placeholder="'+esc(cfg.placeholder)+'"></div>'+
+      '<button id="mobileTopSearchClear" type="button">Clear</button></div>'+
+      '<div id="mobileTopSearchCount"></div>';
+    var input=document.getElementById('mobileTopSearchInput');
+    var clear=document.getElementById('mobileTopSearchClear');
+    if(input)input.addEventListener('input',applySearch);
+    if(clear)clear.addEventListener('click',function(){if(input)input.value='';applySearch();if(input)input.focus();});
+    applySearch();
+  }
+  function applySearch(){
+    if(!currentKey||!mobile())return;
+    var cfg=data[currentKey];
+    var input=document.getElementById('mobileTopSearchInput');
+    var q=String(input&&input.value||'').toLowerCase().trim();
+    var cards=cardsFor(currentKey),visible=0;
+    cards.forEach(function(card){
+      var allowed=baseAllowed(card,currentKey,currentIndex);
+      var text=(card.getAttribute('data-model')||'')+' '+(card.textContent||'');
+      var match=!q||text.toLowerCase().indexOf(q)!==-1;
+      var show=allowed&&match;
+      card.style.display=show?'':'none';
+      if(show)visible++;
+    });
+    var count=document.getElementById('mobileTopSearchCount');
+    if(count)count.textContent=visible+' '+cfg.allLabel+' shown';
+  }
+  function setState(key,index){
+    currentKey=key;currentIndex=index;
+    if(!mobile())return;
+    renderSearch();
+  }
+
+  var oldOpen=window.openMotherCategory;
+  window.openMotherCategory=function(key){
+    if(mobile() && document.body.classList.contains('mobile-products-view')){
+      setState(key,-1);
+    }
+    if(typeof oldOpen==='function')return oldOpen.apply(this,arguments);
+  };
+  var oldSub=window.mobileSelectSubcategory;
+  window.mobileSelectSubcategory=function(key,index){
+    setState(key,index);
+    if(typeof oldSub==='function')return oldSub.apply(this,arguments);
+  };
+  var oldAll=window.mobileShowMotherAll;
+  window.mobileShowMotherAll=function(key){
+    setState(key,-1);
+    if(typeof oldAll==='function')return oldAll.apply(this,arguments);
+  };
+  var oldBack=window.mobileBackToMotherCategories;
+  window.mobileBackToMotherCategories=function(){
+    currentKey=null;currentIndex=-1;
+    var slot=document.getElementById('mobileCategoryFilterSlot');if(slot)slot.innerHTML='';
+    if(typeof oldBack==='function')return oldBack.apply(this,arguments);
+  };
+  var oldProducts=window.showMobileProducts;
+  window.showMobileProducts=function(e){
+    currentKey=null;currentIndex=-1;
+    if(typeof oldProducts==='function')oldProducts.apply(this,arguments);
+  };
+  window.addEventListener('resize',function(){
+    if(!mobile()){currentKey=null;currentIndex=-1;return;}
+    if(currentKey&&document.body.classList.contains('mobile-mother-selected'))renderSearch();
+  });
+})();
+</script>
