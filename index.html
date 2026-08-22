@@ -3651,6 +3651,102 @@ body:not(.seervi-category-active) .seervi-category-back-wrap{display:none!import
     <span class="category-card-name">MACHINES</span>
   </button>
 </div>
+
+<style id="seervi-mobile-filter-above-subcategories">
+@media(max-width:600px){
+  /* The selected mother's search/filter controls sit above the photo sub-category cards. */
+  #mobileCategoryFilterSlot{
+    display:none;
+    width:100%;
+    box-sizing:border-box;
+    padding:10px 12px 6px;
+    margin:0;
+  }
+  body.mobile-products-view.mobile-mother-selected #mobileCategoryFilterSlot{
+    display:block!important;
+  }
+  #mobileCategoryFilterSlot .catalog-controls{
+    display:flex!important;
+    width:100%;
+    margin:0!important;
+    padding:12px!important;
+    box-sizing:border-box;
+  }
+  #mobileCategoryFilterSlot .result-count{
+    display:block!important;
+    margin:7px 2px 0!important;
+  }
+  /* Keep the photo sub-category strip immediately below the filter area. */
+  body.mobile-products-view.mobile-mother-selected #mobileSubcategoryBar{
+    position:relative!important;
+    top:auto!important;
+    margin:0!important;
+  }
+}
+@media(min-width:601px){
+  #mobileCategoryFilterSlot{display:none!important}
+}
+</style>
+<div id="mobileCategoryFilterSlot" aria-label="Category search and filters"></div>
+<script id="seervi-mobile-filter-above-subcategories-script">
+(function(){
+  var sections=['profiles','products','tvMounts','earthAugers'];
+  var moved=[];
+
+  function isMobile(){return window.innerWidth<=600;}
+
+  function restore(){
+    moved.forEach(function(item){
+      if(item.placeholder && item.placeholder.parentNode){
+        item.placeholder.parentNode.insertBefore(item.el,item.placeholder.nextSibling);
+        item.placeholder.parentNode.insertBefore(item.result,item.el.nextSibling);
+        item.placeholder.remove();
+      }
+    });
+    moved=[];
+    var slot=document.getElementById('mobileCategoryFilterSlot');
+    if(slot)slot.innerHTML='';
+  }
+
+  function moveForSection(sectionId){
+    restore();
+    var section=document.getElementById(sectionId);
+    var slot=document.getElementById('mobileCategoryFilterSlot');
+    if(!section||!slot)return;
+
+    var controls=section.querySelector('.catalog-controls');
+    var result=section.querySelector('.result-count');
+    if(!controls)return;
+
+    var ph=document.createElement('span');
+    ph.className='mobile-filter-placeholder';
+    ph.style.display='none';
+    controls.parentNode.insertBefore(ph,controls);
+
+    slot.appendChild(controls);
+    if(result)slot.appendChild(result);
+
+    moved.push({el:controls,result:result||document.createElement('span'),placeholder:ph});
+  }
+
+  window.seerviMoveMobileCategoryFilter=function(sectionId){
+    if(!isMobile())return;
+    moveForSection(sectionId);
+  };
+
+  window.seerviRestoreMobileCategoryFilter=function(){
+    restore();
+  };
+
+  document.addEventListener('DOMContentLoaded',function(){
+    if(!isMobile())restore();
+  });
+  window.addEventListener('resize',function(){
+    if(!isMobile())restore();
+  });
+})();
+</script>
+
 <div id="mobileSubcategoryBar" aria-label="Sub categories"></div>
 <div class="seervi-mobile-category-back"><button type="button" onclick="mobileBackToMotherCategories()">← ALL CATEGORIES</button></div>
 
@@ -9074,6 +9170,65 @@ body.seervi-non-home-view nav{display:none !important;}
   };
 })();
 </script>
+
+
+<style id="seervi-mobile-filter-placement-final-style">
+@media(max-width:600px){
+  body.mobile-products-view.mobile-mother-selected #mobileSubcategoryBar{
+    position:relative!important;
+    top:auto!important;
+    z-index:36!important;
+  }
+}
+</style>
+
+<script id="seervi-mobile-filter-placement-final">
+(function(){
+  function mobile(){return window.innerWidth<=600;}
+  var sectionForMother={aluminium:'profiles',tools:'products',tv:'tvMounts',machines:'earthAugers'};
+
+  function place(key){
+    if(!mobile())return;
+    var section=sectionForMother[key];
+    if(section && typeof window.seerviMoveMobileCategoryFilter==='function'){
+      window.seerviMoveMobileCategoryFilter(section);
+    }
+  }
+
+  function restore(){
+    if(typeof window.seerviRestoreMobileCategoryFilter==='function'){
+      window.seerviRestoreMobileCategoryFilter();
+    }
+  }
+
+  var oldAll=window.mobileShowMotherAll;
+  if(typeof oldAll==='function'){
+    window.mobileShowMotherAll=function(key){
+      oldAll.apply(this,arguments);
+      setTimeout(function(){place(key);},0);
+    };
+  }
+
+  var oldSub=window.mobileSelectSubcategory;
+  if(typeof oldSub==='function'){
+    window.mobileSelectSubcategory=function(key,index){
+      oldSub.apply(this,arguments);
+      setTimeout(function(){place(key);},0);
+    };
+  }
+
+  var oldBack=window.mobileBackToMotherCategories;
+  window.mobileBackToMotherCategories=function(){
+    restore();
+    if(typeof oldBack==='function')return oldBack.apply(this,arguments);
+  };
+
+  window.addEventListener('resize',function(){
+    if(!mobile())restore();
+  });
+})();
+</script>
+
 </body></html>
 
 <style id="seervi-non-home-topspace-fix-v1">
