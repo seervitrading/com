@@ -6,7 +6,10 @@
 .cloud-connected-badge{position:fixed;left:16px;top:88px;z-index:40;display:none;align-items:center;gap:7px;padding:7px 10px;border:1px solid #22c55e55;border-radius:999px;background:#07150dE8;color:#7ee2a4;font-size:9px;font-weight:900;letter-spacing:1.2px;box-shadow:0 8px 24px #0008;backdrop-filter:blur(10px)}
 .cloud-connected-badge.show{display:inline-flex}
 .cloud-connected-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 10px #22c55e}
-@media(max-width:600px){.cloud-connected-badge{left:10px;top:82px;padding:6px 9px;font-size:8px}}
+@media(max-width:600px){
+  .inventory-mother-category{padding:10px;border-radius:12px}
+  .inventory-mother-head h4{font-size:17px}
+.cloud-connected-badge{left:10px;top:82px;padding:6px 9px;font-size:8px}}
 a{text-decoration:none;color:inherit}.wrap{max-width:1180px;margin:auto;padding:0 56px}
 nav{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff10;position:sticky;top:0;background:#080a0ddd;backdrop-filter:blur(14px);z-index:10}
 .logo{font-weight:800;letter-spacing:1.5px;font-size:20px}.logo span{color:var(--accent)}
@@ -2434,6 +2437,13 @@ body:not(.admin-quote-mode) .cart-note{
 .inventory-stock-switch input:not(:checked) ~ .inventory-stock-state{color:#e88989}
 .inventory-stock-empty{padding:18px;text-align:center;color:#77818c;font-size:10px;border:1px dashed #ffffff18;border-radius:10px}
 .inventory-stock-category{border:1px solid #ffffff12;background:#0b1016;border-radius:12px;padding:12px;margin-bottom:12px}
+.inventory-mother-category{border:1px solid #ffffff18;background:#0d1319;border-radius:15px;padding:14px;margin-bottom:16px}
+.inventory-mother-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:2px 4px 12px;margin-bottom:12px;border-bottom:1px solid #ffffff12}
+.inventory-mother-kicker{display:block;color:#f0c66a;font-size:9px;font-weight:900;letter-spacing:1.5px}
+.inventory-mother-head h4{margin:4px 0 2px;color:#fff;font-size:20px;line-height:1.15}
+.inventory-mother-count{display:block;color:#737d87;font-size:9px;font-weight:800;letter-spacing:.7px}
+.inventory-mother-subcategories{display:grid;grid-template-columns:1fr;gap:12px}
+
 .inventory-category-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 2px 12px;border-bottom:1px solid #ffffff0d;margin-bottom:10px}
 .inventory-category-kicker{display:block;color:#7f8994;font-size:8px;font-weight:900;letter-spacing:1.2px}
 .inventory-category-head h5{margin:3px 0 2px;color:#fff;font-size:15px}
@@ -7481,16 +7491,20 @@ function inventoryRenderAdmin(){
   // Keep filter controls stable while the stock cards are refreshed.
   if(categoryEl){
     const current=categoryEl.value || 'all';
-    const categories=[...new Set(items.map(item=>item.type||'Item'))].sort((a,b)=>a.localeCompare(b));
-    categoryEl.innerHTML='<option value="all">ALL CATEGORIES</option>'+categories.map(type=>`<option value="${esc(type)}">${esc(type.toUpperCase())}</option>`).join('');
-    categoryEl.value=categories.includes(current)?current:'all';
+    const mothers=[...new Set(items.map(item=>inventoryMotherCategoryForItem(item)||'OTHER'))]
+      .sort((a,b)=>a.localeCompare(b));
+    categoryEl.innerHTML='<option value="all">ALL MOTHER CATEGORIES</option>'+
+      mothers.map(mother=>`<option value="${esc(mother)}">${esc(mother)}</option>`).join('');
+    categoryEl.value=mothers.includes(current)?current:'all';
   }
 
   const matches=item=>{
     const stock=seerviInventoryState[item.key]!==false;
-    const hay=[item.type,item.model,item.spec].filter(Boolean).join(' ').toLowerCase();
+    const mother=inventoryMotherCategoryForItem(item);
+    const sub=inventorySubcategoryForItem(item);
+    const hay=[mother,sub,item.type,item.model,item.spec].filter(Boolean).join(' ').toLowerCase();
     const searchOk=!search || hay.includes(search);
-    const categoryOk=category==='all' || item.type===category;
+    const categoryOk=category==='all' || mother===category;
     const statusOk=status==='all' || (status==='in' ? stock : !stock);
     return searchOk && categoryOk && statusOk;
   };
@@ -7505,6 +7519,7 @@ function inventoryRenderAdmin(){
     return;
   }
 
+  // Build Mother Category -> Subcategory groups without changing inventory keys or stock logic.
   const groups={};
   filtered.forEach(item=>{
     const mother=inventoryMotherCategoryForItem(item);
@@ -7513,22 +7528,28 @@ function inventoryRenderAdmin(){
     (groups[key] ||= {mother,sub,items:[]}).items.push(item);
   });
 
+  const motherGroups={};
+  Object.values(groups).forEach(bucket=>{
+    (motherGroups[bucket.mother] ||= []).push(bucket);
+  });
+
   let switchIndex=0;
-  grid.innerHTML=Object.keys(groups).map(groupKey=>{
-    const bucket=groups[groupKey];
+  const renderSubcategory=(bucket)=>{
     const group=bucket.items;
     const mother=bucket.mother;
     const sub=bucket.sub;
     // The switch still applies to the underlying inventory type/model records exactly as before.
     const fullGroup=items.filter(item=>inventoryMotherCategoryForItem(item)===mother && inventorySubcategoryForItem(item)===sub);
-    const groupId='inventoryCategory_'+String(groupKey).replace(/[^a-z0-9]+/gi,'_');
+    const groupId='inventoryCategory_'+String(mother+'_'+sub).replace(/[^a-z0-9]+/gi,'_');
     const allStock=fullGroup.every(item=>seerviInventoryState[item.key]!==false);
     const noneStock=fullGroup.every(item=>seerviInventoryState[item.key]===false);
     const categoryState=allStock?'STOCK':(noneStock?'NO STOCK':'MIXED');
+
     const cards=group.map(item=>{
       const stock=seerviInventoryState[item.key]!==false;
       const id='inventorySwitch_'+(switchIndex++);
       const spec=item.spec ? `<span class="inventory-stock-spec">${esc(item.spec)}</span>` : '';
+      const qty=Number.isFinite(Number(seerviInventoryQty[item.key]))?Math.max(0,Number(seerviInventoryQty[item.key])):'';
       return `<div class="inventory-stock-card" data-inventory-card="${esc(item.key)}">
         <div class="inventory-stock-image"><img src="${item.image}" alt="${esc(item.model)}"></div>
         <div class="inventory-stock-info">
@@ -7538,7 +7559,7 @@ function inventoryRenderAdmin(){
         </div>
         <div class="inventory-available-qty">
           <label for="inventoryQty_${switchIndex}">AVAILABLE QTY</label>
-          <input id="inventoryQty_${switchIndex}" type="number" min="0" step="1" value="${Number.isFinite(Number(seerviInventoryQty[item.key]))?Math.max(0,Number(seerviInventoryQty[item.key])):''}" placeholder="SET" onchange="setInventoryQuantity('${esc(item.key)}',this.value,this)" onkeydown="if(event.key==='Enter')this.blur()">
+          <input id="inventoryQty_${switchIndex}" type="number" min="0" step="1" value="${qty}" placeholder="SET" onchange="setInventoryQuantity('${esc(item.key)}',this.value,this)" onkeydown="if(event.key==='Enter')this.blur()">
         </div>
         <label class="inventory-stock-switch" for="${id}">
           <input id="${id}" type="checkbox" ${stock?'checked':''} onchange="setInventoryStock('${esc(item.key)}',this.checked,this)">
@@ -7547,6 +7568,7 @@ function inventoryRenderAdmin(){
         </label>
       </div>`;
     }).join('');
+
     return `<section class="inventory-stock-category" data-inventory-category="${esc(mother)}" data-inventory-subcategory="${esc(sub)}">
       <div class="inventory-category-head">
         <div>
@@ -7561,6 +7583,21 @@ function inventoryRenderAdmin(){
         </label>
       </div>
       <div class="inventory-category-grid">${cards}</div>
+    </section>`;
+  };
+
+  grid.innerHTML=Object.entries(motherGroups).map(([mother,buckets])=>{
+    const total=items.filter(item=>inventoryMotherCategoryForItem(item)===mother).length;
+    const shown=buckets.reduce((sum,b)=>sum+b.items.length,0);
+    return `<section class="inventory-mother-category" data-inventory-mother="${esc(mother)}">
+      <div class="inventory-mother-head">
+        <div>
+          <span class="inventory-mother-kicker">MOTHER CATEGORY</span>
+          <h4>${esc(mother)}</h4>
+          <span class="inventory-mother-count">${total} ITEM${total===1?'':'S'}${shown!==total?' · '+shown+' SHOWN':''}</span>
+        </div>
+      </div>
+      <div class="inventory-mother-subcategories">${buckets.map(renderSubcategory).join('')}</div>
     </section>`;
   }).join('');
 
