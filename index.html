@@ -8203,7 +8203,49 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
     }
   });
 })();
-</script></body></html>
+</script>
+<style id="seervi-topbar-home-only-v1">
+/* Top navigation belongs to the public Home view only. Hide it while any app/modal view is open. */
+body.seervi-non-home-view nav{display:none !important;}
+</style>
+<script id="seervi-topbar-home-only-script">
+(function(){
+  const VIEW_IDS = [
+    'accountDashboardModal',
+    'notificationModal',
+    'notificationPostModal',
+    'customerLoginModal',
+    'crmModal',
+    'adminNewPartyModal',
+    'adminStockModal',
+    'productModal',
+    'cartDrawer'
+  ];
+  function isOpen(el){
+    if(!el) return false;
+    if(el.id==='cartDrawer') return el.classList.contains('show');
+    if(el.classList.contains('show')) return true;
+    const aria=el.getAttribute('aria-hidden');
+    if(aria==='false') return true;
+    const cs=getComputedStyle(el);
+    return cs.display!=='none' && cs.visibility!=='hidden' && cs.opacity!=='0';
+  }
+  function syncTopbarHomeOnly(){
+    const nonHome = VIEW_IDS.some(id=>isOpen(document.getElementById(id)));
+    document.body.classList.toggle('seervi-non-home-view', nonHome);
+  }
+  function init(){
+    syncTopbarHomeOnly();
+    const observer=new MutationObserver(syncTopbarHomeOnly);
+    observer.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class','aria-hidden','style','hidden']});
+    window.seerviSyncTopbarHomeOnly=syncTopbarHomeOnly;
+    window.addEventListener('hashchange',syncTopbarHomeOnly);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
+</body></html>
 <style id="mobile-hero-right-crop-final">
 @media(max-width:600px){
   .bw-hero .bw-hero-image{background-position:right center !important;background-size:cover !important;}
