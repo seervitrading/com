@@ -9300,3 +9300,41 @@ body.seervi-non-home-view nav{display:none !important;}
   window.addEventListener('resize',function(){if(!mobile())document.body.classList.remove('mobile-mother-selected');});
 })();
 </script>
+
+<!-- FINAL MOBILE PRODUCTS CLEANUP: Products screen contains ONLY mother categories first. -->
+<style id="seervi-mobile-products-only-mother-final">
+@media (max-width:600px){
+  /* Products tab: remove every non-product/home section. */
+  body.mobile-products-view #customerHomeProfile,
+  body.mobile-products-view #how-seervi-works,
+  body.mobile-products-view #about-intro,
+  body.mobile-products-view #quote,
+  body.mobile-products-view #about,
+  body.mobile-products-view #why-seervi,
+  body.mobile-products-view #contact,
+  body.mobile-products-view footer{
+    display:none !important;
+    visibility:hidden !important;
+    height:0 !important;
+    min-height:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:hidden !important;
+  }
+
+  /* First Products screen = ONLY the four mother-category cards. */
+  body.mobile-products-view:not(.mobile-mother-selected) #profiles,
+  body.mobile-products-view:not(.mobile-mother-selected) #products,
+  body.mobile-products-view:not(.mobile-mother-selected) #tvMounts,
+  body.mobile-products-view:not(.mobile-mother-selected) #earthAugers,
+  body.mobile-products-view:not(.mobile-mother-selected) #applications{
+    display:none !important;
+    visibility:hidden !important;
+    height:0 !important;
+    min-height:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:hidden !important;
+  }
+}
+</style>
