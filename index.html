@@ -8195,7 +8195,6 @@ document.addEventListener('DOMContentLoaded',filterEarthAugers);
     const el=document.getElementById('earthAugers');
     if(el) el.style.display='';
   };
-  const oldResize=window.onresize;
   window.addEventListener('resize',function(){
     if(window.innerWidth>600){
       const el=document.getElementById('earthAugers');
@@ -8231,7 +8230,7 @@ body.seervi-non-home-view nav{display:none !important;}
     return cs.display!=='none' && cs.visibility!=='hidden' && cs.opacity!=='0';
   }
   function syncTopbarHomeOnly(){
-    const nonHome = VIEW_IDS.some(id=>isOpen(document.getElementById(id)));
+    const nonHome = document.body.classList.contains('mobile-products-view') || VIEW_IDS.some(id=>isOpen(document.getElementById(id)));
     document.body.classList.toggle('seervi-non-home-view', nonHome);
   }
   function init(){
@@ -8245,7 +8244,8 @@ body.seervi-non-home-view nav{display:none !important;}
   else init();
 })();
 </script>
-</body></html>
+
+
 <style id="mobile-hero-right-crop-final">
 @media(max-width:600px){
   .bw-hero .bw-hero-image{background-position:right center !important;background-size:cover !important;}
@@ -8501,3 +8501,4 @@ body.seervi-non-home-view nav{display:none !important;}
   }
 }
 </style>
+</body></html>
