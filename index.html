@@ -3474,8 +3474,7 @@ body:not(.seervi-category-active) #profiles,
 body:not(.seervi-category-active) #products,
 body:not(.seervi-category-active) #tvMounts,
 body:not(.seervi-category-active) #earthAugers,
-body:not(.seervi-category-active) #applications,
-body:not(.seervi-category-active) #curtainFinials, body:not(.seervi-category-active) #curtainFinials01, body:not(.seervi-category-active) #curtainFinials02, body:not(.seervi-category-active) #curtainFinials03, body:not(.seervi-category-active) #curtainFinials04, body:not(.seervi-category-active) #curtainBrackets, body:not(.seervi-category-active) #curtainBrackets01, body:not(.seervi-category-active) #curtainDesignRods, body:not(.seervi-category-active) #curtainRods, body:not(.seervi-category-active) #curtainHooks, body:not(.seervi-category-active) #curtainRings, body:not(.seervi-category-active) #curtainAccessories, body:not(.seervi-category-active) #magneticClip{display:none!important;}
+body:not(.seervi-category-active) #applications{display:none!important;}
 body.seervi-category-active #productCategoryBar{display:none!important;}
 
 .mother-category-panel{position:fixed;inset:0;z-index:10050;display:none;align-items:center;justify-content:center;padding:28px;}
@@ -8454,7 +8453,7 @@ function seerviShowSaveSuccess(message){
       mounts:document.getElementById('tvMounts'),
       coming:document.getElementById('applications'),
       augers:document.getElementById('earthAugers'),
-      curtains:[document.getElementById('curtainRods'),document.getElementById('curtainFinials01'),document.getElementById('curtainFinials02'),document.getElementById('curtainFinials03'),document.getElementById('curtainFinials04'),document.getElementById('curtainBrackets'),document.getElementById('curtainBrackets01'),document.getElementById('curtainDesignRods'),document.getElementById('curtainHooks'),document.getElementById('curtainRings'),document.getElementById('curtainAccessories'),document.getElementById('magneticClip')]
+      curtains:[document.getElementById('curtainFinials'),document.getElementById('curtainFinials01'),document.getElementById('curtainFinials02'),document.getElementById('curtainFinials03'),document.getElementById('curtainFinials04'),document.getElementById('curtainBrackets'),document.getElementById('curtainBrackets01')]
     };
     ['profiles','blades','mounts','coming','augers','curtains'].forEach(function(key){
       const el=sections[key];
@@ -8468,9 +8467,6 @@ function seerviShowSaveSuccess(message){
       if(firstTarget) setTimeout(function(){ firstTarget.scrollIntoView({behavior:'smooth',block:'start'}); },20);
     }
   }
-  /* Legacy generic Finials section is retired; only Finials 01–04 are exposed. */
-  const legacyFinials=document.getElementById('curtainFinials');
-  if(legacyFinials) legacyFinials.style.display='none';
   window.showProductCategory=setCategory;
 
   const oldHome=window.showMobileHome;
@@ -8870,7 +8866,9 @@ body.seervi-non-home-view nav{display:none !important;}
     curtains:{
       title:'CURTAINS',
       desc:'Curtain products arranged by curtain hardware category.',
-      items:[{title:'RODS',desc:'Curtain rods in multiple finishes and colours.',section:'curtainRods',image:'images/curtain-rods.webp'},{title:'FINIALS 01',desc:'Curtain finial models – collection 01.',section:'curtainFinials01',image:'images/curtain-finials-01.webp'},{title:'FINIALS 02',desc:'Curtain finial models – collection 02.',section:'curtainFinials02',image:'images/curtain-finials-02.webp'},{title:'FINIALS 03',desc:'Curtain finial models – collection 03.',section:'curtainFinials03',image:'images/curtain-finials-03.webp'},{title:'FINIALS 04',desc:'Curtain finial models – collection 04.',section:'curtainFinials04',image:'images/curtain-finials-04.webp'},{title:'BRACKET',desc:'Curtain bracket models in multiple designs.',section:'curtainBrackets',image:'images/curtain-bracket.webp'},{title:'BRACKET 01',desc:'Curtain bracket models – collection 01.',section:'curtainBrackets01',image:'images/curtain-bracket-01.webp'},{title:'DESIGN RODS',desc:'Decorative curtain rod designs and finishes.',section:'curtainDesignRods',image:'images/curtain-design-rods.webp'},{title:'HOOKS',desc:'Curtain hook models in multiple designs.',section:'curtainHooks',image:'images/curtain-hooks.webp'},{title:'RINGS',desc:'Curtain rings in multiple finishes and designs.',section:'curtainRings',image:'images/curtain-rings.webp'},{title:'ACCESSORIES',desc:'Curtain rod accessories and finishing components.',section:'curtainAccessories',image:'images/curtain-accessories.webp'},{title:'MAGNETIC CLIP',desc:'Magnetic clips in multiple decorative designs.',section:'magneticClip',image:'images/magnetic-clip.webp'}]
+      items:[
+        {title:'CURTAIN FINIALS',desc:'Curtain finial models in multiple designs and rod sizes.',section:'curtainFinials',image:'images/curtain-finials.webp'},{title:'CURTAIN FINIALS 01',desc:'Curtain finial models – collection 01.',section:'curtainFinials01',image:'images/curtain-finials-01.webp'},{title:'CURTAIN FINIALS 02',desc:'Curtain finial models – collection 02.',section:'curtainFinials02',image:'images/curtain-finials-02.webp'},{title:'CURTAIN FINIALS 03',desc:'Curtain finial models – collection 03.',section:'curtainFinials03',image:'images/curtain-finials-03.webp'},{title:'CURTAIN FINIALS 04',desc:'Curtain finial models – collection 04.',section:'curtainFinials04',image:'images/curtain-finials-04.webp'},{title:'CURTAIN BRACKET',desc:'Curtain bracket models in multiple designs.',section:'curtainBrackets',image:'images/curtain-bracket.webp'},{title:'CURTAIN DESIGN RODS',desc:'Decorative curtain rod designs and finishes.',section:'curtainDesignRods',image:'images/curtain-design-rods.webp'},{title:'CURTAIN RODS',desc:'Curtain rods in multiple finishes and colours.',section:'curtainRods',image:'images/curtain-rods.webp'}
+      ]
     }
   };
 
@@ -9316,7 +9314,7 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
     tools:{motherImage:'images/mother-tools.webp',items:[{title:'WALL CUTTER',section:'products',filter:'Wall Cutter Blade',image:'images/category-wall-blades.webp'},{title:'METAL CUTTER',section:'products',filter:'Metal Cutting Wheel',image:'images/category-metal-blades.webp'}]},
     tv:{motherImage:'images/mother-tv-stands.webp',items:[{title:'WALL FIXED',section:'tvMounts',models:['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105'],image:'images/category-wall-fixed.webp'},{title:'WALL MOUNT STANDS',section:'tvMounts',models:['P4-1','P4','P5','P6','P65','DC200-1','DC200','DC200-X'],image:'images/category-mounts.webp'}]},
     machines:{motherImage:'images/mother-machines.webp',items:[{title:'EARTH AUGER',section:'earthAugers',image:'images/category-augers.webp'}]},
-    curtains:{motherImage:'images/mother-curtains.webp',items:[{title:'RODS',desc:'Curtain rods in multiple finishes and colours.',section:'curtainRods',image:'images/curtain-rods.webp'},{title:'FINIALS 01',desc:'Curtain finial models – collection 01.',section:'curtainFinials01',image:'images/curtain-finials-01.webp'},{title:'FINIALS 02',desc:'Curtain finial models – collection 02.',section:'curtainFinials02',image:'images/curtain-finials-02.webp'},{title:'FINIALS 03',desc:'Curtain finial models – collection 03.',section:'curtainFinials03',image:'images/curtain-finials-03.webp'},{title:'FINIALS 04',desc:'Curtain finial models – collection 04.',section:'curtainFinials04',image:'images/curtain-finials-04.webp'},{title:'BRACKET',desc:'Curtain bracket models in multiple designs.',section:'curtainBrackets',image:'images/curtain-bracket.webp'},{title:'BRACKET 01',desc:'Curtain bracket models – collection 01.',section:'curtainBrackets01',image:'images/curtain-bracket-01.webp'},{title:'DESIGN RODS',desc:'Decorative curtain rod designs and finishes.',section:'curtainDesignRods',image:'images/curtain-design-rods.webp'},{title:'HOOKS',desc:'Curtain hook models in multiple designs.',section:'curtainHooks',image:'images/curtain-hooks.webp'},{title:'RINGS',desc:'Curtain rings in multiple finishes and designs.',section:'curtainRings',image:'images/curtain-rings.webp'},{title:'ACCESSORIES',desc:'Curtain rod accessories and finishing components.',section:'curtainAccessories',image:'images/curtain-accessories.webp'},{title:'MAGNETIC CLIP',desc:'Magnetic clips in multiple decorative designs.',section:'magneticClip',image:'images/magnetic-clip.webp'}]}
+    curtains:{motherImage:'images/mother-curtains.webp',items:[{title:'CURTAIN FINIALS',section:'curtainFinials',image:'images/curtain-finials.webp'},{title:'CURTAIN FINIALS 01',section:'curtainFinials01',image:'images/curtain-finials-01.webp'},{title:'CURTAIN FINIALS 02',section:'curtainFinials02',image:'images/curtain-finials-02.webp'},{title:'CURTAIN FINIALS 03',section:'curtainFinials03',image:'images/curtain-finials-03.webp'},{title:'CURTAIN FINIALS 04',section:'curtainFinials04',image:'images/curtain-finials-04.webp'},{title:'CURTAIN BRACKET',section:'curtainBrackets',image:'images/curtain-bracket.webp'},{title:'CURTAIN BRACKET 01',section:'curtainBrackets01',image:'images/curtain-bracket-01.webp'},{title:'CURTAIN DESIGN RODS',section:'curtainDesignRods',image:'images/curtain-design-rods.webp'},{title:'CURTAIN RODS',section:'curtainRods',image:'images/curtain-rods.webp'},{title:'CURTAIN HOOKS',section:'curtainHooks',image:'images/curtain-hooks.webp'},{title:'CURTAIN RINGS',section:'curtainRings',image:'images/curtain-rings.webp'},{title:'CURTAIN ACCESSORIES',section:'curtainAccessories',image:'images/curtain-accessories.webp'},{title:'MAGNETIC CLIP',section:'magneticClip',image:'images/magnetic-clip.webp'}]}
     };
   function hideSections(){ids.forEach(function(id){var e=document.getElementById(id);if(e)e.style.setProperty('display','none','important');});}
   function showSection(id){hideSections();var e=document.getElementById(id);if(e)e.style.setProperty('display','block','important');}
@@ -9339,8 +9337,8 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   function selectAll(key){
     if(!mobile())return;var cfg=keys[key];if(!cfg)return;
     document.body.classList.add('mobile-mother-selected');render(key,-1);clearFilters();
-    /* Mother category is navigation-only: do not show every product underneath it. */
-    ids.forEach(function(id){var e=document.getElementById(id);if(e)e.style.setProperty('display','none','important');});
+    var seen={};cfg.items.forEach(function(it){seen[it.section]=1;});
+    ids.forEach(function(id){var e=document.getElementById(id);if(e)e.style.setProperty('display',seen[id]?'block':'none','important');});
     window.scrollTo({top:0,behavior:'smooth'});
   }
   function selectSub(key,index){
