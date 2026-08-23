@@ -3520,6 +3520,32 @@ body.seervi-category-active #productCategoryBar{display:none!important;}
 body:not(.seervi-category-active) .seervi-category-back-wrap{display:none!important;}
 @media(max-width:600px){.seervi-category-back-wrap{padding:8px 12px 0}.seervi-category-back{font-size:11px;padding:9px 12px;}}
 </style>
+
+<style id="mobile-subcategory-image-proportion-fix">
+@media(max-width:600px){
+  #mobileSubcategoryBar .mobile-subcategory-tab{
+    width:92px!important; min-width:92px!important; height:94px!important;
+    padding:6px!important; display:flex!important; flex-direction:column!important;
+    align-items:center!important; justify-content:flex-start!important; gap:5px!important;
+    overflow:hidden!important;
+  }
+  #mobileSubcategoryBar .mobile-subcategory-tab-image{
+    width:78px!important; height:62px!important; flex:0 0 62px!important;
+    display:flex!important; align-items:center!important; justify-content:center!important;
+    overflow:hidden!important; border-radius:6px!important;
+  }
+  #mobileSubcategoryBar .mobile-subcategory-tab-image img{
+    display:block!important; width:100%!important; height:100%!important;
+    max-width:100%!important; max-height:100%!important;
+    object-fit:contain!important; object-position:center!important;
+  }
+  #mobileSubcategoryBar .mobile-subcategory-tab-name{
+    display:block!important; width:100%!important; overflow:hidden!important;
+    text-overflow:ellipsis!important; white-space:nowrap!important;
+    text-align:center!important; line-height:14px!important;
+  }
+}
+</style>
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
