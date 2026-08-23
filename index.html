@@ -9327,7 +9327,39 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   nav > .wrap > .nav-left-group{display:none !important;}
 }
 </style>
-</body></html>
+</body>
+<style id="mobile-category-back-and-gold-tags-final-fix">
+@media(max-width:600px){
+  /* Keep the mobile back control OUTSIDE the product/category sections.
+     The older section-level back control must never render on mobile. */
+  .seervi-category-back-wrap{display:none!important;}
+  body.mobile-products-view .seervi-mobile-category-back{
+    display:flex!important;
+    position:relative!important;
+    width:100%!important;
+    box-sizing:border-box!important;
+    margin:0!important;
+    padding:7px 12px 8px!important;
+    background:#090d12!important;
+    border:0!important;
+    z-index:40!important;
+  }
+  body.mobile-products-view .seervi-mobile-category-back button{
+    position:relative!important;
+    margin:0!important;
+  }
+
+  /* Product-category gold kicker lines removed on mobile, as requested. */
+  body.mobile-products-view #profiles .section-head .tag,
+  body.mobile-products-view #products .section-head .tag,
+  body.mobile-products-view #tvMounts .section-head .tag,
+  body.mobile-products-view #earthAugers .section-head .tag,
+  body.mobile-products-view #applications .section-head .tag{
+    display:none!important;
+  }
+}
+</style>
+</html>
 
 <style id="seervi-non-home-topspace-fix-v1">
 /* NON-HOME VIEWS: the Home-only fixed topbar is hidden, so its reserved mobile space must also be removed. */
