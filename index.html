@@ -3681,7 +3681,8 @@ body:not(.mobile-products-view) #curtainDesignRods{display:none!important;visibi
     'profiles','products','tvMounts','earthAugers',
     'curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04',
     'curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods',
-    'curtainHooks','curtainRings','curtainAccessories','magneticClip'
+    'curtainHooks','curtainRings','curtainAccessories','magneticClip',
+    'curtainTrackKFSeries','curtainTrackKFXSeries'
   ];
   var SECTION_MOTHER={
     profiles:'aluminium', products:'tools', tvMounts:'tv', earthAugers:'machines',
@@ -3689,7 +3690,9 @@ body:not(.mobile-products-view) #curtainDesignRods{display:none!important;visibi
     curtainFinials03:'curtains', curtainFinials04:'curtains', curtainBrackets:'curtains',
     curtainBrackets01:'curtains', curtainDesignRods:'curtains', curtainRods:'curtains',
     curtainHooks:'curtains', curtainRings:'curtains', curtainAccessories:'curtains',
-    magneticClip:'curtains'
+    magneticClip:'curtains',
+    curtainTrackKFSeries:'curtainTrack',
+    curtainTrackKFXSeries:'curtainTrack'
   };
 
   function isMobile(){ return window.innerWidth<=600; }
@@ -10946,5 +10949,42 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
     }
   };
   window.mobileBackToMotherCategories=window.backToMotherCategories;
+})();
+</script>
+
+<script id="seervi-final-curtain-track-back-safety-v4">
+(function(){
+  'use strict';
+  function hideTrack(){
+    ['curtainTrackKFSeries','curtainTrackKFXSeries'].forEach(function(id){
+      var e=document.getElementById(id);
+      if(!e)return;
+      e.style.setProperty('display','none','important');
+      e.style.setProperty('visibility','hidden','important');
+      e.style.setProperty('height','0','important');
+      e.style.setProperty('min-height','0','important');
+      e.style.setProperty('overflow','hidden','important');
+    });
+  }
+  var previousFresh=window.seerviFreshBackToMother;
+  window.seerviFreshBackToMother=function(){
+    if(window.__seerviCurrentMotherKey==='curtainTrack'){
+      hideTrack();
+      document.body.classList.remove('mobile-mother-selected','seervi-category-active','mother-panel-open');
+      var sub=document.getElementById('mobileSubcategoryBar');
+      if(sub)sub.innerHTML='';
+      var bar=document.getElementById('productCategoryBar');
+      if(bar)bar.style.removeProperty('display');
+      var q=document.getElementById('mobileProductSearchInput');
+      if(q)q.value='';
+      var search=document.getElementById('mobileProductSearch');
+      if(search)search.classList.remove('has-value');
+      if(typeof window.setMobileProductSearchPlaceholder==='function')window.setMobileProductSearchPlaceholder('Search products...');
+      document.body.classList.add('mobile-products-view');
+      window.scrollTo({top:0,behavior:'smooth'});
+      return;
+    }
+    if(typeof previousFresh==='function')return previousFresh.apply(this,arguments);
+  };
 })();
 </script>
