@@ -10200,6 +10200,35 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
+
+<script id="seervi-curtain-track-back-final-fix">
+(function(){
+  'use strict';
+  const previousBack=window.backToMotherCategories;
+  function curtainTrackBack(){
+    if(window.__seerviCurrentMotherKey!=='curtainTrack'){
+      return typeof previousBack==='function' ? previousBack.apply(this,arguments) : undefined;
+    }
+    const ids=['profiles','products','tvMounts','earthAugers','curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04','curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods','curtainHooks','curtainRings','curtainAccessories','magneticClip','applications','curtainTrackKFSeries','curtainTrackKFXSeries'];
+    ids.forEach(function(id){const el=document.getElementById(id);if(el)el.style.setProperty('display','none','important');});
+    document.body.classList.remove('seervi-category-active','mobile-mother-selected','mother-panel-open');
+    const panel=document.getElementById('motherCategoryPanel');
+    if(panel){panel.classList.remove('show');panel.setAttribute('aria-hidden','true');}
+    if(window.innerWidth<=600){
+      document.body.classList.add('mobile-products-view','mobile-mother-selected');
+      if(typeof window.renderMobileTabs==='function') window.renderMobileTabs();
+      else if(typeof window.renderMobileSubcategory==='function') window.renderMobileSubcategory();
+    }else{
+      document.body.classList.remove('mobile-products-view');
+      if(typeof window.renderMother==='function') window.renderMother();
+      else if(typeof window.renderDesktopMother==='function') window.renderDesktopMother();
+    }
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  window.backToMotherCategories=curtainTrackBack;
+  window.mobileBackToMotherCategories=curtainTrackBack;
+})();
+</script>
 </body>
 <style id="mobile-category-back-and-gold-tags-final-fix">
 @media(max-width:600px){
