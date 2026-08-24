@@ -9855,6 +9855,79 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   },true);
 })();
 </script>
+
+<style id="seervi-web-category-images-and-back-flow-final">
+@media(min-width:601px){
+  .mother-category-panel-head{position:relative;display:flex!important;align-items:center!important;gap:14px!important;}
+  .mother-category-panel-head > div:first-child{flex:1;min-width:0;}
+  .seervi-desktop-flow-back{
+    display:inline-flex!important;align-items:center;justify-content:center;
+    width:48px;height:42px;flex:0 0 48px;
+    border:1px solid #ffffff24;border-radius:10px;
+    background:#10151b;color:#f0c66a;font-size:22px;font-weight:900;
+    line-height:1;cursor:pointer;box-shadow:0 8px 22px #0005;
+  }
+  .seervi-desktop-flow-back:hover{border-color:#f0c66a88;background:#171d24;transform:translateY(-1px);}
+  .mother-subcategory-image{display:flex!important;align-items:center;justify-content:center;overflow:hidden;background:#0b0f14;}
+  .mother-subcategory-image img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;}
+  .seervi-desktop-section-back-row{display:flex!important;align-items:center;margin:0 0 12px!important;min-height:42px;}
+  .seervi-desktop-section-back{
+    display:inline-flex!important;align-items:center;justify-content:center;
+    width:48px;height:42px;
+    border:1px solid #ffffff24;border-radius:10px;
+    background:#10151b;color:#f0c66a;font-size:22px;font-weight:900;
+    line-height:1;cursor:pointer;box-shadow:0 8px 22px #0005;
+  }
+  .seervi-desktop-section-back:hover{border-color:#f0c66a88;background:#171d24;transform:translateY(-1px);}
+}
+@media(max-width:600px){
+  .seervi-desktop-flow-back,.seervi-desktop-section-back-row{display:none!important;}
+}
+</style>
+<script id="seervi-web-category-images-and-back-flow-final">
+(function(){
+  'use strict';
+  function mobile(){return window.innerWidth<=600;}
+  function addPanelBack(){
+    if(mobile())return;
+    var head=document.querySelector('#motherCategoryPanel .mother-category-panel-head');
+    if(!head || head.querySelector('.seervi-desktop-flow-back'))return;
+    var b=document.createElement('button');
+    b.type='button'; b.className='seervi-desktop-flow-back'; b.setAttribute('aria-label','Back to categories'); b.textContent='←';
+    b.addEventListener('click',function(e){
+      e.preventDefault(); e.stopPropagation();
+      if(typeof window.closeMotherCategory==='function')window.closeMotherCategory();
+      document.body.classList.remove('mother-panel-open');
+      var bar=document.getElementById('productCategoryBar');
+      if(bar)bar.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+    head.insertBefore(b,head.firstChild);
+  }
+  var sectionIds=['profiles','products','tvMounts','earthAugers','curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04','curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods','curtainHooks','curtainRings','curtainAccessories','magneticClip'];
+  function addSectionBacks(){
+    if(mobile())return;
+    sectionIds.forEach(function(id){
+      var sec=document.getElementById(id); if(!sec)return;
+      var wrap=sec.querySelector('.wrap'); if(!wrap)return;
+      if(wrap.querySelector(':scope > .seervi-desktop-section-back-row'))return;
+      var row=document.createElement('div'); row.className='seervi-desktop-section-back-row';
+      var b=document.createElement('button'); b.type='button'; b.className='seervi-desktop-section-back'; b.textContent='←'; b.setAttribute('aria-label','Back to sub categories');
+      b.addEventListener('click',function(e){
+        e.preventDefault();e.stopPropagation();
+        var key=window.__seerviCurrentMotherKey;
+        if(key && typeof window.openMotherCategory==='function')window.openMotherCategory(key);
+        else if(typeof window.showProductCategory==='function')window.showProductCategory('all');
+      });
+      row.appendChild(b); wrap.insertBefore(row,wrap.firstChild);
+    });
+  }
+  function ensure(){addPanelBack();addSectionBacks();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ensure);else ensure();
+  window.addEventListener('resize',function(){setTimeout(ensure,0);});
+  var mo=new MutationObserver(function(){ensure();});
+  if(document.body)mo.observe(document.body,{childList:true,subtree:true});
+})();
+</script>
 </body>
 <style id="mobile-category-back-and-gold-tags-final-fix">
 @media(max-width:600px){
@@ -10556,33 +10629,33 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   ];
   var CFG={
     aluminium:{title:'ALUMINIUM',items:[
-      {title:'ALUMINIUM PROFILES',section:'profiles'}
+      {title:'ALUMINIUM PROFILES',section:'profiles',image:'images/category-profiles.webp'}
     ]},
     tools:{title:'TOOLS',items:[
-      {title:'WALL CUTTER',section:'products',filter:'Wall Cutter Blade'},
-      {title:'METAL CUTTER',section:'products',filter:'Metal Cutting Wheel'}
+      {title:'WALL CUTTER',section:'products',filter:'Wall Cutter Blade',image:'images/category-wall-blades.webp'},
+      {title:'METAL CUTTER',section:'products',filter:'Metal Cutting Wheel',image:'images/category-metal-blades.webp'}
     ]},
     tv:{title:'TV STANDS',items:[
-      {title:'WALL FIXED',section:'tvMounts',models:['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105']},
-      {title:'WALL MOUNT STANDS',section:'tvMounts',models:['P4-1','P4','P5','P6','P65','DC200-1','DC200','DC200-X']}
+      {title:'WALL FIXED',section:'tvMounts',models:['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105'],image:'images/category-wall-fixed.webp'},
+      {title:'WALL MOUNT STANDS',section:'tvMounts',models:['P4-1','P4','P5','P6','P65','DC200-1','DC200','DC200-X'],image:'images/category-mounts.webp'}
     ]},
     machines:{title:'MACHINES',items:[
-      {title:'EARTH AUGER',section:'earthAugers'}
+      {title:'EARTH AUGER',section:'earthAugers',image:'images/category-augers.webp'}
     ]},
     curtains:{title:'CURTAINS',items:[
-      {title:'RODS',section:'curtainRods'},
-      {title:'DESIGN RODS',section:'curtainDesignRods'},
-      {title:'FINIALS',section:'curtainFinials'},
-      {title:'FINIALS 01',section:'curtainFinials01'},
-      {title:'FINIALS 02',section:'curtainFinials02'},
-      {title:'FINIALS 03',section:'curtainFinials03'},
-      {title:'FINIALS 04',section:'curtainFinials04'},
-      {title:'BRACKET',section:'curtainBrackets'},
-      {title:'BRACKET 01',section:'curtainBrackets01'},
-      {title:'HOOKS',section:'curtainHooks'},
-      {title:'RINGS',section:'curtainRings'},
-      {title:'ACCESSORIES',section:'curtainAccessories'},
-      {title:'MAGNETIC CLIP',section:'magneticClip'}
+      {title:'RODS',section:'curtainRods',image:'images/curtain-rods.webp'},
+      {title:'DESIGN RODS',section:'curtainDesignRods',image:'images/curtain-design-rods.webp'},
+      {title:'FINIALS',section:'curtainFinials',image:'images/curtain-finials.webp'},
+      {title:'FINIALS 01',section:'curtainFinials01',image:'images/curtain-finials-01.webp'},
+      {title:'FINIALS 02',section:'curtainFinials02',image:'images/curtain-finials-02.webp'},
+      {title:'FINIALS 03',section:'curtainFinials03',image:'images/curtain-finials-03.webp'},
+      {title:'FINIALS 04',section:'curtainFinials04',image:'images/curtain-finials-04.webp'},
+      {title:'BRACKET',section:'curtainBrackets',image:'images/curtain-bracket.webp'},
+      {title:'BRACKET 01',section:'curtainBrackets01',image:'images/curtain-bracket-01.webp'},
+      {title:'HOOKS',section:'curtainHooks',image:'images/curtain-hooks.webp'},
+      {title:'RINGS',section:'curtainRings',image:'images/curtain-rings.webp'},
+      {title:'ACCESSORIES',section:'curtainAccessories',image:'images/curtain-accessories.webp'},
+      {title:'MAGNETIC CLIP',section:'magneticClip',image:'images/magnetic-clip.webp'}
     ]}
   };
 
