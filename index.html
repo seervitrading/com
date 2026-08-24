@@ -10536,3 +10536,231 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   };
 })();
 </script>
+
+
+<!-- FINAL DESKTOP PRODUCT FLOW FIX: show every product in every subcategory -->
+<style id="seervi-final-desktop-all-products-v1">
+@media(min-width:601px){
+  /* Some older curtain-flow rules hide these sections on desktop. The final
+     controller below sets the active section's visibility/size explicitly. */
+}
+</style>
+<script id="seervi-final-desktop-all-products-v1">
+(function(){
+  'use strict';
+  var IDS=[
+    'profiles','products','tvMounts','earthAugers',
+    'curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04',
+    'curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods',
+    'curtainHooks','curtainRings','curtainAccessories','magneticClip'
+  ];
+  var CFG={
+    aluminium:{title:'ALUMINIUM',items:[
+      {title:'ALUMINIUM PROFILES',section:'profiles'}
+    ]},
+    tools:{title:'TOOLS',items:[
+      {title:'WALL CUTTER',section:'products',filter:'Wall Cutter Blade'},
+      {title:'METAL CUTTER',section:'products',filter:'Metal Cutting Wheel'}
+    ]},
+    tv:{title:'TV STANDS',items:[
+      {title:'WALL FIXED',section:'tvMounts',models:['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105']},
+      {title:'WALL MOUNT STANDS',section:'tvMounts',models:['P4-1','P4','P5','P6','P65','DC200-1','DC200','DC200-X']}
+    ]},
+    machines:{title:'MACHINES',items:[
+      {title:'EARTH AUGER',section:'earthAugers'}
+    ]},
+    curtains:{title:'CURTAINS',items:[
+      {title:'RODS',section:'curtainRods'},
+      {title:'DESIGN RODS',section:'curtainDesignRods'},
+      {title:'FINIALS',section:'curtainFinials'},
+      {title:'FINIALS 01',section:'curtainFinials01'},
+      {title:'FINIALS 02',section:'curtainFinials02'},
+      {title:'FINIALS 03',section:'curtainFinials03'},
+      {title:'FINIALS 04',section:'curtainFinials04'},
+      {title:'BRACKET',section:'curtainBrackets'},
+      {title:'BRACKET 01',section:'curtainBrackets01'},
+      {title:'HOOKS',section:'curtainHooks'},
+      {title:'RINGS',section:'curtainRings'},
+      {title:'ACCESSORIES',section:'curtainAccessories'},
+      {title:'MAGNETIC CLIP',section:'magneticClip'}
+    ]}
+  };
+
+  var originalMother=window.openMotherCategory;
+  var originalSub=window.openMotherSubcategory;
+  var currentKey='';
+
+  function isMobile(){ return window.innerWidth<=600; }
+  function esc(v){
+    return String(v==null?'':v).replace(/[&<>"']/g,function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c];
+    });
+  }
+  function section(id){ return document.getElementById(id); }
+
+  function hideAll(){
+    IDS.forEach(function(id){
+      var e=section(id);
+      if(!e)return;
+      e.style.setProperty('display','none','important');
+      e.style.setProperty('visibility','hidden','important');
+      e.style.setProperty('height','0','important');
+      e.style.setProperty('min-height','0','important');
+      e.style.setProperty('margin','0','important');
+      e.style.setProperty('padding','0','important');
+      e.style.setProperty('overflow','hidden','important');
+    });
+  }
+
+  function showOne(id){
+    var e=section(id); if(!e)return null;
+    e.style.setProperty('display','block','important');
+    e.style.setProperty('visibility','visible','important');
+    e.style.setProperty('height','auto','important');
+    e.style.setProperty('min-height','0','important');
+    e.style.setProperty('margin','0','important');
+    e.style.setProperty('padding','0','important');
+    e.style.setProperty('overflow','visible','important');
+    return e;
+  }
+
+  function clearSearchAndResetCards(){
+    [
+      'profileSearch','bladeSearch','mountSearch','earthAugerSearch',
+      'curtainFinialSearch','curtainFinial01Search','curtainFinial02Search','curtainFinial03Search','curtainFinial04Search',
+      'curtainBracketSearch','curtainBracket01Search','curtainDesignRodSearch','curtainRodSearch',
+      'curtainHookSearch','curtainRingSearch','curtainAccessorySearch','magneticClipSearch'
+    ].forEach(function(id){
+      var e=document.getElementById(id); if(e)e.value='';
+    });
+
+    var cards=document.querySelectorAll(
+      '#profiles .profile-product-card,'+
+      '#products .home-product-card,'+
+      '#tvMounts .tv-mount-product-card,'+
+      '#earthAugers .earth-auger-product-card,'+
+      '#curtainFinials .curtain-finial-product-card,'+
+      '#curtainFinials01 .curtain-finial-product-card,'+
+      '#curtainFinials02 .curtain-finial-product-card,'+
+      '#curtainFinials03 .curtain-finial-product-card,'+
+      '#curtainFinials04 .curtain-finial-product-card,'+
+      '#curtainBrackets .curtain-finial-product-card,'+
+      '#curtainBrackets01 .curtain-finial-product-card,'+
+      '#curtainDesignRods .curtain-finial-product-card,'+
+      '#curtainRods .curtain-finial-product-card,'+
+      '#curtainHooks .curtain-finial-product-card,'+
+      '#curtainRings .curtain-finial-product-card,'+
+      '#curtainAccessories .curtain-finial-product-card,'+
+      '#magneticClip .curtain-finial-product-card'
+    );
+    cards.forEach(function(c){c.style.display='';});
+
+    /* Aluminium: entering the subcategory starts from all thicknesses. */
+    var thickness=document.getElementById('profileThickness');
+    if(thickness)thickness.value='';
+    if(typeof window.filterProfiles==='function')window.filterProfiles();
+    cards.forEach(function(c){c.style.display='';});
+  }
+
+  function applySubFilter(item){
+    if(item.filter){
+      var wanted=String(item.filter).toLowerCase();
+      document.querySelectorAll('#products .home-product-card').forEach(function(c){
+        c.style.display=String(c.getAttribute('data-model')||'').toLowerCase()===wanted?'':'none';
+      });
+    }
+    if(item.models){
+      var set=new Set(item.models.map(function(x){return String(x).toLowerCase();}));
+      document.querySelectorAll('#tvMounts .tv-mount-product-card').forEach(function(c){
+        c.style.display=set.has(String(c.getAttribute('data-model')||'').toLowerCase())?'':'none';
+      });
+    }
+  }
+
+  function closePanel(){
+    var p=document.getElementById('motherCategoryPanel');
+    if(p){p.classList.remove('show');p.setAttribute('aria-hidden','true');}
+    document.body.classList.remove('mother-panel-open');
+  }
+
+  function openDesktopMother(key){
+    var cfg=CFG[key];
+    var panel=document.getElementById('motherCategoryPanel');
+    var grid=document.getElementById('motherSubcategoryGrid');
+    var title=document.getElementById('motherCategoryTitle');
+    var desc=document.getElementById('motherCategoryDescription');
+    if(!cfg||!panel||!grid)return;
+    currentKey=key;
+    window.__seerviCurrentMotherKey=key;
+    hideAll();
+    document.body.classList.remove('seervi-category-active','mobile-mother-selected');
+    if(title)title.textContent=cfg.title;
+    if(desc)desc.textContent='Select a sub-category to view its products.';
+    grid.innerHTML=cfg.items.map(function(item,index){
+      return '<button type="button" class="mother-subcategory-btn" data-final-desktop-sub="'+esc(key)+'" data-final-desktop-index="'+index+'">'+
+        '<span class="mother-subcategory-image"><img src="'+esc(item.image||'')+'" alt="'+esc(item.title)+'"></span>'+
+        '<span class="mother-subcategory-copy"><strong>'+esc(item.title)+'</strong><span>View '+esc(item.title.toLowerCase())+' products.</span><em>VIEW PRODUCTS ↗</em></span></button>';
+    }).join('');
+    panel.classList.add('show');
+    panel.setAttribute('aria-hidden','false');
+    document.body.classList.add('mother-panel-open');
+    grid.querySelectorAll('[data-final-desktop-sub]').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        openDesktopSub(key,Number(btn.getAttribute('data-final-desktop-index')));
+      });
+    });
+  }
+
+  function openDesktopSub(key,index){
+    var cfg=CFG[key],item=cfg&&cfg.items[index];
+    if(!item)return;
+    currentKey=key;
+    window.__seerviCurrentMotherKey=key;
+    closePanel();
+    hideAll();
+    clearSearchAndResetCards();
+    document.body.classList.add('seervi-category-active');
+    document.body.classList.remove('mobile-mother-selected');
+    var sec=showOne(item.section);
+    applySubFilter(item);
+    if(sec){
+      setTimeout(function(){sec.scrollIntoView({behavior:'smooth',block:'start'});},40);
+    }
+  }
+
+  window.openMotherCategory=function(key){
+    if(isMobile()) return typeof originalMother==='function' ? originalMother.apply(this,arguments) : undefined;
+    openDesktopMother(key);
+  };
+
+  window.openMotherSubcategory=function(key,index){
+    if(isMobile()) return typeof originalSub==='function' ? originalSub.apply(this,arguments) : undefined;
+    openDesktopSub(key,index);
+  };
+
+  window.backToMotherCategories=function(){
+    if(isMobile()){
+      if(typeof originalMother==='function' && currentKey) return originalMother.call(this,currentKey);
+      return;
+    }
+    if(currentKey)openDesktopMother(currentKey);
+  };
+
+  window.mobileBackToMotherCategories=window.backToMotherCategories;
+
+  /* If another legacy listener tries to route a desktop mother card through
+     an older handler, stop it and use this final controller. */
+  document.addEventListener('click',function(e){
+    if(isMobile())return;
+    var card=e.target.closest&&e.target.closest('#productCategoryBar .mother-category-card');
+    if(!card)return;
+    var raw=card.getAttribute('onclick')||'';
+    var m=raw.match(/openMotherCategory\(['"]([^'"]+)['"]\)/);
+    if(!m)return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    openDesktopMother(m[1]);
+  },true);
+
+})();
+</script>
