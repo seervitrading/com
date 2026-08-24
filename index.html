@@ -11287,3 +11287,62 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   window.seerviUniversalDesktopOpenSub=openSubDesktop;
 })();
 </script>
+
+
+<!-- FINAL CURTAIN TRACK NORMALIZATION: desktop uses the exact same universal
+     Mother -> Subcategory -> Product -> Back controller as every other category.
+     Mobile keeps its already-working Curtain Track controller unchanged. -->
+<script id="seervi-curtain-track-universal-normalization-final">
+(function(){
+  'use strict';
+  var legacyOpenCurtainTrack=window.openCurtainTrack;
+  var legacyOpenKFSeries=window.openKFSeries;
+  var legacyOpenKFXSeries=window.openKFXSeries;
+
+  function desktop(){return window.innerWidth>600;}
+
+  /* The old Curtain Track handlers are still referenced by legacy click
+     listeners. On desktop, redirect those calls into the universal controller
+     instead of letting the old special renderer create an extra section. */
+  window.openCurtainTrack=function(){
+    if(!desktop()){
+      return typeof legacyOpenCurtainTrack==='function' ? legacyOpenCurtainTrack.apply(this,arguments) : undefined;
+    }
+    if(typeof window.openMotherCategory==='function'){
+      return window.openMotherCategory('curtainTrack');
+    }
+  };
+
+  window.openKFSeries=function(){
+    if(!desktop()){
+      return typeof legacyOpenKFSeries==='function' ? legacyOpenKFSeries.apply(this,arguments) : undefined;
+    }
+    if(typeof window.openMotherSubcategory==='function'){
+      return window.openMotherSubcategory('curtainTrack',0);
+    }
+  };
+
+  window.openKFXSeries=function(){
+    if(!desktop()){
+      return typeof legacyOpenKFXSeries==='function' ? legacyOpenKFXSeries.apply(this,arguments) : undefined;
+    }
+    if(typeof window.openMotherSubcategory==='function'){
+      return window.openMotherSubcategory('curtainTrack',1);
+    }
+  };
+
+  /* Any desktop Curtain Track section-back must return to the same universal
+     Mother panel, never Home and never a legacy Curtain Track renderer. */
+  document.addEventListener('click',function(e){
+    if(!desktop())return;
+    var b=e.target.closest&&e.target.closest('.seervi-desktop-section-back');
+    if(!b)return;
+    var sec=b.closest('section');
+    if(sec && (sec.id==='curtainTrackKFSeries'||sec.id==='curtainTrackKFXSeries')){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if(typeof window.openMotherCategory==='function')window.openMotherCategory('curtainTrack');
+    }
+  },true);
+})();
+</script>
