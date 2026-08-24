@@ -9856,7 +9856,7 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 })();
 </script>
 
-<style id="seervi-web-category-images-and-back-flow-final">
+<style id="seervi-web-category-images-and-back-flow-final-style">
 @media(min-width:601px){
   .mother-category-panel-head{position:relative;display:flex!important;align-items:center!important;gap:14px!important;}
   .mother-category-panel-head > div:first-child{flex:1;min-width:0;}
@@ -9884,7 +9884,7 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   .seervi-desktop-flow-back,.seervi-desktop-section-back-row{display:none!important;}
 }
 </style>
-<script id="seervi-web-category-images-and-back-flow-final">
+<script id="seervi-web-category-images-and-back-flow-final-script">
 (function(){
   'use strict';
   function mobile(){return window.innerWidth<=600;}
@@ -10049,234 +10049,7 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 }
 </style>
 
-<script id="seervi-restored-old-product-flow-script">
-(function(){
-  var IDS=[
-    'profiles','products','tvMounts','earthAugers',
-    'curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03',
-    'curtainFinials04','curtainBrackets','curtainBrackets01',
-    'curtainDesignRods','curtainRods','curtainHooks','curtainRings',
-    'curtainAccessories','magneticClip','applications'
-  ];
 
-  var DATA={
-    aluminium:{
-      title:'ALUMINIUM',
-      desc:'Aluminium products arranged by profile category.',
-      items:[
-        {title:'ALUMINIUM PROFILES',desc:'All Seervi aluminium profile models currently in the catalogue.',section:'profiles',image:'images/category-profiles.webp'}
-      ]
-    },
-    tools:{
-      title:'TOOLS',
-      desc:'Cutting tools arranged by the machine/application they are used with.',
-      items:[
-        {title:'WALL CUTTER',desc:'Wall cutter blades for wall and stone cutting applications.',section:'products',filter:'Wall Cutter Blade',image:'images/category-wall-blades.webp'},
-        {title:'METAL CUTTER',desc:'Metal cutting blades/wheels for metal cutting applications.',section:'products',filter:'Metal Cutting Wheel',image:'images/category-metal-blades.webp'}
-      ]
-    },
-    tv:{
-      title:'TV STANDS',
-      desc:'TV stands arranged by mounting style.',
-      items:[
-        {title:'WALL FIXED',desc:'HT-101, HT-102, HT-103, GJ-104S, GJ-104 and GJ-105.',section:'tvMounts',models:['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105'],image:'images/category-wall-fixed.webp'},
-        {title:'WALL MOUNT STANDS',desc:'P4-1, P4, P5, P6, P65, DC200-1, DC200 and DC200-X.',section:'tvMounts',models:['P4-1','P4','P5','P6','P65','DC200-1','DC200','DC200-X'],image:'images/category-mounts.webp'}
-      ]
-    },
-    machines:{
-      title:'MACHINES',
-      desc:'Professional machines arranged by machine type.',
-      items:[
-        {title:'EARTH AUGER',desc:'All Seervi Earth Auger machine models.',section:'earthAugers',image:'images/category-augers.webp'}
-      ]
-    },
-    curtains:{
-      title:'CURTAINS',
-      desc:'Curtain products arranged by curtain hardware category.',
-      items:[
-        {title:'RODS',desc:'Curtain rods in multiple finishes and colours.',section:'curtainRods',image:'images/curtain-rods.webp'},
-        {title:'DESIGN RODS',desc:'Decorative curtain rod designs and finishes.',section:'curtainDesignRods',image:'images/curtain-design-rods.webp'},
-        {title:'FINIALS',desc:'Curtain finial models.',section:'curtainFinials',image:'images/curtain-finials.webp'},
-        {title:'FINIALS 01',desc:'Curtain finial models – collection 01.',section:'curtainFinials01',image:'images/curtain-finials-01.webp'},
-        {title:'FINIALS 02',desc:'Curtain finial models – collection 02.',section:'curtainFinials02',image:'images/curtain-finials-02.webp'},
-        {title:'FINIALS 03',desc:'Curtain finial models – collection 03.',section:'curtainFinials03',image:'images/curtain-finials-03.webp'},
-        {title:'FINIALS 04',desc:'Curtain finial models – collection 04.',section:'curtainFinials04',image:'images/curtain-finials-04.webp'},
-        {title:'BRACKET',desc:'Curtain bracket models in multiple designs.',section:'curtainBrackets',image:'images/curtain-bracket.webp'},
-        {title:'BRACKET 01',desc:'Curtain bracket models – collection 01.',section:'curtainBrackets01',image:'images/curtain-bracket-01.webp'},
-        {title:'HOOKS',desc:'Curtain hook models in multiple designs.',section:'curtainHooks',image:'images/curtain-hooks.webp'},
-        {title:'RINGS',desc:'Curtain rings in multiple finishes and designs.',section:'curtainRings',image:'images/curtain-rings.webp'},
-        {title:'ACCESSORIES',desc:'Curtain rod accessories and finishing components.',section:'curtainAccessories',image:'images/curtain-accessories.webp'},
-        {title:'MAGNETIC CLIP',desc:'Magnetic clips in multiple decorative designs.',section:'magneticClip',image:'images/magnetic-clip.webp'}
-      ]
-    }
-  };
-
-  function mobile(){return window.innerWidth<=600;}
-  function esc(v){
-    return String(v||'').replace(/[&<>"']/g,function(c){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c];
-    });
-  }
-  function hideSections(){
-    IDS.forEach(function(id){
-      var e=document.getElementById(id);
-      if(e)e.style.setProperty('display','none','important');
-    });
-  }
-  function clearFilters(){
-    ['bladeSearch','mountSearch','curtainFinialSearch','curtainFinial01Search',
-     'curtainFinial02Search','curtainFinial03Search','curtainFinial04Search',
-     'curtainBracketSearch','curtainBracket01Search','curtainDesignRodSearch',
-     'curtainRodSearch','curtainHookSearch','curtainRingSearch','curtainAccessorySearch',
-     'magneticClipSearch'].forEach(function(id){
-      var e=document.getElementById(id); if(e)e.value='';
-    });
-    document.querySelectorAll('#profiles .profile-product-card,#products .home-product-card,#tvMounts .tv-mount-product-card,'+
-      '#curtainFinials .curtain-finial-product-card,#curtainFinials01 .curtain-finial-product-card,'+
-      '#curtainFinials02 .curtain-finial-product-card,#curtainFinials03 .curtain-finial-product-card,'+
-      '#curtainFinials04 .curtain-finial-product-card,#curtainBrackets .curtain-finial-product-card,'+
-      '#curtainBrackets01 .curtain-finial-product-card,#curtainDesignRods .curtain-finial-product-card,'+
-      '#curtainRods .curtain-finial-product-card,#curtainHooks .curtain-finial-product-card,'+
-      '#curtainRings .curtain-finial-product-card,#curtainAccessories .curtain-finial-product-card,'+
-      '#magneticClip .curtain-finial-product-card').forEach(function(c){c.style.display='';});
-  }
-  function showSection(item){
-    hideSections();
-    var e=document.getElementById(item.section);
-    if(e)e.style.setProperty('display','block','important');
-    if(item.filter){
-      var wanted=String(item.filter).toLowerCase();
-      document.querySelectorAll('#products .home-product-card').forEach(function(c){
-        c.style.display=String(c.getAttribute('data-model')||'').toLowerCase()===wanted?'':'none';
-      });
-    }
-    if(item.models){
-      var set=new Set(item.models.map(function(x){return String(x).toLowerCase();}));
-      document.querySelectorAll('#tvMounts .tv-mount-product-card').forEach(function(c){
-        c.style.display=set.has(String(c.getAttribute('data-model')||'').toLowerCase())?'':'none';
-      });
-    }
-  }
-
-  window.openMotherCategory=function(key){
-    if(!document.body.classList.contains('mobile-products-view')){
-      var cfgDesktop=DATA[key];
-      var panelDesktop=document.getElementById('motherCategoryPanel');
-      var gridDesktop=document.getElementById('motherSubcategoryGrid');
-      var titleDesktop=document.getElementById('motherCategoryTitle');
-      var descDesktop=document.getElementById('motherCategoryDescription');
-      if(!cfgDesktop||!panelDesktop||!gridDesktop)return;
-      titleDesktop.textContent=cfgDesktop.title;
-      descDesktop.textContent=cfgDesktop.desc;
-      gridDesktop.innerHTML=cfgDesktop.items.map(function(item,index){
-        return '<button type="button" class="mother-subcategory-btn" onclick="openMotherSubcategory(\\''+
-          esc(key)+'\\','+index+')"><img src="'+esc(item.image)+'" alt="'+esc(item.title)+
-          '"><span class="mother-subcategory-copy"><strong>'+esc(item.title)+
-          '</strong><span>'+esc(item.desc)+'</span><em>VIEW PRODUCTS ↗</em></span></button>';
-      }).join('');
-      panelDesktop.classList.add('show');
-      panelDesktop.setAttribute('aria-hidden','false');
-      document.body.classList.add('mother-panel-open');
-      return;
-    }
-    var cfg=DATA[key];
-    var panel=document.getElementById('motherCategoryPanel');
-    var grid=document.getElementById('motherSubcategoryGrid');
-    var title=document.getElementById('motherCategoryTitle');
-    var desc=document.getElementById('motherCategoryDescription');
-    if(!cfg||!panel||!grid)return;
-    title.textContent=cfg.title;
-    desc.textContent=cfg.desc;
-    grid.innerHTML=cfg.items.map(function(item,index){
-      return '<button type="button" class="mother-subcategory-btn" onclick="openMotherSubcategory(\''+
-        esc(key)+'\','+index+')"><img src="'+esc(item.image)+'" alt="'+esc(item.title)+
-        '"><span class="mother-subcategory-copy"><strong>'+esc(item.title)+
-        '</strong><span>'+esc(item.desc)+'</span><em>VIEW PRODUCTS ↗</em></span></button>';
-    }).join('');
-    document.body.classList.remove('mobile-mother-selected');
-    panel.classList.add('show');
-    panel.setAttribute('aria-hidden','false');
-    document.body.classList.add('mother-panel-open');
-  };
-
-  window.openMotherSubcategory=function(key,index){
-    if(!mobile() || !document.body.classList.contains('mobile-products-view'))return;
-    var cfg=DATA[key], item=cfg&&cfg.items[index];
-    if(!item)return;
-    var panel=document.getElementById('motherCategoryPanel');
-    if(panel){panel.classList.remove('show');panel.setAttribute('aria-hidden','true');}
-    document.body.classList.remove('mother-panel-open');
-    document.body.classList.add('mobile-mother-selected','seervi-category-active');
-    clearFilters();
-    showSection(item);
-    var target=document.getElementById(item.section);
-    if(target)setTimeout(function(){target.scrollIntoView({behavior:'smooth',block:'start'});},40);
-  };
-
-  window.backToMotherCategories=function(){
-    if(!mobile())return;
-    var panel=document.getElementById('motherCategoryPanel');
-    if(panel){panel.classList.remove('show');panel.setAttribute('aria-hidden','true');}
-    document.body.classList.remove('mother-panel-open','mobile-mother-selected','seervi-category-active');
-    clearFilters();
-    hideSections();
-    window.scrollTo({top:0,behavior:'smooth'});
-  };
-
-  window.mobileBackToMotherCategories=window.backToMotherCategories;
-
-  window.showMobileProducts=function(e){
-    if(e&&mobile())e.preventDefault();
-    document.body.classList.add('mobile-products-view');
-    document.body.classList.remove('mobile-mother-selected','seervi-category-active');
-    var panel=document.getElementById('motherCategoryPanel');
-    if(panel){panel.classList.remove('show');panel.setAttribute('aria-hidden','true');}
-    document.body.classList.remove('mother-panel-open');
-    clearFilters();
-    hideSections();
-    window.scrollTo({top:0,behavior:'smooth'});
-  };
-
-  window.showProductCategory=function(category){
-    if(mobile() && document.body.classList.contains('mobile-products-view')){
-      if(category==='all'){
-        window.showMobileProducts();
-      }
-      return;
-    }
-  };
-
-  function bind(){
-    var bar=document.getElementById('productCategoryBar');
-    if(!bar)return;
-    bar.querySelectorAll('.mother-category-card').forEach(function(card){
-      card.onclick=function(e){
-        if(!mobile()||!document.body.classList.contains('mobile-products-view'))return;
-        e.preventDefault();e.stopPropagation();
-        var m=card.getAttribute('data-mother-key');
-        if(!m){
-          var raw=card.getAttribute('onclick')||'';
-          var match=raw.match(/openMotherCategory\(['"]([^'"]+)['"]\)/);
-          m=match&&match[1];
-        }
-        if(m)window.openMotherCategory(m);
-      };
-    });
-  }
-
-  function resetHome(){
-    if(!mobile())return;
-    if(!document.body.classList.contains('mobile-products-view'))return;
-    document.body.classList.remove('mobile-mother-selected','seervi-category-active');
-    hideSections();
-  }
-
-  document.addEventListener('DOMContentLoaded',function(){
-    bind();
-    if(mobile()&&document.body.classList.contains('mobile-products-view'))resetHome();
-  });
-})();
-</script>
 
 
 
@@ -10668,13 +10441,13 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 
 
 <!-- FINAL DESKTOP PRODUCT FLOW FIX: show every product in every subcategory -->
-<style id="seervi-final-desktop-all-products-v1">
+<style id="seervi-final-desktop-all-products-v1-style">
 @media(min-width:601px){
   /* Some older curtain-flow rules hide these sections on desktop. The final
      controller below sets the active section's visibility/size explicitly. */
 }
 </style>
-<script id="seervi-final-desktop-all-products-v1">
+<script id="seervi-final-desktop-all-products-v1-script">
 (function(){
   'use strict';
   var IDS=[
