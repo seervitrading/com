@@ -3903,7 +3903,7 @@ const seerviProducts = [{"title":"Wall Cutter Blade","desc":"Diamond saw blade f
 function openProduct(i){
   const p=seerviProducts[i];
   const wm=document.getElementById('modalProductWatermark');
-  const showWatermark=!!(p.screen || p.engine || (p.desc && p.desc.toLowerCase().indexOf('earth auger')!==-1));
+  const showWatermark=true; // All product detail images, including curtain items, always show the Seervi watermark.
   wm.classList.toggle('show-watermark',showWatermark);
   document.getElementById('modalProductWatermarkLabel').textContent='SEERVITRADING';
   document.getElementById('modalProductImage').src=p.image;
@@ -9945,6 +9945,30 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 })();
 </script>
 
+
+<style id="seervi-final-subcategory-event-lock">
+/* Final event lock: stop older navigation listeners from overwriting the selected curtain section. */
+</style>
+<script id="seervi-final-subcategory-event-lock-script">
+(function(){
+  'use strict';
+  function isSubButton(el){
+    return el && el.closest ? el.closest('[data-final-sub-index]') : null;
+  }
+  document.addEventListener('click',function(e){
+    var btn=isSubButton(e.target);
+    if(!btn) return;
+    var key=btn.getAttribute('data-final-sub-key');
+    var index=Number(btn.getAttribute('data-final-sub-index'));
+    if(!key || !Number.isFinite(index)) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    if(typeof window.openMotherSubcategory==='function'){
+      window.openMotherSubcategory(key,index);
+    }
+  },true);
+})();
+</script>
 </body>
 <style id="mobile-category-back-and-gold-tags-final-fix">
 @media(max-width:600px){
