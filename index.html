@@ -9855,6 +9855,96 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   },true);
 })();
 </script>
+
+<style id="seervi-web-back-flow-final">
+@media(min-width:601px){
+  .seervi-web-backbar{display:flex!important;align-items:center;gap:10px;margin:0 0 18px;padding:0 0 2px;position:relative;z-index:5}
+  .seervi-web-back-btn{width:44px;height:44px;border:1px solid #ffffff25;border-radius:10px;background:#10151b;color:#f0c66a;font-size:23px;font-weight:900;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 8px 24px #0006}
+  .seervi-web-back-btn:hover{border-color:#f0c66a88;transform:translateY(-1px)}
+  .seervi-web-back-label{font-size:10px;font-weight:900;letter-spacing:1.1px;color:#7f8994;text-transform:uppercase}
+  .mother-category-panel-head{align-items:center}
+  .seervi-web-mother-back{display:inline-flex;width:44px;height:44px;margin-right:8px;border:1px solid #ffffff25;border-radius:10px;background:#10151b;color:#f0c66a;font-size:23px;font-weight:900;line-height:1;align-items:center;justify-content:center;cursor:pointer}
+  .seervi-web-mother-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+
+  .seervi-web-modal-back{position:absolute;left:16px;top:14px;width:40px;height:40px;border-radius:10px;border:1px solid #ffffff25;background:#090b0dcc;color:#f0c66a;font-size:23px;line-height:1;cursor:pointer;z-index:3;display:inline-flex;align-items:center;justify-content:center}
+  .seervi-web-modal-back:hover{border-color:#f0c66a88}
+}
+@media(max-width:600px){.seervi-web-backbar,.seervi-web-mother-back,.seervi-web-mother-actions{display:none!important}}
+</style>
+<script id="seervi-web-back-flow-final-script">
+(function(){
+  if(window.__seerviWebBackFinalInstalled)return;
+  window.__seerviWebBackFinalInstalled=true;
+  function desktop(){return window.innerWidth>600;}
+  function key(){return window.__seerviCurrentMotherKey||'curtains';}
+  function sectionIds(){return ['profiles','products','tvMounts','earthAugers','curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04','curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods','curtainHooks','curtainRings','curtainAccessories','magneticClip'];}
+  function hideAll(){sectionIds().forEach(function(id){var e=document.getElementById(id);if(e)e.style.setProperty('display','none','important');});}
+  function goMotherCategories(){
+    var panel=document.getElementById('motherCategoryPanel');
+    if(panel){panel.classList.remove('show');panel.setAttribute('aria-hidden','true');}
+    document.body.classList.remove('mother-panel-open','seervi-category-active','mobile-mother-selected');
+    hideAll();
+    var bar=document.getElementById('productCategoryBar');if(bar)bar.style.removeProperty('display');
+    var sub=document.getElementById('mobileSubcategoryBar');if(sub)sub.innerHTML='';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function goMotherSubcategories(){
+    var k=key();
+    hideAll();
+    document.body.classList.remove('seervi-category-active','mobile-mother-selected');
+    document.body.classList.add('mother-panel-open');
+    var panel=document.getElementById('motherCategoryPanel');
+    if(panel){panel.classList.add('show');panel.setAttribute('aria-hidden','false');}
+    if(typeof window.__seerviFinalRenderDesktop==='function') window.__seerviFinalRenderDesktop(k);
+    else if(typeof window.renderMotherCategoryPanel==='function') window.renderMotherCategoryPanel(k);
+    else {
+      var card=document.querySelector('#productCategoryBar .mother-category-card[onclick*="'+k+'"]');
+      if(card)card.click();
+    }
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function ensureMotherBack(){
+    var head=document.querySelector('#motherCategoryPanel .mother-category-panel-head');
+    if(!head||head.querySelector('.seervi-web-mother-back'))return;
+    var close=head.querySelector('.mother-category-close');
+    if(!close)return;
+    var actions=document.createElement('div');actions.className='seervi-web-mother-actions';
+    var b=document.createElement('button');b.type='button';b.className='seervi-web-mother-back';b.setAttribute('aria-label','Back to categories');b.title='Back to categories';b.innerHTML='←';b.onclick=function(e){e.preventDefault();e.stopPropagation();goMotherCategories();};
+    close.parentNode.insertBefore(actions,close);actions.appendChild(b);actions.appendChild(close);
+  }
+  function ensureSectionBack(sec){
+    if(!sec||sec.querySelector(':scope > .seervi-web-backbar'))return;
+    var bar=document.createElement('div');bar.className='seervi-web-backbar';
+    var b=document.createElement('button');b.type='button';b.className='seervi-web-back-btn';b.innerHTML='←';b.setAttribute('aria-label','Back to sub-categories');b.title='Back to sub-categories';
+    var l=document.createElement('span');l.className='seervi-web-back-label';l.textContent='Back to sub-categories';
+    b.onclick=function(e){e.preventDefault();e.stopPropagation();goMotherSubcategories();};
+    bar.appendChild(b);bar.appendChild(l);sec.insertBefore(bar,sec.firstChild);
+  }
+  function ensureModalBack(modalId, closeFn, label){
+    var modal=document.getElementById(modalId);if(!modal)return;
+    var box=modal.querySelector('.product-modal-box');if(!box||box.querySelector('.seervi-web-modal-back'))return;
+    var b=document.createElement('button');b.type='button';b.className='seervi-web-modal-back';b.innerHTML='←';b.setAttribute('aria-label',label);b.title=label;
+    b.onclick=function(e){e.preventDefault();e.stopPropagation();if(typeof window[closeFn]==='function')window[closeFn]();};
+    var close=box.querySelector('.modal-close');
+    if(close)close.parentNode.insertBefore(b,close);else box.insertBefore(b,box.firstChild);
+  }
+  function ensureModalBacks(){
+    if(!desktop())return;
+    ensureModalBack('productModal','closeProduct','Back to products');
+    ensureModalBack('profileModal','closeProfile','Back to products');
+  }
+  function refresh(){
+    if(!desktop())return;
+    ensureMotherBack();
+    ensureModalBacks();
+    sectionIds().forEach(function(id){var sec=document.getElementById(id);if(sec)ensureSectionBack(sec);});
+  }
+  document.addEventListener('DOMContentLoaded',function(){refresh();setTimeout(refresh,200);setTimeout(refresh,800);});
+  new MutationObserver(function(){refresh();}).observe(document.body,{childList:true,subtree:true});
+  window.addEventListener('resize',refresh);
+})();
+</script>
+
 </body>
 <style id="mobile-category-back-and-gold-tags-final-fix">
 @media(max-width:600px){
@@ -10460,3 +10550,91 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 })();
 </script>
 
+
+
+<style id="seervi-default-first-subcategory-uniform-space">
+/* FINAL PRODUCT FLOW:
+   1) Opening a mother category automatically opens its first subcategory.
+   2) Keep one identical, clean gap between the subcategory navigation and product items.
+*/
+#profiles,#products,#tvMounts,#earthAugers,#curtainFinials,#curtainFinials01,#curtainFinials02,#curtainFinials03,#curtainFinials04,#curtainBrackets,#curtainBrackets01,#curtainDesignRods,#curtainRods,#curtainHooks,#curtainRings,#curtainAccessories,#magneticClip{
+  margin-top:0!important;
+}
+body.mobile-products-view.mobile-mother-selected #profiles,
+body.mobile-products-view.mobile-mother-selected #products,
+body.mobile-products-view.mobile-mother-selected #tvMounts,
+body.mobile-products-view.mobile-mother-selected #earthAugers,
+body.mobile-products-view.mobile-mother-selected #curtainFinials,
+body.mobile-products-view.mobile-mother-selected #curtainFinials01,
+body.mobile-products-view.mobile-mother-selected #curtainFinials02,
+body.mobile-products-view.mobile-mother-selected #curtainFinials03,
+body.mobile-products-view.mobile-mother-selected #curtainFinials04,
+body.mobile-products-view.mobile-mother-selected #curtainBrackets,
+body.mobile-products-view.mobile-mother-selected #curtainBrackets01,
+body.mobile-products-view.mobile-mother-selected #curtainDesignRods,
+body.mobile-products-view.mobile-mother-selected #curtainRods,
+body.mobile-products-view.mobile-mother-selected #curtainHooks,
+body.mobile-products-view.mobile-mother-selected #curtainRings,
+body.mobile-products-view.mobile-mother-selected #curtainAccessories,
+body.mobile-products-view.mobile-mother-selected #magneticClip{
+  padding-top:20px!important;
+}
+#mobileSubcategoryBar{
+  margin-bottom:0!important;
+}
+@media(max-width:600px){
+  #mobileSubcategoryBar{padding-bottom:8px!important;}
+  body.mobile-products-view.mobile-mother-selected #profiles,
+  body.mobile-products-view.mobile-mother-selected #products,
+  body.mobile-products-view.mobile-mother-selected #tvMounts,
+  body.mobile-products-view.mobile-mother-selected #earthAugers,
+  body.mobile-products-view.mobile-mother-selected #curtainFinials,
+  body.mobile-products-view.mobile-mother-selected #curtainFinials01,
+  body.mobile-products-view.mobile-mother-selected #curtainFinials02,
+  body.mobile-products-view.mobile-mother-selected #curtainFinials03,
+  body.mobile-products-view.mobile-mother-selected #curtainFinials04,
+  body.mobile-products-view.mobile-mother-selected #curtainBrackets,
+  body.mobile-products-view.mobile-mother-selected #curtainBrackets01,
+  body.mobile-products-view.mobile-mother-selected #curtainDesignRods,
+  body.mobile-products-view.mobile-mother-selected #curtainRods,
+  body.mobile-products-view.mobile-mother-selected #curtainHooks,
+  body.mobile-products-view.mobile-mother-selected #curtainRings,
+  body.mobile-products-view.mobile-mother-selected #curtainAccessories,
+  body.mobile-products-view.mobile-mother-selected #magneticClip{
+    padding-top:16px!important;
+  }
+}
+</style>
+<script id="seervi-default-first-subcategory-final-script">
+(function(){
+  'use strict';
+  var previousOpen=window.openMotherCategory;
+  var armed=false;
+  var firstOpenDone={};
+
+  function openFirstSubcategory(key){
+    if(!key || firstOpenDone[key]) return;
+    firstOpenDone[key]=true;
+    var fn=window.openMotherSubcategory;
+    if(typeof fn!=='function') return;
+    setTimeout(function(){
+      try{ fn(key,0); }catch(err){ console.error('Seervi first subcategory flow:',err); }
+    },60);
+  }
+
+  window.openMotherCategory=function(key){
+    if(typeof previousOpen==='function') previousOpen.apply(this,arguments);
+    firstOpenDone[key]=false;
+    openFirstSubcategory(key);
+  };
+
+  /* Reset the one-time guard when the user returns to the mother-category level. */
+  var previousBack=window.backToMotherCategories;
+  window.backToMotherCategories=function(){
+    if(typeof previousBack==='function') previousBack.apply(this,arguments);
+    var key=window.__seerviCurrentMotherKey;
+    if(key) firstOpenDone[key]=false;
+  };
+  window.mobileBackToMotherCategories=window.backToMotherCategories;
+})();
+</script>
