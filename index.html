@@ -10911,3 +10911,40 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 
 })();
 </script>
+
+
+<script id="seervi-final-curtain-back-v2">
+(function(){
+  function hideCurtain(){
+    ['curtainTrackKFSeries','curtainTrackKFXSeries'].forEach(function(id){
+      var e=document.getElementById(id);
+      if(e){e.style.setProperty('display','none','important');e.style.setProperty('visibility','hidden','important');e.style.setProperty('height','0','important');e.style.setProperty('overflow','hidden','important');}
+    });
+  }
+  window.backToMotherCategories=function(){
+    var key=window.__seerviCurrentMotherKey;
+    if(key==='curtainTrack'){
+      hideCurtain();
+      document.body.classList.remove('seervi-category-active','mother-panel-open');
+      var panel=document.getElementById('motherCategoryPanel');
+      if(panel){panel.classList.remove('show');panel.setAttribute('aria-hidden','true');}
+      if(window.innerWidth<=600){
+        document.body.classList.add('mobile-products-view','mobile-mother-selected');
+        if(typeof window.renderMobileTabs==='function')window.renderMobileTabs();
+        else if(typeof window.renderMobileSubcategory==='function')window.renderMobileSubcategory();
+      }else{
+        document.body.classList.remove('mobile-products-view');
+        if(typeof window.renderMother==='function')window.renderMother();
+        else if(typeof window.renderDesktopMother==='function')window.renderDesktopMother();
+      }
+      window.scrollTo({top:0,behavior:'smooth'});
+      return;
+    }
+    /* Preserve the universal controller for every other mother category. */
+    if(typeof window.openMotherCategory==='function' && key){
+      try{window.openMotherCategory(key);return;}catch(e){}
+    }
+  };
+  window.mobileBackToMotherCategories=window.backToMotherCategories;
+})();
+</script>
