@@ -3903,7 +3903,7 @@ const seerviProducts = [{"title":"Wall Cutter Blade","desc":"Diamond saw blade f
 function openProduct(i){
   const p=seerviProducts[i];
   const wm=document.getElementById('modalProductWatermark');
-  const showWatermark=!!(p.screen || p.engine || (p.desc && p.desc.toLowerCase().indexOf('earth auger')!==-1));
+  const showWatermark=true;
   wm.classList.toggle('show-watermark',showWatermark);
   document.getElementById('modalProductWatermarkLabel').textContent='SEERVITRADING';
   document.getElementById('modalProductImage').src=p.image;
@@ -9960,6 +9960,28 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   box-shadow:0 1px 5px rgba(0,0,0,.16)!important;pointer-events:none!important;
   color:#f3d77b!important;font-size:9px!important;line-height:22px!important;font-weight:900!important;letter-spacing:1px!important;text-align:center!important;
   padding:0!important;margin:0!important;border:0!important;transform:none!important;
+}
+</style>
+
+<style id="seervi-universal-item-view-watermark-final">
+/* FINAL: every product opened in the item-view modal gets the same watermark. */
+.seervi-watermark-modal-image.show-watermark::before{
+  content:"SEERVI TRADING   •   SEERVI TRADING   •   SEERVI TRADING   •   SEERVI TRADING" !important;
+  position:absolute !important; z-index:20 !important; left:-18% !important; top:43% !important;
+  width:136% !important; height:34px !important; display:flex !important; align-items:center !important; justify-content:center !important;
+  white-space:nowrap !important; overflow:hidden !important; transform:rotate(-23deg) !important; transform-origin:center !important;
+  color:rgba(70,70,70,.22) !important; font-size:12px !important; font-weight:900 !important; letter-spacing:2.2px !important;
+  pointer-events:none !important; user-select:none !important; text-shadow:0 1px 0 rgba(255,255,255,.12) !important;
+}
+.seervi-watermark-modal-image.show-watermark::after{
+  content:"" !important; position:absolute !important; z-index:21 !important; right:10px !important; bottom:9px !important;
+  width:132px !important; height:22px !important; border-radius:6px !important; background:rgba(25,25,25,.62) !important;
+  box-shadow:0 1px 5px rgba(0,0,0,.16) !important; pointer-events:none !important;
+}
+.seervi-watermark-modal-image.show-watermark .seervi-watermark-bottom{
+  display:block !important; position:absolute !important; z-index:22 !important; right:14px !important; bottom:11px !important;
+  color:#f3d77b !important; font-size:10px !important; line-height:18px !important; font-weight:900 !important;
+  letter-spacing:1px !important; pointer-events:none !important; user-select:none !important; text-shadow:0 1px 2px rgba(0,0,0,.7) !important;
 }
 </style>
 </body>
