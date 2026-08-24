@@ -7738,89 +7738,95 @@ function inventoryItemKey(type,model,spec){
 
 function inventoryTypeForCard(card){
   if(!card) return 'Item';
+  // Universal source: use the product card's cart type when available.
+  const cartType=String(card.dataset.cartType || card.querySelector('[data-cart-type]')?.dataset.cartType || '').trim();
+  if(cartType==='Profile') return 'Aluminium Profile';
+  if(cartType) return cartType;
   if(card.matches('#profiles .profile-product-card')) return 'Aluminium Profile';
   if(card.matches('#products .home-product-card')) return 'Cutting Blade';
-  if(card.matches('#tvMounts .home-product-card')) return 'TV Wall Mount';
+  if(card.matches('#tvMounts .home-product-card,#tvMounts .tv-mount-product-card')) return 'TV Wall Mount';
   if(card.matches('#earthAugers .earth-auger-product-card')) return 'Earth Auger';
-  if(card.matches('#curtainFinials .curtain-finial-product-card') || card.matches('#curtainFinials01 .curtain-finial-product-card') || card.matches('#curtainFinials02 .curtain-finial-product-card') || card.matches('#curtainFinials03 .curtain-finial-product-card') || card.matches('#curtainFinials04 .curtain-finial-product-card')) return 'Curtain Finial';
-  if(card.matches('#curtainBrackets .curtain-finial-product-card') || card.matches('#curtainBrackets01 .curtain-finial-product-card','#curtainHooks .curtain-finial-product-card')) return 'Curtain Bracket';
-  if(card.matches('#curtainRings .curtain-finial-product-card')) return 'Curtain Ring';
-  if(card.matches('#curtainAccessories .curtain-finial-product-card')) return 'Curtain Accessory';
-  if(card.matches('#magneticClip .curtain-finial-product-card')) return 'Magnetic Clip';
+  const section=card.closest('section');
+  const tag=String(section?.querySelector('.section-head .tag')?.textContent||'');
+  const upper=tag.toUpperCase();
+  if(upper.includes('CURTAIN TRACK')) return 'Curtain Track';
+  if(upper.includes('CURTAIN FINIAL')) return 'Curtain Finial';
+  if(upper.includes('CURTAIN BRACKET')) return 'Curtain Bracket';
+  if(upper.includes('CURTAIN RING')) return 'Curtain Ring';
+  if(upper.includes('CURTAIN ACCESSORIES')) return 'Curtain Accessory';
+  if(upper.includes('MAGNETIC CLIP')) return 'Magnetic Clip';
+  if(upper.includes('CURTAIN HOOK')) return 'Curtain Hook';
   return 'Item';
 }
 
 // Stock display follows the same Mother Category -> Subcategory structure as the public catalogue.
+// The catalogue DOM is the single source of truth; no per-category inventory list is required.
+ follows the same Mother Category -> Subcategory structure as the public catalogue.
 // Inventory keys/types remain unchanged so existing Firebase stock records and logic are preserved.
+function inventoryStampCatalogueContext(){
+  document.querySelectorAll('section').forEach(section=>{
+    const tag=String(section.querySelector('.section-head .tag')?.textContent||'').replace(/\s+/g,' ').trim();
+    const title=String(section.querySelector('.section-head h2')?.textContent||'').replace(/\s+/g,' ').trim();
+    if(tag.includes('/')){
+      const parts=tag.split('/');
+      section.dataset.motherCategory=section.dataset.motherCategory||parts[0].trim();
+      section.dataset.subcategory=section.dataset.subcategory||parts.slice(1).join('/').trim();
+    }else if(title && !section.dataset.subcategory && /product|catalog|track|curtain|blade|mount|profile|auger/i.test(section.id+' '+title)){
+      section.dataset.subcategory=title;
+    }
+  });
+}
+
+function inventoryContextForCard(card){
+  const section=card?.closest('section');
+  const tag=String(section?.querySelector('.section-head .tag')?.textContent||'').replace(/\s+/g,' ').trim();
+  const title=String(section?.querySelector('.section-head h2')?.textContent||'').replace(/\s+/g,' ').trim();
+  let mother=String(card?.dataset.motherCategory || section?.dataset.motherCategory || '').trim();
+  let sub=String(card?.dataset.subcategory || section?.dataset.subcategory || '').trim();
+  // If a section follows the public catalogue convention "MOTHER / SUBCATEGORY",
+  // discover both names automatically from the visible section heading.
+  if(tag.includes('/')){
+    const parts=tag.split('/').map(x=>x.trim()).filter(Boolean);
+    const first=parts[0]||'';
+    const hasNumericPrefix=/^\d+\s*$/.test(first);
+    if(!mother && !hasNumericPrefix) mother=first;
+    if(!sub) sub=parts.slice(hasNumericPrefix?1:1).join(' / ').trim();
+  }
+  if(!sub) sub=title;
+
+  // Legacy curtain sections keep their established public subcategory names.
+  const legacyCurtain={
+    curtainRods:'RODS', curtainDesignRods:'DESIGN RODS', curtainFinials:'FINIALS',
+    curtainFinials01:'FINIALS 01', curtainFinials02:'FINIALS 02', curtainFinials03:'FINIALS 03',
+    curtainFinials04:'FINIALS 04', curtainBrackets:'BRACKET', curtainBrackets01:'BRACKET 01',
+    curtainHooks:'HOOKS', curtainRings:'RINGS', curtainAccessories:'ACCESSORIES', magneticClip:'MAGNETIC CLIP'
+  };
+  if(section?.id && legacyCurtain[section.id]){ mother='CURTAINS'; sub=legacyCurtain[section.id]; }
+
+  // Legacy sections whose visible tag is descriptive rather than Mother/Subcategory.
+  const detectedType=String(inventoryTypeForCard(card)||'');
+  if(detectedType==='Aluminium Profile'){ mother='ALUMINIUM'; sub='ALUMINIUM PROFILES'; }
+  else if(detectedType==='Cutting Blade'){ mother='TOOLS'; if(!sub || /^CUTTING BLADES$/i.test(sub)) sub='METAL CUTTER'; }
+  else if(detectedType==='TV Wall Mount'){ mother='TV STANDS'; }
+  else if(detectedType==='Earth Auger'){ mother='MACHINES'; sub='EARTH AUGER'; }
+  else if(!mother && detectedType==='Curtain Track'){ mother='CURTAIN TRACK'; }
+  if(!mother){ mother='OTHER'; }
+  return {mother,sub:sub||detectedType.toUpperCase()||'OTHER'};
+}
 function inventoryMotherCategoryForItem(item){
-  const type=String(item?.type||'');
-  if(type==='Aluminium Profile') return 'ALUMINIUM';
-  if(type==='Cutting Blade') return 'TOOLS';
-  if(type==='TV Wall Mount') return 'TV STANDS';
-  if(type==='Earth Auger') return 'MACHINES';
-  if(type==='Curtain Finial' || type==='Curtain Bracket' || type==='Curtain Ring' || type==='Curtain Accessory' || type==='Magnetic Clip') return 'CURTAINS';
-  return 'OTHER';
+  if(item?.motherCategory) return String(item.motherCategory).trim();
+  return inventoryContextForCard(item?.card).mother;
 }
 function inventorySubcategoryForItem(item){
-  const type=String(item?.type||'');
-  const model=String(item?.model||'').trim();
-  const lowerModel=model.toLowerCase();
-  /* IMPORTANT: Stock subcategory names must stay EXACTLY the same as the
-     public catalogue Mother -> Subcategory names. */
-  if(type==='Aluminium Profile') return 'ALUMINIUM PROFILES';
-  if(type==='Cutting Blade') return lowerModel==='wall cutter blade' ? 'WALL CUTTER' : 'METAL CUTTER';
-  if(type==='TV Wall Mount'){
-    const fixed=['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105'];
-    return fixed.includes(model) ? 'WALL FIXED' : 'WALL MOUNT STANDS';
-  }
-  if(type==='Earth Auger') return 'EARTH AUGER';
-
-  /* Curtain sections already have their own product subcategory names.
-     Read the actual section id so stock never invents a different label. */
-  const sectionId=item?.card?.closest('section')?.id || '';
-  const curtainNames={
-    curtainRods:'RODS',
-    curtainDesignRods:'DESIGN RODS',
-    curtainFinials:'FINIALS',
-    curtainFinials01:'FINIALS 01',
-    curtainFinials02:'FINIALS 02',
-    curtainFinials03:'FINIALS 03',
-    curtainFinials04:'FINIALS 04',
-    curtainBrackets:'BRACKET',
-    curtainBrackets01:'BRACKET 01',
-    curtainHooks:'HOOKS',
-    curtainRings:'RINGS',
-    curtainAccessories:'ACCESSORIES',
-    magneticClip:'MAGNETIC CLIP'
-  };
-  if(curtainNames[sectionId]) return curtainNames[sectionId];
-
-  return type.toUpperCase()||'OTHER';
+  if(item?.subcategory) return String(item.subcategory).trim();
+  return inventoryContextForCard(item?.card).sub;
 }
 
 function inventoryCollectItems(){
-  const selectors=[
-    '#profiles .profile-product-card',
-    '#products .home-product-card',
-    '#tvMounts .home-product-card',
-    '#tvMounts .tv-mount-product-card',
-    '#earthAugers .earth-auger-product-card',
-    '#curtainFinials .curtain-finial-product-card',
-    '#curtainFinials01 .curtain-finial-product-card',
-    '#curtainFinials02 .curtain-finial-product-card',
-    '#curtainFinials03 .curtain-finial-product-card',
-    '#curtainFinials04 .curtain-finial-product-card',
-    '#curtainBrackets .curtain-finial-product-card',
-    '#curtainBrackets01 .curtain-finial-product-card',
-    '#curtainDesignRods .curtain-finial-product-card',
-    '#curtainRods .curtain-finial-product-card',
-    '#curtainHooks .curtain-finial-product-card',
-    '#curtainRings .curtain-finial-product-card',
-    '#curtainAccessories .curtain-finial-product-card',
-    '#magneticClip .curtain-finial-product-card'
-  ];
-  const cards=[];
-  selectors.forEach(sel=>document.querySelectorAll(sel).forEach(card=>cards.push(card)));
+  inventoryStampCatalogueContext();
+  // Universal discovery: every catalogue product card participates automatically.
+  // Future Mother Categories/Subcategories only need to exist in the catalogue DOM.
+  const cards=[...document.querySelectorAll('.profile-product-card,.home-product-card,.earth-auger-product-card')];
   const seen=new Set(), items=[];
   cards.forEach(card=>{
     const type=inventoryTypeForCard(card);
@@ -7829,13 +7835,9 @@ function inventoryCollectItems(){
     const key=inventoryItemKey(type,model,spec);
     if(seen.has(key)) return;
     seen.add(key);
+    const ctx=inventoryContextForCard(card);
     const img=card.querySelector('img');
-    items.push({
-      key,type,model,spec,
-      subcategory:String(card.dataset.subcategory||'').trim(),
-      image:img?.src||'',
-      card
-    });
+    items.push({key,type,model,spec,motherCategory:ctx.mother,subcategory:ctx.sub,image:img?.src||'',card});
   });
   seerviInventoryItems=items;
   return items;
@@ -7850,11 +7852,9 @@ function inventoryApplyToHome(){
       item.card.dataset.stockState=stock?'in-stock':'out-of-stock';
     }
   });
-  // Keep empty product sections visually tidy when every card in a section is unavailable.
-  ['profiles','products','tvMounts','earthAugers','curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04','curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods','curtainHooks','curtainRings','curtainAccessories','magneticClip'].forEach(id=>{
-    const section=document.getElementById(id);
-    if(!section) return;
-    const cards=[...section.querySelectorAll('.profile-product-card,.home-product-card')];
+  // Keep every product section visually tidy, including future categories.
+  document.querySelectorAll('section').forEach(section=>{
+    const cards=[...section.querySelectorAll('.profile-product-card,.home-product-card,.earth-auger-product-card')];
     if(!cards.length) return;
     const visible=cards.some(c=>!c.hidden);
     section.dataset.allOutOfStock=visible?'false':'true';
@@ -8073,6 +8073,8 @@ window.setInventoryCategoryStock=async function(type,stock,input){
       stock:!!stock,
       ...(Number.isFinite(Number(seerviInventoryQty[item.key])) ? {availableQty:Math.max(0,Number(seerviInventoryQty[item.key])),qtyTracking:true} : {}),
       public:true,
+      motherCategory:item.motherCategory||inventoryMotherCategoryForItem(item),
+      subcategory:item.subcategory||inventorySubcategoryForItem(item),
       updatedBy:crmUser.email||crmUser.uid,
       updatedAt:serverTimestamp()
     },{merge:true})));
@@ -8181,6 +8183,8 @@ window.setInventoryStock=async function(key,stock,input){
       stock:!!stock,
       ...(Number.isFinite(Number(seerviInventoryQty[key])) ? {availableQty:Math.max(0,Number(seerviInventoryQty[key])),qtyTracking:true} : {}),
       public:true,
+      motherCategory:item.motherCategory||inventoryMotherCategoryForItem(item),
+      subcategory:item.subcategory||inventorySubcategoryForItem(item),
       updatedBy:crmUser.email||crmUser.uid,
       updatedAt:serverTimestamp()
     },{merge:true});
@@ -10107,10 +10111,7 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   const oldMobileSearch=window.mobileProductSearchFilter;window.mobileProductSearchFilter=function(){if(typeof oldMobileSearch==='function')oldMobileSearch.apply(this,arguments);if(!isMobile()||window.__seerviCurrentMotherKey!=='curtainTrack')return;const q=String(document.getElementById('mobileProductSearchInput')?.value||'').toLowerCase().trim();document.querySelectorAll('#curtainTrackKFSeries .home-product-card').forEach(card=>{const hay=(card.textContent+' '+(card.dataset.model||'')).toLowerCase();card.style.display=!q||hay.includes(q)?'':'none';});};
   document.addEventListener('click',e=>{const mother=e.target.closest&&e.target.closest('[data-curtain-track-mother]');if(mother){e.preventDefault();e.stopImmediatePropagation();openCurtainTrack();return;}const sub=e.target.closest&&e.target.closest('[data-curtain-track-subcategory],[data-curtain-track-mobile-sub]');if(sub){e.preventDefault();e.stopImmediatePropagation();openKFSeries();}},true);
   const oldBack=window.backToMotherCategories;window.backToMotherCategories=function(){if(window.__seerviCurrentMotherKey==='curtainTrack'){hideExistingSections();document.body.classList.remove('seervi-category-active','mobile-mother-selected','mother-panel-open');if(isMobile()){document.body.classList.add('mobile-products-view','mobile-mother-selected');renderMobileSubcategory();}else renderDesktopMother();window.scrollTo({top:0,behavior:'smooth'});return;}if(typeof oldBack==='function')return oldBack.apply(this,arguments);};window.mobileBackToMotherCategories=window.backToMotherCategories;
-  const oldType=window.inventoryTypeForCard;window.inventoryTypeForCard=function(card){if(card&&card.closest&&card.closest('#curtainTrackKFSeries'))return 'Curtain Track';return typeof oldType==='function'?oldType(card):'Item';};
-  const oldMother=window.inventoryMotherCategoryForItem;window.inventoryMotherCategoryForItem=function(item){if(item&&item.type==='Curtain Track')return 'CURTAIN TRACK';return typeof oldMother==='function'?oldMother(item):'OTHER';};
-  const oldSub=window.inventorySubcategoryForItem;window.inventorySubcategoryForItem=function(item){if(item&&item.type==='Curtain Track')return 'KF SERIES';return typeof oldSub==='function'?oldSub(item):(String(item?.type||'OTHER').toUpperCase());};
-  const oldCollect=window.inventoryCollectItems;window.inventoryCollectItems=function(){const items=typeof oldCollect==='function'?(oldCollect()||[]):[];document.querySelectorAll('#curtainTrackKFSeries .curtain-track-product-card').forEach(card=>{const type='Curtain Track',model=String(card.dataset.model||'').trim(),spec=String(card.dataset.inventorySpec||'KF SERIES').trim(),key=window.inventoryItemKey(type,model,spec);if(!items.some(x=>x.key===key)){const img=card.querySelector('img');items.push({key,type,model,spec,subcategory:'KF SERIES',image:img?.src||'',card});}});window.seerviInventoryItems=items;return items;};
+  // Inventory is discovered universally from catalogue cards; no KF-specific override needed.
   function ensureGalleryControls(){const wrap=document.getElementById('modalProductWatermark');if(!wrap||wrap.querySelector('.seervi-gallery-prev'))return;wrap.classList.add('seervi-product-gallery-wrap');wrap.insertAdjacentHTML('beforeend','<button type="button" class="seervi-gallery-prev" aria-label="Previous photo">‹</button><button type="button" class="seervi-gallery-next" aria-label="Next photo">›</button><span class="seervi-gallery-counter" aria-live="polite"></span>');wrap.querySelector('.seervi-gallery-prev').onclick=e=>{e.stopPropagation();showGallery(galleryIndex-1);};wrap.querySelector('.seervi-gallery-next').onclick=e=>{e.stopPropagation();showGallery(galleryIndex+1);};let sx=0,sy=0;wrap.addEventListener('touchstart',e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;},{passive:true});wrap.addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy))showGallery(galleryIndex+(dx<0?1:-1));},{passive:true});}
   function showGallery(i){if(!galleryItems.length)return;galleryIndex=(i+galleryItems.length)%galleryItems.length;const img=document.getElementById('modalProductImage');if(img){img.src=galleryItems[galleryIndex];img.alt=currentProduct.title+' photo '+(galleryIndex+1);}const c=document.querySelector('.seervi-gallery-counter');if(c)c.textContent=(galleryIndex+1)+' / '+galleryItems.length;}
   window.openCurtainTrackProduct=function(index){currentProduct=PRODUCTS[Number(index)||0]||PRODUCTS[0];ensureGalleryControls();galleryItems=currentProduct.gallery.slice();galleryIndex=0;const wm=document.getElementById('modalProductWatermark');if(wm)wm.classList.add('show-watermark');const label=document.getElementById('modalProductWatermarkLabel');if(label)label.textContent='SEERVITRADING';const title=document.getElementById('modalProductTitle');if(title)title.textContent=currentProduct.title;const desc=document.getElementById('modalProductDesc');if(desc)desc.innerHTML='<strong>'+esc(currentProduct.title)+'</strong><br>Complete set includes:<br><span class="kf-part-line">'+esc(currentProduct.components)+'</span>';const specs=document.getElementById('modalProductSpecs');if(specs)specs.innerHTML='<span><b>Series</b><strong>'+esc(currentProduct.title.replace(' SERIES',''))+'</strong></span><span><b>Profile</b><strong>'+esc(currentProduct.profile)+'</strong></span><span><b>Dimensions</b><strong>'+esc(currentProduct.dimensions)+'</strong></span><span><b>Set Components</b><strong>'+esc(currentProduct.components)+'</strong></span>';showGallery(0);const modal=document.getElementById('productModal');if(modal){modal.classList.add('show');modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');}};
@@ -10193,13 +10194,10 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   window.openCurtainTrack=openCurtainTrackKFX;
   const oldBack=window.backToMotherCategories;window.backToMotherCategories=function(){if(window.__seerviCurrentMotherKey==='curtainTrack'){['curtainTrackKFSeries','curtainTrackKFXSeries'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.setProperty('display','none','important');});document.body.classList.remove('seervi-category-active','mobile-mother-selected','mother-panel-open');if(mobile()){document.body.classList.add('mobile-products-view','mobile-mother-selected');renderMobileTabs();setTimeout(()=>window.openKFSeries(),0);}else renderMother();window.scrollTo({top:0,behavior:'smooth'});return;}if(typeof oldBack==='function')return oldBack.apply(this,arguments);};window.mobileBackToMotherCategories=window.backToMotherCategories;
   document.addEventListener('click',e=>{const k=e.target.closest&&e.target.closest('[data-curtain-track-kfx-subcategory],[data-curtain-track-kfx-mobile-sub]');if(k){e.preventDefault();e.stopImmediatePropagation();openKFXSeries();}},true);
-  // Inventory integration: same mother category, new KF X SERIES subcategory.
-  const oldType=window.inventoryTypeForCard;window.inventoryTypeForCard=function(card){if(card&&card.closest&&card.closest('#curtainTrackKFXSeries'))return 'Curtain Track';return typeof oldType==='function'?oldType(card):'Item';};
-  const oldSub=window.inventorySubcategoryForItem;window.inventorySubcategoryForItem=function(item){if(item&&item.type==='Curtain Track')return item.subcategory||item.spec||'KF SERIES';return typeof oldSub==='function'?oldSub(item):(String(item?.type||'OTHER').toUpperCase());};
-  const oldCollect=window.inventoryCollectItems;window.inventoryCollectItems=function(){const items=typeof oldCollect==='function'?(oldCollect()||[]):[];document.querySelectorAll('#curtainTrackKFXSeries .curtain-track-product-card').forEach(card=>{const type='Curtain Track',model=String(card.dataset.model||'').trim(),spec=String(card.dataset.inventorySpec||'KF X SERIES').trim(),key=window.inventoryItemKey(type,model,spec);if(!items.some(x=>x.key===key)){const img=card.querySelector('img');items.push({key,type,model,spec,subcategory:'KF X SERIES',image:img?.src||'',card});}});window.seerviInventoryItems=items;return items;};
+  // Inventory is discovered universally from catalogue cards; no KF X-specific override needed.
   // Mobile search support for the new subcategory.
   const oldSearch=window.mobileProductSearchFilter;window.mobileProductSearchFilter=function(){if(typeof oldSearch==='function')oldSearch.apply(this,arguments);if(!mobile()||window.__seerviCurrentMotherKey!=='curtainTrack')return;const q=String(document.getElementById('mobileProductSearchInput')?.value||'').toLowerCase().trim();const sec=document.getElementById('curtainTrackKFXSeries');if(sec&&sec.style.display!=='none')document.querySelectorAll('#curtainTrackKFXSeries .home-product-card').forEach(card=>{const hay=(card.textContent+' '+(card.dataset.model||'')).toLowerCase();card.style.display=!q||hay.includes(q)?'':'none';});};
-  function boot(){renderKFXCards();}
+  function boot(){renderKFXCards();if(typeof window.inventoryApplyToHome==='function')window.inventoryApplyToHome();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
