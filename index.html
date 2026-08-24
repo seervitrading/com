@@ -3636,31 +3636,7 @@ body:not(.mobile-products-view) #curtainDesignRods{display:none!important;visibi
   .catalog-search{min-width:0!important;}
 }
 </style>
-<script id="seervi-subcategory-back-search-final-script">
-(function(){
-  function addBackButtons(){
-    document.querySelectorAll('.catalog-controls').forEach(function(ctrl){
-      if(ctrl.querySelector('.seervi-search-back-btn')) return;
-      var search=ctrl.querySelector('.catalog-search');
-      if(!search) return;
-      var btn=document.createElement('button');
-      btn.type='button';
-      btn.className='seervi-search-back-btn';
-      btn.setAttribute('aria-label','Back to category');
-      btn.setAttribute('title','Back to category');
-      btn.innerHTML='←';
-      btn.addEventListener('click',function(e){
-        e.preventDefault(); e.stopPropagation();
-        if(typeof window.backToMotherCategories==='function') window.backToMotherCategories();
-      });
-      ctrl.insertBefore(btn,search);
-    });
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',addBackButtons);
-  else addBackButtons();
-  new MutationObserver(addBackButtons).observe(document.body,{childList:true,subtree:true});
-})();
-</script>
+
 
 <style id="seervi-fresh-search-back-final">
 /* Fresh SUB CATEGORY -> MOTHER CATEGORY back control.
@@ -3744,18 +3720,6 @@ body:not(.mobile-products-view) #curtainDesignRods{display:none!important;visibi
     return b;
   }
 
-  function addDesktopButtons(){
-    PRODUCT_SECTIONS.forEach(function(id){
-      var section=document.getElementById(id);
-      if(!section) return;
-      var controls=section.querySelector('.catalog-controls');
-      var search=controls && controls.querySelector('.catalog-search');
-      if(!controls || !search) return;
-      if(controls.querySelector('.seervi-fresh-search-back')) return;
-      controls.insertBefore(makeButton(),search);
-    });
-  }
-
   function addMobileButton(){
     var box=document.getElementById('mobileProductSearch');
     if(!box || box.querySelector('.seervi-fresh-search-back')) return;
@@ -3767,7 +3731,6 @@ body:not(.mobile-products-view) #curtainDesignRods{display:none!important;visibi
   }
 
   function addButtons(){
-    addDesktopButtons();
     addMobileButton();
   }
 
@@ -3863,6 +3826,30 @@ body:not(.mobile-products-view) #curtainDesignRods{display:none!important;visibi
   window.addEventListener('resize',addButtons);
 })();
 </script>
+
+<style id="seervi-subcategory-items-only-final">
+/* FINAL: when a sub-category is opened, show the product items directly.
+   The global Back + Search controls remain at the top; section title/description
+   inside the selected sub-category is intentionally hidden. */
+#profiles .section-head,
+#products .section-head,
+#tvMounts .section-head,
+#earthAugers .section-head,
+#curtainRods .section-head,
+#curtainFinials01 .section-head,
+#curtainFinials02 .section-head,
+#curtainFinials03 .section-head,
+#curtainFinials04 .section-head,
+#curtainBrackets .section-head,
+#curtainBrackets01 .section-head,
+#curtainDesignRods .section-head,
+#curtainHooks .section-head,
+#curtainRings .section-head,
+#curtainAccessories .section-head,
+#magneticClip .section-head{
+  display:none!important;
+}
+</style>
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -10382,3 +10369,94 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   },true);
 })();
 </script>
+
+<style id="seervi-clean-subcategory-controls-final">
+/* FINAL CLEAN PRODUCT FLOW
+   The single global Products search/back bar is already at the top.
+   Do not show duplicate section-level search, clear or back controls. */
+#profiles .catalog-controls .catalog-search,
+#profiles .catalog-controls .filter-clear,
+#profiles .catalog-controls .seervi-search-back-btn,
+#profiles .catalog-controls .seervi-fresh-search-back,
+#products .catalog-controls,
+#tvMounts .catalog-controls,
+#earthAugers .catalog-controls,
+#curtainFinials .catalog-controls,
+#curtainFinials01 .catalog-controls,
+#curtainFinials02 .catalog-controls,
+#curtainFinials03 .catalog-controls,
+#curtainFinials04 .catalog-controls,
+#curtainBrackets .catalog-controls,
+#curtainBrackets01 .catalog-controls,
+#curtainDesignRods .catalog-controls,
+#curtainRods .catalog-controls,
+#curtainHooks .catalog-controls,
+#curtainRings .catalog-controls,
+#curtainAccessories .catalog-controls,
+#magneticClip .catalog-controls{
+  display:none!important;
+}
+/* If any older script creates duplicate arrows, remove them from the DOM visually. */
+#profiles .seervi-search-back-btn,
+#products .seervi-search-back-btn,
+#tvMounts .seervi-search-back-btn,
+#earthAugers .seervi-search-back-btn,
+#curtainFinials .seervi-search-back-btn,
+#curtainFinials01 .seervi-search-back-btn,
+#curtainFinials02 .seervi-search-back-btn,
+#curtainFinials03 .seervi-search-back-btn,
+#curtainFinials04 .seervi-search-back-btn,
+#curtainBrackets .seervi-search-back-btn,
+#curtainBrackets01 .seervi-search-back-btn,
+#curtainDesignRods .seervi-search-back-btn,
+#curtainRods .seervi-search-back-btn,
+#curtainHooks .seervi-search-back-btn,
+#curtainRings .seervi-search-back-btn,
+#curtainAccessories .seervi-search-back-btn,
+#magneticClip .seervi-search-back-btn,
+#profiles .seervi-fresh-search-back,
+#products .seervi-fresh-search-back,
+#tvMounts .seervi-fresh-search-back,
+#earthAugers .seervi-fresh-search-back,
+#curtainFinials .seervi-fresh-search-back,
+#curtainFinials01 .seervi-fresh-search-back,
+#curtainFinials02 .seervi-fresh-search-back,
+#curtainFinials03 .seervi-fresh-search-back,
+#curtainFinials04 .seervi-fresh-search-back,
+#curtainBrackets .seervi-fresh-search-back,
+#curtainBrackets01 .seervi-fresh-search-back,
+#curtainDesignRods .seervi-fresh-search-back,
+#curtainRods .seervi-fresh-search-back,
+#curtainHooks .seervi-fresh-search-back,
+#curtainRings .seervi-fresh-search-back,
+#curtainAccessories .seervi-fresh-search-back,
+#magneticClip .seervi-fresh-search-back{
+  display:none!important;
+}
+/* Keep the Aluminium thickness selector if present; only search/clear/back are removed. */
+#profiles .catalog-controls:has(#profileThickness){
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+}
+#profiles .catalog-controls:has(#profileThickness) #profileThickness{
+  display:block!important;
+  width:180px!important;
+}
+</style>
+<script id="seervi-clean-subcategory-controls-final-script">
+(function(){
+  'use strict';
+  var sectionIds=['profiles','products','tvMounts','earthAugers','curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04','curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods','curtainHooks','curtainRings','curtainAccessories','magneticClip'];
+  function clean(){
+    sectionIds.forEach(function(id){
+      var section=document.getElementById(id);
+      if(!section)return;
+      section.querySelectorAll('.seervi-search-back-btn,.seervi-fresh-search-back').forEach(function(el){el.remove();});
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean);else clean();
+  new MutationObserver(clean).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+
