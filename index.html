@@ -10462,89 +10462,77 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 
 
 
-<style id="seervi-default-first-subcategory-uniform-space">
-/* FINAL PRODUCT FLOW:
-   1) Opening a mother category automatically opens its first subcategory.
-   2) Keep one identical, clean gap between the subcategory navigation and product items.
-*/
-#profiles,#products,#tvMounts,#earthAugers,#curtainFinials,#curtainFinials01,#curtainFinials02,#curtainFinials03,#curtainFinials04,#curtainBrackets,#curtainBrackets01,#curtainDesignRods,#curtainRods,#curtainHooks,#curtainRings,#curtainAccessories,#magneticClip{
-  margin-top:0!important;
-}
-body.mobile-products-view.mobile-mother-selected #profiles,
-body.mobile-products-view.mobile-mother-selected #products,
-body.mobile-products-view.mobile-mother-selected #tvMounts,
-body.mobile-products-view.mobile-mother-selected #earthAugers,
-body.mobile-products-view.mobile-mother-selected #curtainFinials,
-body.mobile-products-view.mobile-mother-selected #curtainFinials01,
-body.mobile-products-view.mobile-mother-selected #curtainFinials02,
-body.mobile-products-view.mobile-mother-selected #curtainFinials03,
-body.mobile-products-view.mobile-mother-selected #curtainFinials04,
-body.mobile-products-view.mobile-mother-selected #curtainBrackets,
-body.mobile-products-view.mobile-mother-selected #curtainBrackets01,
-body.mobile-products-view.mobile-mother-selected #curtainDesignRods,
-body.mobile-products-view.mobile-mother-selected #curtainRods,
-body.mobile-products-view.mobile-mother-selected #curtainHooks,
-body.mobile-products-view.mobile-mother-selected #curtainRings,
-body.mobile-products-view.mobile-mother-selected #curtainAccessories,
-body.mobile-products-view.mobile-mother-selected #magneticClip{
-  padding-top:20px!important;
-}
-#mobileSubcategoryBar{
-  margin-bottom:0!important;
-}
-@media(max-width:600px){
-  #mobileSubcategoryBar{padding-bottom:8px!important;}
-  body.mobile-products-view.mobile-mother-selected #profiles,
-  body.mobile-products-view.mobile-mother-selected #products,
-  body.mobile-products-view.mobile-mother-selected #tvMounts,
-  body.mobile-products-view.mobile-mother-selected #earthAugers,
-  body.mobile-products-view.mobile-mother-selected #curtainFinials,
-  body.mobile-products-view.mobile-mother-selected #curtainFinials01,
-  body.mobile-products-view.mobile-mother-selected #curtainFinials02,
-  body.mobile-products-view.mobile-mother-selected #curtainFinials03,
-  body.mobile-products-view.mobile-mother-selected #curtainFinials04,
-  body.mobile-products-view.mobile-mother-selected #curtainBrackets,
-  body.mobile-products-view.mobile-mother-selected #curtainBrackets01,
-  body.mobile-products-view.mobile-mother-selected #curtainDesignRods,
-  body.mobile-products-view.mobile-mother-selected #curtainRods,
-  body.mobile-products-view.mobile-mother-selected #curtainHooks,
-  body.mobile-products-view.mobile-mother-selected #curtainRings,
-  body.mobile-products-view.mobile-mother-selected #curtainAccessories,
-  body.mobile-products-view.mobile-mother-selected #magneticClip{
-    padding-top:16px!important;
+<style id="seervi-mobile-first-subcategory-default-and-uniform-gap-v1">
+/* MOBILE ONLY:
+   1) Mother category opens with its FIRST subcategory already selected.
+   2) Every selected subcategory keeps the same clean gap before its items.
+   Desktop/web mother-category flow is intentionally untouched. */
+@media (max-width:600px){
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #profiles,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #products,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #tvMounts,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #earthAugers,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainRods,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainFinials,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainFinials01,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainFinials02,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainFinials03,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainFinials04,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainBrackets,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainBrackets01,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainDesignRods,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainHooks,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainRings,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainAccessories,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #magneticClip{
+    margin-top:0!important;
+    padding-top:0!important;
+  }
+
+  /* One identical breathing space from the subcategory strip to the item grid. */
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #profiles .profile-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #products .home-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #tvMounts .home-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #earthAugers .earth-auger-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainRods .curtain-finial-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainFinials .curtain-finial-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainFinials01 .curtain-finial-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainFinials02 .curtain-finial-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainFinials03 .curtain-finial-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainFinials04 .curtain-finial-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainBrackets .curtain-finial-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainBrackets01 .curtain-finial-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainDesignRods .curtain-finial-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainHooks .curtain-finial-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainRings .curtain-finial-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #curtainAccessories .curtain-finial-product-grid,
+  body.mobile-products-view.mobile-mother-selected.seervi-category-active #magneticClip .curtain-finial-product-grid{
+    margin-top:14px!important;
   }
 }
 </style>
-<script id="seervi-default-first-subcategory-final-script">
+
+<script id="seervi-mobile-first-subcategory-default-v1">
 (function(){
-  'use strict';
-  var previousOpen=window.openMotherCategory;
-  var armed=false;
-  var firstOpenDone={};
+  function isMobile(){ return window.innerWidth <= 600; }
+  var originalOpen = window.openMotherCategory;
+  if(typeof originalOpen !== 'function') return;
 
-  function openFirstSubcategory(key){
-    if(!key || firstOpenDone[key]) return;
-    firstOpenDone[key]=true;
-    var fn=window.openMotherSubcategory;
-    if(typeof fn!=='function') return;
+  window.openMotherCategory = function(key){
+    /* Only mobile gets the automatic first-subcategory selection. */
+    if(!isMobile()){
+      return originalOpen.apply(this, arguments);
+    }
+
+    originalOpen.apply(this, arguments);
+
+    /* Let the existing mother-category renderer finish, then open item #1. */
     setTimeout(function(){
-      try{ fn(key,0); }catch(err){ console.error('Seervi first subcategory flow:',err); }
-    },60);
-  }
-
-  window.openMotherCategory=function(key){
-    if(typeof previousOpen==='function') previousOpen.apply(this,arguments);
-    firstOpenDone[key]=false;
-    openFirstSubcategory(key);
+      if(!document.body.classList.contains('mobile-products-view')) return;
+      if(typeof window.openMotherSubcategory === 'function'){
+        window.openMotherSubcategory(key, 0);
+      }
+    }, 0);
   };
-
-  /* Reset the one-time guard when the user returns to the mother-category level. */
-  var previousBack=window.backToMotherCategories;
-  window.backToMotherCategories=function(){
-    if(typeof previousBack==='function') previousBack.apply(this,arguments);
-    var key=window.__seerviCurrentMotherKey;
-    if(key) firstOpenDone[key]=false;
-  };
-  window.mobileBackToMotherCategories=window.backToMotherCategories;
 })();
 </script>
