@@ -9969,6 +9969,70 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   },true);
 })();
 </script>
+
+<!-- FINAL WEB SUBCATEGORY VISIBILITY FIX: keep the selected subcategory's products visible on desktop. -->
+<style id="seervi-final-web-subcategory-visibility-fix">
+@media (min-width:601px){
+  body.seervi-category-active #curtainBrackets,
+  body.seervi-category-active #curtainBrackets01,
+  body.seervi-category-active #curtainDesignRods,
+  body.seervi-category-active #curtainRods,
+  body.seervi-category-active #curtainHooks,
+  body.seervi-category-active #curtainRings,
+  body.seervi-category-active #curtainAccessories,
+  body.seervi-category-active #magneticClip,
+  body.seervi-category-active #curtainFinials01,
+  body.seervi-category-active #curtainFinials02,
+  body.seervi-category-active #curtainFinials03,
+  body.seervi-category-active #curtainFinials04{display:none!important;}
+  body.seervi-category-active.seervi-web-sub-selected #seerviSelectedSubSection{display:block!important;}
+}
+</style>
+<script id="seervi-final-web-subcategory-visibility-fix-script">
+(function(){
+  if(window.__seerviFinalWebSubVisibilityFix)return;
+  window.__seerviFinalWebSubVisibilityFix=true;
+  const IDS=['profiles','products','tvMounts','earthAugers','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04','curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods','curtainHooks','curtainRings','curtainAccessories','magneticClip'];
+  const MAP={
+    aluminium:['profiles'],
+    machines:['earthAugers'],
+    tools:['products'],
+    tv:['tvMounts'],
+    curtains:['curtainRods','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04','curtainBrackets','curtainBrackets01','curtainDesignRods','curtainHooks','curtainRings','curtainAccessories','magneticClip']
+  };
+  function hideAll(){IDS.forEach(id=>{const e=document.getElementById(id);if(e)e.style.setProperty('display','none','important');});}
+  function showSelected(key,index){
+    if(window.innerWidth<=600)return;
+    const list=MAP[key]||[];
+    const id=list[index];
+    if(!id)return;
+    hideAll();
+    const sec=document.getElementById(id);
+    if(sec){
+      sec.style.setProperty('display','block','important');
+      sec.setAttribute('data-seervi-selected-sub','true');
+      document.body.classList.add('seervi-category-active','seervi-web-sub-selected');
+      window.__seerviSelectedSection=id;
+      window.__seerviCurrentMotherKey=key;
+      setTimeout(()=>sec.scrollIntoView({behavior:'smooth',block:'start'}),30);
+    }
+  }
+  document.addEventListener('click',function(e){
+    if(window.innerWidth<=600)return;
+    const b=e.target.closest&&e.target.closest('[data-seervi-sub-index]');
+    if(!b)return;
+    const key=b.getAttribute('data-seervi-sub-key')||'';
+    const index=Number(b.getAttribute('data-seervi-sub-index'));
+    setTimeout(()=>showSelected(key,index),80);
+  },true);
+  window.addEventListener('resize',function(){
+    if(window.innerWidth<=600)return;
+    const key=window.__seerviCurrentMotherKey;
+    const id=window.__seerviSelectedSection;
+    if(key&&id){const sec=document.getElementById(id);if(sec)sec.style.setProperty('display','block','important');}
+  });
+})();
+</script>
 </body>
 <style id="mobile-category-back-and-gold-tags-final-fix">
 @media(max-width:600px){
