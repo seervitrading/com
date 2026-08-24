@@ -10704,7 +10704,8 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
     'profiles','products','tvMounts','earthAugers',
     'curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04',
     'curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods',
-    'curtainHooks','curtainRings','curtainAccessories','magneticClip'
+    'curtainHooks','curtainRings','curtainAccessories','magneticClip',
+    'applications','curtainTrackKFSeries','curtainTrackKFXSeries'
   ];
   var CFG={
     aluminium:{title:'ALUMINIUM',items:[
@@ -10735,6 +10736,10 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
       {title:'RINGS',section:'curtainRings',image:'images/curtain-rings.webp'},
       {title:'ACCESSORIES',section:'curtainAccessories',image:'images/curtain-accessories.webp'},
       {title:'MAGNETIC CLIP',section:'magneticClip',image:'images/magnetic-clip.webp'}
+    ]},
+    curtainTrack:{title:'CURTAIN TRACK',items:[
+      {title:'KF SERIES',section:'curtainTrackKFSeries',image:'images/curtain-track-kf-series.webp'},
+      {title:'KF X SERIES',section:'curtainTrackKFXSeries',image:'images/kf-x-series.webp'}
     ]}
   };
 
@@ -10988,5 +10993,297 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
     }
     if(typeof previousFresh==='function')return previousFresh.apply(this,arguments);
   };
+})();
+</script>
+
+<script id="seervi-curtain-track-web-flow-final-v7">
+(function(){
+  'use strict';
+  /* Final desktop-only controller. Mobile navigation is deliberately left
+     exactly as the already-working mobile controller handles it. */
+  var priorOpenMother=window.openMotherCategory;
+  var priorBack=window.backToMotherCategories;
+  var trackIds=['curtainTrackKFSeries','curtainTrackKFXSeries'];
+  var allIds=['profiles','products','tvMounts','earthAugers','curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04','curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods','curtainHooks','curtainRings','curtainAccessories','magneticClip','applications','curtainTrackKFSeries','curtainTrackKFXSeries'];
+
+  function desktop(){ return window.innerWidth>600; }
+  function hideAll(){
+    allIds.forEach(function(id){
+      var e=document.getElementById(id);
+      if(e){
+        e.style.setProperty('display','none','important');
+        e.style.setProperty('visibility','hidden','important');
+        e.style.setProperty('height','0','important');
+        e.style.setProperty('overflow','hidden','important');
+      }
+    });
+  }
+  function closePanel(){
+    var p=document.getElementById('motherCategoryPanel');
+    if(p){p.classList.remove('show');p.setAttribute('aria-hidden','true');}
+    document.body.classList.remove('mother-panel-open');
+  }
+  function focusMotherPanel(){
+    var bar=document.getElementById('productCategoryBar');
+    if(bar){setTimeout(function(){bar.scrollIntoView({behavior:'smooth',block:'start'});},40);}
+  }
+  function showMother(){
+    hideAll();
+    closePanel();
+    document.body.classList.remove('seervi-category-active','mobile-mother-selected','mobile-products-view');
+    window.__seerviCurrentMotherKey='curtainTrack';
+    if(typeof window.renderMother==='function'){
+      window.renderMother();
+      var renderedGrid=document.getElementById('motherSubcategoryGrid');
+      if(renderedGrid){
+        var renderedKF=renderedGrid.querySelector('[data-curtain-track-subcategory]');
+        var renderedKFX=renderedGrid.querySelector('[data-curtain-track-kfx-subcategory]');
+        if(renderedKF)renderedKF.onclick=function(e){if(e)e.preventDefault();window.openKFSeries();};
+        if(renderedKFX)renderedKFX.onclick=function(e){if(e)e.preventDefault();window.openKFXSeries();};
+      }
+      focusMotherPanel();
+      return;
+    }
+    if(typeof window.renderDesktopMother==='function'){
+      window.renderDesktopMother();
+      var renderedGrid2=document.getElementById('motherSubcategoryGrid');
+      if(renderedGrid2){
+        var renderedKF2=renderedGrid2.querySelector('[data-curtain-track-subcategory]');
+        var renderedKFX2=renderedGrid2.querySelector('[data-curtain-track-kfx-subcategory]');
+        if(renderedKF2)renderedKF2.onclick=function(e){if(e)e.preventDefault();window.openKFSeries();};
+        if(renderedKFX2)renderedKFX2.onclick=function(e){if(e)e.preventDefault();window.openKFXSeries();};
+      }
+      focusMotherPanel();
+      return;
+    }
+    /* Last-resort renderer matching the existing Curtain Track panel. */
+    var panel=document.getElementById('motherCategoryPanel');
+    var grid=document.getElementById('motherSubcategoryGrid');
+    var title=document.getElementById('motherCategoryTitle');
+    var desc=document.getElementById('motherCategoryDescription');
+    if(!panel||!grid)return;
+    if(title)title.textContent='CURTAIN TRACK';
+    if(desc)desc.textContent='Curtain track products arranged under KF SERIES and KF X SERIES.';
+    grid.innerHTML='<button type="button" class="mother-subcategory-btn" data-final-curtain-kf><span class="mother-subcategory-image"><img src="images/curtain-track-kf-series.webp" alt="KF SERIES"></span><span class="mother-subcategory-copy"><strong>KF SERIES</strong><span>View all KF Series curtain track products.</span><em>VIEW PRODUCTS ↗</em></span></button><button type="button" class="mother-subcategory-btn" data-final-curtain-kfx><span class="mother-subcategory-image"><img src="images/kf-x-series.webp" alt="KF X SERIES"></span><span class="mother-subcategory-copy"><strong>KF X SERIES</strong><span>View all KF X Series curtain track products.</span><em>VIEW PRODUCTS ↗</em></span></button>';
+    panel.classList.add('show');panel.setAttribute('aria-hidden','false');document.body.classList.add('mother-panel-open');
+    var a=grid.querySelector('[data-final-curtain-kf]');if(a)a.onclick=function(){window.openKFSeries();};
+    var b=grid.querySelector('[data-final-curtain-kfx]');if(b)b.onclick=function(){window.openKFXSeries();};
+    focusMotherPanel();
+  }
+  function showSection(id){
+    hideAll();
+    closePanel();
+    document.body.classList.remove('mobile-products-view','mobile-mother-selected','mother-panel-open');
+    document.body.classList.add('seervi-category-active');
+    var sec=document.getElementById(id);
+    if(!sec)return;
+    sec.style.setProperty('display','block','important');
+    sec.style.setProperty('visibility','visible','important');
+    sec.style.setProperty('height','auto','important');
+    sec.style.setProperty('min-height','0','important');
+    sec.style.setProperty('margin','0','important');
+    sec.style.setProperty('padding','0','important');
+    sec.style.setProperty('overflow','visible','important');
+    setTimeout(function(){sec.scrollIntoView({behavior:'smooth',block:'start'});},40);
+  }
+
+  /* Desktop mother-category entry: Curtain Track uses the same mother-panel
+     stage as every other desktop category. Other categories are untouched. */
+  window.openMotherCategory=function(key){
+    if(key==='curtainTrack' && desktop()){
+      showMother();
+      return;
+    }
+    return typeof priorOpenMother==='function' ? priorOpenMother.apply(this,arguments) : undefined;
+  };
+
+  /* Desktop subcategory entry: never leave the mother panel behind while a
+     Curtain Track product section is being shown. */
+  var priorOpenKF=window.openKFSeries;
+  var priorOpenKFX=window.openKFXSeries;
+  window.openKFSeries=function(){
+    window.__seerviCurrentMotherKey='curtainTrack';
+    if(desktop()){
+      if(typeof window.renderCards==='function'){} /* keep existing renderer untouched */
+      showSection('curtainTrackKFSeries');
+      return;
+    }
+    return typeof priorOpenKF==='function' ? priorOpenKF.apply(this,arguments) : undefined;
+  };
+  window.openKFXSeries=function(){
+    window.__seerviCurrentMotherKey='curtainTrack';
+    if(desktop()){
+      if(typeof window.renderKFXCards==='function'){} /* keep existing renderer untouched */
+      showSection('curtainTrackKFXSeries');
+      return;
+    }
+    return typeof priorOpenKFX==='function' ? priorOpenKFX.apply(this,arguments) : undefined;
+  };
+
+  /* Section/product back: return to the Curtain Track mother panel, not the
+     home page and not a leftover KF/KF-X section. Mobile keeps its existing
+     working handler. */
+  window.backToMotherCategories=function(){
+    if(window.__seerviCurrentMotherKey==='curtainTrack' && desktop()){
+      showMother();
+      window.scrollTo({top:0,behavior:'smooth'});
+      return;
+    }
+    return typeof priorBack==='function' ? priorBack.apply(this,arguments) : undefined;
+  };
+  window.mobileBackToMotherCategories=window.backToMotherCategories;
+})();
+</script>
+
+<!-- FINAL UNIVERSAL DESKTOP CATEGORY FLOW: Curtain Track uses the same controller as every other Mother Category. -->
+<script id="seervi-universal-desktop-flow-final">
+(function(){
+  'use strict';
+  var priorMother=window.openMotherCategory;
+  var priorSub=window.openMotherSubcategory;
+  var ALL_SECTIONS=[
+    'profiles','products','tvMounts','earthAugers',
+    'curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04',
+    'curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods','curtainHooks','curtainRings','curtainAccessories','magneticClip',
+    'applications','curtainTrackKFSeries','curtainTrackKFXSeries'
+  ];
+  var CFG={
+    aluminium:{title:'ALUMINIUM',desc:'Aluminium products arranged by profile category.',items:[
+      {title:'ALUMINIUM PROFILES',section:'profiles',image:'images/category-profiles.webp'}
+    ]},
+    tools:{title:'TOOLS',desc:'Cutting tools arranged by application.',items:[
+      {title:'WALL CUTTER',section:'products',filter:'Wall Cutter Blade',image:'images/category-wall-blades.webp'},
+      {title:'METAL CUTTER',section:'products',filter:'Metal Cutting Wheel',image:'images/category-metal-blades.webp'}
+    ]},
+    tv:{title:'TV STANDS',desc:'TV stands arranged by mounting style.',items:[
+      {title:'WALL FIXED',section:'tvMounts',models:['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105'],image:'images/category-wall-fixed.webp'},
+      {title:'WALL MOUNT STANDS',section:'tvMounts',models:['P4-1','P4','P5','P6','P65','DC200-1','DC200','DC200-X'],image:'images/category-mounts.webp'}
+    ]},
+    machines:{title:'MACHINES',desc:'Professional machines arranged by machine type.',items:[
+      {title:'EARTH AUGER',section:'earthAugers',image:'images/category-augers.webp'}
+    ]},
+    curtains:{title:'CURTAINS',desc:'Curtain products arranged by hardware category.',items:[
+      {title:'RODS',section:'curtainRods',image:'images/curtain-rods.webp'},
+      {title:'DESIGN RODS',section:'curtainDesignRods',image:'images/curtain-design-rods.webp'},
+      {title:'FINIALS',section:'curtainFinials',image:'images/curtain-finials.webp'},
+      {title:'FINIALS 01',section:'curtainFinials01',image:'images/curtain-finials-01.webp'},
+      {title:'FINIALS 02',section:'curtainFinials02',image:'images/curtain-finials-02.webp'},
+      {title:'FINIALS 03',section:'curtainFinials03',image:'images/curtain-finials-03.webp'},
+      {title:'FINIALS 04',section:'curtainFinials04',image:'images/curtain-finials-04.webp'},
+      {title:'BRACKET',section:'curtainBrackets',image:'images/curtain-bracket.webp'},
+      {title:'BRACKET 01',section:'curtainBrackets01',image:'images/curtain-bracket-01.webp'},
+      {title:'HOOKS',section:'curtainHooks',image:'images/curtain-hooks.webp'},
+      {title:'RINGS',section:'curtainRings',image:'images/curtain-rings.webp'},
+      {title:'ACCESSORIES',section:'curtainAccessories',image:'images/curtain-accessories.webp'},
+      {title:'MAGNETIC CLIP',section:'magneticClip',image:'images/magnetic-clip.webp'}
+    ]},
+    curtainTrack:{title:'CURTAIN TRACK',desc:'Curtain track products arranged by series.',items:[
+      {title:'KF SERIES',section:'curtainTrackKFSeries',image:'images/curtain-track-kf-series.webp'},
+      {title:'KF X SERIES',section:'curtainTrackKFXSeries',image:'images/kf-x-series.webp'}
+    ]}
+  };
+
+  function desktop(){return window.innerWidth>600;}
+  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c];});}
+  function panel(){return document.getElementById('motherCategoryPanel');}
+  function grid(){return document.getElementById('motherSubcategoryGrid');}
+  function hideAll(){
+    ALL_SECTIONS.forEach(function(id){
+      var e=document.getElementById(id);
+      if(!e)return;
+      e.style.setProperty('display','none','important');
+      e.style.setProperty('visibility','hidden','important');
+      e.style.setProperty('height','0','important');
+      e.style.setProperty('min-height','0','important');
+      e.style.setProperty('margin','0','important');
+      e.style.setProperty('padding','0','important');
+      e.style.setProperty('overflow','hidden','important');
+    });
+  }
+  function closePanel(){
+    var p=panel();
+    if(p){p.classList.remove('show');p.setAttribute('aria-hidden','true');}
+    document.body.classList.remove('mother-panel-open');
+  }
+  function resetProductVisibility(){
+    document.querySelectorAll(
+      '#profiles .profile-product-card,#products .home-product-card,#tvMounts .tv-mount-product-card,#earthAugers .earth-auger-product-card,'+
+      '#curtainFinials .curtain-finial-product-card,#curtainFinials01 .curtain-finial-product-card,#curtainFinials02 .curtain-finial-product-card,'+
+      '#curtainFinials03 .curtain-finial-product-card,#curtainFinials04 .curtain-finial-product-card,#curtainBrackets .curtain-finial-product-card,'+
+      '#curtainBrackets01 .curtain-finial-product-card,#curtainDesignRods .curtain-finial-product-card,#curtainRods .curtain-finial-product-card,'+
+      '#curtainHooks .curtain-finial-product-card,#curtainRings .curtain-finial-product-card,#curtainAccessories .curtain-finial-product-card,'+
+      '#magneticClip .curtain-finial-product-card,#curtainTrackKFSeries .home-product-card,#curtainTrackKFXSeries .home-product-card'
+    ).forEach(function(c){c.style.display='';});
+  }
+  function applyFilter(item){
+    if(item.filter){
+      var wanted=String(item.filter).toLowerCase();
+      document.querySelectorAll('#products .home-product-card').forEach(function(c){c.style.display=String(c.getAttribute('data-model')||'').toLowerCase()===wanted?'':'none';});
+    }
+    if(item.models){
+      var set={};item.models.forEach(function(x){set[String(x).toLowerCase()]=1;});
+      document.querySelectorAll('#tvMounts .tv-mount-product-card').forEach(function(c){c.style.display=set[String(c.getAttribute('data-model')||'').toLowerCase()]?'':'none';});
+    }
+  }
+  function openMotherDesktop(key){
+    var cfg=CFG[key];if(!cfg)return;
+    window.__seerviCurrentMotherKey=key;
+    hideAll();resetProductVisibility();closePanel();
+    document.body.classList.remove('seervi-category-active','mobile-mother-selected','mobile-products-view');
+    var p=panel(),g=grid(),t=document.getElementById('motherCategoryTitle'),d=document.getElementById('motherCategoryDescription');
+    if(!p||!g)return;
+    if(t)t.textContent=cfg.title;
+    if(d)d.textContent=cfg.desc;
+    g.innerHTML=cfg.items.map(function(item,index){
+      return '<button type="button" class="mother-subcategory-btn" data-universal-sub-key="'+esc(key)+'" data-universal-sub-index="'+index+'">'+
+        '<span class="mother-subcategory-image"><img src="'+esc(item.image)+'" alt="'+esc(item.title)+'"></span>'+
+        '<span class="mother-subcategory-copy"><strong>'+esc(item.title)+'</strong><span>View '+esc(item.title.toLowerCase())+' products.</span><em>VIEW PRODUCTS ↗</em></span></button>';
+    }).join('');
+    p.classList.add('show');p.setAttribute('aria-hidden','false');document.body.classList.add('mother-panel-open');
+    g.querySelectorAll('[data-universal-sub-index]').forEach(function(btn){
+      btn.addEventListener('click',function(e){
+        e.preventDefault();e.stopPropagation();openSubDesktop(key,Number(btn.getAttribute('data-universal-sub-index')));
+      });
+    });
+    setTimeout(function(){var bar=document.getElementById('productCategoryBar');if(bar)bar.scrollIntoView({behavior:'smooth',block:'start'});},40);
+  }
+  function openSubDesktop(key,index){
+    var cfg=CFG[key],item=cfg&&cfg.items[index];if(!item)return;
+    window.__seerviCurrentMotherKey=key;
+    hideAll();resetProductVisibility();closePanel();
+    document.body.classList.remove('mobile-products-view','mobile-mother-selected','mother-panel-open');
+    document.body.classList.add('seervi-category-active');
+    applyFilter(item);
+    var sec=document.getElementById(item.section);
+    if(!sec)return;
+    sec.style.setProperty('display','block','important');
+    sec.style.setProperty('visibility','visible','important');
+    sec.style.setProperty('height','auto','important');
+    sec.style.setProperty('min-height','0','important');
+    sec.style.setProperty('margin','0','important');
+    sec.style.setProperty('padding','0','important');
+    sec.style.setProperty('overflow','visible','important');
+    setTimeout(function(){sec.scrollIntoView({behavior:'smooth',block:'start'});},40);
+  }
+  window.openMotherCategory=function(key){
+    if(!desktop()) return typeof priorMother==='function'?priorMother.apply(this,arguments):undefined;
+    if(CFG[key]){openMotherDesktop(key);return;}
+    return typeof priorMother==='function'?priorMother.apply(this,arguments):undefined;
+  };
+  window.openMotherSubcategory=function(key,index){
+    if(!desktop()) return typeof priorSub==='function'?priorSub.apply(this,arguments):undefined;
+    if(CFG[key]){openSubDesktop(key,index);return;}
+    return typeof priorSub==='function'?priorSub.apply(this,arguments):undefined;
+  };
+  window.backToMotherCategories=function(){
+    if(!desktop()){
+      return typeof window.mobileBackToMotherCategories==='function' && window.mobileBackToMotherCategories!==window.backToMotherCategories ? window.mobileBackToMotherCategories.apply(this,arguments) : (typeof priorMother==='function'&&window.__seerviCurrentMotherKey?priorMother.call(this,window.__seerviCurrentMotherKey):undefined);
+    }
+    var key=window.__seerviCurrentMotherKey;
+    if(CFG[key]){openMotherDesktop(key);return;}
+    return typeof window.openMotherCategory==='function'&&key?window.openMotherCategory(key):undefined;
+  };
+  window.seerviUniversalDesktopOpenMother=openMotherDesktop;
+  window.seerviUniversalDesktopOpenSub=openSubDesktop;
 })();
 </script>
