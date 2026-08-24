@@ -3514,13 +3514,7 @@ body.seervi-category-active #productCategoryBar{display:none!important;}
   .mother-subcategory-copy strong{font-size:14px;}
 }
 </style>
-<style id="seervi-category-back-style">
-.seervi-category-back-wrap{max-width:1400px;margin:0 auto;padding:14px 20px 0;}
-.seervi-category-back{border:1px solid #ffffff1c;background:#10161c;color:#dfe3e7;border-radius:10px;padding:10px 14px;font-size:12px;font-weight:800;letter-spacing:.06em;cursor:pointer;}
-.seervi-category-back:hover{border-color:#f0c66a;color:#f0c66a;}
-body:not(.seervi-category-active) .seervi-category-back-wrap{display:none!important;}
-@media(max-width:600px){.seervi-category-back-wrap{padding:8px 12px 0}.seervi-category-back{font-size:11px;padding:9px 12px;}}
-</style>
+
 
 <style id="mobile-subcategory-image-proportion-fix">
 @media(max-width:600px){
@@ -3631,6 +3625,244 @@ body:not(.mobile-products-view) #curtainDesignRods{display:none!important;visibi
 </style>
 </style>
 </style>
+<style id="seervi-subcategory-back-search-final">
+/* Back to mother category — placed immediately to the left of product search */
+.seervi-search-back-btn{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:38px;height:38px;border:1px solid #ffffff24;background:#10151b;color:#f0c66a;border-radius:8px;font-size:20px;font-weight:900;line-height:1;cursor:pointer;touch-action:manipulation;transition:.18s ease;box-shadow:0 5px 16px #0005;}
+.seervi-search-back-btn:hover{border-color:#ffffff66;background:#171d24;transform:translateX(-1px);}
+.seervi-search-back-btn:active{transform:scale(.95);}
+.seervi-search-back-btn[aria-label]{position:relative;}
+@media(max-width:600px){
+  .seervi-search-back-btn{width:36px;height:36px;border-radius:8px;font-size:19px;}
+  .catalog-search{min-width:0!important;}
+}
+</style>
+<script id="seervi-subcategory-back-search-final-script">
+(function(){
+  function addBackButtons(){
+    document.querySelectorAll('.catalog-controls').forEach(function(ctrl){
+      if(ctrl.querySelector('.seervi-search-back-btn')) return;
+      var search=ctrl.querySelector('.catalog-search');
+      if(!search) return;
+      var btn=document.createElement('button');
+      btn.type='button';
+      btn.className='seervi-search-back-btn';
+      btn.setAttribute('aria-label','Back to category');
+      btn.setAttribute('title','Back to category');
+      btn.innerHTML='←';
+      btn.addEventListener('click',function(e){
+        e.preventDefault(); e.stopPropagation();
+        if(typeof window.backToMotherCategories==='function') window.backToMotherCategories();
+      });
+      ctrl.insertBefore(btn,search);
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',addBackButtons);
+  else addBackButtons();
+  new MutationObserver(addBackButtons).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
+<style id="seervi-fresh-search-back-final">
+/* Fresh SUB CATEGORY -> MOTHER CATEGORY back control.
+   Desktop: sits immediately before each product search box.
+   Mobile: sits immediately before the single global product search box. */
+.seervi-fresh-search-back{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 40px!important;
+  width:40px!important;
+  height:40px!important;
+  box-sizing:border-box!important;
+  padding:0!important;
+  margin:0!important;
+  border:1px solid rgba(255,255,255,.18)!important;
+  border-radius:10px!important;
+  background:#10151b!important;
+  color:#f0c66a!important;
+  font-size:22px!important;
+  font-weight:900!important;
+  line-height:1!important;
+  cursor:pointer!important;
+  touch-action:manipulation!important;
+  user-select:none!important;
+  box-shadow:0 5px 16px rgba(0,0,0,.30)!important;
+}
+.seervi-fresh-search-back:hover{background:#171d24!important;border-color:rgba(255,255,255,.38)!important;}
+.seervi-fresh-search-back:active{transform:scale(.95)!important;}
+@media(max-width:600px){
+  #mobileProductSearch .seervi-fresh-search-back{
+    flex:0 0 36px!important;width:36px!important;height:36px!important;
+    border-radius:9px!important;font-size:20px!important;
+  }
+}
+</style>
+<script id="seervi-fresh-search-back-final-script">
+(function(){
+  'use strict';
+
+  var PRODUCT_SECTIONS=[
+    'profiles','products','tvMounts','earthAugers',
+    'curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04',
+    'curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods',
+    'curtainHooks','curtainRings','curtainAccessories','magneticClip'
+  ];
+  var SECTION_MOTHER={
+    profiles:'aluminium', products:'tools', tvMounts:'tv', earthAugers:'machines',
+    curtainFinials:'curtains', curtainFinials01:'curtains', curtainFinials02:'curtains',
+    curtainFinials03:'curtains', curtainFinials04:'curtains', curtainBrackets:'curtains',
+    curtainBrackets01:'curtains', curtainDesignRods:'curtains', curtainRods:'curtains',
+    curtainHooks:'curtains', curtainRings:'curtains', curtainAccessories:'curtains',
+    magneticClip:'curtains'
+  };
+
+  function isMobile(){ return window.innerWidth<=600; }
+
+  function currentMotherKey(){
+    /* Prefer the mother key already tracked by the existing flow. */
+    if(window.__seerviCurrentMotherKey) return window.__seerviCurrentMotherKey;
+    /* Otherwise derive it from the currently visible product section. */
+    for(var i=0;i<PRODUCT_SECTIONS.length;i++){
+      var el=document.getElementById(PRODUCT_SECTIONS[i]);
+      if(el && getComputedStyle(el).display!=='none') return SECTION_MOTHER[PRODUCT_SECTIONS[i]];
+    }
+    return 'curtains';
+  }
+
+  function makeButton(){
+    var b=document.createElement('button');
+    b.type='button';
+    b.className='seervi-fresh-search-back';
+    b.setAttribute('aria-label','Back to category');
+    b.setAttribute('title','Back to category');
+    b.innerHTML='←';
+    b.addEventListener('click',function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      if(typeof window.seerviFreshBackToMother==='function') window.seerviFreshBackToMother();
+    });
+    return b;
+  }
+
+  function addDesktopButtons(){
+    PRODUCT_SECTIONS.forEach(function(id){
+      var section=document.getElementById(id);
+      if(!section) return;
+      var controls=section.querySelector('.catalog-controls');
+      var search=controls && controls.querySelector('.catalog-search');
+      if(!controls || !search) return;
+      if(controls.querySelector('.seervi-fresh-search-back')) return;
+      controls.insertBefore(makeButton(),search);
+    });
+  }
+
+  function addMobileButton(){
+    var box=document.getElementById('mobileProductSearch');
+    if(!box || box.querySelector('.seervi-fresh-search-back')) return;
+    var b=makeButton();
+    /* Put it directly to the LEFT of the search icon/input. */
+    var icon=box.querySelector('.mobile-product-search-icon');
+    if(icon) box.insertBefore(b,icon);
+    else box.insertBefore(b,box.firstChild);
+  }
+
+  function addButtons(){
+    addDesktopButtons();
+    addMobileButton();
+  }
+
+  function clearProductSearches(){
+    var ids=['mobileProductSearchInput','bladeSearch','mountSearch','curtainFinialSearch',
+      'curtainFinial01Search','curtainFinial02Search','curtainFinial03Search','curtainFinial04Search',
+      'curtainBracketSearch','curtainDesignRodSearch','curtainRodSearch','curtainHookSearch',
+      'curtainRingSearch','curtainAccessorySearch','magneticClipSearch'];
+    ids.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+    var mobileBox=document.getElementById('mobileProductSearch');
+    if(mobileBox) mobileBox.classList.remove('has-value');
+    if(typeof window.mobileProductSearchFilter==='function'){
+      try{window.mobileProductSearchFilter();}catch(_e){}
+    }
+    ['filterBlades','filterMounts','filterCurtainFinials','filterCurtainFinialSubcategory','filterCurtainGenericSubcategory'].forEach(function(fn){
+      /* Do not invoke functions that require arguments. */
+      if(fn==='filterBlades' && typeof window[fn]==='function'){try{window[fn]();}catch(_e){}}
+      if(fn==='filterMounts' && typeof window[fn]==='function'){try{window[fn]();}catch(_e){}}
+      if(fn==='filterCurtainFinials' && typeof window[fn]==='function'){try{window[fn]();}catch(_e){}}
+    });
+  }
+
+  function hideProductSections(){
+    PRODUCT_SECTIONS.forEach(function(id){
+      var el=document.getElementById(id);
+      if(el) el.style.setProperty('display','none','important');
+    });
+  }
+
+  window.seerviFreshBackToMother=function(){
+    var key=currentMotherKey();
+    clearProductSearches();
+
+    if(isMobile()){
+      /* Mobile: return to the four/five mother-category cards. */
+      hideProductSections();
+      document.body.classList.remove('mobile-mother-selected','seervi-category-active','mother-panel-open');
+      var sub=document.getElementById('mobileSubcategoryBar');
+      if(sub) sub.innerHTML='';
+      var categoryBar=document.getElementById('productCategoryBar');
+      if(categoryBar) categoryBar.style.removeProperty('display');
+      document.body.classList.add('mobile-products-view');
+      if(typeof window.closeMotherCategory==='function'){
+        try{window.closeMotherCategory();}catch(_e){}
+      }
+      if(typeof window.setMobileProductSearchPlaceholder==='function'){
+        window.setMobileProductSearchPlaceholder('Search products...');
+      }
+      window.scrollTo({top:0,behavior:'smooth'});
+      setTimeout(addButtons,30);
+      return;
+    }
+
+    /* Web: close the current product section and reopen the selected mother-category panel. */
+    hideProductSections();
+    document.body.classList.remove('seervi-category-active');
+    if(typeof window.closeMotherCategory==='function'){
+      try{window.closeMotherCategory();}catch(_e){}
+    }
+    if(typeof window.openMotherCategory==='function'){
+      try{window.openMotherCategory(key);}catch(_e){}
+    }
+    var bar=document.getElementById('productCategoryBar');
+    if(bar) bar.scrollIntoView({behavior:'smooth',block:'start'});
+    setTimeout(addButtons,30);
+  };
+
+  /* Track the mother category from both desktop cards and mobile category cards. */
+  document.addEventListener('click',function(e){
+    var card=e.target.closest && e.target.closest('.mother-category-card');
+    if(card){
+      var raw=card.getAttribute('onclick')||'';
+      var m=raw.match(/openMotherCategory\(['"]([^'"]+)['"]\)/);
+      if(m) window.__seerviCurrentMotherKey=m[1];
+    }
+    var sub=e.target.closest && e.target.closest('.mother-subcategory-btn');
+    if(sub){
+      var rawSub=sub.getAttribute('onclick')||'';
+      var ms=rawSub.match(/openMotherSubcategory\(['"]([^'"]+)['"]/);
+      if(ms) window.__seerviCurrentMotherKey=ms[1];
+    }
+    var mobSub=e.target.closest && e.target.closest('.mobile-subcategory-tab');
+    if(mobSub){
+      var rawMob=mobSub.getAttribute('onclick')||'';
+      var mm=rawMob.match(/mobileSelectSubcategory\(['"]([^'"]+)['"]/);
+      if(mm) window.__seerviCurrentMotherKey=mm[1];
+    }
+  },true);
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',addButtons);
+  else addButtons();
+  new MutationObserver(addButtons).observe(document.documentElement,{childList:true,subtree:true});
+  window.addEventListener('resize',addButtons);
+})();
+</script>
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -3672,9 +3904,9 @@ body:not(.mobile-products-view) #curtainDesignRods{display:none!important;visibi
   </div>
 </div>
 <div id="mobileSubcategoryBar" aria-label="Sub categories"></div>
-<div class="seervi-mobile-category-back"><button type="button" onclick="mobileBackToMotherCategories()"><span class="back-icon">‹</span><span class="back-label">BACK TO CATEGORIES</span></button></div>
-<section id="customerHomeProfile" class="customer-home-profile" hidden><div class="customer-home-profile-inner"><div class="customer-home-profile-head"><div><div class="crm-kicker">SEERVI TRADING / MY PROFILE</div><h2>Welcome, <span id="customerHomeName">Customer</span></h2><p id="customerHomeMeta">Your account details and business profile.</p></div><div class="customer-home-profile-actions"><button class="crm-primary" type="button" onclick="customerEditProfile()">EDIT PROFILE</button><button class="crm-secondary" type="button" onclick="openCustomerLogin()">MY ACCOUNT</button></div></div><div id="customerHomeProfileGrid" class="customer-home-profile-grid"></div></div></section><section id="profiles"><div class="seervi-category-back-wrap"><button type="button" class="seervi-category-back" onclick="backToMotherCategories()">← BACK TO CATEGORIES</button></div><div class="wrap"><div class="section-head"><div><div class="tag">01 / ALUMINIUM PROFILES</div><h2>Our Profiles</h2></div><p>Explore each Seervi profile model individually with its actual model drawing and specification.</p></div><div class="catalog-controls"><div class="catalog-search"><span>⌕</span><input id="profileSearch" type="search" placeholder="Search model e.g. 1707A, 0809CC..." oninput="filterProfiles()"></div><select id="profileThickness" onchange="filterProfiles()"><option value="">All thickness</option><option>0.4 mm</option><option>0.5 mm</option><option>0.6 mm</option><option>0.7 mm</option><option>0.75 mm</option></select><button class="filter-clear" onclick="clearProfileFilters()">Clear</button></div><div id="profileResultCount" class="result-count"></div><div class="profile-product-grid"><article class="profile-product-card" data-model="1707A" data-thickness="0.4 mm" onclick="openProfile(0)"><div class="profile-product-image"><img src="images/product-image-003-616767ade72f6666.webp" alt="Seervi 1707A aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">01</span><h3>1707A</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.4 mm</span><span><b>Aluminium</b>40 g/M</span><span><b>PC Weight</b>11 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1707A" data-cart-thickness="0.4 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.4 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.4 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1707A" data-thickness="0.5 mm" onclick="openProfile(1)"><div class="profile-product-image"><img src="images/product-image-003-616767ade72f6666.webp" alt="Seervi 1707A aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">02</span><h3>1707A</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.5 mm</span><span><b>Aluminium</b>50 g/M</span><span><b>PC Weight</b>11 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1707A" data-cart-thickness="0.5 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.5 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.5 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1707A" data-thickness="0.5 mm" onclick="openProfile(2)"><div class="profile-product-image"><img src="images/product-image-003-616767ade72f6666.webp" alt="Seervi 1707A aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">03</span><h3>1707A</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.5 mm</span><span><b>Aluminium</b>62 g/M</span><span><b>PC Weight</b>12 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1707A" data-cart-thickness="0.5 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.5 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.5 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1707A" data-thickness="0.75 mm" onclick="openProfile(3)"><div class="profile-product-image"><img src="images/product-image-003-616767ade72f6666.webp" alt="Seervi 1707A aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">04</span><h3>1707A</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.75 mm</span><span><b>Aluminium</b>75 g/M</span><span><b>PC Weight</b>16 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1707A" data-cart-thickness="0.75 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.75 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.75 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1707" data-thickness="0.7 mm" onclick="openProfile(4)"><div class="profile-product-image"><img src="images/product-image-004-135b25a2d1f12c88.webp" alt="Seervi 1707 aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">05</span><h3>1707</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.7 mm</span><span><b>Aluminium</b>59 g/M</span><span><b>PC Weight</b>12 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1707" data-cart-thickness="0.7 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707','0.7 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707','0.7 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="0809CC" data-thickness="0.4 mm" onclick="openProfile(5)"><div class="profile-product-image"><img src="images/product-image-005-f9a961cc2b00b228.webp" alt="Seervi 0809CC aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">06</span><h3>0809CC</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.4 mm</span><span><b>Aluminium</b>31 g/M</span><span><b>PC Weight</b>9 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="0809CC" data-cart-thickness="0.4 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','0809CC','0.4 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','0809CC','0.4 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="0809CC" data-thickness="0.7 mm" onclick="openProfile(6)"><div class="profile-product-image"><img src="images/product-image-005-f9a961cc2b00b228.webp" alt="Seervi 0809CC aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">07</span><h3>0809CC</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.7 mm</span><span><b>Aluminium</b>55 g/M</span><span><b>PC Weight</b>9 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="0809CC" data-cart-thickness="0.7 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','0809CC','0.7 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','0809CC','0.7 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1010CC" data-thickness="0.4 mm" onclick="openProfile(7)"><div class="profile-product-image"><img src="images/product-image-006-f24cdba235f6ccac.webp" alt="Seervi 1010CC aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">08</span><h3>1010CC</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.4 mm</span><span><b>Aluminium</b>42 g/M</span><span><b>PC Weight</b>11 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1010CC" data-cart-thickness="0.4 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1010CC','0.4 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1010CC','0.4 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1010CC" data-thickness="0.5 mm" onclick="openProfile(8)"><div class="profile-product-image"><img src="images/product-image-006-f24cdba235f6ccac.webp" alt="Seervi 1010CC aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">09</span><h3>1010CC</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.5 mm</span><span><b>Aluminium</b>48 g/M</span><span><b>PC Weight</b>11 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1010CC" data-cart-thickness="0.5 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1010CC','0.5 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1010CC','0.5 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1210CC" data-thickness="0.5 mm" onclick="openProfile(9)"><div class="profile-product-image"><img src="images/product-image-007-9c43993571b3dfe6.webp" alt="Seervi 1210CC aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">10</span><h3>1210CC</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.5 mm</span><span><b>Aluminium</b>55 g/M</span><span><b>PC Weight</b>12 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1210CC" data-cart-thickness="0.5 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1210CC','0.5 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1210CC','0.5 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1210CC" data-thickness="0.6 mm" onclick="openProfile(10)"><div class="profile-product-image"><img src="images/product-image-007-9c43993571b3dfe6.webp" alt="Seervi 1210CC aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">11</span><h3>1210CC</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.6 mm</span><span><b>Aluminium</b>62 g/M</span><span><b>PC Weight</b>12 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1210CC" data-cart-thickness="0.6 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1210CC','0.6 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1210CC','0.6 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="2310SF" data-thickness="0.4 mm" onclick="openProfile(11)"><div class="profile-product-image"><img src="images/product-image-008-2da6d7d794abace7.webp" alt="Seervi 2310SF aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">12</span><h3>2310SF</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.4 mm</span><span><b>Aluminium</b>45 g/M</span><span><b>PC Weight</b>21 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="2310SF" data-cart-thickness="0.4 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','2310SF','0.4 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','2310SF','0.4 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="2310CC" data-thickness="0.5 mm" onclick="openProfile(12)"><div class="profile-product-image"><img src="images/product-image-009-231c663461016f27.webp" alt="Seervi 2310CC aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">13</span><h3>2310CC</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.5 mm</span><span><b>Aluminium</b>52 g/M</span><span><b>PC Weight</b>21 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="2310CC" data-cart-thickness="0.5 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','2310CC','0.5 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','2310CC','0.5 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1616C" data-thickness="0.4 mm" onclick="openProfile(13)"><div class="profile-product-image"><img src="images/product-image-010-81c1b1b81f7cd54c.webp" alt="Seervi 1616C aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">14</span><h3>1616C</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.4 mm</span><span><b>Aluminium</b>46 g/M</span><span><b>PC Weight</b>17 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1616C" data-cart-thickness="0.4 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1616C','0.4 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1616C','0.4 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1616C" data-thickness="0.5 mm" onclick="openProfile(14)"><div class="profile-product-image"><img src="images/product-image-010-81c1b1b81f7cd54c.webp" alt="Seervi 1616C aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">15</span><h3>1616C</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.5 mm</span><span><b>Aluminium</b>58 g/M</span><span><b>PC Weight</b>17 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1616C" data-cart-thickness="0.5 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1616C','0.5 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1616C','0.5 mm',1)">＋</button></div></div></article></div></div></section><section id="products"><div class="seervi-category-back-wrap"><button type="button" class="seervi-category-back" onclick="backToMotherCategories()">← BACK TO CATEGORIES</button></div><div class="wrap"><div class="section-head"><div><div class="tag">02 / CUTTING BLADES</div><h2>Cutting Blades</h2></div><p>Professional cutting solutions with clear size and performance specifications. Click a product to view it larger.</p></div><div class="catalog-controls"><div class="catalog-search"><span>⌕</span><input id="bladeSearch" type="search" placeholder="Search cutting blade..." oninput="filterBlades()"></div><button class="filter-clear" onclick="clearBladeFilter()">Clear</button></div><div id="bladeResultCount" class="result-count"></div><div class="home-product-grid"><article class="home-product-card" data-model="Wall Cutter Blade" onclick="openProduct(0)"><div class="home-product-thumb"><img src="images/product-image-011-64720c3fcd30d82e.webp" alt="Seervi Wall Cutter Blade"></div><div class="home-product-meta"><span class="tag">01</span><h3>Wall Cutter Blade</h3><p>Diamond saw blade for granite, marble &amp; stone applications.</p><div class="product-spec-strip"><span><b>Size</b> Ø114 × 15 × 1.8 × 20 mm × 8T</span><span><b>Max Speed</b> 13,300 RPM</span><span><b>Speed</b> 80 m/s</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Cutting Blade" data-cart-model="Wall Cutter Blade" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Cutting Blade','Wall Cutter Blade','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Cutting Blade','Wall Cutter Blade','',1)">＋</button></div></div></article><article class="home-product-card" data-model="Metal Cutting Wheel" onclick="openProduct(1)"><div class="home-product-thumb"><img src="images/product-image-012-f4a20328c47aaf69.webp" alt="Seervi Metal Cutting Wheel"></div><div class="home-product-meta"><span class="tag">02</span><h3>Metal Cutting Wheel</h3><p>Professional abrasive cutting wheel for metal cutting applications.</p><div class="product-spec-strip"><span><b>Size</b> 107 × 1.2 × 16 mm</span><span><b>Inch Size</b> 4″ × 3/64″ × 5/8″</span><span><b>Type</b> T41-WA460QBF</span><span><b>Max Speed</b> 15,200 RPM • 80 m/s</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Cutting Blade" data-cart-model="Metal Cutting Wheel" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Cutting Blade','Metal Cutting Wheel','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Cutting Blade','Metal Cutting Wheel','',1)">＋</button></div></div></article></div></div></section><section id="tvMounts" class="tv-mounts-section"><div class="seervi-category-back-wrap"><button type="button" class="seervi-category-back" onclick="backToMotherCategories()">← BACK TO CATEGORIES</button></div><div class="wrap"><div class="section-head"><div><div class="tag">03 / TV WALL MOUNTS</div><div class="catalog-controls"><div class="catalog-search"><span>⌕</span><input id="mountSearch" type="search" placeholder="Search model e.g. HT-101, P4, DC200..." oninput="filterMounts()"></div><button class="filter-clear" onclick="clearMountFilter()">Clear</button></div><div id="mountResultCount" class="result-count"></div><h2>TV Wall Mounts</h2></div><p>TV wall mounting solutions with clear screen-size, VESA and load-capacity specifications.</p></div><div class="home-product-grid tv-mount-product-grid"><article class="home-product-card tv-mount-product-card" data-model="HT-101" onclick="openProduct(2)"><div class="home-product-thumb"><img src="images/product-image-013-82dad53d0520e9a0.webp" alt="Seervi HT-101 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>HT-101</h3><p>Fixed TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 14″–42″</span><span><b>VESA</b> 200×200mm</span><span><b>Load Capacity</b> 25kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="HT-101" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','HT-101','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','HT-101','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="HT-102" onclick="openProduct(3)"><div class="home-product-thumb"><img src="images/product-image-014-ada7762dde6119c8.webp" alt="Seervi HT-102 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>HT-102</h3><p>Fixed TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 26″–63″</span><span><b>VESA</b> 400×400mm</span><span><b>Load Capacity</b> 50kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="HT-102" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','HT-102','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','HT-102','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="HT-103" onclick="openProduct(4)"><div class="home-product-thumb"><img src="images/product-image-015-ac910cd8de3def3d.webp" alt="Seervi HT-103 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>HT-103</h3><p>Fixed TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 40″–80″</span><span><b>VESA</b> 600×500mm</span><span><b>Load Capacity</b> 75kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="HT-103" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','HT-103','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','HT-103','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="GJ-104S" onclick="openProduct(5)"><div class="home-product-thumb"><img src="images/product-image-016-80914ba0fadbda02.webp" alt="Seervi GJ-104S TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>GJ-104S</h3><p>Fixed TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 46″–100″</span><span><b>VESA</b> 700×500mm</span><span><b>Load Capacity</b> 80kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="GJ-104S" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','GJ-104S','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','GJ-104S','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="GJ-104" onclick="openProduct(6)"><div class="home-product-thumb"><img src="images/product-image-017-230db2d406fc2b4e.webp" alt="Seervi GJ-104 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>GJ-104</h3><p>Fixed TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 50″–110″</span><span><b>VESA</b> 700×600mm</span><span><b>Load Capacity</b> 150kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="GJ-104" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','GJ-104','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','GJ-104','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="GJ-105" onclick="openProduct(7)"><div class="home-product-thumb"><img src="images/product-image-018-708a4bd52a382546.webp" alt="Seervi GJ-105 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>GJ-105</h3><p>Fixed TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 55″–120″</span><span><b>VESA</b> 800×600mm</span><span><b>Load Capacity</b> 150kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="GJ-105" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','GJ-105','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','GJ-105','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="P4-1" onclick="openProduct(8)"><div class="home-product-thumb"><img src="images/product-image-019-a2e84cac41005f33.webp" alt="Seervi P4-1 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>P4-1</h3><p>Full-motion TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 26″–55″</span><span><b>VESA</b> 400×400mm</span><span><b>Load Capacity</b> 31.8kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="P4-1" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P4-1','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P4-1','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="P4" onclick="openProduct(9)"><div class="home-product-thumb"><img src="images/product-image-020-d2dc4c56b33076cb.webp" alt="Seervi P4 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>P4</h3><p>Full-motion TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 32″–60″</span><span><b>VESA</b> 400×400mm</span><span><b>Load Capacity</b> 31.8kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="P4" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P4','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P4','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="P5" onclick="openProduct(10)"><div class="home-product-thumb"><img src="images/product-image-021-dc26b1237c9a03c3.webp" alt="Seervi P5 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>P5</h3><p>Full-motion TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 32″–65″</span><span><b>VESA</b> 400×400mm</span><span><b>Load Capacity</b> 36.5kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="P5" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P5','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P5','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="P6" onclick="openProduct(11)"><div class="home-product-thumb"><img src="images/product-image-022-2c87019073d4ebcd.webp" alt="Seervi P6 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>P6</h3><p>Heavy-duty TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 40″–80″</span><span><b>VESA</b> 600×400mm</span><span><b>Load Capacity</b> 45.5kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="P6" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P6','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P6','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="P65" onclick="openProduct(12)"><div class="home-product-thumb"><img src="images/product-image-023-d2a8686accbeec74.webp" alt="Seervi P65 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>P65</h3><p>Heavy-duty TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 40″–85″</span><span><b>VESA</b> 600×400mm</span><span><b>Load Capacity</b> 68.2kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="P65" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P65','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P65','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="DC200-1" onclick="openProduct(13)"><div class="home-product-thumb"><img src="images/product-image-024-5e59941f57478ea1.webp" alt="Seervi DC200-1 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>DC200-1</h3><p>Full-motion TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 17″–42″</span><span><b>VESA</b> 200×200mm</span><span><b>Load Capacity</b> 25kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="DC200-1" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','DC200-1','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','DC200-1','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="DC200" onclick="openProduct(14)"><div class="home-product-thumb"><img src="images/product-image-025-7a42181acb0131c2.webp" alt="Seervi DC200 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>DC200</h3><p>Full-motion TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 19″–42″</span><span><b>VESA</b> 200×200mm</span><span><b>Load Capacity</b> 35kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="DC200" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','DC200','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','DC200','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="DC200-X" onclick="openProduct(15)"><div class="home-product-thumb"><img src="images/product-image-026-d1aceccd1df2b57d.webp" alt="Seervi DC200-X TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>DC200-X</h3><p>Full-motion TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 19″–56″</span><span><b>VESA</b> 400×400mm</span><span><b>Load Capacity</b> 30kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="DC200-X" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','DC200-X','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','DC200-X','',1)">＋</button></div></div></article></div></div></section><section id="earthAugers" class="earth-auger-section"><div class="seervi-category-back-wrap"><button type="button" class="seervi-category-back" onclick="backToMotherCategories()">← BACK TO CATEGORIES</button></div><div class="wrap"><div class="section-head"><div><div class="tag">EARTH AUGER / NEW ARRIVAL</div><h2>Earth Augers</h2></div><p>Professional earth auger models with clear engine, power, drilling and handling specifications. Click a product to view it larger.</p></div><div class="catalog-controls"><div class="catalog-search"><span>⌕</span><input id="earthAugerSearch" type="search" placeholder="Search earth auger e.g. DZ43, DZ63, AT63..." oninput="filterEarthAugers()"></div><button class="filter-clear" onclick="clearEarthAugerFilter()">Clear</button></div><div id="earthAugerResultCount" class="result-count"></div><div class="home-product-grid earth-auger-product-grid"><article class="home-product-card earth-auger-product-card" data-model="DZ43" onclick="openProduct(16)"><div class="home-product-thumb"><img src="images/earth-auger-dz43.webp" alt="Seervi DZ43 Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>DZ43</h3><p>Single-person petrol earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> 1E40F-5A</span><span><b>Power</b> 1.25/5500 kW/r/min</span><span><b>Displacement</b> 42.7 cc</span><span><b>Weight</b> 16 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="DZ43" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ43','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ43','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="DZ52" onclick="openProduct(17)"><div class="home-product-thumb"><img src="images/earth-auger-dz52.webp" alt="Seervi DZ52 Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>DZ52</h3><p>Single-person petrol earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> 1E44F-2A</span><span><b>Power</b> 1.4/5500 kW/r/min</span><span><b>Displacement</b> 51.7 cc</span><span><b>Weight</b> 16.5 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="DZ52" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ52','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ52','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="DZ63" onclick="openProduct(18)"><div class="home-product-thumb"><img src="images/earth-auger-dz63.webp" alt="Seervi DZ63 Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>DZ63</h3><p>Single-person petrol earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> 1E48F</span><span><b>Power</b> 2.27/5000 kW/r/min</span><span><b>Displacement</b> 63.3 cc</span><span><b>Weight</b> 17 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="DZ63" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ63','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ63','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="DZ33" onclick="openProduct(19)"><div class="home-product-thumb"><img src="images/earth-auger-dz33.webp" alt="Seervi DZ33 Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>DZ33</h3><p>Single-person petrol earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> 1E40F-3</span><span><b>Power</b> 1.25/5500 kW/r/min</span><span><b>Displacement</b> 42.7 cc</span><span><b>Weight</b> 16 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="DZ33" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ33','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ33','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="AG41" onclick="openProduct(20)"><div class="home-product-thumb"><img src="images/earth-auger-ag41.webp" alt="Seervi AG41 Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>AG41</h3><p>Single-person petrol earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> 1E40F-6</span><span><b>Power</b> 1.45/7000 kW/r/min</span><span><b>Displacement</b> 40.2 cc</span><span><b>Weight</b> 17.5 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="AG41" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','AG41','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','AG41','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="AG63" onclick="openProduct(21)"><div class="home-product-thumb"><img src="images/earth-auger-ag63.webp" alt="Seervi AG63 Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>AG63</h3><p>Single-person petrol earth auger. Catalogue table identifies this column as AG43.</p><div class="product-spec-strip"><span><b>Engine</b> 1E40F-5A</span><span><b>Power</b> 1.25/6500 kW/r/min</span><span><b>Displacement</b> 42.7 cc</span><span><b>Weight</b> 16 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="AG63" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','AG63','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','AG63','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="DZ196W" onclick="openProduct(22)"><div class="home-product-thumb"><img src="images/earth-auger-dz196w.webp" alt="Seervi DZ196W Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>DZ196W</h3><p>High-speed reducer hand-lift earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> LX196</span><span><b>Power</b> 3.6/3600 kW/r/min</span><span><b>Displacement</b> 196 cc</span><span><b>Weight</b> 115 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="DZ196W" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ196W','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ196W','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="DZ1196H" onclick="openProduct(23)"><div class="home-product-thumb"><img src="images/earth-auger-dz1196h.webp" alt="Seervi DZ1196H Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>DZ1196H</h3><p>Two-person earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> LX196</span><span><b>Power</b> 3.6/3600 kW/r/min</span><span><b>Displacement</b> 196 cc</span><span><b>Weight</b> 95 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="DZ1196H" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ1196H','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ1196H','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="AT63" onclick="openProduct(24)"><div class="home-product-thumb"><img src="images/earth-auger-at63.webp" alt="Seervi AT63 Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>AT63</h3><p>Two-person petrol earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> 1E48F</span><span><b>Power</b> 2.27/5000 kW/r/min</span><span><b>Displacement</b> 63.3 cc</span><span><b>Weight</b> —</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="AT63" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','AT63','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','AT63','',1)">＋</button></div></div></article></div></div></section><section id="curtainFinials" class="curtain-finials-section">
-<div class="seervi-category-back-wrap"><button type="button" class="seervi-category-back" onclick="backToMotherCategories()">← BACK TO CATEGORIES</button></div>
+
+<section id="customerHomeProfile" class="customer-home-profile" hidden><div class="customer-home-profile-inner"><div class="customer-home-profile-head"><div><div class="crm-kicker">SEERVI TRADING / MY PROFILE</div><h2>Welcome, <span id="customerHomeName">Customer</span></h2><p id="customerHomeMeta">Your account details and business profile.</p></div><div class="customer-home-profile-actions"><button class="crm-primary" type="button" onclick="customerEditProfile()">EDIT PROFILE</button><button class="crm-secondary" type="button" onclick="openCustomerLogin()">MY ACCOUNT</button></div></div><div id="customerHomeProfileGrid" class="customer-home-profile-grid"></div></div></section><section id="profiles"><div class="wrap"><div class="section-head"><div><div class="tag">01 / ALUMINIUM PROFILES</div><h2>Our Profiles</h2></div><p>Explore each Seervi profile model individually with its actual model drawing and specification.</p></div><div class="catalog-controls"><div class="catalog-search"><span>⌕</span><input id="profileSearch" type="search" placeholder="Search model e.g. 1707A, 0809CC..." oninput="filterProfiles()"></div><select id="profileThickness" onchange="filterProfiles()"><option value="">All thickness</option><option>0.4 mm</option><option>0.5 mm</option><option>0.6 mm</option><option>0.7 mm</option><option>0.75 mm</option></select><button class="filter-clear" onclick="clearProfileFilters()">Clear</button></div><div id="profileResultCount" class="result-count"></div><div class="profile-product-grid"><article class="profile-product-card" data-model="1707A" data-thickness="0.4 mm" onclick="openProfile(0)"><div class="profile-product-image"><img src="images/product-image-003-616767ade72f6666.webp" alt="Seervi 1707A aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">01</span><h3>1707A</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.4 mm</span><span><b>Aluminium</b>40 g/M</span><span><b>PC Weight</b>11 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1707A" data-cart-thickness="0.4 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.4 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.4 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1707A" data-thickness="0.5 mm" onclick="openProfile(1)"><div class="profile-product-image"><img src="images/product-image-003-616767ade72f6666.webp" alt="Seervi 1707A aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">02</span><h3>1707A</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.5 mm</span><span><b>Aluminium</b>50 g/M</span><span><b>PC Weight</b>11 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1707A" data-cart-thickness="0.5 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.5 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.5 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1707A" data-thickness="0.5 mm" onclick="openProfile(2)"><div class="profile-product-image"><img src="images/product-image-003-616767ade72f6666.webp" alt="Seervi 1707A aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">03</span><h3>1707A</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.5 mm</span><span><b>Aluminium</b>62 g/M</span><span><b>PC Weight</b>12 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1707A" data-cart-thickness="0.5 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.5 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.5 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1707A" data-thickness="0.75 mm" onclick="openProfile(3)"><div class="profile-product-image"><img src="images/product-image-003-616767ade72f6666.webp" alt="Seervi 1707A aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">04</span><h3>1707A</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.75 mm</span><span><b>Aluminium</b>75 g/M</span><span><b>PC Weight</b>16 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1707A" data-cart-thickness="0.75 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.75 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707A','0.75 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1707" data-thickness="0.7 mm" onclick="openProfile(4)"><div class="profile-product-image"><img src="images/product-image-004-135b25a2d1f12c88.webp" alt="Seervi 1707 aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">05</span><h3>1707</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.7 mm</span><span><b>Aluminium</b>59 g/M</span><span><b>PC Weight</b>12 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1707" data-cart-thickness="0.7 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707','0.7 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1707','0.7 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="0809CC" data-thickness="0.4 mm" onclick="openProfile(5)"><div class="profile-product-image"><img src="images/product-image-005-f9a961cc2b00b228.webp" alt="Seervi 0809CC aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">06</span><h3>0809CC</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.4 mm</span><span><b>Aluminium</b>31 g/M</span><span><b>PC Weight</b>9 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="0809CC" data-cart-thickness="0.4 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','0809CC','0.4 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','0809CC','0.4 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="0809CC" data-thickness="0.7 mm" onclick="openProfile(6)"><div class="profile-product-image"><img src="images/product-image-005-f9a961cc2b00b228.webp" alt="Seervi 0809CC aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">07</span><h3>0809CC</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.7 mm</span><span><b>Aluminium</b>55 g/M</span><span><b>PC Weight</b>9 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="0809CC" data-cart-thickness="0.7 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','0809CC','0.7 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','0809CC','0.7 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1010CC" data-thickness="0.4 mm" onclick="openProfile(7)"><div class="profile-product-image"><img src="images/product-image-006-f24cdba235f6ccac.webp" alt="Seervi 1010CC aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">08</span><h3>1010CC</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.4 mm</span><span><b>Aluminium</b>42 g/M</span><span><b>PC Weight</b>11 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1010CC" data-cart-thickness="0.4 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1010CC','0.4 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1010CC','0.4 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1010CC" data-thickness="0.5 mm" onclick="openProfile(8)"><div class="profile-product-image"><img src="images/product-image-006-f24cdba235f6ccac.webp" alt="Seervi 1010CC aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">09</span><h3>1010CC</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.5 mm</span><span><b>Aluminium</b>48 g/M</span><span><b>PC Weight</b>11 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1010CC" data-cart-thickness="0.5 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1010CC','0.5 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1010CC','0.5 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1210CC" data-thickness="0.5 mm" onclick="openProfile(9)"><div class="profile-product-image"><img src="images/product-image-007-9c43993571b3dfe6.webp" alt="Seervi 1210CC aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">10</span><h3>1210CC</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.5 mm</span><span><b>Aluminium</b>55 g/M</span><span><b>PC Weight</b>12 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1210CC" data-cart-thickness="0.5 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1210CC','0.5 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1210CC','0.5 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1210CC" data-thickness="0.6 mm" onclick="openProfile(10)"><div class="profile-product-image"><img src="images/product-image-007-9c43993571b3dfe6.webp" alt="Seervi 1210CC aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">11</span><h3>1210CC</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.6 mm</span><span><b>Aluminium</b>62 g/M</span><span><b>PC Weight</b>12 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1210CC" data-cart-thickness="0.6 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1210CC','0.6 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1210CC','0.6 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="2310SF" data-thickness="0.4 mm" onclick="openProfile(11)"><div class="profile-product-image"><img src="images/product-image-008-2da6d7d794abace7.webp" alt="Seervi 2310SF aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">12</span><h3>2310SF</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.4 mm</span><span><b>Aluminium</b>45 g/M</span><span><b>PC Weight</b>21 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="2310SF" data-cart-thickness="0.4 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','2310SF','0.4 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','2310SF','0.4 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="2310CC" data-thickness="0.5 mm" onclick="openProfile(12)"><div class="profile-product-image"><img src="images/product-image-009-231c663461016f27.webp" alt="Seervi 2310CC aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">13</span><h3>2310CC</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.5 mm</span><span><b>Aluminium</b>52 g/M</span><span><b>PC Weight</b>21 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="2310CC" data-cart-thickness="0.5 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','2310CC','0.5 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','2310CC','0.5 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1616C" data-thickness="0.4 mm" onclick="openProfile(13)"><div class="profile-product-image"><img src="images/product-image-010-81c1b1b81f7cd54c.webp" alt="Seervi 1616C aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">14</span><h3>1616C</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.4 mm</span><span><b>Aluminium</b>46 g/M</span><span><b>PC Weight</b>17 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1616C" data-cart-thickness="0.4 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1616C','0.4 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1616C','0.4 mm',1)">＋</button></div></div></article><article class="profile-product-card" data-model="1616C" data-thickness="0.5 mm" onclick="openProfile(14)"><div class="profile-product-image"><img src="images/product-image-010-81c1b1b81f7cd54c.webp" alt="Seervi 1616C aluminium profile"><span class="profile-zoom">VIEW ↗</span></div><div class="profile-product-body"><span class="tag">15</span><h3>1616C</h3><div class="profile-mini-specs"><span><b>Thickness</b>0.5 mm</span><span><b>Aluminium</b>58 g/M</span><span><b>PC Weight</b>17 g/M</span><div class="product-cart-control" data-cart-type="Profile" data-cart-model="1616C" data-cart-thickness="0.5 mm"><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1616C','0.5 mm',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Profile','1616C','0.5 mm',1)">＋</button></div></div></article></div></div></section><section id="products"><div class="wrap"><div class="section-head"><div><div class="tag">02 / CUTTING BLADES</div><h2>Cutting Blades</h2></div><p>Professional cutting solutions with clear size and performance specifications. Click a product to view it larger.</p></div><div class="catalog-controls"><div class="catalog-search"><span>⌕</span><input id="bladeSearch" type="search" placeholder="Search cutting blade..." oninput="filterBlades()"></div><button class="filter-clear" onclick="clearBladeFilter()">Clear</button></div><div id="bladeResultCount" class="result-count"></div><div class="home-product-grid"><article class="home-product-card" data-model="Wall Cutter Blade" onclick="openProduct(0)"><div class="home-product-thumb"><img src="images/product-image-011-64720c3fcd30d82e.webp" alt="Seervi Wall Cutter Blade"></div><div class="home-product-meta"><span class="tag">01</span><h3>Wall Cutter Blade</h3><p>Diamond saw blade for granite, marble &amp; stone applications.</p><div class="product-spec-strip"><span><b>Size</b> Ø114 × 15 × 1.8 × 20 mm × 8T</span><span><b>Max Speed</b> 13,300 RPM</span><span><b>Speed</b> 80 m/s</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Cutting Blade" data-cart-model="Wall Cutter Blade" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Cutting Blade','Wall Cutter Blade','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Cutting Blade','Wall Cutter Blade','',1)">＋</button></div></div></article><article class="home-product-card" data-model="Metal Cutting Wheel" onclick="openProduct(1)"><div class="home-product-thumb"><img src="images/product-image-012-f4a20328c47aaf69.webp" alt="Seervi Metal Cutting Wheel"></div><div class="home-product-meta"><span class="tag">02</span><h3>Metal Cutting Wheel</h3><p>Professional abrasive cutting wheel for metal cutting applications.</p><div class="product-spec-strip"><span><b>Size</b> 107 × 1.2 × 16 mm</span><span><b>Inch Size</b> 4″ × 3/64″ × 5/8″</span><span><b>Type</b> T41-WA460QBF</span><span><b>Max Speed</b> 15,200 RPM • 80 m/s</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Cutting Blade" data-cart-model="Metal Cutting Wheel" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Cutting Blade','Metal Cutting Wheel','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Cutting Blade','Metal Cutting Wheel','',1)">＋</button></div></div></article></div></div></section><section id="tvMounts" class="tv-mounts-section"><div class="wrap"><div class="section-head"><div><div class="tag">03 / TV WALL MOUNTS</div><div class="catalog-controls"><div class="catalog-search"><span>⌕</span><input id="mountSearch" type="search" placeholder="Search model e.g. HT-101, P4, DC200..." oninput="filterMounts()"></div><button class="filter-clear" onclick="clearMountFilter()">Clear</button></div><div id="mountResultCount" class="result-count"></div><h2>TV Wall Mounts</h2></div><p>TV wall mounting solutions with clear screen-size, VESA and load-capacity specifications.</p></div><div class="home-product-grid tv-mount-product-grid"><article class="home-product-card tv-mount-product-card" data-model="HT-101" onclick="openProduct(2)"><div class="home-product-thumb"><img src="images/product-image-013-82dad53d0520e9a0.webp" alt="Seervi HT-101 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>HT-101</h3><p>Fixed TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 14″–42″</span><span><b>VESA</b> 200×200mm</span><span><b>Load Capacity</b> 25kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="HT-101" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','HT-101','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','HT-101','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="HT-102" onclick="openProduct(3)"><div class="home-product-thumb"><img src="images/product-image-014-ada7762dde6119c8.webp" alt="Seervi HT-102 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>HT-102</h3><p>Fixed TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 26″–63″</span><span><b>VESA</b> 400×400mm</span><span><b>Load Capacity</b> 50kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="HT-102" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','HT-102','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','HT-102','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="HT-103" onclick="openProduct(4)"><div class="home-product-thumb"><img src="images/product-image-015-ac910cd8de3def3d.webp" alt="Seervi HT-103 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>HT-103</h3><p>Fixed TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 40″–80″</span><span><b>VESA</b> 600×500mm</span><span><b>Load Capacity</b> 75kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="HT-103" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','HT-103','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','HT-103','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="GJ-104S" onclick="openProduct(5)"><div class="home-product-thumb"><img src="images/product-image-016-80914ba0fadbda02.webp" alt="Seervi GJ-104S TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>GJ-104S</h3><p>Fixed TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 46″–100″</span><span><b>VESA</b> 700×500mm</span><span><b>Load Capacity</b> 80kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="GJ-104S" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','GJ-104S','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','GJ-104S','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="GJ-104" onclick="openProduct(6)"><div class="home-product-thumb"><img src="images/product-image-017-230db2d406fc2b4e.webp" alt="Seervi GJ-104 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>GJ-104</h3><p>Fixed TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 50″–110″</span><span><b>VESA</b> 700×600mm</span><span><b>Load Capacity</b> 150kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="GJ-104" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','GJ-104','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','GJ-104','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="GJ-105" onclick="openProduct(7)"><div class="home-product-thumb"><img src="images/product-image-018-708a4bd52a382546.webp" alt="Seervi GJ-105 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>GJ-105</h3><p>Fixed TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 55″–120″</span><span><b>VESA</b> 800×600mm</span><span><b>Load Capacity</b> 150kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="GJ-105" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','GJ-105','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','GJ-105','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="P4-1" onclick="openProduct(8)"><div class="home-product-thumb"><img src="images/product-image-019-a2e84cac41005f33.webp" alt="Seervi P4-1 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>P4-1</h3><p>Full-motion TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 26″–55″</span><span><b>VESA</b> 400×400mm</span><span><b>Load Capacity</b> 31.8kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="P4-1" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P4-1','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P4-1','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="P4" onclick="openProduct(9)"><div class="home-product-thumb"><img src="images/product-image-020-d2dc4c56b33076cb.webp" alt="Seervi P4 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>P4</h3><p>Full-motion TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 32″–60″</span><span><b>VESA</b> 400×400mm</span><span><b>Load Capacity</b> 31.8kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="P4" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P4','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P4','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="P5" onclick="openProduct(10)"><div class="home-product-thumb"><img src="images/product-image-021-dc26b1237c9a03c3.webp" alt="Seervi P5 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>P5</h3><p>Full-motion TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 32″–65″</span><span><b>VESA</b> 400×400mm</span><span><b>Load Capacity</b> 36.5kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="P5" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P5','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P5','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="P6" onclick="openProduct(11)"><div class="home-product-thumb"><img src="images/product-image-022-2c87019073d4ebcd.webp" alt="Seervi P6 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>P6</h3><p>Heavy-duty TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 40″–80″</span><span><b>VESA</b> 600×400mm</span><span><b>Load Capacity</b> 45.5kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="P6" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P6','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P6','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="P65" onclick="openProduct(12)"><div class="home-product-thumb"><img src="images/product-image-023-d2a8686accbeec74.webp" alt="Seervi P65 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>P65</h3><p>Heavy-duty TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 40″–85″</span><span><b>VESA</b> 600×400mm</span><span><b>Load Capacity</b> 68.2kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="P65" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P65','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','P65','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="DC200-1" onclick="openProduct(13)"><div class="home-product-thumb"><img src="images/product-image-024-5e59941f57478ea1.webp" alt="Seervi DC200-1 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>DC200-1</h3><p>Full-motion TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 17″–42″</span><span><b>VESA</b> 200×200mm</span><span><b>Load Capacity</b> 25kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="DC200-1" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','DC200-1','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','DC200-1','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="DC200" onclick="openProduct(14)"><div class="home-product-thumb"><img src="images/product-image-025-7a42181acb0131c2.webp" alt="Seervi DC200 TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>DC200</h3><p>Full-motion TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 19″–42″</span><span><b>VESA</b> 200×200mm</span><span><b>Load Capacity</b> 35kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="DC200" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','DC200','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','DC200','',1)">＋</button></div></div></article><article class="home-product-card tv-mount-product-card" data-model="DC200-X" onclick="openProduct(15)"><div class="home-product-thumb"><img src="images/product-image-026-d1aceccd1df2b57d.webp" alt="Seervi DC200-X TV Wall Mount"></div><div class="home-product-meta"><span class="tag">TV WALL MOUNT</span><h3>DC200-X</h3><p>Full-motion TV wall mount bracket.</p><div class="product-spec-strip"><span><b>Screen Size</b> 19″–56″</span><span><b>VESA</b> 400×400mm</span><span><b>Load Capacity</b> 30kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="TV Wall Mount" data-cart-model="DC200-X" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','DC200-X','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('TV Wall Mount','DC200-X','',1)">＋</button></div></div></article></div></div></section><section id="earthAugers" class="earth-auger-section"><div class="wrap"><div class="section-head"><div><div class="tag">EARTH AUGER / NEW ARRIVAL</div><h2>Earth Augers</h2></div><p>Professional earth auger models with clear engine, power, drilling and handling specifications. Click a product to view it larger.</p></div><div class="catalog-controls"><div class="catalog-search"><span>⌕</span><input id="earthAugerSearch" type="search" placeholder="Search earth auger e.g. DZ43, DZ63, AT63..." oninput="filterEarthAugers()"></div><button class="filter-clear" onclick="clearEarthAugerFilter()">Clear</button></div><div id="earthAugerResultCount" class="result-count"></div><div class="home-product-grid earth-auger-product-grid"><article class="home-product-card earth-auger-product-card" data-model="DZ43" onclick="openProduct(16)"><div class="home-product-thumb"><img src="images/earth-auger-dz43.webp" alt="Seervi DZ43 Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>DZ43</h3><p>Single-person petrol earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> 1E40F-5A</span><span><b>Power</b> 1.25/5500 kW/r/min</span><span><b>Displacement</b> 42.7 cc</span><span><b>Weight</b> 16 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="DZ43" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ43','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ43','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="DZ52" onclick="openProduct(17)"><div class="home-product-thumb"><img src="images/earth-auger-dz52.webp" alt="Seervi DZ52 Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>DZ52</h3><p>Single-person petrol earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> 1E44F-2A</span><span><b>Power</b> 1.4/5500 kW/r/min</span><span><b>Displacement</b> 51.7 cc</span><span><b>Weight</b> 16.5 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="DZ52" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ52','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ52','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="DZ63" onclick="openProduct(18)"><div class="home-product-thumb"><img src="images/earth-auger-dz63.webp" alt="Seervi DZ63 Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>DZ63</h3><p>Single-person petrol earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> 1E48F</span><span><b>Power</b> 2.27/5000 kW/r/min</span><span><b>Displacement</b> 63.3 cc</span><span><b>Weight</b> 17 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="DZ63" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ63','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ63','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="DZ33" onclick="openProduct(19)"><div class="home-product-thumb"><img src="images/earth-auger-dz33.webp" alt="Seervi DZ33 Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>DZ33</h3><p>Single-person petrol earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> 1E40F-3</span><span><b>Power</b> 1.25/5500 kW/r/min</span><span><b>Displacement</b> 42.7 cc</span><span><b>Weight</b> 16 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="DZ33" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ33','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ33','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="AG41" onclick="openProduct(20)"><div class="home-product-thumb"><img src="images/earth-auger-ag41.webp" alt="Seervi AG41 Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>AG41</h3><p>Single-person petrol earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> 1E40F-6</span><span><b>Power</b> 1.45/7000 kW/r/min</span><span><b>Displacement</b> 40.2 cc</span><span><b>Weight</b> 17.5 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="AG41" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','AG41','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','AG41','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="AG63" onclick="openProduct(21)"><div class="home-product-thumb"><img src="images/earth-auger-ag63.webp" alt="Seervi AG63 Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>AG63</h3><p>Single-person petrol earth auger. Catalogue table identifies this column as AG43.</p><div class="product-spec-strip"><span><b>Engine</b> 1E40F-5A</span><span><b>Power</b> 1.25/6500 kW/r/min</span><span><b>Displacement</b> 42.7 cc</span><span><b>Weight</b> 16 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="AG63" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','AG63','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','AG63','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="DZ196W" onclick="openProduct(22)"><div class="home-product-thumb"><img src="images/earth-auger-dz196w.webp" alt="Seervi DZ196W Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>DZ196W</h3><p>High-speed reducer hand-lift earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> LX196</span><span><b>Power</b> 3.6/3600 kW/r/min</span><span><b>Displacement</b> 196 cc</span><span><b>Weight</b> 115 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="DZ196W" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ196W','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ196W','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="DZ1196H" onclick="openProduct(23)"><div class="home-product-thumb"><img src="images/earth-auger-dz1196h.webp" alt="Seervi DZ1196H Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>DZ1196H</h3><p>Two-person earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> LX196</span><span><b>Power</b> 3.6/3600 kW/r/min</span><span><b>Displacement</b> 196 cc</span><span><b>Weight</b> 95 kg</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="DZ1196H" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ1196H','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','DZ1196H','',1)">＋</button></div></div></article><article class="home-product-card earth-auger-product-card" data-model="AT63" onclick="openProduct(24)"><div class="home-product-thumb"><img src="images/earth-auger-at63.webp" alt="Seervi AT63 Earth Auger"></div><div class="home-product-meta"><span class="tag">EARTH AUGER</span><h3>AT63</h3><p>Two-person petrol earth auger.</p><div class="product-spec-strip"><span><b>Engine</b> 1E48F</span><span><b>Power</b> 2.27/5000 kW/r/min</span><span><b>Displacement</b> 63.3 cc</span><span><b>Weight</b> —</span></div><button type="button">VIEW PRODUCT <span>↗</span></button><div class="product-cart-control" data-cart-type="Earth Auger" data-cart-model="AT63" data-cart-thickness=""><button class="cart-minus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','AT63','',-1)">−</button><span class="product-qty">0</span><button class="cart-plus" type="button" onclick="event.stopPropagation();changeProductQty('Earth Auger','AT63','',1)">＋</button></div></div></article></div></div></section><section id="curtainFinials" class="curtain-finials-section">
+
 <div class="wrap"><div class="section-head"><div><div class="tag">CURTAINS / CURTAIN FINIALS</div><h2>Curtain Finials</h2></div><p>Catalogue curtain finials in multiple designs and rod sizes.</p></div>
 <div class="catalog-controls"><div class="catalog-search"><span>⌕</span><input id="curtainFinialSearch" type="search" placeholder="Search model e.g. KY1209, KY1819..." oninput="filterCurtainFinials()"></div><button class="filter-clear" onclick="clearCurtainFinialFilter()">Clear</button></div>
 <div id="curtainFinialResultCount" class="result-count"></div>
@@ -7521,19 +7753,38 @@ function inventoryMotherCategoryForItem(item){
 }
 function inventorySubcategoryForItem(item){
   const type=String(item?.type||'');
-  const model=String(item?.model||'').toLowerCase();
+  const model=String(item?.model||'').trim();
+  const lowerModel=model.toLowerCase();
+  /* IMPORTANT: Stock subcategory names must stay EXACTLY the same as the
+     public catalogue Mother -> Subcategory names. */
   if(type==='Aluminium Profile') return 'ALUMINIUM PROFILES';
-  if(type==='Cutting Blade') return model.includes('wall') ? 'WALL CUTTING BLADES' : 'METAL CUTTING BLADES';
+  if(type==='Cutting Blade') return lowerModel==='wall cutter blade' ? 'WALL CUTTER' : 'METAL CUTTER';
   if(type==='TV Wall Mount'){
     const fixed=['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105'];
-    return fixed.includes(String(item?.model||'')) ? 'WALL FIXED' : 'WALL MOUNT STANDS';
+    return fixed.includes(model) ? 'WALL FIXED' : 'WALL MOUNT STANDS';
   }
   if(type==='Earth Auger') return 'EARTH AUGER';
-  if(type==='Curtain Finial') return item?.subcategory || 'CURTAIN FINIALS';
-  if(type==='Curtain Bracket') return item?.subcategory || 'CURTAIN BRACKET';
-  if(type==='Curtain Ring') return item?.subcategory || 'CURTAIN RINGS';
-  if(type==='Curtain Accessory') return item?.subcategory || 'CURTAIN ACCESSORIES';
-  if(type==='Magnetic Clip') return item?.subcategory || 'MAGNETIC CLIP';
+
+  /* Curtain sections already have their own product subcategory names.
+     Read the actual section id so stock never invents a different label. */
+  const sectionId=item?.card?.closest('section')?.id || '';
+  const curtainNames={
+    curtainRods:'RODS',
+    curtainDesignRods:'DESIGN RODS',
+    curtainFinials:'FINIALS',
+    curtainFinials01:'FINIALS 01',
+    curtainFinials02:'FINIALS 02',
+    curtainFinials03:'FINIALS 03',
+    curtainFinials04:'FINIALS 04',
+    curtainBrackets:'BRACKET',
+    curtainBrackets01:'BRACKET 01',
+    curtainHooks:'HOOKS',
+    curtainRings:'RINGS',
+    curtainAccessories:'ACCESSORIES',
+    magneticClip:'MAGNETIC CLIP'
+  };
+  if(curtainNames[sectionId]) return curtainNames[sectionId];
+
   return type.toUpperCase()||'OTHER';
 }
 
@@ -8848,7 +9099,7 @@ body.seervi-non-home-view nav{display:none !important;}
       title:'ALUMINIUM',
       desc:'Aluminium products arranged by profile category.',
       items:[
-        {title:'ALUMINIUM PROFILES',desc:'All Seervi aluminium profile models currently in the catalogue.',section:'profiles',image:'images/category-profiles.webp'}
+        {title:'ALUMINIUM PROFILES',desc:'All Seervi aluminium profile models currently in the catalogue.',section:'profiles',filter:null,image:'images/category-profiles.webp'}
       ]
     },
     tools:{
@@ -9126,15 +9377,15 @@ function hideAllSections(){['profiles','products','tvMounts','earthAugers','curt
   body.mobile-products-view.mobile-mother-selected #earthAugers{
     scroll-margin-top:132px;
   }
-  body:not(.mobile-products-view) .seervi-mobile-category-back{display:none!important;}
-body.mobile-products-view:not(.mobile-mother-selected) .seervi-mobile-category-back{display:none!important;}
-body.mobile-products-view.mobile-mother-selected .seervi-mobile-category-back{display:flex;width:100%;margin:0;padding:8px 12px 4px;}
-.seervi-mobile-category-back button{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.035));backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#eef2f5;border-radius:999px;padding:8px 14px 8px 9px;font-size:10px;font-weight:900;letter-spacing:.08em;cursor:pointer;touch-action:manipulation;box-shadow:0 6px 18px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.16);transition:transform .18s ease,border-color .18s ease,background .18s ease;}
-.seervi-mobile-category-back button:active{transform:scale(.96);background:rgba(255,255,255,.13);}
-.seervi-mobile-category-back .back-icon{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);font-size:20px;line-height:18px;font-weight:500;}
-.seervi-mobile-category-back .back-label{line-height:1;}
+
+
+
+
+
+
+
 @media(min-width:601px){
-  #mobileSubcategoryBar,.seervi-mobile-category-back{display:none!important}
+
 }
 </style>
 <style id="mobile-mother-category-glass">
@@ -9303,17 +9554,9 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 .mobile-bottom-bar{z-index:10050!important;}
 .cart-drawer{z-index:9990!important;}
 }
-@media(min-width:601px){#mobileTopDateTime,#mobileProductSearch,#mobileSubcategoryBar,.seervi-mobile-category-back{display:none!important;}}
+@media(min-width:601px){#mobileTopDateTime,#mobileProductSearch,#mobileSubcategoryBar{display:none!important;}}
 </style>
-<style id="mobile-filter-strip-final-remove">
-@media(max-width:600px){
- body.mobile-products-view .catalog-controls{display:none!important;}
- body.mobile-products-view .result-count{display:none!important;}
- body.mobile-products-view .seervi-category-back-wrap{display:none!important;}
- body.mobile-products-view:not(.mobile-mother-selected) .seervi-mobile-category-back{display:none!important;}
- body.mobile-products-view.mobile-mother-selected .seervi-mobile-category-back{display:flex!important;}
-}
-</style>
+
 <script id="seervi-mobile-mother-final-fix-script">
 (function(){
   var originalOpenMotherCategory=window.openMotherCategory;
@@ -9506,27 +9749,130 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   nav > .wrap > .nav-left-group{display:none !important;}
 }
 </style>
+
+<script id="seervi-final-subcategory-restore-v3">
+(function(){
+  var CFG={
+    aluminium:{title:'ALUMINIUM',desc:'Aluminium products arranged by profile category.',items:[{title:'ALUMINIUM PROFILES',section:'profiles',image:'images/category-profiles.webp'}]},
+    tools:{title:'TOOLS',desc:'Cutting tools arranged by application.',items:[{title:'WALL CUTTER',section:'products',filter:'Wall Cutter Blade',image:'images/category-wall-blades.webp'},{title:'METAL CUTTER',section:'products',filter:'Metal Cutting Wheel',image:'images/category-metal-blades.webp'}]},
+    tv:{title:'TV STANDS',desc:'TV stands arranged by mounting style.',items:[{title:'WALL FIXED',section:'tvMounts',models:['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105'],image:'images/category-wall-fixed.webp'},{title:'WALL MOUNT STANDS',section:'tvMounts',models:['P4-1','P4','P5','P6','P65','DC200-1','DC200','DC200-X'],image:'images/category-mounts.webp'}]},
+    machines:{title:'MACHINES',desc:'Professional machines arranged by machine type.',items:[{title:'EARTH AUGER',section:'earthAugers',image:'images/category-augers.webp'}]},
+    curtains:{title:'CURTAINS',desc:'Curtain products arranged by hardware category.',items:[{title:'RODS',section:'curtainRods',image:'images/curtain-rods.webp'},{title:'DESIGN RODS',section:'curtainDesignRods',image:'images/curtain-design-rods.webp'},{title:'FINIALS',section:'curtainFinials',image:'images/curtain-finials.webp'},{title:'FINIALS 01',section:'curtainFinials01',image:'images/curtain-finials-01.webp'},{title:'FINIALS 02',section:'curtainFinials02',image:'images/curtain-finials-02.webp'},{title:'FINIALS 03',section:'curtainFinials03',image:'images/curtain-finials-03.webp'},{title:'FINIALS 04',section:'curtainFinials04',image:'images/curtain-finials-04.webp'},{title:'BRACKET',section:'curtainBrackets',image:'images/curtain-bracket.webp'},{title:'BRACKET 01',section:'curtainBrackets01',image:'images/curtain-bracket-01.webp'},{title:'HOOKS',section:'curtainHooks',image:'images/curtain-hooks.webp'},{title:'RINGS',section:'curtainRings',image:'images/curtain-rings.webp'},{title:'ACCESSORIES',section:'curtainAccessories',image:'images/curtain-accessories.webp'},{title:'MAGNETIC CLIP',section:'magneticClip',image:'images/magnetic-clip.webp'}]}
+  };
+  var IDS=['profiles','products','tvMounts','earthAugers','curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04','curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods','curtainHooks','curtainRings','curtainAccessories','magneticClip'];
+  function mobile(){return window.innerWidth<=600;}
+  function hide(){IDS.forEach(function(id){var e=document.getElementById(id);if(e)e.style.setProperty('display','none','important');});}
+  function clear(){['profileSearch','bladeSearch','mountSearch','earthAugerSearch','curtainFinialSearch','curtainFinial01Search','curtainFinial02Search','curtainFinial03Search','curtainFinial04Search','curtainBracketSearch','curtainDesignRodSearch','curtainRodSearch','curtainHookSearch','curtainRingSearch','curtainAccessorySearch','magneticClipSearch'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});}
+  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function renderMobile(key){
+    var bar=document.getElementById('mobileSubcategoryBar'),cfg=CFG[key];if(!bar||!cfg)return;
+    bar.innerHTML=cfg.items.map(function(it,i){return '<button type="button" class="mobile-subcategory-tab" data-seervi-sub-key="'+esc(key)+'" data-seervi-sub-index="'+i+'"><span class="mobile-subcategory-tab-image"><img src="'+esc(it.image)+'" alt="'+esc(it.title)+'"></span><span class="mobile-subcategory-tab-name">'+esc(it.title)+'</span></button>';}).join('');
+    bar.style.display='flex';
+    bar.querySelectorAll('[data-seervi-sub-index]').forEach(function(b){b.addEventListener('click',function(){openSub(key,Number(b.getAttribute('data-seervi-sub-index')));});});
+  }
+  function renderDesktop(key){
+    var p=document.getElementById('motherCategoryPanel'),g=document.getElementById('motherSubcategoryGrid'),t=document.getElementById('motherCategoryTitle'),d=document.getElementById('motherCategoryDescription'),cfg=CFG[key];if(!p||!g||!cfg)return;
+    t.textContent=cfg.title;d.textContent=cfg.desc;
+    g.innerHTML=cfg.items.map(function(it,i){return '<button type="button" class="mother-subcategory-btn" data-seervi-sub-key="'+esc(key)+'" data-seervi-sub-index="'+i+'"><img src="'+esc(it.image)+'" alt="'+esc(it.title)+'"><span class="mother-subcategory-copy"><strong>'+esc(it.title)+'</strong><span>View '+esc(it.title.toLowerCase())+' products.</span><em>VIEW PRODUCTS ↗</em></span></button>';}).join('');
+    p.classList.add('show');p.setAttribute('aria-hidden','false');document.body.classList.add('mother-panel-open');
+    g.querySelectorAll('[data-seervi-sub-index]').forEach(function(b){b.addEventListener('click',function(){openSub(key,Number(b.getAttribute('data-seervi-sub-index')));});});
+  }
+  function openSub(key,index){
+    var cfg=CFG[key],it=cfg&&cfg.items[index];if(!it)return;
+    window.__seerviCurrentMotherKey=key;clear();hide();
+    var p=document.getElementById('motherCategoryPanel');if(p){p.classList.remove('show');p.setAttribute('aria-hidden','true');}
+    document.body.classList.remove('mother-panel-open');document.body.classList.add('seervi-category-active','mobile-mother-selected');
+    var sec=document.getElementById(it.section);if(sec)sec.style.setProperty('display','block','important');
+    if(it.filter){var w=it.filter.toLowerCase();document.querySelectorAll('#products .home-product-card').forEach(function(c){c.style.display=String(c.getAttribute('data-model')||'').toLowerCase()===w?'':'none';});}
+    if(it.models){var set={};it.models.forEach(function(x){set[String(x).toLowerCase()]=1;});document.querySelectorAll('#tvMounts .tv-mount-product-card').forEach(function(c){c.style.display=set[String(c.getAttribute('data-model')||'').toLowerCase()]?'':'none';});}
+    if(mobile()){renderMobile(key);setTimeout(function(){if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'});},40);}else{setTimeout(function(){if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'});},40);}
+  }
+  window.openMotherCategory=function(key){
+    if(!CFG[key])return;window.__seerviCurrentMotherKey=key;
+    hide();document.body.classList.remove('seervi-category-active','mobile-mother-selected');
+    if(mobile()){
+      document.body.classList.add('mobile-products-view','mobile-mother-selected');
+      var p=document.getElementById('motherCategoryPanel');if(p){p.classList.remove('show');p.setAttribute('aria-hidden','true');}
+      document.body.classList.remove('mother-panel-open');renderMobile(key);window.scrollTo({top:0,behavior:'smooth'});
+    }else{renderDesktop(key);}
+  };
+  window.openMotherSubcategory=function(key,index){openSub(key,index);};
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('.mother-category-card');if(!b)return;
+    var raw=b.getAttribute('onclick')||'',m=raw.match(/openMotherCategory\(['"]([^'"]+)['"]\)/);if(m){e.preventDefault();e.stopPropagation();window.openMotherCategory(m[1]);}
+  },true);
+})();
+</script>
+<style id="seervi-final-subcategory-restore-v4">
+@media(max-width:600px){
+  body.mobile-products-view.mobile-mother-selected #mobileSubcategoryBar{display:flex!important;}
+  #mobileSubcategoryBar .mobile-subcategory-tab{display:flex!important;}
+}
+</style>
+<script id="seervi-final-subcategory-restore-v4-script">
+(function(){
+  const SUB={
+    aluminium:[{title:'ALUMINIUM PROFILES',section:'profiles',image:'images/category-profiles.webp'}],
+    machines:[{title:'EARTH AUGER',section:'earthAugers',image:'images/category-augers.webp'}],
+    tools:[{title:'WALL CUTTER',section:'products',filter:'Wall Cutter Blade',image:'images/category-wall-blades.webp'},{title:'METAL CUTTER',section:'products',filter:'Metal Cutting Wheel',image:'images/category-metal-cutter-blades.webp'}],
+    tv:[{title:'WALL FIXED',section:'tvMounts',models:['HT-101','HT-102','HT-103','GJ-104S','GJ-104','GJ-105'],image:'images/category-wall-fixed.webp'},{title:'WALL MOUNT STANDS',section:'tvMounts',models:['P4-1','P4','P5','P6','P65','DC200-1','DC200','DC200-X'],image:'images/category-mounts.webp'}],
+    curtains:[{title:'RODS',section:'curtainRods',image:'images/curtain-rods.webp'},{title:'FINIALS 01',section:'curtainFinials01',image:'images/curtain-finials-01.webp'},{title:'FINIALS 02',section:'curtainFinials02',image:'images/curtain-finials-02.webp'},{title:'FINIALS 03',section:'curtainFinials03',image:'images/curtain-finials-03.webp'},{title:'FINIALS 04',section:'curtainFinials04',image:'images/curtain-finials-04.webp'},{title:'BRACKET',section:'curtainBrackets',image:'images/curtain-bracket.webp'},{title:'BRACKET 01',section:'curtainBrackets01',image:'images/curtain-bracket-01.webp'},{title:'DESIGN RODS',section:'curtainDesignRods',image:'images/curtain-design-rods.webp'},{title:'HOOKS',section:'curtainHooks',image:'images/curtain-hooks.webp'},{title:'RINGS',section:'curtainRings',image:'images/curtain-rings.webp'},{title:'ACCESSORIES',section:'curtainAccessories',image:'images/curtain-accessories.webp'},{title:'MAGNETIC CLIP',section:'magneticClip',image:'images/magnetic-clip.webp'}]
+  };
+  const IDS=['profiles','products','tvMounts','earthAugers','curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04','curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods','curtainHooks','curtainRings','curtainAccessories','magneticClip'];
+  const mobile=()=>window.innerWidth<=600;
+  function hide(){IDS.forEach(id=>{const e=document.getElementById(id);if(e)e.style.setProperty('display','none','important');});}
+  function clear(){['profileSearch','bladeSearch','mountSearch','earthAugerSearch','curtainFinialSearch','curtainFinial01Search','curtainFinial02Search','curtainFinial03Search','curtainFinial04Search','curtainBracketSearch','curtainDesignRodSearch','curtainRodSearch','curtainHookSearch','curtainRingSearch','curtainAccessorySearch','magneticClipSearch'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});}
+  function esc(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function renderMobile(key){
+    const bar=document.getElementById('mobileSubcategoryBar'),items=SUB[key];if(!bar||!items)return;
+    bar.innerHTML=items.map((it,i)=>'<button type="button" class="mobile-subcategory-tab" data-final-sub-key="'+esc(key)+'" data-final-sub-index="'+i+'"><span class="mobile-subcategory-tab-image"><img src="'+esc(it.image)+'" alt="'+esc(it.title)+'"></span><span class="mobile-subcategory-tab-name">'+esc(it.title)+'</span></button>').join('');
+    bar.style.setProperty('display','flex','important');
+    bar.querySelectorAll('[data-final-sub-index]').forEach(b=>b.onclick=()=>openSub(key,Number(b.dataset.finalSubIndex)));
+  }
+  function renderDesktop(key){
+    const panel=document.getElementById('motherCategoryPanel'),grid=document.getElementById('motherSubcategoryGrid'),title=document.getElementById('motherCategoryTitle'),desc=document.getElementById('motherCategoryDescription'),items=SUB[key];if(!panel||!grid||!items)return;
+    title.textContent=key==='aluminium'?'ALUMINIUM':key==='machines'?'MACHINES':key==='tools'?'TOOLS':key==='tv'?'TV STANDS':'CURTAINS';
+    desc.textContent='Select a sub-category to view its products.';
+    grid.innerHTML=items.map((it,i)=>'<button type="button" class="mother-subcategory-btn" data-final-sub-key="'+esc(key)+'" data-final-sub-index="'+i+'"><img src="'+esc(it.image)+'" alt="'+esc(it.title)+'"><span class="mother-subcategory-copy"><strong>'+esc(it.title)+'</strong><span>View '+esc(it.title.toLowerCase())+' products.</span><em>VIEW PRODUCTS ↗</em></span></button>').join('');
+    panel.classList.add('show');panel.setAttribute('aria-hidden','false');document.body.classList.add('mother-panel-open');
+    grid.querySelectorAll('[data-final-sub-index]').forEach(b=>b.onclick=()=>openSub(key,Number(b.dataset.finalSubIndex)));
+  }
+  function openSub(key,index){
+    const it=SUB[key]&&SUB[key][index];if(!it)return;
+    window.__seerviCurrentMotherKey=key;clear();hide();
+    const panel=document.getElementById('motherCategoryPanel');if(panel){panel.classList.remove('show');panel.setAttribute('aria-hidden','true');}
+    document.body.classList.remove('mother-panel-open');document.body.classList.add('seervi-category-active','mobile-mother-selected');
+    const sec=document.getElementById(it.section);if(sec)sec.style.setProperty('display','block','important');
+    if(it.filter){const w=it.filter.toLowerCase();document.querySelectorAll('#products .home-product-card').forEach(c=>c.style.display=String(c.dataset.model||'').toLowerCase()===w?'':'none');}
+    if(it.models){const set=new Set(it.models.map(x=>x.toLowerCase()));document.querySelectorAll('#tvMounts .tv-mount-product-card').forEach(c=>c.style.display=set.has(String(c.dataset.model||'').toLowerCase())?'':'none');}
+    if(mobile()){renderMobile(key);}
+    setTimeout(()=>{if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'});},50);
+  }
+  window.openMotherCategory=function(key){
+    if(!SUB[key])return;window.__seerviCurrentMotherKey=key;hide();clear();document.body.classList.remove('seervi-category-active');
+    if(mobile()){document.body.classList.add('mobile-products-view','mobile-mother-selected');const panel=document.getElementById('motherCategoryPanel');if(panel){panel.classList.remove('show');panel.setAttribute('aria-hidden','true');}document.body.classList.remove('mother-panel-open');renderMobile(key);window.scrollTo({top:0,behavior:'smooth'});}
+    else{document.body.classList.remove('mobile-mother-selected');renderDesktop(key);}
+  };
+  window.openMotherSubcategory=function(key,index){openSub(key,index);};
+  window.backToMotherCategories=function(){
+    const key=window.__seerviCurrentMotherKey;
+    hide();clear();document.body.classList.remove('seervi-category-active','mobile-mother-selected','mother-panel-open');
+    const bar=document.getElementById('mobileSubcategoryBar');if(bar)bar.innerHTML='';
+    if(mobile()){document.body.classList.add('mobile-products-view');if(key)renderMobile(key);document.body.classList.add('mobile-mother-selected');window.scrollTo({top:0,behavior:'smooth'});}
+    else if(key){renderDesktop(key);}
+  };
+  window.mobileBackToMotherCategories=window.backToMotherCategories;
+  document.addEventListener('click',function(e){
+    const card=e.target.closest&&e.target.closest('#productCategoryBar .mother-category-card');if(!card)return;
+    const raw=card.getAttribute('onclick')||'',m=raw.match(/openMotherCategory\(['"]([^'"]+)['"]\)/);if(m){e.preventDefault();e.stopImmediatePropagation();window.openMotherCategory(m[1]);}
+  },true);
+})();
+</script>
 </body>
 <style id="mobile-category-back-and-gold-tags-final-fix">
 @media(max-width:600px){
   /* Keep the mobile back control OUTSIDE the product/category sections.
      The older section-level back control must never render on mobile. */
-  .seervi-category-back-wrap{display:none!important;}
-  body.mobile-products-view .seervi-mobile-category-back{
-    display:flex!important;
-    position:relative!important;
-    width:100%!important;
-    box-sizing:border-box!important;
-    margin:0!important;
-    padding:7px 12px 8px!important;
-    background:#090d12!important;
-    border:0!important;
-    z-index:40!important;
-  }
-  body.mobile-products-view .seervi-mobile-category-back button{
-    position:relative!important;
-    margin:0!important;
-  }
 
   /* Product-category gold kicker lines removed on mobile, as requested. */
   body.mobile-products-view #profiles .section-head .tag,
@@ -9582,8 +9928,8 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 
   /* Old flow uses the category popup, not the newer subcategory strip. */
   body.mobile-products-view #mobileSubcategoryBar{display:none!important;}
-  body.mobile-products-view .seervi-mobile-category-back{display:none!important;}
-  body.mobile-products-view.mobile-mother-selected .seervi-mobile-category-back{display:none!important;}
+
+
 }
 </style>
 
@@ -9889,3 +10235,150 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   letter-spacing:1px;text-align:center;
 }
 </style>
+
+
+<style id="seervi-final-back-and-mobile-all-fix">
+@media(max-width:600px){
+  /* Remove only the sticky ALL subcategory tab; keep the real subcategory tabs. */
+  #mobileSubcategoryBar [data-mother-all],
+  #mobileSubcategoryBar .mobile-subcategory-tab[data-mother-all]{
+    display:none!important;
+  }
+  #mobileSubcategoryBar:has(.mobile-subcategory-tab:nth-child(1):only-child){
+    display:none!important;
+  }
+}
+</style>
+
+<script id="seervi-final-back-and-mobile-all-script">
+(function(){
+  var currentMotherKey='';
+  var sectionMother={
+    profiles:'aluminium',
+    products:'tools',
+    tvMounts:'tv',
+    earthAugers:'machines',
+    curtainFinials:'curtains',
+    curtainFinials01:'curtains',
+    curtainFinials02:'curtains',
+    curtainFinials03:'curtains',
+    curtainFinials04:'curtains',
+    curtainBrackets:'curtains',
+    curtainBrackets01:'curtains',
+    curtainDesignRods:'curtains',
+    curtainRods:'curtains',
+    curtainHooks:'curtains',
+    curtainRings:'curtains',
+    curtainAccessories:'curtains',
+    magneticClip:'curtains'
+  };
+
+  function mobile(){return window.innerWidth<=600;}
+
+  function hideSections(){
+    Object.keys(sectionMother).forEach(function(id){
+      var e=document.getElementById(id);
+      if(e)e.style.setProperty('display','none','important');
+    });
+  }
+
+  function closePanel(){
+    var p=document.getElementById('motherCategoryPanel');
+    if(p){p.classList.remove('show');p.setAttribute('aria-hidden','true');}
+    document.body.classList.remove('mother-panel-open');
+  }
+
+  function openMother(key){
+    if(typeof window.openMotherCategory==='function'){
+      /* Call the previous implementation, not this wrapper. */
+      return window.__seerviOriginalMotherOpen(key);
+    }
+  }
+
+  /* Capture the existing functions once, then wrap them. */
+  if(!window.__seerviOriginalMotherOpen){
+    window.__seerviOriginalMotherOpen=window.openMotherCategory;
+  }
+  if(!window.__seerviOriginalSubOpen){
+    window.__seerviOriginalSubOpen=window.openMotherSubcategory;
+  }
+
+  window.openMotherCategory=function(key){
+    currentMotherKey=key||currentMotherKey;
+    return window.__seerviOriginalMotherOpen && window.__seerviOriginalMotherOpen.apply(this,arguments);
+  };
+
+  window.openMotherSubcategory=function(key,index){
+    currentMotherKey=key||currentMotherKey;
+    return window.__seerviOriginalSubOpen && window.__seerviOriginalSubOpen.apply(this,arguments);
+  };
+
+  /* Reliable Back To Categories:
+     always returns to the mother-category panel, never Home. */
+  window.backToMotherCategories=function(){
+    var key=currentMotherKey;
+
+    if(!key){
+      var active=Object.keys(sectionMother).find(function(id){
+        var e=document.getElementById(id);
+        return e && getComputedStyle(e).display!=='none';
+      });
+      key=active?sectionMother[active]:'curtains';
+    }
+
+    hideSections();
+    document.body.classList.remove('seervi-category-active','mobile-mother-selected');
+    document.body.classList.add('mobile-products-view');
+
+    closePanel();
+
+    if(typeof window.__seerviOriginalMotherOpen==='function'){
+      window.__seerviOriginalMotherOpen(key);
+    }
+
+    var bar=document.getElementById('mobileSubcategoryBar');
+    if(bar){
+      /* Remove the old sticky ALL tab only. */
+      bar.querySelectorAll('[data-mother-all]').forEach(function(el){el.remove();});
+    }
+
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  window.mobileBackToMotherCategories=window.backToMotherCategories;
+
+  /* Any old ALL button becomes inert/hidden; mother category itself remains navigation-only. */
+  document.addEventListener('click',function(e){
+    var all=e.target.closest && e.target.closest('[data-mother-all]');
+    if(all){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      all.style.display='none';
+    }
+  },true);
+
+  /* Whenever the existing subcategory renderer rebuilds the bar, strip ALL again. */
+  function stripAll(){
+    var bar=document.getElementById('mobileSubcategoryBar');
+    if(!bar)return;
+    bar.querySelectorAll('[data-mother-all]').forEach(function(el){el.remove();});
+  }
+  var obsTarget=document.getElementById('mobileSubcategoryBar');
+  if(obsTarget){
+    new MutationObserver(stripAll).observe(obsTarget,{childList:true,subtree:true});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    stripAll();
+  });
+
+  /* Track the mother key even when cards use inline onclick. */
+  document.addEventListener('click',function(e){
+    var card=e.target.closest && e.target.closest('.mother-category-card');
+    if(card){
+      var raw=card.getAttribute('onclick')||'';
+      var m=raw.match(/openMotherCategory\(['"]([^'"]+)['"]\)/);
+      if(m)currentMotherKey=m[1];
+    }
+  },true);
+})();
+</script>
