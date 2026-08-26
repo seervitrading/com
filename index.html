@@ -4101,12 +4101,23 @@ body.nav-is-scrolled{padding-top:76px;}
       </div>
     </div>
 
+    <div class="admin-items-category-card" style="margin-bottom:14px">
+      <div class="crm-section-title">ITEM BULK RULE</div>
+      <p class="crm-auth-status" style="margin:6px 0;line-height:1.6">
+        <b>Category + Subcategory must already exist in Firebase.</b>
+        Item Bulk Add only creates Items. If either name is missing or does not match
+        the existing Firebase taxonomy, that row stays in <b>ERROR</b> and cannot be imported.
+        No Category or Subcategory is created automatically by this flow.
+      </p>
+    </div>
+
     <div class="seervi-bulk-grid">
       <div class="admin-items-category-card">
         <div class="crm-section-title">1. PREPARE EXCEL</div>
         <div class="crm-muted" style="margin:8px 0 12px;line-height:1.6">
-          Required: <b>Category</b>, <b>Item Name</b>, <b>WEBP Image URL / Path</b>.<br>
-          Subcategory is optional. Specifications use paired columns:
+          Required: <b>Category</b>, <b>Subcategory</b>, <b>Item Name</b>, <b>WEBP Image URL / Path</b>.<br>
+          Category and Subcategory must already exist in Firebase. This Item Bulk Add flow never creates
+          missing taxonomy automatically. Specifications use paired columns:
           <b>Spec 1 Name / Spec 1 Value</b>, <b>Spec 2 Name / Spec 2 Value</b>…
         </div>
         <button class="crm-secondary" type="button" onclick="seerviBulkDownloadTemplate()">DOWNLOAD EXCEL TEMPLATE</button>
@@ -8983,8 +8994,13 @@ window.seerviBulkImport=async function(){
   if(seerviBulkImporting)return;
   try{
     seerviItemsAdminGuard();
+    // Taxonomy may have changed after the preview. Refresh and validate again
+    // immediately before any Item document is written.
+    await seerviItemsLoadCategories();
+    await seerviBulkPrepare();
+
     const valid=seerviBulkValidation.filter(x=>!x.errors.length);
-    if(!valid.length)throw new Error('There are no valid rows to import.');
+    if(!valid.length)throw new Error('There are no valid rows to import. Every Item must reference an existing Firebase Category and Subcategory.');
     if(!confirm(`Import ${valid.length} valid item(s) to Firebase?`))return;
     seerviBulkImporting=true;
     const btn=$('seerviBulkImportButton');
@@ -9037,8 +9053,19 @@ window.seerviBulkDownloadTemplate=function(){
     {wch:24},{wch:24},{wch:30},{wch:18},{wch:48},{wch:45},{wch:12},
     {wch:20},{wch:24},{wch:20},{wch:24},{wch:20},{wch:24}
   ];
+  const notes=[
+    ['SEERVI ITEM BULK ADD — IMPORTANT'],
+    ['Category and Subcategory must already exist in Firebase before importing Items.'],
+    ['This Item Bulk Add flow does NOT create missing Categories or Subcategories.'],
+    ['If Category/Subcategory does not match existing Firebase taxonomy, the row will show ERROR and cannot be imported.'],
+    ['Use the separate Category / Subcategory Bulk Import to create taxonomy first.']
+  ];
+  const notesWs=XLSX.utils.aoa_to_sheet(notes);
+  notesWs['!cols']=[{wch:105}];
+
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'Items');
+  XLSX.utils.book_append_sheet(wb,notesWs,'Instructions');
   XLSX.writeFile(wb,'seervi_items_bulk_template.xlsx');
 };
 
