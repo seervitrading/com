@@ -3830,6 +3830,145 @@ body:not(.mobile-products-view) #curtainDesignRods{display:none!important;visibi
 })();
 </script>
 
+<!-- Universal catalogue layer. Existing product markup/controllers remain intact;
+     this is the one safe place to register every future item. -->
+<script id="seervi-universal-catalogue-v1">
+(function () {
+  'use strict';
+
+  /*
+    ADD NEW PRODUCTS HERE
+    Copy the object below into SEERVI_NEW_ITEMS, remove the // marks, and update
+    the values. `section` must be one of the section ids in SEERVI_CATALOGUE.
+
+    {
+      section: 'curtainAccessories',
+      title: 'KY9001',
+      type: 'Curtain Accessory',
+      subcategory: 'Accessories',
+      image: 'images/00-old-products/your-image.webp',
+      description: 'Short customer-facing description.',
+      specs: { Material: 'ABS', Finish: 'White' }
+    }
+  */
+  const SEERVI_NEW_ITEMS = [];
+
+  const SEERVI_CATALOGUE = Object.freeze({
+    aluminium: ['profiles'],
+    tools: ['products'],
+    tv: ['tvMounts'],
+    machines: ['earthAugers'],
+    curtains: ['curtainRods','curtainDesignRods','curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04','curtainBrackets','curtainBrackets01','curtainHooks','curtainRings','curtainAccessories','magneticClip'],
+    curtainTrack: ['curtainTrackKFSeries','curtainTrackKFXSeries']
+  });
+
+  const VALID_SECTIONS = new Set(Object.values(SEERVI_CATALOGUE).flat());
+  const text = value => String(value == null ? '' : value);
+  const byId = id => document.getElementById(id);
+
+  function sectionFor(sectionId) {
+    const section = byId(sectionId);
+    if (!section) throw new Error('Unknown catalogue section: ' + sectionId);
+    return section;
+  }
+
+  function gridFor(section) {
+    return section.querySelector('.home-product-grid,.profile-product-grid,.tv-mount-product-grid,.earth-auger-product-grid,.curtain-track-product-grid') || section.querySelector('[id$="Grid"]');
+  }
+
+  function openUniversalItem(item) {
+    const modal = byId('productModal');
+    const image = byId('modalProductImage');
+    const title = byId('modalProductTitle');
+    const description = byId('modalProductDesc');
+    const specs = byId('modalProductSpecs');
+    const watermark = byId('modalProductWatermark');
+    const label = byId('modalProductWatermarkLabel');
+    if (!modal || !image || !title || !description || !specs) return;
+
+    image.src = item.image;
+    image.alt = item.title;
+    title.textContent = item.title;
+    description.textContent = item.description || '';
+    specs.replaceChildren();
+    Object.entries(item.specs || {}).forEach(([name, value]) => {
+      const tile = document.createElement('span');
+      const nameEl = document.createElement('b');
+      const valueEl = document.createElement('strong');
+      nameEl.textContent = name;
+      valueEl.textContent = text(value);
+      tile.append(nameEl, valueEl);
+      specs.appendChild(tile);
+    });
+    if (watermark) watermark.classList.add('show-watermark');
+    if (label) label.textContent = 'SEERVITRADING';
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+  }
+
+  function addToExistingCart(item) {
+    if (typeof window.addToCart !== 'function') return;
+    window.addToCart({
+      type: item.type || 'Product', model: item.title, name: item.title,
+      thickness: item.subcategory || '', subcategory: item.subcategory || '',
+      spec: item.subcategory || '', qty: 1, rate: 0, image: item.image
+    });
+  }
+
+  function renderUniversalItem(item) {
+    if (!item || !VALID_SECTIONS.has(item.section) || !item.title || !item.image) {
+      throw new Error('Every new item needs section, title, and image.');
+    }
+    const section = sectionFor(item.section);
+    const grid = gridFor(section);
+    if (!grid) throw new Error('No product grid found in section: ' + item.section);
+    const card = document.createElement('article');
+    card.className = 'home-product-card universal-product-card';
+    card.dataset.model = item.title;
+    card.dataset.subcategory = item.subcategory || '';
+    card.dataset.inventorySpec = item.subcategory || '';
+
+    const thumb = document.createElement('div');
+    thumb.className = 'home-product-thumb';
+    const img = document.createElement('img');
+    img.src = item.image; img.alt = 'Seervi ' + item.title; img.loading = 'lazy'; img.decoding = 'async';
+    thumb.appendChild(img);
+
+    const body = document.createElement('div');
+    body.className = 'home-product-meta';
+    const tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = item.type || 'PRODUCT';
+    const heading = document.createElement('h3'); heading.textContent = item.title;
+    const copy = document.createElement('p'); copy.textContent = item.description || '';
+    const view = document.createElement('button'); view.type = 'button'; view.textContent = 'VIEW PRODUCT ↗';
+    const cart = document.createElement('button'); cart.type = 'button'; cart.className = 'add-cart-btn'; cart.textContent = 'ADD TO CART';
+    view.addEventListener('click', event => { event.stopPropagation(); openUniversalItem(item); });
+    cart.addEventListener('click', event => { event.stopPropagation(); addToExistingCart(item); });
+    card.addEventListener('click', () => openUniversalItem(item));
+    body.append(tag, heading, copy, view, cart);
+    card.append(thumb, body);
+    grid.appendChild(card);
+    return card;
+  }
+
+  /* Public helpers: use these instead of creating another navigation patch. */
+  window.SEERVI_CATALOGUE = SEERVI_CATALOGUE;
+  window.seerviRegisterProduct = renderUniversalItem;
+  window.seerviRegisterProducts = items => (items || []).map(renderUniversalItem);
+  window.seerviOpenCategory = key => typeof window.openMotherCategory === 'function' && window.openMotherCategory(key);
+  window.seerviOpenSubcategory = (key, index) => typeof window.openMotherSubcategory === 'function' && window.openMotherSubcategory(key, index);
+
+  function registerConfiguredItems() {
+    try { window.seerviRegisterProducts(SEERVI_NEW_ITEMS); }
+    catch (error) { console.error('Seervi catalogue registration failed:', error); }
+  }
+  /* This script appears before some legacy markup; wait until every catalogue
+     section exists before registering future products. */
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', registerConfiguredItems, { once: true });
+  else registerConfiguredItems();
+})();
+</script>
+
 <style id="seervi-subcategory-items-only-final">
 /* FINAL: when a sub-category is opened, show the product items directly.
    The global Back + Search controls remain at the top; section title/description
