@@ -3848,6 +3848,89 @@ body.nav-is-scrolled{padding-top:76px;}
   }
 }
 </style>
+
+<style id="seervi-stock-compact-card-final">
+/* Compact stock cards: image + item/model + simple tick + quantity. */
+#adminStockModal .inventory-stock-card{
+  min-height:92px !important;
+  display:grid !important;
+  grid-template-columns:72px minmax(0,1fr) 34px !important;
+  grid-template-rows:auto auto !important;
+  align-items:center !important;
+  column-gap:12px !important;
+  row-gap:7px !important;
+  padding:10px 12px !important;
+}
+#adminStockModal .inventory-stock-image{
+  grid-column:1 !important;grid-row:1 / span 2 !important;
+  width:72px !important;height:72px !important;
+}
+#adminStockModal .inventory-stock-info{
+  grid-column:2 !important;grid-row:1 !important;
+  min-width:0 !important;align-self:end !important;
+}
+#adminStockModal .inventory-stock-name{
+  display:block !important;margin:0 !important;
+  font-size:14px !important;line-height:1.25 !important;font-weight:800 !important;
+  white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;
+}
+#adminStockModal .inventory-stock-model{
+  display:block !important;margin-top:4px !important;
+  color:#8d97a3 !important;font-size:11px !important;line-height:1.25 !important;
+  white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;
+}
+#adminStockModal .inventory-stock-switch{
+  grid-column:3 !important;grid-row:1 !important;
+  width:30px !important;height:30px !important;padding:0 !important;margin:0 !important;
+  display:flex !important;align-items:center !important;justify-content:center !important;
+  cursor:pointer !important;
+}
+#adminStockModal .inventory-stock-switch input{
+  position:absolute !important;opacity:0 !important;width:1px !important;height:1px !important;
+}
+#adminStockModal .inventory-simple-check{
+  width:24px !important;height:24px !important;
+  display:flex !important;align-items:center !important;justify-content:center !important;
+  border:1px solid #59636f !important;border-radius:6px !important;
+  color:transparent !important;background:#0d131a !important;
+  font-size:16px !important;font-weight:900 !important;line-height:1 !important;
+  transition:none !important;
+}
+#adminStockModal .inventory-stock-switch input:checked + .inventory-simple-check{
+  color:#111 !important;background:#d9b55a !important;border-color:#d9b55a !important;
+}
+#adminStockModal .inventory-stock-switch input:focus-visible + .inventory-simple-check{
+  outline:2px solid #d9b55a !important;outline-offset:2px !important;
+}
+#adminStockModal .inventory-available-qty{
+  grid-column:2 / 4 !important;grid-row:2 !important;
+  width:100% !important;display:grid !important;
+  grid-template-columns:auto 92px !important;justify-content:end !important;
+  align-items:center !important;gap:8px !important;
+}
+#adminStockModal .inventory-available-qty label{
+  font-size:8px !important;letter-spacing:.9px !important;font-weight:900 !important;color:#69737e !important;
+}
+#adminStockModal .inventory-available-qty input{
+  height:30px !important;font-size:11px !important;border-radius:7px !important;
+}
+@media(max-width:600px){
+  #adminStockModal .inventory-stock-card{
+    grid-template-columns:64px minmax(0,1fr) 32px !important;
+    min-height:84px !important;padding:9px 10px !important;column-gap:10px !important;
+  }
+  #adminStockModal .inventory-stock-image{width:64px !important;height:64px !important}
+  #adminStockModal .inventory-stock-name{font-size:13px !important}
+  #adminStockModal .inventory-stock-model{font-size:10px !important}
+  #adminStockModal .inventory-available-qty{grid-template-columns:auto 86px !important}
+}
+@media(max-width:360px){
+  #adminStockModal .inventory-stock-card{grid-template-columns:58px minmax(0,1fr) 30px !important}
+  #adminStockModal .inventory-stock-image{width:58px !important;height:58px !important}
+  #adminStockModal .inventory-simple-check{width:22px !important;height:22px !important}
+  #adminStockModal .inventory-available-qty input{width:82px !important}
+}
+</style>
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -8252,20 +8335,17 @@ function inventoryRenderAdmin(){
       return `<div class="inventory-stock-card" data-inventory-card="${esc(item.key)}">
         <div class="inventory-stock-image">${item.image?`<img src="${esc(item.image)}" alt="${esc(item.name||item.model||'Item')}">`:'<span>NO IMAGE</span>'}</div>
         <div class="inventory-stock-info">
-          <span class="inventory-stock-type">${esc(item.subcategory||item.category||'ITEM')}</span>
-          <strong class="inventory-stock-name" title="${esc(item.name||item.model||'Item')}">${esc(item.name||item.model||'Unnamed Item')}</strong>
-          ${item.model?`<span class="inventory-stock-spec">Model: ${esc(item.model)}</span>`:''}
-          ${spec}
+          <strong class="inventory-stock-name" title="${esc(item.name||item.model||'Item')}">${esc(item.name||'Unnamed Item')}</strong>
+          ${item.model?`<span class="inventory-stock-model">Model: ${esc(item.model)}</span>`:`<span class="inventory-stock-model">Model: —</span>`}
         </div>
+        <label class="inventory-stock-switch" for="${id}" title="${stock?'In stock':'Out of stock'}">
+          <input id="${id}" type="checkbox" ${stock?'checked':''} onchange="setInventoryStock('${esc(item.key)}',this.checked,this)">
+          <span class="inventory-simple-check" aria-hidden="true">✓</span>
+        </label>
         <div class="inventory-available-qty">
-          <label for="inventoryQty_${switchIndex}">AVAILABLE QTY</label>
+          <label for="inventoryQty_${switchIndex}">QTY</label>
           <input id="inventoryQty_${switchIndex}" type="number" min="0" step="1" value="${Number.isFinite(Number(seerviInventoryQty[item.key]))?Math.max(0,Number(seerviInventoryQty[item.key])):''}" placeholder="SET" onchange="setInventoryQuantity('${esc(item.key)}',this.value,this)" onkeydown="if(event.key==='Enter')this.blur()">
         </div>
-        <label class="inventory-stock-switch" for="${id}">
-          <input id="${id}" type="checkbox" ${stock?'checked':''} onchange="setInventoryStock('${esc(item.key)}',this.checked,this)">
-          <span class="inventory-stock-slider"></span>
-          <span class="inventory-stock-state">${stock?'STOCK':'NO STOCK'}</span>
-        </label>
       </div>`;
     }).join('');
     return `<section class="inventory-stock-category" data-inventory-category="${esc(bucket.categoryId)}" data-inventory-subcategory="${esc(bucket.subcategoryId)}">
