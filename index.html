@@ -9752,8 +9752,20 @@ seerviPublicRenderSubcategories=function(){
   }
 
   bar.hidden=false;
+
+  // "ALL ITEMS" belongs to the selected main Category, so it must use the
+  // Category's own WEBP image — never an Item/Subcategory image.
+  const selectedCategory=seerviPublicCategories.find(
+    x=>x.type==='category' && x.id===seerviPublicSelectedCategory
+  );
+  const categoryImage=seerviPublicCategoryImage(selectedCategory);
+
+  const allItemsImage=categoryImage
+    ? `<img src="${seerviItemsEsc(categoryImage)}" alt="${seerviItemsEsc(selectedCategory?.name||'Category')}" loading="lazy" onerror="this.style.opacity='.12'">`
+    : '<span>NO IMAGE</span>';
+
   bar.innerHTML=`<button type="button" class="seervi-public-subcategory-card ${seerviPublicSelectedSubcategory==='all'?'active':''}" onclick="seerviPublicSelectSubcategory('all')">
-      <div class="seervi-public-subcategory-image"><span>ALL</span></div>
+      <div class="seervi-public-subcategory-image">${allItemsImage}</div>
       <strong>ALL ITEMS</strong>
     </button>`+
     subs.map(x=>{
