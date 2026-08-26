@@ -3694,6 +3694,34 @@ body.nav-is-scrolled{padding-top:76px;}
   .seervi-public-subcategory-card{flex-basis:116px}
 }
 </style>
+<style id="seervi-bulk-separated-style">
+.seervi-bulk-mode-tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:0 0 14px;
+  border-bottom:1px solid #ffffff12;
+  padding-bottom:8px;
+}
+.seervi-bulk-mode-tab{
+  border:1px solid #ffffff16;
+  background:#11171e;
+  color:#9da7b1;
+  border-radius:7px;
+  padding:11px 14px;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.08em;
+  cursor:pointer;
+}
+.seervi-bulk-mode-tab:hover{border-color:#d8b45a55;color:#f2f4f6}
+.seervi-bulk-mode-tab.active{background:#d8b45a;color:#111;border-color:#d8b45a}
+.seervi-bulk-flow{min-width:0}
+@media(max-width:640px){
+  .seervi-bulk-mode-tabs{display:grid;grid-template-columns:1fr 1fr}
+  .seervi-bulk-mode-tab{width:100%;min-height:44px}
+}
+</style>
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -4056,98 +4084,115 @@ body.nav-is-scrolled{padding-top:76px;}
   <section id="seerviItemsBulkView" class="admin-items-view" hidden>
     <div class="admin-items-form-head">
       <div>
-        <div class="crm-section-title">BULK ITEM IMPORT</div>
-        <p class="crm-auth-status">Excel → Preview → Validate → Import to Firebase. Nothing is written until you confirm.</p>
+        <div class="crm-section-title">BULK ADD</div>
+        <p class="crm-auth-status">Choose one operation. Category / Subcategory creation and Item creation are separate flows.</p>
       </div>
-      <button class="crm-secondary" type="button" onclick="seerviBulkDownloadTemplate()">DOWNLOAD TEMPLATE</button>
     </div>
 
-    <div class="admin-items-category-card" style="margin-bottom:18px">
-      <div class="crm-section-title">CATEGORY / SUBCATEGORY BULK IMPORT</div>
-      <p class="crm-auth-status" style="margin:6px 0 12px;line-height:1.6">
-        Use this when you want to create many Categories / Subcategories together.
-        Each row supports its own WEBP image. Categories are created before their Subcategories,
-        so both can be included in one file.
-      </p>
-      <div class="seervi-bulk-grid">
-        <div>
-          <button class="crm-secondary" type="button" onclick="seerviCategoryBulkDownloadTemplate()">DOWNLOAD CATEGORY TEMPLATE</button>
-          <div class="crm-muted" style="margin-top:8px">
-            Columns: <b>Type</b>, <b>Parent Category</b>, <b>Name</b>, <b>Slug</b>,
-            <b>WEBP Image URL / Path</b>, <b>Active</b>, <b>Sort Order</b>.
+    <div class="seervi-bulk-mode-tabs" role="tablist" aria-label="Bulk add type">
+      <button id="seerviBulkModeCategories" class="seervi-bulk-mode-tab active" type="button"
+        role="tab" aria-selected="true" onclick="seerviBulkMode('categories')">
+        CATEGORY / SUBCATEGORY
+      </button>
+      <button id="seerviBulkModeItems" class="seervi-bulk-mode-tab" type="button"
+        role="tab" aria-selected="false" onclick="seerviBulkMode('items')">
+        ITEMS
+      </button>
+    </div>
+
+    <!-- CATEGORY / SUBCATEGORY BULK FLOW -->
+    <section id="seerviCategoryBulkFlow" class="seervi-bulk-flow" aria-labelledby="seerviBulkModeCategories">
+      <div class="admin-items-category-card">
+        <div class="crm-section-title">CATEGORY / SUBCATEGORY BULK IMPORT</div>
+        <p class="crm-auth-status" style="margin:6px 0 12px;line-height:1.6">
+          Create Categories and Subcategories in Firebase from one Excel/CSV file.
+          Categories are created first, then their Subcategories. Each row can have its own WEBP image.
+          This flow creates <b>taxonomy only</b>; it does not create Items.
+        </p>
+
+        <div class="seervi-bulk-grid">
+          <div>
+            <div class="crm-section-title">1. PREPARE TAXONOMY FILE</div>
+            <div class="crm-muted" style="margin:8px 0 12px;line-height:1.6">
+              Columns: <b>Type</b>, <b>Parent Category</b>, <b>Name</b>, <b>Slug</b>,
+              <b>WEBP Image URL / Path</b>, <b>Active</b>, <b>Sort Order</b>.
+            </div>
+            <button class="crm-secondary" type="button" onclick="seerviCategoryBulkDownloadTemplate()">DOWNLOAD CATEGORY TEMPLATE</button>
+          </div>
+
+          <div>
+            <div class="crm-section-title">2. UPLOAD FILE</div>
+            <input id="seerviCategoryBulkFile" type="file" accept=".xlsx,.xls,.csv" style="margin-top:10px">
+            <div class="crm-muted" style="margin-top:8px">Supported: .xlsx, .xls, .csv</div>
+            <button class="crm-primary" type="button" style="margin-top:12px" onclick="seerviCategoryBulkReadFile()">READ & PREVIEW CATEGORIES</button>
+            <div id="seerviCategoryBulkFileStatus" class="crm-auth-status" style="margin-top:9px"></div>
           </div>
         </div>
-        <div>
-          <input id="seerviCategoryBulkFile" type="file" accept=".xlsx,.xls,.csv">
+
+        <div id="seerviCategoryBulkPreviewArea" class="seervi-bulk-preview-area" hidden style="margin-top:16px">
+          <div class="seervi-bulk-summary">
+            <div><span>ROWS</span><strong id="seerviCategoryBulkTotal">0</strong></div>
+            <div><span>VALID</span><strong id="seerviCategoryBulkValid">0</strong></div>
+            <div><span>ERRORS</span><strong id="seerviCategoryBulkErrors">0</strong></div>
+            <div><span>DUPLICATES</span><strong id="seerviCategoryBulkDuplicates">0</strong></div>
+          </div>
+          <div class="seervi-bulk-actions">
+            <button class="crm-secondary" type="button" onclick="seerviCategoryBulkRevalidate()">REVALIDATE</button>
+            <button class="crm-primary" type="button" id="seerviCategoryBulkImportButton" onclick="seerviCategoryBulkImport()" disabled>IMPORT VALID CATEGORIES</button>
+          </div>
+          <div id="seerviCategoryBulkValidationStatus" class="crm-auth-status"></div>
+          <div id="seerviCategoryBulkTableWrap" class="seervi-bulk-table-wrap"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ITEM BULK FLOW -->
+    <section id="seerviItemBulkFlow" class="seervi-bulk-flow" hidden aria-labelledby="seerviBulkModeItems">
+      <div class="admin-items-category-card" style="margin-bottom:14px">
+        <div class="crm-section-title">ITEM BULK IMPORT</div>
+        <p class="crm-auth-status" style="margin:6px 0;line-height:1.6">
+          <b>Category + Subcategory must already exist in Firebase.</b>
+          This flow creates <b>Items only</b>. It never creates Categories or Subcategories.
+          If either name is missing or does not exactly match the existing Firebase taxonomy,
+          that row remains <b>ERROR</b> and cannot be imported.
+        </p>
+      </div>
+
+      <div class="seervi-bulk-grid">
+        <div class="admin-items-category-card">
+          <div class="crm-section-title">1. PREPARE ITEM EXCEL</div>
+          <div class="crm-muted" style="margin:8px 0 12px;line-height:1.6">
+            Required: <b>Category</b>, <b>Subcategory</b>, <b>Item Name</b>, <b>WEBP Image URL / Path</b>.<br>
+            Specifications use paired columns:
+            <b>Spec 1 Name / Spec 1 Value</b>, <b>Spec 2 Name / Spec 2 Value</b>…
+          </div>
+          <button class="crm-secondary" type="button" onclick="seerviBulkDownloadTemplate()">DOWNLOAD ITEM TEMPLATE</button>
+        </div>
+
+        <div class="admin-items-category-card">
+          <div class="crm-section-title">2. UPLOAD ITEM FILE</div>
+          <input id="seerviBulkFile" type="file" accept=".xlsx,.xls,.csv" style="margin-top:10px">
           <div class="crm-muted" style="margin-top:8px">Supported: .xlsx, .xls, .csv</div>
-          <button class="crm-primary" type="button" style="margin-top:12px" onclick="seerviCategoryBulkReadFile()">READ & PREVIEW CATEGORIES</button>
-          <div id="seerviCategoryBulkFileStatus" class="crm-auth-status" style="margin-top:9px"></div>
+          <button class="crm-primary" type="button" style="margin-top:12px" onclick="seerviBulkReadFile()">READ & PREVIEW ITEMS</button>
+          <div id="seerviBulkFileStatus" class="crm-auth-status" style="margin-top:9px"></div>
         </div>
       </div>
 
-      <div id="seerviCategoryBulkPreviewArea" class="seervi-bulk-preview-area" hidden style="margin-top:16px">
+      <div id="seerviBulkPreviewArea" class="seervi-bulk-preview-area" hidden style="margin-top:16px">
         <div class="seervi-bulk-summary">
-          <div><span>ROWS</span><strong id="seerviCategoryBulkTotal">0</strong></div>
-          <div><span>VALID</span><strong id="seerviCategoryBulkValid">0</strong></div>
-          <div><span>ERRORS</span><strong id="seerviCategoryBulkErrors">0</strong></div>
-          <div><span>DUPLICATES</span><strong id="seerviCategoryBulkDuplicates">0</strong></div>
+          <div><span>ROWS</span><strong id="seerviBulkTotal">0</strong></div>
+          <div><span>VALID</span><strong id="seerviBulkValid">0</strong></div>
+          <div><span>ERRORS</span><strong id="seerviBulkErrors">0</strong></div>
+          <div><span>DUPLICATES</span><strong id="seerviBulkDuplicates">0</strong></div>
         </div>
         <div class="seervi-bulk-actions">
-          <button class="crm-secondary" type="button" onclick="seerviCategoryBulkRevalidate()">REVALIDATE</button>
-          <button class="crm-primary" type="button" id="seerviCategoryBulkImportButton" onclick="seerviCategoryBulkImport()" disabled>IMPORT VALID CATEGORIES</button>
+          <button class="crm-secondary" type="button" onclick="seerviBulkRevalidate()">REVALIDATE</button>
+          <button class="crm-primary" type="button" id="seerviBulkImportButton" onclick="seerviBulkImport()" disabled>IMPORT VALID ITEMS</button>
         </div>
-        <div id="seerviCategoryBulkValidationStatus" class="crm-auth-status"></div>
-        <div id="seerviCategoryBulkTableWrap" class="seervi-bulk-table-wrap"></div>
+        <div id="seerviBulkValidationStatus" class="crm-auth-status"></div>
+        <div id="seerviBulkTableWrap" class="seervi-bulk-table-wrap"></div>
       </div>
-    </div>
-
-    <div class="admin-items-category-card" style="margin-bottom:14px">
-      <div class="crm-section-title">ITEM BULK RULE</div>
-      <p class="crm-auth-status" style="margin:6px 0;line-height:1.6">
-        <b>Category + Subcategory must already exist in Firebase.</b>
-        Item Bulk Add only creates Items. If either name is missing or does not match
-        the existing Firebase taxonomy, that row stays in <b>ERROR</b> and cannot be imported.
-        No Category or Subcategory is created automatically by this flow.
-      </p>
-    </div>
-
-    <div class="seervi-bulk-grid">
-      <div class="admin-items-category-card">
-        <div class="crm-section-title">1. PREPARE EXCEL</div>
-        <div class="crm-muted" style="margin:8px 0 12px;line-height:1.6">
-          Required: <b>Category</b>, <b>Subcategory</b>, <b>Item Name</b>, <b>WEBP Image URL / Path</b>.<br>
-          Category and Subcategory must already exist in Firebase. This Item Bulk Add flow never creates
-          missing taxonomy automatically. Specifications use paired columns:
-          <b>Spec 1 Name / Spec 1 Value</b>, <b>Spec 2 Name / Spec 2 Value</b>…
-        </div>
-        <button class="crm-secondary" type="button" onclick="seerviBulkDownloadTemplate()">DOWNLOAD EXCEL TEMPLATE</button>
-      </div>
-
-      <div class="admin-items-category-card">
-        <div class="crm-section-title">2. UPLOAD FILE</div>
-        <input id="seerviBulkFile" type="file" accept=".xlsx,.xls,.csv" style="margin-top:10px">
-        <div class="crm-muted" style="margin-top:8px">Supported: .xlsx, .xls, .csv</div>
-        <button class="crm-primary" type="button" style="margin-top:12px" onclick="seerviBulkReadFile()">READ & PREVIEW</button>
-        <div id="seerviBulkFileStatus" class="crm-auth-status" style="margin-top:9px"></div>
-      </div>
-    </div>
-
-    <div id="seerviBulkPreviewArea" class="seervi-bulk-preview-area" hidden>
-      <div class="seervi-bulk-summary">
-        <div><span>ROWS</span><strong id="seerviBulkTotal">0</strong></div>
-        <div><span>VALID</span><strong id="seerviBulkValid">0</strong></div>
-        <div><span>ERRORS</span><strong id="seerviBulkErrors">0</strong></div>
-        <div><span>DUPLICATES</span><strong id="seerviBulkDuplicates">0</strong></div>
-      </div>
-
-      <div class="seervi-bulk-actions">
-        <button class="crm-secondary" type="button" onclick="seerviBulkRevalidate()">REVALIDATE</button>
-        <button class="crm-primary" type="button" id="seerviBulkImportButton" onclick="seerviBulkImport()" disabled>IMPORT VALID ITEMS</button>
-      </div>
-
-      <div id="seerviBulkValidationStatus" class="crm-auth-status"></div>
-      <div id="seerviBulkTableWrap" class="seervi-bulk-table-wrap"></div>
-    </div>
+    </section>
   </section>
 
 <section id="seerviItemsCategoriesView" class="admin-items-view" hidden>
@@ -8510,6 +8555,36 @@ if(document.readyState==='loading'){
 
 
 
+/* ===== SEERVI BULK MODE SWITCH ===== */
+function seerviBulkMode(mode){
+  const selected=mode==='items'?'items':'categories';
+  const catBtn=$('seerviBulkModeCategories');
+  const itemBtn=$('seerviBulkModeItems');
+  const catFlow=$('seerviCategoryBulkFlow');
+  const itemFlow=$('seerviItemBulkFlow');
+
+  if(catBtn){
+    const active=selected==='categories';
+    catBtn.classList.toggle('active',active);
+    catBtn.setAttribute('aria-selected',active?'true':'false');
+  }
+  if(itemBtn){
+    const active=selected==='items';
+    itemBtn.classList.toggle('active',active);
+    itemBtn.setAttribute('aria-selected',active?'true':'false');
+  }
+  if(catFlow){
+    catFlow.hidden=selected!=='categories';
+    catFlow.setAttribute('aria-hidden',selected==='categories'?'false':'true');
+  }
+  if(itemFlow){
+    itemFlow.hidden=selected!=='items';
+    itemFlow.setAttribute('aria-hidden',selected==='items'?'false':'true');
+  }
+}
+window.seerviBulkMode=seerviBulkMode;
+/* ===== END SEERVI BULK MODE SWITCH ===== */
+
 /* ===== SEERVI BULK ADD / STEP 4 ===== */
 let seerviBulkRows=[];
 let seerviBulkValidation=[];
@@ -8564,9 +8639,9 @@ function seerviBulkItemKey(categoryId,subcategoryId,name,model){
 async function seerviBulkPrepare(){
   seerviItemsAdminGuard();
   await seerviItemsLoadCategories();
-  if(!seerviItemsCache.length){
-    seerviItemsCache=await seerviGetItems({limit:1000});
-  }
+  // Always refresh Items from Firebase before validation so duplicate detection
+  // never relies on a stale in-memory list.
+  seerviItemsCache=await seerviGetItems({limit:1000});
   const existing=new Set(seerviItemsCache.map(x=>seerviBulkItemKey(x.categoryId,x.subcategoryId,x.name,x.model)));
   const fileKeys=new Set();
 
@@ -9111,8 +9186,9 @@ if(!window.seerviItemsTabStep4Wrapped){
       if(el)el.textContent=e?.message||'Unable to load categories.';
     });
   }else if(tab==='bulk'){
+    seerviBulkMode('categories');
     seerviItemsLoadCategories().catch(e=>{
-      const el=$('seerviBulkValidationStatus');
+      const el=$('seerviCategoryBulkValidationStatus');
       if(el)el.textContent=e?.message||'Unable to load categories.';
     });
   }
