@@ -5773,13 +5773,7 @@ window.accountDashboardNewParty=function(){
     openAdminPanel();
     return;
   }
-
-  // NEW PARTY is its own utility screen. Do not leave the Account Dashboard
-  // underneath it and do not route through the main Admin Panel.
   closeAccountDashboard();
-
-  // Wait one frame so the parent dashboard is fully closed before the
-  // dedicated modal is mounted/opened.
   requestAnimationFrame(()=>{
     try{
       ensureAdminUtilityModals();
@@ -5827,10 +5821,6 @@ function crmErr(msg){
 }
 
 function ensureAdminUtilityModals(){
-  // Create each utility modal independently. The previous implementation
-  // required BOTH the Party and Stock DOM nodes to exist at the same moment.
-  // If Stock was not mounted yet, the function returned and New Party could
-  // never open.
   const ensureParty=()=>{
     let partyModal=document.getElementById('adminNewPartyModal');
     const party=document.getElementById('crmPartyMaster');
@@ -5847,7 +5837,6 @@ function ensureAdminUtilityModals(){
       if(panel && party.parentElement!==panel) panel.appendChild(party);
     }
   };
-
   const ensureStock=()=>{
     let stockModal=document.getElementById('adminStockModal');
     const stock=document.getElementById('inventoryStockPanel');
@@ -5864,11 +5853,9 @@ function ensureAdminUtilityModals(){
       if(panel && stock.parentElement!==panel) panel.appendChild(stock);
     }
   };
-
   ensureParty();
   ensureStock();
 }
-
 
 window.closeAdminNewParty=function(){
   const m=document.getElementById('adminNewPartyModal');
@@ -5885,37 +5872,28 @@ window.openAdminNewParty=function(){
     openAdminPanel();
     return;
   }
-
   ensureAdminUtilityModals();
-
-  const m=document.getElementById('adminNewPartyModal');
-  const party=document.getElementById('crmPartyMaster');
-
+  let m=document.getElementById('adminNewPartyModal');
+  let party=document.getElementById('crmPartyMaster');
   if(!m || !party){
     ensureAdminUtilityModals();
+    m=document.getElementById('adminNewPartyModal');
+    party=document.getElementById('crmPartyMaster');
   }
-  const readyModal=document.getElementById('adminNewPartyModal');
-  const readyParty=document.getElementById('crmPartyMaster');
-  if(!readyModal || !readyParty){
-    throw new Error('New Party form is not available in the page.');
-  }
+  if(!m || !party) throw new Error('New Party form is not available in the page.');
 
-  // Ensure the party form belongs to the dedicated modal and is not left
-  // hidden inside the main Admin Panel.
   const panel=m.querySelector('.crm-panel');
   if(panel && party.parentElement!==panel) panel.appendChild(party);
-
   party.hidden=false;
   party.style.display='block';
-
   m.classList.add('show');
   m.setAttribute('aria-hidden','false');
   m.style.display='flex';
   m.style.visibility='visible';
   m.style.opacity='1';
-
   setTimeout(()=>document.getElementById('crmPartyName')?.focus(),60);
 };
+;
 
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ensureAdminUtilityModals);
 else ensureAdminUtilityModals();
@@ -6065,26 +6043,18 @@ window.crmRefresh = async function(){
 };
 
 window.crmNewParty = function(){
-  if(!crmUser || !isAuthorisedAdmin(crmUser)){
-    crmShowLogin();
-    return;
-  }
-
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){crmShowLogin();return;}
   ensureAdminUtilityModals();
   crmPartyId='';
-
+  if($('crmPartyMaster')) $('crmPartyMaster').hidden=false;
   if($('crmPartySelect')) $('crmPartySelect').value='';
   if(typeof renderCartPartySelector==='function') renderCartPartySelector();
-
-  ['crmPartyName','crmPartyCompany','crmPartyPhone','crmPartyEmail','crmPartyCity','crmPartyAddress']
-    .forEach(id=>{const el=$(id);if(el)el.value='';});
-
+  ['crmPartyName','crmPartyCompany','crmPartyPhone','crmPartyEmail','crmPartyCity','crmPartyAddress'].forEach(id=>{if($(id)) $(id).value='';});
   if($('crmPartyMeta')) $('crmPartyMeta').textContent='New party — enter details and save.';
   crmQuotes=[];crmRates=[];crmLedger=[];
   crmRateSearchText='';
   if($('crmRateSearch')) $('crmRateSearch').value='';
   crmRenderAll();
-
   openAdminNewParty();
 };
 
@@ -6107,37 +6077,17 @@ window.crmSelectParty = async function(id){
 };
 
 window.crmSaveParty = async function(){
-  if(!crmUser || !isAuthorisedAdmin(crmUser)){
-    alert('Admin login required.');
-    return;
-  }
-
-  const nameEl=$('crmPartyName'), companyEl=$('crmPartyCompany'),
-        phoneEl=$('crmPartyPhone'), emailEl=$('crmPartyEmail'),
-        cityEl=$('crmPartyCity'), addressEl=$('crmPartyAddress');
-
+  if(!crmUser){crmShowLogin();return;}
   const data={
-    name:nameEl?.value.trim()||'',
-    company:companyEl?.value.trim()||'',
-    phone:phoneEl?.value.trim()||'',
-    email:emailEl?.value.trim()||'',
-    city:cityEl?.value.trim()||'',
-    address:addressEl?.value.trim()||'',
+    name:$('crmPartyName').value.trim(),
+    company:$('crmPartyCompany').value.trim(),
+    phone:$('crmPartyPhone').value.trim(),
+    email:$('crmPartyEmail').value.trim(),
+    city:$('crmPartyCity').value.trim(),
+    address:$('crmPartyAddress').value.trim(),
     updatedAt:serverTimestamp()
   };
-
-  if(!data.name && !data.company){
-    alert('Enter at least Party Name or Shop / Company.');
-    nameEl?.focus();
-    return;
-  }
-
-  const saveBtn=document.querySelector('#adminNewPartyModal #crmPartyMaster .crm-primary.small');
-  if(saveBtn){
-    saveBtn.disabled=true;
-    saveBtn.textContent='SAVING…';
-  }
-
+  if(!data.name && !data.company){alert('Enter at least Party Name or Shop / Company.');return;}
   try{
     if(crmPartyId){
       await setDoc(doc(db,'parties',crmPartyId),data,{merge:true});
@@ -6146,31 +6096,19 @@ window.crmSaveParty = async function(){
       const ref=await addDoc(collection(db,'parties'),data);
       crmPartyId=ref.id;
     }
-
     seerviInvalidateCache('admin:parties:');
     seerviInvalidateCache('party:'+crmPartyId+':');
-    seerviInvalidateCache('admin:');
-
     await crmRefreshParties();
-    if($('crmPartySelect')) $('crmPartySelect').value=crmPartyId;
-
-    if($('crmPartyMeta')) $('crmPartyMeta').textContent='Saved securely in Firebase Cloud.';
+    $('crmPartySelect').value=crmPartyId;
+    $('crmPartyMeta').textContent='Saved securely in Firebase Cloud.';
+    seerviInvalidateCache('party:'+crmPartyId+':');
+    seerviInvalidateCache('admin:');
     await crmLoadPartyData(crmPartyId);
     await crmLoadGlobalAdmin();
-
+    if($('crmPartyMaster')) $('crmPartyMaster').hidden=true;
     if(typeof renderCartPartySelector==='function') renderCartPartySelector();
-
-    // Successful New Party flow ends on the dedicated modal, not the main
-    // Admin Panel. The selected party remains available in CRM state.
-    closeAdminNewParty();
   }catch(e){
-    console.error('CRM SAVE PARTY FAILED',e);
     alert('Could not save party: '+(e?.message||'Check Firestore rules.'));
-  }finally{
-    if(saveBtn){
-      saveBtn.disabled=false;
-      saveBtn.textContent='SAVE PARTY';
-    }
   }
 };
 
