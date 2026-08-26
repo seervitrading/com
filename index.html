@@ -3700,9 +3700,7 @@ body.nav-is-scrolled{padding-top:76px;}
 #customerDashboardView .customer-profile-card[hidden],
 #customerDashboardView .customer-portal-tabs[hidden],
 #customerDashboardView .customer-profile-edit[hidden]{display:none !important}
-</style><div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Admin Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-close" type="button" onclick="closeCRM()">×</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div><div id="adminGlobalArea" class="admin-global-area">
-
-<div id="adminItemsArea" class="admin-items-area" hidden>
+</style><div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Admin Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-close" type="button" onclick="closeCRM()">×</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div><div id="adminItemsArea" class="admin-items-area" hidden>
   <div class="admin-items-head">
     <div>
       <div class="crm-section-title">SEERVI ADMIN / ITEMS</div>
@@ -3783,6 +3781,10 @@ body.nav-is-scrolled{padding-top:76px;}
         </div>
       </div>
       </div>
+
+<div id="adminGlobalArea" class="admin-global-area">
+
+
 
       <div class="seervi-item-form-section">
         <div class="seervi-item-form-section-title">ITEM DETAILS</div>
@@ -5699,7 +5701,13 @@ window.closeAccountDashboard=function(){
   const m=$('accountDashboardModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');
 };
 window.accountDashboardAdminPanel=function(){
+  closeAccountDashboard();
+  const items=$('adminItemsArea');
+  if(items)items.hidden=true;
+  const global=$('adminGlobalArea');
+  if(global)global.hidden=false;
   openAdminPanel();
+  $('crmWorkspace')?.removeAttribute('data-active-workspace');
 };
 window.accountDashboardNewParty=function(){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
@@ -7882,27 +7890,24 @@ function seerviItemsBackToDashboard(){
 window.accountDashboardItems=function(){
   closeAccountDashboard();
 
-  // IMPORTANT: do not call openAdminPanel() or crmShowWorkspace() here.
-  // Those functions intentionally open the generic Admin Panel and load the
-  // global admin workspace. The ITEMS shortcut must open only the Firebase
-  // Items workspace.
-  $('crmModal')?.setAttribute('aria-hidden','false');
-  $('crmModal')?.classList.add('show');
-
+  // ITEMS is a separate workspace. Never call openAdminPanel() here.
   if(!crmUser || !isAuthorisedAdmin(crmUser)){
+    $('crmModal')?.setAttribute('aria-hidden','false');
+    $('crmModal')?.classList.add('show');
     crmShowLogin();
     setTimeout(()=>$('crmEmail')?.focus(),40);
     return;
   }
 
+  $('crmModal')?.setAttribute('aria-hidden','false');
+  $('crmModal')?.classList.add('show');
   $('crmLogin').hidden=true;
   $('crmWorkspace').hidden=false;
   $('cloudConnectedBadge')?.classList.add('show');
   crmSetStatus('Cloud connected: '+(crmUser.email||'Admin'), true);
 
-  // Explicitly hide the generic admin workspace and show only Items.
-  const global=$('adminGlobalArea');
   const items=$('adminItemsArea');
+  const global=$('adminGlobalArea');
   if(global)global.hidden=true;
   if(items)items.hidden=false;
 
@@ -7916,10 +7921,11 @@ window.seerviOpenItemsPanel=function(){
   if(!area)return;
   if(global)global.hidden=true;
   area.hidden=false;
-  // Keep the CRM modal on the Items workspace, not the generic Admin Panel.
   $('crmWorkspace')?.setAttribute('data-active-workspace','items');
   seerviItemsTab('all');
-  seerviItemsLoadCategories().catch(()=>{});
+  seerviItemsLoadCategories().catch(e=>{
+    seerviItemsSetStatus(e?.message||'Unable to load categories.',true);
+  });
 };
 
 function seerviAddSpecificationRow(name='',value=''){
