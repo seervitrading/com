@@ -4049,8 +4049,16 @@ body.nav-is-scrolled{padding-top:76px;}
             <input id="seerviItemModel" type="text" maxlength="200" placeholder="Model or item code">
           </div>
           <div>
-            <label for="seerviItemImage">WEBP IMAGE URL / PATH *</label>
-            <input id="seerviItemImage" type="text" maxlength="2000" required placeholder="images/items/example.webp">
+            <label for="seerviItemImage">MAIN WEBP IMAGE URL / PATH *</label>
+            <input id="seerviItemImage" type="text" maxlength="2000" required placeholder="images/items/example-main.webp">
+          </div>
+          <div class="seervi-item-form-full">
+            <div class="seervi-item-form-section-title-row" style="margin-top:2px">
+              <div class="seervi-item-form-section-title">IMAGE GALLERY</div>
+              <button class="crm-secondary small" type="button" onclick="seerviAddGalleryImageRow()">＋ ADD IMAGE</button>
+            </div>
+            <div id="seerviItemGalleryRows" class="seervi-specifications-rows"></div>
+            <div class="crm-muted">Add as many additional WEBP images as required. There is no fixed image-count limit.</div>
           </div>
           <div class="seervi-item-form-full">
             <label for="seerviItemDescription">DESCRIPTION</label>
@@ -5337,6 +5345,21 @@ function seerviValidateWebpPath(value){
   return v;
 }
 
+function seerviNormaliseItemGalleryImages(value){
+  const raw=Array.isArray(value) ? value : String(value||'').split(/[|\\n\\r]+/);
+  const seen=new Set();
+  const output=[];
+  raw.forEach(entry=>{
+    const v=seerviCleanItemValue(entry,2000).trim();
+    if(!v)return;
+    const clean=v.split('?')[0].split('#')[0].toLowerCase();
+    if(!clean.endsWith('.webp')) throw new Error(`Gallery image must be a .webp URL/path: ${v}`);
+    const key=v.toLowerCase();
+    if(!seen.has(key)){seen.add(key);output.push(v);}
+  });
+  return output;
+}
+
 function seerviBuildItemPayload(input={}){
   const nowFields={updatedAt:serverTimestamp()};
   const payload={
@@ -5346,6 +5369,7 @@ function seerviBuildItemPayload(input={}){
     model:seerviCleanItemValue(input.model,200),
     description:seerviCleanItemValue(input.description,5000),
     imageWebpUrl:seerviValidateWebpPath(input.imageWebpUrl),
+    galleryImages:seerviNormaliseItemGalleryImages(input.galleryImages),
     specifications:seerviCleanSpecifications(input.specifications),
     active:input.active!==false,
     ...nowFields
@@ -8639,8 +8663,6 @@ function seerviBulkItemKey(categoryId,subcategoryId,name,model){
 async function seerviBulkPrepare(){
   seerviItemsAdminGuard();
   await seerviItemsLoadCategories();
-  // Always refresh Items from Firebase before validation so duplicate detection
-  // never relies on a stale in-memory list.
   seerviItemsCache=await seerviGetItems({limit:1000});
   const existing=new Set(seerviItemsCache.map(x=>seerviBulkItemKey(x.categoryId,x.subcategoryId,x.name,x.model)));
   const fileKeys=new Set();
@@ -8650,36 +8672,41 @@ async function seerviBulkPrepare(){
     const subcategoryName=seerviBulkCell(row,'Subcategory');
     const name=seerviBulkCell(row,'Item Name','Name');
     const model=seerviBulkCell(row,'Model','Model / Code','Code');
-    const image=seerviBulkCell(row,'WEBP Image URL / Path','WEBP URL','Image WebP URL','Image URL');
+    const image=seerviBulkCell(row,'WEBP Image URL / Path','Main WEBP Image URL / Path','WEBP URL','Image WebP URL','Image URL');
+    const galleryRaw=seerviBulkCell(row,'Gallery Images','Gallery Image URLs / Paths','Additional WEBP Images','Additional Images');
     const description=seerviBulkCell(row,'Description');
     const category=seerviBulkFindCategory(categoryName);
     const subcategory=subcategoryName ? (category ? seerviBulkFindSubcategory(subcategoryName,category.id) : null) : null;
     const errors=[];
+
     if(!categoryName)errors.push('Category is required');
     else if(!category)errors.push(`Category not found: ${categoryName}`);
     if(!subcategoryName)errors.push('Subcategory is required');
     else if(!subcategory)errors.push(`Subcategory not found under ${categoryName}: ${subcategoryName}`);
     if(!name)errors.push('Item Name is required');
-    if(!image)errors.push('WEBP Image URL / Path is required');
-    else if(!image.split('?')[0].split('#')[0].toLowerCase().endsWith('.webp'))errors.push('WEBP Image URL / Path must end with .webp');
+    if(!image)errors.push('Main WEBP Image URL / Path is required');
+    else if(!image.split('?')[0].split('#')[0].toLowerCase().endsWith('.webp'))errors.push('Main WEBP Image URL / Path must end with .webp');
+
+    let galleryImages=[];
+    try{ galleryImages=seerviNormaliseItemGalleryImages(galleryRaw); }
+    catch(e){ errors.push(e?.message||'Invalid Gallery Images'); }
+
     const key=seerviBulkItemKey(category?.id||'',subcategory?.id||'',name,model);
     const duplicateInFile=fileKeys.has(key);
     if(duplicateInFile)errors.push('Duplicate row in this Excel file');
     fileKeys.add(key);
     const duplicate=existing.has(key)||duplicateInFile;
     if(duplicate)errors.push('Item already exists');
+
     return {
-      rowNumber:index+2,
-      raw:row,
+      rowNumber:index+2, raw:row,
       data:{
-        categoryId:category?.id||'',
-        subcategoryId:subcategory?.id||'',
-        name,model,description,imageWebpUrl:image,
+        categoryId:category?.id||'', subcategoryId:subcategory?.id||'',
+        name, model, description, imageWebpUrl:image, galleryImages,
         specifications:seerviBulkSpecColumns(row),
         active:!['false','0','no','inactive'].includes(seerviBulkCell(row,'Active','Status').toLowerCase())
       },
-      errors,
-      duplicate
+      errors, duplicate
     };
   });
   seerviBulkRenderPreview();
@@ -8704,7 +8731,7 @@ function seerviBulkRenderPreview(){
     ? `${valid.length} valid row(s). ${errorRows.length} row(s) require correction.`
     : `${valid.length} row(s) ready to import.`;
   table.innerHTML=`<table class="seervi-bulk-table">
-    <thead><tr><th>ROW</th><th>STATUS</th><th>CATEGORY</th><th>SUBCATEGORY</th><th>ITEM</th><th>MODEL</th><th>IMAGE</th><th>SPECS</th><th>ERRORS</th></tr></thead>
+    <thead><tr><th>ROW</th><th>STATUS</th><th>CATEGORY</th><th>SUBCATEGORY</th><th>ITEM</th><th>MODEL</th><th>MAIN IMAGE</th><th>GALLERY</th><th>SPECS</th><th>ERRORS</th></tr></thead>
     <tbody>${seerviBulkValidation.map(x=>{
       const status=x.errors.length?'ERROR':x.duplicate?'DUPLICATE':'READY';
       const cls=x.errors.length?'bulk-row-error':x.duplicate?'bulk-row-duplicate':'';
@@ -8717,6 +8744,7 @@ function seerviBulkRenderPreview(){
         <td>${seerviItemsEsc(x.data.name)}</td>
         <td>${seerviItemsEsc(x.data.model)}</td>
         <td>${seerviItemsEsc(x.data.imageWebpUrl)}</td>
+        <td>${(x.data.galleryImages||[]).length} image(s)</td>
         <td>${Object.keys(x.data.specifications||{}).length}</td>
         <td class="seervi-bulk-error-text">${seerviItemsEsc(x.errors.join(' · '))}</td>
       </tr>`;
@@ -9113,7 +9141,8 @@ window.seerviBulkDownloadTemplate=function(){
     'Subcategory':'Example Subcategory',
     'Item Name':'Example Item',
     'Model':'MODEL-001',
-    'WEBP Image URL / Path':'images/items/example.webp',
+    'WEBP Image URL / Path':'images/items/example-main.webp',
+    'Gallery Images':'images/items/example-02.webp|images/items/example-03.webp|images/items/example-04.webp',
     'Description':'Example item description',
     'Active':'TRUE',
     'Spec 1 Name':'Material',
@@ -9125,7 +9154,7 @@ window.seerviBulkDownloadTemplate=function(){
   };
   const ws=XLSX.utils.json_to_sheet([row]);
   ws['!cols']=[
-    {wch:24},{wch:24},{wch:30},{wch:18},{wch:48},{wch:45},{wch:12},
+    {wch:24},{wch:24},{wch:30},{wch:18},{wch:48},{wch:72},{wch:45},{wch:12},
     {wch:20},{wch:24},{wch:20},{wch:24},{wch:20},{wch:24}
   ];
   const notes=[
@@ -9133,6 +9162,8 @@ window.seerviBulkDownloadTemplate=function(){
     ['Category and Subcategory must already exist in Firebase before importing Items.'],
     ['This Item Bulk Add flow does NOT create missing Categories or Subcategories.'],
     ['If Category/Subcategory does not match existing Firebase taxonomy, the row will show ERROR and cannot be imported.'],
+    ['Main WEBP Image URL / Path is required. Gallery Images is optional and supports unlimited additional WEBP paths.'],
+    ['Separate multiple Gallery Images with the | character. Example: image-02.webp|image-03.webp|image-04.webp'],
     ['Use the separate Category / Subcategory Bulk Import to create taxonomy first.']
   ];
   const notesWs=XLSX.utils.aoa_to_sheet(notes);
@@ -10096,6 +10127,236 @@ window.seerviPublicCloseItem=seerviPublicCloseItem;
 window.seerviPublicAddToCart=seerviPublicAddToCart;
 /* ===== END SEERVI PUBLIC CATALOGUE GLOBAL EVENT BRIDGE ===== */
 
+
+/* ===== SEERVI FINAL MULTI-IMAGE ITEM SYSTEM ===== */
+function seerviAddGalleryImageRow(value=''){
+  const wrap=$('seerviItemGalleryRows');
+  if(!wrap)return;
+  const row=document.createElement('div');
+  row.className='seervi-spec-row seervi-gallery-row';
+  row.innerHTML=`<input class="seervi-gallery-image-url" type="text" maxlength="2000" placeholder="images/items/example-02.webp" value="${seerviItemsEsc(value)}">
+    <button class="crm-secondary small" type="button" title="Remove image" onclick="this.parentElement.remove()">×</button>`;
+  wrap.appendChild(row);
+}
+window.seerviAddGalleryImageRow=seerviAddGalleryImageRow;
+
+function seerviReadGalleryImages(){
+  const output=[];
+  document.querySelectorAll('#seerviItemGalleryRows .seervi-gallery-image-url').forEach(input=>{
+    const value=String(input.value||'').trim();
+    if(value)output.push(value);
+  });
+  return seerviNormaliseItemGalleryImages(output);
+}
+
+window.seerviItemsResetForm=function(){
+  seerviItemsEditingId='';
+  $('seerviItemId').value='';
+  $('seerviItemName').value='';
+  $('seerviItemModel').value='';
+  $('seerviItemImage').value='';
+  $('seerviItemDescription').value='';
+  $('seerviItemActive').checked=true;
+  const gallery=$('seerviItemGalleryRows');
+  if(gallery)gallery.innerHTML='';
+  $('seerviSpecificationsRows').innerHTML='';
+  seerviAddSpecificationRow();
+  $('seerviItemFormMode').textContent='Create a new Firebase item.';
+  $('seerviItemSaveButton').textContent='SAVE ITEM';
+  $('seerviItemCancelEdit').hidden=true;
+  $('seerviItemFormStatus').textContent='';
+  seerviItemsPopulateCategorySelects();
+};
+
+window.seerviEditItem=async function(itemId){
+  try{
+    seerviItemsAdminGuard();
+    const item=seerviItemsCache.find(x=>x.id===itemId) || await seerviGetItem(itemId);
+    if(!item)throw new Error('Item not found.');
+    seerviItemsEditingId=item.id;
+    await seerviItemsLoadCategories();
+    seerviItemsTab('add');
+    seerviItemsRenderSelectValue('seerviItemCategory',item.categoryId);
+    seerviItemCategoryChanged();
+    seerviItemsRenderSelectValue('seerviItemSubcategory',item.subcategoryId);
+    $('seerviItemId').value=item.id;
+    $('seerviItemName').value=item.name||'';
+    $('seerviItemModel').value=item.model||'';
+    $('seerviItemImage').value=item.imageWebpUrl||'';
+    $('seerviItemDescription').value=item.description||'';
+    $('seerviItemActive').checked=item.active!==false;
+
+    const gallery=$('seerviItemGalleryRows');
+    if(gallery){
+      gallery.innerHTML='';
+      (Array.isArray(item.galleryImages)?item.galleryImages:[]).forEach(url=>seerviAddGalleryImageRow(url));
+    }
+    $('seerviSpecificationsRows').innerHTML='';
+    Object.entries(item.specifications||{}).forEach(([k,v])=>seerviAddSpecificationRow(k,v));
+    seerviItemsAddSpecificationRowIfEmpty();
+    $('seerviItemFormMode').textContent=`Editing item: ${item.name||item.id}`;
+    $('seerviItemSaveButton').textContent='UPDATE ITEM';
+    $('seerviItemCancelEdit').hidden=false;
+    $('seerviItemFormStatus').textContent='';
+  }catch(e){
+    const status=$('seerviItemFormStatus');
+    if(status){status.textContent=e?.message||'Unable to edit item.';status.style.color='#f28b8b';}
+    seerviItemsSetStatus(e?.message||'Unable to edit item.',true);
+  }
+};
+
+window.seerviSaveItemForm=async function(){
+  try{
+    seerviItemsAdminGuard();
+    const status=$('seerviItemFormStatus'), save=$('seerviItemSaveButton');
+    if(status)status.textContent='Saving…';
+    if(save)save.disabled=true;
+    const category=$('seerviItemCategory').value.trim();
+    const subcategory=$('seerviItemSubcategory').value.trim();
+    const image=$('seerviItemImage').value.trim();
+    if(!category)throw new Error('Category is required.');
+    if(!subcategory)throw new Error('Subcategory is required.');
+    if(!image)throw new Error('Main WEBP image URL / path is required.');
+    const galleryImages=seerviReadGalleryImages();
+    const data={
+      categoryId:category, subcategoryId:subcategory,
+      name:$('seerviItemName').value.trim(),
+      model:$('seerviItemModel').value.trim(),
+      imageWebpUrl:image, galleryImages,
+      description:$('seerviItemDescription').value.trim(),
+      specifications:seerviReadSpecificationRows(),
+      active:$('seerviItemActive').checked
+    };
+    if(!data.name)throw new Error('Item name is required.');
+    if(seerviItemsEditingId) await seerviUpdateItem(seerviItemsEditingId,data);
+    else await seerviCreateItem(data);
+    if(status)status.textContent=`Item ${seerviItemsEditingId?'updated':'created'} successfully. ${galleryImages.length} additional image(s) saved.`;
+    await seerviItemsLoadAll();
+    seerviItemsResetForm();
+    seerviItemsTab('all');
+  }catch(e){
+    const status=$('seerviItemFormStatus');
+    if(status){status.textContent=e?.message||'Save failed.';status.style.color='#f28b8b';}
+  }finally{
+    const save=$('seerviItemSaveButton');if(save)save.disabled=false;
+  }
+};
+
+function seerviPublicItemImageList(item){
+  const list=[];
+  const main=String(item?.imageWebpUrl||'').trim();
+  if(main)list.push(main);
+  (Array.isArray(item?.galleryImages)?item.galleryImages:[]).forEach(url=>{
+    const v=String(url||'').trim();
+    if(v && !list.some(x=>x.toLowerCase()===v.toLowerCase()))list.push(v);
+  });
+  return list;
+}
+
+function seerviPublicGalleryHtml(item){
+  const images=seerviPublicItemImageList(item);
+  if(!images.length)return '<div class="seervi-public-empty">NO IMAGE</div>';
+  return `<div class="seervi-item-gallery">
+    <div class="seervi-item-gallery-main">
+      <img id="seerviItemGalleryMain" src="${seerviItemsEsc(images[0])}" alt="${seerviItemsEsc(item.name||'Product')}" loading="lazy">
+    </div>
+    ${images.length>1?`<div class="seervi-item-gallery-thumbs">${images.map((url,i)=>`<button type="button" class="seervi-item-gallery-thumb ${i===0?'active':''}" onclick="seerviPublicGallerySelect('${seerviItemsEsc(url)}',this)"><img src="${seerviItemsEsc(url)}" alt="Image ${i+1}" loading="lazy"></button>`).join('')}</div>`:''}
+  </div>`;
+}
+window.seerviPublicGallerySelect=function(url,button){
+  const main=$('seerviItemGalleryMain');
+  if(main)main.src=url;
+  document.querySelectorAll('#seerviPublicItemModal .seervi-item-gallery-thumb').forEach(x=>x.classList.remove('active'));
+  button?.classList.add('active');
+};
+
+window.seerviPublicAddToCart=function(itemId){
+  const item=seerviPublicItems.find(x=>x.id===itemId);
+  if(!item)return;
+  const allImages=seerviPublicItemImageList(item);
+  addToCart({
+    type:'Item',
+    firebaseItemId:item.id,
+    categoryId:item.categoryId||'',
+    subcategoryId:item.subcategoryId||'',
+    category:seerviPublicCategoryName(item.categoryId),
+    subcategory:seerviPublicCategoryName(item.subcategoryId),
+    model:item.model||item.id,
+    name:item.name||item.model||'Item',
+    image:item.imageWebpUrl||'',
+    imageWebpUrl:item.imageWebpUrl||'',
+    galleryImages:allImages.slice(1),
+    description:item.description||'',
+    specifications:{...(item.specifications||{})},
+    specification:Object.entries(item.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(', '),
+    rate:0
+  });
+};
+
+window.seerviPublicOpenItem=function(itemId){
+  const item=seerviPublicItems.find(x=>x.id===itemId);
+  if(!item)return;
+  let modal=document.getElementById('seerviPublicItemModal');
+  if(!modal){
+    modal=document.createElement('div');
+    modal.id='seerviPublicItemModal';
+    modal.className='product-modal';
+    modal.innerHTML='<div class="product-modal-box"><button class="modal-close" type="button" aria-label="Close" onclick="seerviPublicCloseItem()">×</button><div id="seerviPublicItemModalContent"></div></div>';
+    document.body.appendChild(modal);
+  }
+  const specs=Object.entries(item.specifications||{});
+  const specTable=specs.length?`<div style="margin-top:18px;border:1px solid #ffffff12;border-radius:10px;overflow:hidden"><table style="width:100%;border-collapse:collapse">${specs.map(([k,v])=>`<tr><td style="padding:9px;border-bottom:1px solid #ffffff0d;color:#8f99a4;width:35%">${seerviItemsEsc(k)}</td><td style="padding:9px;border-bottom:1px solid #ffffff0d;color:#f2f4f6">${seerviItemsEsc(v)}</td></tr>`).join('')}</table></div>`:'';
+  $('seerviPublicItemModalContent').innerHTML=`${seerviPublicGalleryHtml(item)}
+    <div class="modal-caption">
+      <div class="crm-kicker">${seerviItemsEsc(seerviPublicCategoryName(item.categoryId))}${item.subcategoryId?' / '+seerviItemsEsc(seerviPublicCategoryName(item.subcategoryId)):''}</div>
+      <h3>${seerviItemsEsc(item.name||'Unnamed Item')}</h3>
+      ${item.model?`<p><b>Model:</b> ${seerviItemsEsc(item.model)}</p>`:''}
+      ${item.description?`<p style="margin-top:8px">${seerviItemsEsc(item.description)}</p>`:''}
+      ${specTable}
+      <button class="crm-primary" type="button" style="margin-top:16px" onclick="seerviPublicAddToCart('${seerviItemsEsc(item.id)}');seerviPublicCloseItem()">ADD TO CART</button>
+    </div>`;
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+};
+
+seerviPublicRenderItems=function(){
+  const grid=$('seerviPublicProductGrid'); if(!grid)return;
+  let rows=seerviPublicItems.filter(item=>{
+    if(seerviPublicSelectedCategory!=='all' && item.categoryId!==seerviPublicSelectedCategory)return false;
+    if(seerviPublicSelectedSubcategory!=='all' && item.subcategoryId!==seerviPublicSelectedSubcategory)return false;
+    if(seerviPublicSearchQuery && !seerviPublicItemSearchText(item).includes(seerviPublicSearchQuery))return false;
+    return true;
+  });
+  rows.sort((a,b)=>{
+    if(seerviPublicSortMode==='name-desc')return String(b.name||'').localeCompare(String(a.name||''));
+    if(seerviPublicSortMode==='newest')return (seerviPublicMillis(b.createdAt)||seerviPublicMillis(b.updatedAt))-(seerviPublicMillis(a.createdAt)||seerviPublicMillis(a.updatedAt));
+    return String(a.name||'').localeCompare(String(b.name||''));
+  });
+  if(!rows.length){grid.innerHTML='<div class="seervi-public-empty">No products match your search or selected category.</div>';return;}
+  grid.innerHTML=rows.map(item=>{
+    const category=seerviPublicCategoryName(item.categoryId), subcategory=seerviPublicCategoryName(item.subcategoryId);
+    const image=item.imageWebpUrl||'', imageCount=seerviPublicItemImageList(item).length;
+    const specHtml=Object.entries(item.specifications||{}).slice(0,6).map(([k,v])=>`<span class="seervi-public-spec-chip">${seerviItemsEsc(k)}: ${seerviItemsEsc(v)}</span>`).join('');
+    const imageHtml=image
+      ? `<div class="home-product-thumb" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')"><img src="${seerviItemsEsc(image)}" alt="${seerviItemsEsc(item.name||'Product')}" loading="lazy">${imageCount>1?`<span class="seervi-gallery-count">${imageCount} IMAGES</span>`:''}</div>`
+      : `<div class="home-product-thumb" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')"><div class="seervi-public-empty">NO IMAGE</div></div>`;
+    return `<article class="home-product-card seervi-public-product-card" data-model="${seerviItemsEsc(item.model||item.id)}" data-subcategory="${seerviItemsEsc(subcategory)}" data-type="Item">
+      ${imageHtml}<div class="home-product-meta">
+        <div class="seervi-public-category-line">${seerviItemsEsc(category)}${subcategory?' / '+seerviItemsEsc(subcategory):''}</div>
+        <h3>${seerviItemsEsc(item.name||'Unnamed Item')}</h3>
+        ${item.model?`<p>Model: ${seerviItemsEsc(item.model)}</p>`:''}
+        ${item.description?`<p>${seerviItemsEsc(item.description).slice(0,180)}</p>`:''}
+        ${specHtml?`<div class="seervi-public-specs">${specHtml}</div>`:''}
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">
+          <button class="crm-secondary small" type="button" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')">VIEW DETAILS</button>
+          <button class="crm-primary small" type="button" onclick="seerviPublicAddToCart('${seerviItemsEsc(item.id)}')">ADD TO CART</button>
+        </div>
+      </div></article>`;
+  }).join('');
+};
+/* ===== END SEERVI FINAL MULTI-IMAGE ITEM SYSTEM ===== */
+
 /* ===== SEERVI ITEMS GLOBAL EVENT BRIDGE =====
    Firebase Items controller runs in a module. Inline HTML handlers and
    dynamically rendered action buttons require these functions on window.
@@ -10948,6 +11209,19 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
     display:none!important;
   }
 }
+/* Multi-image Item gallery */
+.seervi-gallery-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.seervi-gallery-row .seervi-gallery-image-url{flex:1;min-width:0}
+.seervi-item-gallery{margin-bottom:16px}
+.seervi-item-gallery-main{width:100%;max-height:520px;display:flex;justify-content:center;align-items:center;background:#fff;border-radius:12px;overflow:hidden}
+.seervi-item-gallery-main img{display:block;width:100%;max-height:520px;object-fit:contain}
+.seervi-item-gallery-thumbs{display:flex;gap:8px;overflow-x:auto;padding:10px 2px 2px}
+.seervi-item-gallery-thumb{flex:0 0 72px;width:72px;height:72px;padding:0;border:1px solid #ffffff18;border-radius:8px;overflow:hidden;background:#111820;cursor:pointer}
+.seervi-item-gallery-thumb.active{border-color:#d9b55a}
+.seervi-item-gallery-thumb img{width:100%;height:100%;object-fit:cover}
+.home-product-thumb{position:relative}
+.seervi-gallery-count{position:absolute;right:8px;bottom:8px;padding:5px 8px;border-radius:999px;background:#111a;color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em}
+@media(max-width:700px){.seervi-item-gallery-main{max-height:360px}.seervi-item-gallery-main img{max-height:360px}}
 </style>
 
 
