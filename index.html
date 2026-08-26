@@ -9968,6 +9968,19 @@ window.SEERVI_SINGLE_ADMIN_EMAIL='seervitrading@gmail.com';
 })();
  /* ===== END SEERVI ITEMS TAB CLICK HARDENING ===== */
 
+/* ===== SEERVI PUBLIC CATALOGUE GLOBAL EVENT BRIDGE =====
+   Public catalogue code runs inside the module script. Dynamic category,
+   subcategory and product cards use inline onclick handlers, so these final
+   handlers must be explicitly exposed on window.
+*/
+window.seerviPublicSelectCategory=seerviPublicSelectCategory;
+window.seerviPublicBackToCategories=seerviPublicBackToCategories;
+window.seerviPublicSelectSubcategory=seerviPublicSelectSubcategory;
+window.seerviPublicOpenItem=seerviPublicOpenItem;
+window.seerviPublicCloseItem=seerviPublicCloseItem;
+window.seerviPublicAddToCart=seerviPublicAddToCart;
+/* ===== END SEERVI PUBLIC CATALOGUE GLOBAL EVENT BRIDGE ===== */
+
 /* ===== SEERVI ITEMS GLOBAL EVENT BRIDGE =====
    Firebase Items controller runs in a module. Inline HTML handlers and
    dynamically rendered action buttons require these functions on window.
