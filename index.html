@@ -6202,6 +6202,22 @@ window.accountDashboardAdminPanel=function(){
   if(global)global.hidden=false;
   $('crmWorkspace')?.removeAttribute('data-active-workspace');
 };
+window.accountDashboardStock=function(){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){
+    openAdminPanel();
+    return;
+  }
+  closeAccountDashboard();
+  requestAnimationFrame(()=>{
+    try{
+      ensureAdminUtilityModals();
+      toggleInventoryStock(true);
+    }catch(e){
+      console.error('STOCK launcher failed',e);
+      alert('Could not open Stock: '+(e?.message||'workspace unavailable.'));
+    }
+  });
+};
 window.accountDashboardNewParty=function(){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){
     openAdminPanel();
@@ -6227,7 +6243,14 @@ window.accountDashboardNotificationPost=function(){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
   openNotificationPost();
 };
-window.accountDashboardSignOut=function(){closeAccountDashboard();closeAdminNewParty();closeAdminStock();crmSignOut();};
+window.accountDashboardSignOut=function(){
+  closeAccountDashboard();
+  try{if(typeof closeAdminNewParty==='function')closeAdminNewParty();}catch(e){console.warn('New Party close during sign-out:',e);}
+  try{if(typeof closeAdminStock==='function')closeAdminStock();}catch(e){console.warn('Stock close during sign-out:',e);}
+  if(typeof crmSignOut==='function') return crmSignOut();
+  console.error('crmSignOut is unavailable.');
+  alert('Sign out is temporarily unavailable. Please refresh once and try again.');
+};
 window.accountDashboardEditProfile=function(){
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
@@ -8337,6 +8360,22 @@ async function rollbackInventoryQuoteDeltas(applied){
   try{await adjustInventoryForQuoteDeltas(reverse,{strict:false});}catch(e){console.warn('Inventory rollback failed:',e);}
 }
 
+window.closeAdminStock=function(){
+  const modal=document.getElementById('adminStockModal');
+  const panel=document.getElementById('inventoryStockPanel');
+  if(modal){
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden','true');
+    modal.style.display='none';
+    modal.style.visibility='hidden';
+    modal.style.opacity='0';
+  }
+  if(panel){
+    panel.hidden=true;
+  }
+  if(typeof seerviSyncTopbarHomeOnly==='function') seerviSyncTopbarHomeOnly();
+};
+
 window.toggleInventoryStock=async function(force){
   if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
   ensureAdminUtilityModals();
@@ -8345,7 +8384,12 @@ window.toggleInventoryStock=async function(force){
   if(!panel||!modal)return;
   const show=typeof force==='boolean'?force:!modal.classList.contains('show');
   if(show){
-    panel.hidden=false;modal.classList.add('show');modal.setAttribute('aria-hidden','false');
+    panel.hidden=false;
+    modal.style.display='flex';
+    modal.style.visibility='visible';
+    modal.style.opacity='1';
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden','false');
     inventoryInitFilters();
     const grid=document.getElementById('inventoryStockGrid');if(grid)grid.innerHTML='<div class="inventory-stock-empty">Loading Firebase items…</div>';
     try{await inventoryEnsureItemsLoaded();inventoryRenderAdmin();}catch(e){if(grid)grid.innerHTML=`<div class="inventory-stock-empty">Unable to load Firebase items: ${esc(e?.message||'Unknown error')}</div>`;}
