@@ -7876,13 +7876,24 @@ function seerviItemsBackToDashboard(){
   const global=$('adminGlobalArea');
   if(area)area.hidden=true;
   if(global)global.hidden=false;
+  $('crmWorkspace')?.removeAttribute('data-active-workspace');
 }
 
 window.accountDashboardItems=function(){
-  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){
+    openAdminPanel();
+    return;
+  }
   closeAccountDashboard();
   openAdminPanel();
-  seerviOpenItemsPanel();
+
+  // crmShowWorkspace() starts an async global-admin refresh. Select the
+  // Firebase Items workspace after that initialization so the generic Admin
+  // Panel does not remain visible over the Items screen.
+  requestAnimationFrame(()=>{
+    seerviOpenItemsPanel();
+    setTimeout(()=>seerviOpenItemsPanel(),250);
+  });
 };
 
 window.seerviOpenItemsPanel=function(){
@@ -7892,6 +7903,8 @@ window.seerviOpenItemsPanel=function(){
   if(!area)return;
   if(global)global.hidden=true;
   area.hidden=false;
+  // Keep the CRM modal on the Items workspace, not the generic Admin Panel.
+  $('crmWorkspace')?.setAttribute('data-active-workspace','items');
   seerviItemsTab('all');
   seerviItemsLoadCategories().catch(()=>{});
 };
