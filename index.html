@@ -750,7 +750,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 /* V45 — Process section is informational, not a numbered product section */
 .supply-step{padding-top:22px}
 .supply-icon{margin-top:4px}
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script><style>
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><style>
 /* V46 — Cart Rate + PDF Quotation */
 .cart-item{align-items:flex-start!important}
 .cart-item-main{flex:1;min-width:0}
@@ -3330,10 +3331,200 @@ body.nav-is-scrolled{padding-top:76px;}
 
 
 
+
+<style id="seervi-step3-items-style">
+.admin-items-area{margin-top:14px;border-top:1px solid #ffffff12;padding-top:16px}
+.admin-items-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px}
+.admin-items-title{margin:4px 0 5px;font-size:20px;letter-spacing:.02em;color:#f2f4f6}
+.admin-items-subtitle{margin:0;color:#8f99a4;font-size:11px}
+.admin-items-head-actions{display:flex;gap:8px;flex-wrap:wrap}
+.admin-items-tabs{display:flex;gap:7px;flex-wrap:wrap;border-bottom:1px solid #ffffff12;margin-bottom:14px}
+.admin-items-tab{border:1px solid #ffffff12;background:#11171e;color:#9da7b1;border-radius:7px 7px 0 0;padding:10px 13px;font-size:10px;font-weight:800;letter-spacing:.08em;cursor:pointer}
+.admin-items-tab:hover{border-color:#d8b45a55;color:#f2f4f6}
+.admin-items-tab.active{background:#d8b45a;color:#111;border-color:#d8b45a}
+.admin-items-view{min-width:0}
+.admin-items-toolbar{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:10px;margin-bottom:12px}
+.admin-items-toolbar label,.seervi-item-form label,.seervi-category-form label{display:block;color:#7f8b96;font-size:9px;font-weight:800;letter-spacing:.1em;margin-bottom:6px}
+.admin-items-toolbar input,.admin-items-toolbar select,.seervi-item-form input,.seervi-item-form select,.seervi-item-form textarea,.seervi-category-form input,.seervi-category-form select{width:100%;box-sizing:border-box;background:#0d1217;color:#f2f4f6;border:1px solid #283038;border-radius:7px;padding:10px 11px;font:inherit;font-size:12px;outline:none}
+.admin-items-toolbar input:focus,.admin-items-toolbar select:focus,.seervi-item-form input:focus,.seervi-item-form select:focus,.seervi-item-form textarea:focus,.seervi-category-form input:focus,.seervi-category-form select:focus{border-color:#d8b45a88}
+.admin-items-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.seervi-item-row{display:grid;grid-template-columns:58px minmax(180px,1.5fr) minmax(130px,1fr) minmax(120px,1fr) 82px auto;gap:10px;align-items:center;border:1px solid #ffffff12;background:#11171e;border-radius:9px;padding:9px 10px}
+.seervi-item-thumb{width:58px;height:58px;border-radius:7px;border:1px solid #ffffff12;background:#0a0e12;object-fit:cover}
+.seervi-item-name{font-weight:800;color:#f2f4f6;font-size:12px}
+.seervi-item-meta{color:#7f8b96;font-size:9px;margin-top:3px;line-height:1.45}
+.seervi-item-category{color:#c9d0d7;font-size:10px;line-height:1.4}
+.seervi-item-status{font-size:9px;font-weight:900;letter-spacing:.08em}
+.seervi-item-status.active{color:#6ee7a8}
+.seervi-item-status.inactive{color:#f28b8b}
+.seervi-item-actions{display:flex;gap:5px;justify-content:flex-end;flex-wrap:wrap}
+.seervi-item-actions button{font-size:9px!important;padding:8px 9px!important}
+.seervi-item-form-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.seervi-item-form{display:flex;flex-direction:column;gap:12px}
+.seervi-item-form-section{border:1px solid #ffffff12;background:#11171e;border-radius:10px;padding:13px}
+.seervi-item-form-section-title{font-size:10px;font-weight:900;letter-spacing:.12em;color:#d8b45a;margin-bottom:11px}
+.seervi-item-form-section-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.seervi-item-form-section-title-row .seervi-item-form-section-title{margin:0}
+.seervi-item-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.seervi-item-form-full{grid-column:1/-1}
+.seervi-specifications-rows{display:flex;flex-direction:column;gap:7px;margin-bottom:9px}
+.seervi-spec-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) auto;gap:7px}
+.seervi-spec-row button{align-self:stretch}
+.seervi-check-label{display:flex!important;align-items:center;gap:7px!important;color:#c9d0d7!important;font-size:10px!important;letter-spacing:.05em!important;margin:0!important}
+.seervi-check-label input{width:auto!important}
+.seervi-item-status-section{padding:11px 13px}
+.seervi-item-form-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.seervi-category-form{display:flex;flex-direction:column;gap:7px}
+.seervi-category-form label{margin-top:4px}
+.admin-items-category-layout{display:grid;grid-template-columns:minmax(250px,.75fr) minmax(0,1.25fr);gap:12px}
+.admin-items-category-card{border:1px solid #ffffff12;background:#11171e;border-radius:10px;padding:13px}
+.seervi-categories-list{display:flex;flex-direction:column;gap:6px;margin-top:9px}
+.seervi-category-row{display:grid;grid-template-columns:90px minmax(0,1fr) 80px 70px;gap:8px;align-items:center;border:1px solid #ffffff10;border-radius:7px;padding:8px 9px;background:#0d1217}
+.seervi-category-type{font-size:8px;font-weight:900;letter-spacing:.08em;color:#d8b45a}
+.seervi-category-name{font-size:11px;color:#f2f4f6;font-weight:700}
+.seervi-category-parent{font-size:9px;color:#7f8b96}
+.seervi-category-active{font-size:8px;font-weight:900}
+@media(max-width:900px){
+  .seervi-item-row{grid-template-columns:52px minmax(0,1fr) auto}
+  .seervi-item-thumb{width:52px;height:52px}
+  .seervi-item-row .seervi-item-category,.seervi-item-row .seervi-item-status{grid-column:2/-1}
+  .seervi-item-actions{grid-column:3;grid-row:1/3}
+  .admin-items-category-layout{grid-template-columns:1fr}
+}
+@media(max-width:620px){
+  .admin-items-head{flex-direction:column}
+  .admin-items-head-actions{width:100%}
+  .admin-items-head-actions button{flex:1}
+  .admin-items-toolbar{grid-template-columns:1fr}
+  .seervi-item-form-grid{grid-template-columns:1fr}
+  .seervi-item-form-full{grid-column:auto}
+  .seervi-spec-row{grid-template-columns:1fr 1fr auto}
+  .seervi-item-row{grid-template-columns:48px minmax(0,1fr)}
+  .seervi-item-actions{grid-column:1/-1;justify-content:flex-start}
+  .seervi-item-row .seervi-item-category,.seervi-item-row .seervi-item-status{grid-column:2}
+  .seervi-category-row{grid-template-columns:1fr 1fr}
+}
+</style>
+
+
+<style id="seervi-step4-bulk-style">
+.seervi-bulk-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.seervi-bulk-preview-area{border:1px solid #ffffff12;background:#11171e;border-radius:10px;padding:13px;margin-top:12px}
+.seervi-bulk-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.seervi-bulk-summary>div{border:1px solid #ffffff10;background:#0d1217;border-radius:8px;padding:10px}
+.seervi-bulk-summary span{display:block;color:#7f8b96;font-size:8px;font-weight:900;letter-spacing:.1em;margin-bottom:5px}
+.seervi-bulk-summary strong{font-size:18px;color:#f2f4f6}
+.seervi-bulk-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+.seervi-bulk-table-wrap{overflow:auto;border:1px solid #ffffff10;border-radius:8px;background:#0b0f14;max-height:500px}
+.seervi-bulk-table{width:100%;min-width:980px;border-collapse:collapse;font-size:10px}
+.seervi-bulk-table th,.seervi-bulk-table td{padding:9px 8px;border-bottom:1px solid #ffffff0d;text-align:left;vertical-align:top}
+.seervi-bulk-table th{position:sticky;top:0;background:#151a20;color:#89939e;font-size:8px;letter-spacing:.08em;z-index:1}
+.seervi-bulk-table td{color:#d7dde2}
+.seervi-bulk-table tr.bulk-row-error{background:#351719}
+.seervi-bulk-table tr.bulk-row-duplicate{background:#302914}
+.seervi-bulk-badge{display:inline-flex;border-radius:999px;padding:4px 7px;font-size:8px;font-weight:900;letter-spacing:.06em}
+.seervi-bulk-badge.ok{color:#6ee7a8;border:1px solid #2d6843}
+.seervi-bulk-badge.error{color:#ff9999;border:1px solid #713b3b}
+.seervi-bulk-badge.duplicate{color:#f0d27a;border:1px solid #6b5928}
+.seervi-bulk-error-text{color:#ff9a9a;font-size:9px;line-height:1.4}
+@media(max-width:700px){
+  .seervi-bulk-grid{grid-template-columns:1fr}
+  .seervi-bulk-summary{grid-template-columns:1fr 1fr}
+}
+</style>
+
+
+<style id="seervi-step5-items-style">
+.admin-items-toolbar{grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(145px,.55fr))}
+@media(max-width:900px){.admin-items-toolbar{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.admin-items-toolbar{grid-template-columns:1fr}}
+</style>
+
+<style id="seervi-step6-category-style">
+.seervi-category-row{grid-template-columns:90px minmax(0,1fr) 80px 100px auto}
+.seervi-category-row .seervi-item-actions{justify-content:flex-end}
+@media(max-width:700px){.seervi-category-row{grid-template-columns:1fr 1fr}.seervi-category-row .seervi-item-actions{grid-column:1/-1;justify-content:flex-start}}
+</style>
+
+
+<style id="seervi-step7-public-catalog-style">
+.firebase-public-catalog{padding:54px 0 36px;scroll-margin-top:70px}
+.firebase-public-catalog .catalog-title{margin-bottom:18px}
+.firebase-public-catalog .catalog-title h2{font-size:32px;margin:10px 0 7px}
+.seervi-public-category-bar,.seervi-public-subcategory-bar{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 10px}
+.seervi-public-category-btn,.seervi-public-subcategory-btn{border:1px solid #ffffff16;background:#11171e;color:#9da7b1;border-radius:999px;padding:9px 13px;font-size:9px;font-weight:900;letter-spacing:.08em;cursor:pointer}
+.seervi-public-category-btn:hover,.seervi-public-subcategory-btn:hover{border-color:#d8b45a66;color:#f2f4f6}
+.seervi-public-category-btn.active,.seervi-public-subcategory-btn.active{background:#d8b45a;border-color:#d8b45a;color:#111}
+.seervi-public-product-grid{margin-top:14px}
+.seervi-public-product-card{min-width:0}
+.seervi-public-product-card .home-product-thumb{cursor:pointer}
+.seervi-public-product-card .seervi-public-specs{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.seervi-public-spec-chip{font-size:8px;color:#aab3bc;border:1px solid #ffffff12;border-radius:5px;padding:4px 6px;background:#0d1217}
+.seervi-public-product-card .seervi-public-category-line{color:#7f8b96;font-size:9px;margin-top:4px}
+.seervi-public-empty{grid-column:1/-1;border:1px dashed #ffffff18;border-radius:10px;padding:28px;text-align:center;color:#7f8b96}
+@media(max-width:600px){
+  .firebase-public-catalog{padding:34px 0 24px}
+  .firebase-public-catalog .catalog-title h2{font-size:25px}
+  .seervi-public-category-bar,.seervi-public-subcategory-bar{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
+  .seervi-public-category-btn,.seervi-public-subcategory-btn{flex:0 0 auto}
+}
+</style>
+
+
+<style id="seervi-step8-public-catalog-style">
+.seervi-public-toolbar{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:10px;margin:12px 0 14px}
+.seervi-public-toolbar label{display:block}
+.seervi-public-toolbar label>span{display:block;color:#7f8b96;font-size:8px;font-weight:900;letter-spacing:.1em;margin:0 0 6px}
+.seervi-public-search input,.seervi-public-sort select{width:100%;box-sizing:border-box;border:1px solid #ffffff16;background:#0e141a;color:#f2f4f6;border-radius:8px;padding:11px 12px;outline:none}
+.seervi-public-search input:focus,.seervi-public-sort select:focus{border-color:#d8b45a66}
+@media(max-width:600px){.seervi-public-toolbar{grid-template-columns:1fr}.seervi-public-sort{max-width:220px}}
+</style>
+
+<style id="seervi-step10-live-style">
+.seervi-live-state{display:inline-flex;align-items:center;gap:6px;font-size:8px;font-weight:900;letter-spacing:.08em;color:#6ee7a8}
+.seervi-live-state::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+</style>
+
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
 </button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url('images/00-old-products/product-image-001-055cde1217d3c801.webp')"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
+
+
+<section id="profiles" class="firebase-public-catalog">
+  <div class="wrap">
+    <div class="catalog-title">
+      <div>
+        <div class="crm-kicker">SEERVI TRADING / PRODUCTS</div>
+        <h2>Our Products</h2>
+        <p>Live catalogue powered by Firebase. Categories, subcategories, items, specifications and WEBP images are managed from the authorised Admin Panel.</p>
+      </div>
+    </div>
+
+    <div id="seerviPublicCategoryBar" class="seervi-public-category-bar" aria-label="Product categories">
+      <button type="button" class="seervi-public-category-btn active" data-category-id="catalogAllButton" onclick="seerviPublicSelectCategory('all')">ALL</button>
+    </div>
+
+    <div id="seerviPublicSubcategoryBar" class="seervi-public-subcategory-bar" hidden></div>
+    <div class="seervi-public-toolbar">
+      <label class="seervi-public-search">
+        <span>SEARCH PRODUCTS</span>
+        <input id="seerviPublicSearch" type="search" placeholder="Search item, model or specification…" autocomplete="off">
+      </label>
+      <label class="seervi-public-sort">
+        <span>SORT</span>
+        <select id="seerviPublicSort">
+          <option value="name">NAME A–Z</option>
+          <option value="name-desc">NAME Z–A</option>
+          <option value="newest">NEWEST</option>
+        </select>
+      </label>
+    </div>
+
+    <div id="seerviPublicCatalogueStatus" class="crm-auth-status">Loading products…</div>
+    <div id="seerviPublicProductGrid" class="home-product-grid seervi-public-product-grid"></div>
+  </div>
+</section>
+
 
 
 
@@ -3351,6 +3542,7 @@ body.nav-is-scrolled{padding-top:76px;}
     </div>
     <div id="adminDashboardOptions" class="account-dashboard-options" hidden aria-label="Admin dashboard options">
       <button class="account-dashboard-option" type="button" onclick="accountDashboardAdminPanel()"><span>▣</span><strong>ADMIN PANEL</strong><small>Manage quotations, parties & ledger</small></button>
+      <button class="account-dashboard-option" type="button" onclick="accountDashboardItems()"><span>▤</span><strong>ITEMS</strong><small>Manage Firebase items & categories</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardNewParty()"><span>＋</span><strong>NEW PARTY</strong><small>Create a new customer / party</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardBackup()"><span>⇩</span><strong>BACKUP DATA</strong><small>Download your CRM business backup</small></button>
       
@@ -3508,7 +3700,224 @@ body.nav-is-scrolled{padding-top:76px;}
 #customerDashboardView .customer-profile-card[hidden],
 #customerDashboardView .customer-portal-tabs[hidden],
 #customerDashboardView .customer-profile-edit[hidden]{display:none !important}
-</style><div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Admin Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-close" type="button" onclick="closeCRM()">×</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div><div id="adminGlobalArea" class="admin-global-area"><div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, all quotations and complete party ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span>QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs"><button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button><button class="crm-tab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button><button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button><button class="crm-tab" data-tab="ledger" onclick="crmTab('ledger')">PAYMENT ENTRY</button></div><div id="crmOverview" class="crm-tab-panel"><div class="crm-stat-grid"><div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div><div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div><div><span>LEDGER BALANCE</span><strong id="crmLedgerBalance">₹0.00</strong></div></div></div><div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div><div id="crmRates" class="crm-tab-panel" hidden><div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div><div id="crmRatesList" class="crm-list"></div></div><div id="crmLedger" class="crm-tab-panel" hidden><div class="crm-ledger-help">Quotation amounts are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.</div><div class="crm-ledger-add"><select id="crmLedgerType"><option value="debit">Debit / Sale</option><option value="credit">Credit / Payment Received</option></select><input id="crmLedgerAmount" type="number" min="0" step="0.01" placeholder="Amount ₹"><input id="crmLedgerNote" placeholder="Note / Reference"><button class="crm-primary small" type="button" onclick="crmAddLedgerEntry()">ADD ENTRY</button></div><div id="crmLedgerList" class="crm-list"></div></div></div></div></div><script>
+</style><div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Admin Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-close" type="button" onclick="closeCRM()">×</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div><div id="adminGlobalArea" class="admin-global-area">
+
+<div id="adminItemsArea" class="admin-items-area" hidden>
+  <div class="admin-items-head">
+    <div>
+      <div class="crm-section-title">SEERVI ADMIN / ITEMS</div>
+      <h3 class="admin-items-title">ITEM MANAGEMENT</h3>
+      <p class="admin-items-subtitle">Firebase-based Category → Subcategory → Item catalogue. No hard-coded product taxonomy.</p>
+    </div>
+    <div class="admin-items-head-actions">
+      <button class="crm-secondary" type="button" onclick="seerviItemsBackToDashboard()">← DASHBOARD</button>
+      <button class="crm-secondary" type="button" onclick="seerviItemsRefresh()">↻ REFRESH</button>
+    </div>
+  </div>
+
+  <div class="admin-items-tabs" role="tablist" aria-label="Items management">
+    <button class="admin-items-tab active" type="button" data-items-tab="all" onclick="seerviItemsTab('all')">ALL ITEMS</button>
+    <button class="admin-items-tab" type="button" data-items-tab="add" onclick="seerviItemsTab('add')">ADD NEW ITEM</button>
+    <button class="admin-items-tab" type="button" data-items-tab="categories" onclick="seerviItemsTab('categories')">CATEGORIES</button>
+    <button class="admin-items-tab" type="button" data-items-tab="bulk" onclick="seerviItemsTab('bulk')">BULK ADD</button>
+  </div>
+
+  <section id="seerviItemsAllView" class="admin-items-view">
+    <div class="admin-items-toolbar">
+      <div class="admin-items-search-wrap">
+        <label for="seerviItemsSearch">SEARCH ITEMS</label>
+        <input id="seerviItemsSearch" type="search" placeholder="Search name, model, category..." oninput="seerviItemsFilter(this.value)">
+      </div>
+      <div class="admin-items-filter-wrap">
+        <label for="seerviItemsStatusFilter">STATUS</label>
+        <select id="seerviItemsStatusFilter" onchange="seerviItemsFilter(document.getElementById('seerviItemsSearch')?.value||'')">
+          <option value="all">ALL</option>
+          <option value="active">ACTIVE</option>
+          <option value="inactive">INACTIVE</option>
+        </select>
+      </div>
+      <div class="admin-items-filter-wrap">
+        <label for="seerviItemsCategoryFilter">CATEGORY</label>
+        <select id="seerviItemsCategoryFilter" onchange="seerviItemsFilter(document.getElementById('seerviItemsSearch')?.value||'')">
+          <option value="all">ALL CATEGORIES</option>
+        </select>
+      </div>
+      <div class="admin-items-filter-wrap">
+        <label for="seerviItemsSubcategoryFilter">SUBCATEGORY</label>
+        <select id="seerviItemsSubcategoryFilter" onchange="seerviItemsFilter(document.getElementById('seerviItemsSearch')?.value||'')">
+          <option value="all">ALL SUBCATEGORIES</option>
+        </select>
+      </div>
+    </div>
+    <div id="seerviItemsStatus" class="crm-auth-status">Loading items…</div>
+    <div id="seerviItemsList" class="admin-items-list"></div>
+  </section>
+
+  <section id="seerviItemsAddView" class="admin-items-view" hidden>
+    <div class="admin-items-form-head">
+      <div>
+        <div class="crm-section-title">ITEM MASTER</div>
+        <p id="seerviItemFormMode" class="crm-auth-status">Create a new Firebase item.</p>
+      </div>
+      <button id="seerviItemCancelEdit" class="crm-secondary" type="button" onclick="seerviItemsResetForm()" hidden>CANCEL EDIT</button>
+    </div>
+
+    <form id="seerviItemForm" class="seervi-item-form" onsubmit="event.preventDefault();seerviSaveItemForm();">
+      <input id="seerviItemId" type="hidden">
+
+      <div class="seervi-item-form-section">
+        <div class="seervi-item-form-section-title">CATEGORY STRUCTURE</div>
+        <div class="seervi-item-form-grid">
+          <div>
+            <label for="seerviItemCategory">CATEGORY *</label>
+            <select id="seerviItemCategory" required onchange="seerviItemCategoryChanged()">
+              <option value="">Select Category</option>
+            </select>
+          </div>
+          <div>
+            <label for="seerviItemSubcategory">SUBCATEGORY</label>
+            <select id="seerviItemSubcategory" required>
+              <option value="">Select Subcategory</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <div class="seervi-item-form-section">
+        <div class="seervi-item-form-section-title">ITEM DETAILS</div>
+        <div class="seervi-item-form-grid">
+          <div class="seervi-item-form-full">
+            <label for="seerviItemName">ITEM NAME *</label>
+            <input id="seerviItemName" type="text" maxlength="300" required placeholder="Enter item name">
+          </div>
+          <div>
+            <label for="seerviItemModel">MODEL / CODE</label>
+            <input id="seerviItemModel" type="text" maxlength="200" placeholder="Model or item code">
+          </div>
+          <div>
+            <label for="seerviItemImage">WEBP IMAGE URL / PATH *</label>
+            <input id="seerviItemImage" type="text" maxlength="2000" required placeholder="images/items/example.webp">
+          </div>
+          <div class="seervi-item-form-full">
+            <label for="seerviItemDescription">DESCRIPTION</label>
+            <textarea id="seerviItemDescription" rows="4" maxlength="5000" placeholder="Item description"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="seervi-item-form-section">
+        <div class="seervi-item-form-section-title-row">
+          <div class="seervi-item-form-section-title">SPECIFICATIONS</div>
+          <button class="crm-secondary small" type="button" onclick="seerviAddSpecificationRow()">＋ ADD SPECIFICATION</button>
+        </div>
+        <div id="seerviSpecificationsRows" class="seervi-specifications-rows"></div>
+        <div class="crm-muted">Add only the specifications relevant to this item. Specification names are fully dynamic.</div>
+      </div>
+
+      <div class="seervi-item-form-section seervi-item-status-section">
+        <label class="seervi-check-label"><input id="seerviItemActive" type="checkbox" checked> ACTIVE ITEM</label>
+      </div>
+
+      <div class="seervi-item-form-actions">
+        <button class="crm-primary" type="submit" id="seerviItemSaveButton">SAVE ITEM</button>
+        <button class="crm-secondary" type="button" onclick="seerviItemsResetForm()">CLEAR</button>
+        <span id="seerviItemFormStatus" class="crm-auth-status"></span>
+      </div>
+    </form>
+  </section>
+
+  
+  <section id="seerviItemsBulkView" class="admin-items-view" hidden>
+    <div class="admin-items-form-head">
+      <div>
+        <div class="crm-section-title">BULK ITEM IMPORT</div>
+        <p class="crm-auth-status">Excel → Preview → Validate → Import to Firebase. Nothing is written until you confirm.</p>
+      </div>
+      <button class="crm-secondary" type="button" onclick="seerviBulkDownloadTemplate()">DOWNLOAD TEMPLATE</button>
+    </div>
+
+    <div class="seervi-bulk-grid">
+      <div class="admin-items-category-card">
+        <div class="crm-section-title">1. PREPARE EXCEL</div>
+        <div class="crm-muted" style="margin:8px 0 12px;line-height:1.6">
+          Required: <b>Category</b>, <b>Item Name</b>, <b>WEBP Image URL / Path</b>.<br>
+          Subcategory is optional. Specifications use paired columns:
+          <b>Spec 1 Name / Spec 1 Value</b>, <b>Spec 2 Name / Spec 2 Value</b>…
+        </div>
+        <button class="crm-secondary" type="button" onclick="seerviBulkDownloadTemplate()">DOWNLOAD EXCEL TEMPLATE</button>
+      </div>
+
+      <div class="admin-items-category-card">
+        <div class="crm-section-title">2. UPLOAD FILE</div>
+        <input id="seerviBulkFile" type="file" accept=".xlsx,.xls,.csv" style="margin-top:10px">
+        <div class="crm-muted" style="margin-top:8px">Supported: .xlsx, .xls, .csv</div>
+        <button class="crm-primary" type="button" style="margin-top:12px" onclick="seerviBulkReadFile()">READ & PREVIEW</button>
+        <div id="seerviBulkFileStatus" class="crm-auth-status" style="margin-top:9px"></div>
+      </div>
+    </div>
+
+    <div id="seerviBulkPreviewArea" class="seervi-bulk-preview-area" hidden>
+      <div class="seervi-bulk-summary">
+        <div><span>ROWS</span><strong id="seerviBulkTotal">0</strong></div>
+        <div><span>VALID</span><strong id="seerviBulkValid">0</strong></div>
+        <div><span>ERRORS</span><strong id="seerviBulkErrors">0</strong></div>
+        <div><span>DUPLICATES</span><strong id="seerviBulkDuplicates">0</strong></div>
+      </div>
+
+      <div class="seervi-bulk-actions">
+        <button class="crm-secondary" type="button" onclick="seerviBulkRevalidate()">REVALIDATE</button>
+        <button class="crm-primary" type="button" id="seerviBulkImportButton" onclick="seerviBulkImport()" disabled>IMPORT VALID ITEMS</button>
+      </div>
+
+      <div id="seerviBulkValidationStatus" class="crm-auth-status"></div>
+      <div id="seerviBulkTableWrap" class="seervi-bulk-table-wrap"></div>
+    </div>
+  </section>
+
+<section id="seerviItemsCategoriesView" class="admin-items-view" hidden>
+    <div class="admin-items-category-layout">
+      <div class="admin-items-category-card">
+        <div class="crm-section-title">CREATE CATEGORY</div>
+        <p class="crm-auth-status">Build Category → Subcategory from scratch.</p>
+        <form id="seerviCategoryForm" class="seervi-category-form" onsubmit="event.preventDefault();seerviCreateCategoryFromForm();"><input id="seerviCategoryEditId" type="hidden">
+          <label for="seerviCategoryType">TYPE</label>
+          <select id="seerviCategoryType" required onchange="seerviCategoryParentOptions()">
+            <option value="">Select Type</option>
+            <option value="category">Category</option>
+            <option value="subcategory">Subcategory</option>
+          </select>
+
+          <label for="seerviCategoryParent">PARENT</label>
+          <select id="seerviCategoryParent">
+            <option value="">No Parent</option>
+          </select>
+
+          <label for="seerviCategoryName">NAME *</label>
+          <input id="seerviCategoryName" type="text" maxlength="200" required placeholder="Enter category name">
+
+          <label for="seerviCategorySlug">SLUG</label>
+          <input id="seerviCategorySlug" type="text" maxlength="220" placeholder="Optional slug">
+
+          <label class="seervi-check-label"><input id="seerviCategoryActive" type="checkbox" checked> ACTIVE</label>
+
+          <div class="seervi-item-form-actions">
+          <button class="crm-primary" type="submit" id="seerviCategorySaveButton">CREATE CATEGORY</button>
+          <button class="crm-secondary" type="button" id="seerviCategoryCancelEdit" onclick="seerviResetCategoryForm()" hidden>CANCEL EDIT</button>
+        </div>
+          <span id="seerviCategoryFormStatus" class="crm-auth-status"></span>
+        </form>
+      </div>
+
+      <div class="admin-items-category-card">
+        <div class="crm-section-title">CATEGORY MASTER</div>
+        <div id="seerviCategoriesStatus" class="crm-auth-status">Loading categories…</div>
+        <div id="seerviCategoriesList" class="seervi-categories-list"></div>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, all quotations and complete party ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span>QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs"><button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button><button class="crm-tab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button><button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button><button class="crm-tab" data-tab="ledger" onclick="crmTab('ledger')">PAYMENT ENTRY</button></div><div id="crmOverview" class="crm-tab-panel"><div class="crm-stat-grid"><div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div><div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div><div><span>LEDGER BALANCE</span><strong id="crmLedgerBalance">₹0.00</strong></div></div></div><div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div><div id="crmRates" class="crm-tab-panel" hidden><div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div><div id="crmRatesList" class="crm-list"></div></div><div id="crmLedger" class="crm-tab-panel" hidden><div class="crm-ledger-help">Quotation amounts are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.</div><div class="crm-ledger-add"><select id="crmLedgerType"><option value="debit">Debit / Sale</option><option value="credit">Credit / Payment Received</option></select><input id="crmLedgerAmount" type="number" min="0" step="0.01" placeholder="Amount ₹"><input id="crmLedgerNote" placeholder="Note / Reference"><button class="crm-primary small" type="button" onclick="crmAddLedgerEntry()">ADD ENTRY</button></div><div id="crmLedgerList" class="crm-list"></div></div></div></div></div><script>
 let seerviCart = JSON.parse(localStorage.getItem('seerviCart') || '[]');
 
 function saveCart(){
@@ -3517,6 +3926,10 @@ function saveCart(){
 }
 
 function cartKey(item){
+  // Firebase items use their immutable document ID so two different items
+  // with the same model/name can never collide in the cart.
+  if(item && item.firebaseItemId) return 'firebase|' + String(item.firebaseItemId);
+  // Legacy cart entries remain compatible with the existing quotation/cart flow.
   return item.type + '|' + item.model + '|' + (item.thickness || '') + '|' + (item.subcategory || '');
 }
 
@@ -3573,36 +3986,6 @@ function clearCart(){
   seerviCart = [];
   saveCart();
 }
-
-
-function changeProductQty(type, model, thickness, delta, subcategory){
-  let img = '';
-  if(type === 'Profile'){
-    const control = [...document.querySelectorAll('.product-cart-control')].find(el =>
-      el.dataset.cartType === type &&
-      el.dataset.cartModel === model &&
-      (el.dataset.cartThickness || '') === (thickness || '') &&
-      (!subcategory || (el.dataset.cartSubcategory || '') === subcategory)
-    );
-    img = control?.closest('.profile-product-card')?.querySelector('.profile-product-image img')?.src || '';
-  } else {
-    const card = [...document.querySelectorAll('.home-product-card')].find(el => el.dataset.model === model && (!subcategory || (el.dataset.subcategory || '') === subcategory));
-    img = card?.querySelector('.home-product-thumb img')?.src || '';
-  }
-  const item = {type:type, model:model, thickness:thickness || '', subcategory:subcategory || '', name:model, image:img};
-  const key = cartKey(item);
-  const found = seerviCart.find(x => cartKey(x) === key);
-
-  if(found){
-    found.qty += delta;
-    if(found.qty <= 0) seerviCart = seerviCart.filter(x => cartKey(x) !== key);
-  } else if(delta > 0){
-    seerviCart.push({...item, qty:1, rate:Number(item.rate||0)});
-  }
-
-  saveCart();
-}
-
 
 function formatINR(value){
   const n = Number(value || 0);
@@ -4115,60 +4498,6 @@ document.addEventListener('click',e=>{
   }
 });
 </script><script>
-function filterProfiles(){
-  const q=(document.getElementById('profileSearch')?.value||'').toLowerCase().trim();
-  const t=document.getElementById('profileThickness')?.value||'';
-  const cards=[...document.querySelectorAll('#profiles .profile-product-card')];
-  let visible=0;
-  cards.forEach(card=>{
-    const model=(card.dataset.model||'').toLowerCase();
-    const thick=card.dataset.thickness||'';
-    const ok=(!q||model.includes(q))&&(!t||thick===t);
-    card.style.display=ok?'':'none';
-    if(ok) visible++;
-  });
-  const r=document.getElementById('profileResultCount');
-  if(r) r.textContent=`${visible} profile option${visible===1?'':'s'} shown`;
-}
-function clearProfileFilters(){
-  const q=document.getElementById('profileSearch'),t=document.getElementById('profileThickness');
-  if(q) q.value=''; if(t) t.value=''; filterProfiles();
-}
-function filterBlades(){
-  const q=(document.getElementById('bladeSearch')?.value||'').toLowerCase().trim();
-  const cards=[...document.querySelectorAll('#products .home-product-card')];
-  let visible=0;
-  cards.forEach(card=>{
-    const model=(card.dataset.model||'').toLowerCase();
-    const ok=!q||model.includes(q);
-    card.style.display=ok?'':'none';
-    if(ok) visible++;
-  });
-  const r=document.getElementById('bladeResultCount');
-  if(r) r.textContent=`${visible} blade option${visible===1?'':'s'} shown`;
-}
-function clearBladeFilter(){
-  const q=document.getElementById('bladeSearch'); if(q) q.value=''; filterBlades();
-}
-function filterMounts(){
-  const q=(document.getElementById('mountSearch')?.value||'').toLowerCase().trim();
-  const cards=[...document.querySelectorAll('#tvMounts .tv-mount-product-card')];
-  let visible=0;
-  cards.forEach(card=>{
-    const model=(card.dataset.model||'').toLowerCase();
-    const details=(card.textContent||'').toLowerCase();
-    const ok=!q || model.includes(q) || details.includes(q);
-    card.style.display=ok?'':'none';
-    if(ok) visible++;
-  });
-  const r=document.getElementById('mountResultCount');
-  if(r) r.textContent=`${visible} mount option${visible===1?'':'s'} shown`;
-}
-function clearMountFilter(){
-  const q=document.getElementById('mountSearch'); if(q) q.value=''; filterMounts();
-}
-document.addEventListener('DOMContentLoaded',()=>{filterProfiles();filterBlades();filterMounts();});
-</script><script>
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){
     setMobileMenuState(false);
@@ -4306,19 +4635,72 @@ function addAIMessage(role,text){
   chat.appendChild(el);chat.scrollTop=chat.scrollHeight;
 }
 function aiProductContext(){
-  const cards=[...document.querySelectorAll('.profile-product-card,.home-product-card,.tv-mount-product-card,.earth-auger-product-card')];
+  if(Array.isArray(seerviPublicItems) && seerviPublicItems.length){
+    return seerviPublicItems.map(item=>{
+      const category=seerviPublicCategoryName(item.categoryId);
+      const subcategory=seerviPublicCategoryName(item.subcategoryId);
+      const specs=Object.entries(item.specifications||{}).slice(0,8)
+        .map(([k,v])=>`${k}: ${v}`).join(', ');
+      return [
+        item.name||'Unnamed Item',
+        item.model?`Model: ${item.model}`:'',
+        category?`Category: ${category}`:'',
+        subcategory?`Subcategory: ${subcategory}`:'',
+        specs?`Specs: ${specs}`:'',
+        item.description?String(item.description).slice(0,180):''
+      ].filter(Boolean).join(' — ');
+    });
+  }
+
+  // Public Firebase catalogue is the authoritative product context.
+  // Keep a DOM fallback only for legacy cards that may still exist elsewhere
+  // on the page, without using any product-specific taxonomy.
+  const cards=[...document.querySelectorAll('.home-product-card')];
   const out=[]; const seen=new Set();
   cards.forEach(c=>{
     const model=String(c.dataset.model||c.querySelector('h3')?.textContent||'').trim();
     if(!model || seen.has(model.toLowerCase()))return;
     seen.add(model.toLowerCase());
     const type=String(c.dataset.type||'').trim();
-    const text=String(c.textContent||'').replace(/\\s+/g,' ').trim();
-    out.push((type?type+': ':'')+model+(text?' — '+text.slice(0,180):''));
+    const cardText=String(c.textContent||'').replace(/\s+/g,' ').trim();
+    out.push((type?type+': ':'')+model+(cardText?' — '+cardText.slice(0,180):''));
   });
   return out;
 }
-function aiFindProduct(q){return null;}
+function aiFindProduct(q){
+  const query=String(q||'').trim().toLowerCase();
+  if(!query || !Array.isArray(seerviPublicItems) || !seerviPublicItems.length)return null;
+
+  const tokens=query.split(/\s+/).filter(x=>x.length>1);
+  let best=null;
+  let bestScore=0;
+
+  seerviPublicItems.forEach(item=>{
+    const fields=[
+      item.name,item.model,item.description,
+      seerviPublicCategoryName(item.categoryId),
+      seerviPublicCategoryName(item.subcategoryId),
+      ...Object.entries(item.specifications||{}).flat()
+    ].map(x=>String(x||'').toLowerCase());
+
+    const hay=fields.join(' ');
+    let score=0;
+
+    if(hay.includes(query))score+=10;
+    tokens.forEach(token=>{
+      if(hay.includes(token))score+=2;
+    });
+    if(String(item.model||'').toLowerCase()===query)score+=20;
+    if(String(item.name||'').toLowerCase()===query)score+=15;
+
+    if(score>bestScore){
+      bestScore=score;
+      best=item;
+    }
+  });
+
+  return bestScore>0 ? best : null;
+}
 function aiReply(q){
   const x=String(q||'').trim();
   const l=x.toLowerCase();
@@ -4592,6 +4974,165 @@ const isAuthorisedAdmin = (userOrEmail) => {
 const publicSignupApp = initializeApp(firebaseConfig,'seervi-public-signup');
 const publicSignupAuth = getAuth(publicSignupApp);
 const publicSignupDb = getFirestore(publicSignupApp);
+
+/* ===== SEERVI FIREBASE ITEMS DATA LAYER / STEP 2 =====
+   Ground-zero product system.
+   No item/category names are hard-coded here.
+   All item taxonomy and item records are stored in Firestore.
+*/
+const SEERVI_ITEMS_COLLECTION = 'items';
+const SEERVI_ITEM_CATEGORIES_COLLECTION = 'itemCategories';
+
+function seerviRequireAdmin(){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){
+    throw new Error('Admin access required.');
+  }
+}
+
+function seerviCleanItemValue(value,max=5000){
+  return String(value ?? '').trim().slice(0,max);
+}
+
+function seerviCleanSpecifications(specifications){
+  const output={};
+  if(!specifications || typeof specifications!=='object') return output;
+  Object.entries(specifications).forEach(([key,value])=>{
+    const k=seerviCleanItemValue(key,120);
+    const v=seerviCleanItemValue(value,1000);
+    if(k) output[k]=v;
+  });
+  return output;
+}
+
+function seerviValidateWebpPath(value){
+  const v=seerviCleanItemValue(value,2000);
+  if(!v) throw new Error('WEBP image URL/path is required.');
+  const clean=v.split('?')[0].split('#')[0].toLowerCase();
+  if(!clean.endsWith('.webp')) throw new Error('WEBP image URL/path must end with .webp.');
+  return v;
+}
+
+function seerviBuildItemPayload(input={}){
+  const nowFields={updatedAt:serverTimestamp()};
+  const payload={
+    categoryId:seerviCleanItemValue(input.categoryId,200),
+    subcategoryId:seerviCleanItemValue(input.subcategoryId,200),
+    name:seerviCleanItemValue(input.name,300),
+    model:seerviCleanItemValue(input.model,200),
+    description:seerviCleanItemValue(input.description,5000),
+    imageWebpUrl:seerviValidateWebpPath(input.imageWebpUrl),
+    specifications:seerviCleanSpecifications(input.specifications),
+    active:input.active!==false,
+    ...nowFields
+  };
+  if(!payload.categoryId) throw new Error('Category is required.');
+  if(!payload.subcategoryId) throw new Error('Subcategory is required.');
+  if(!payload.name) throw new Error('Item name is required.');
+  return payload;
+}
+
+window.seerviCreateItem=async function(input={}){
+  seerviRequireAdmin();
+  const payload=seerviBuildItemPayload(input);
+  payload.createdAt=serverTimestamp();
+  payload.createdBy=crmUser.uid;
+  payload.updatedBy=crmUser.uid;
+  const ref=await addDoc(collection(db,SEERVI_ITEMS_COLLECTION),payload);
+  seerviInvalidateCache('items:');
+  return {id:ref.id,...payload};
+};
+
+window.seerviGetItems=async function(options={}){
+  seerviRequireAdmin();
+  const max=Math.min(Math.max(Number(options.limit)||500,1),1000);
+  const snap=await getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),limit(max)));
+  return snap.docs.map(d=>({id:d.id,...d.data()}));
+};
+
+window.seerviGetItem=async function(itemId){
+  seerviRequireAdmin();
+  const id=seerviCleanItemValue(itemId,200);
+  if(!id) return null;
+  const snap=await getDoc(doc(db,SEERVI_ITEMS_COLLECTION,id));
+  return snap.exists()?{id:snap.id,...snap.data()}:null;
+};
+
+window.seerviUpdateItem=async function(itemId,input={}){
+  seerviRequireAdmin();
+  const id=seerviCleanItemValue(itemId,200);
+  if(!id) throw new Error('Item ID is required.');
+  const payload=seerviBuildItemPayload(input);
+  payload.updatedBy=crmUser.uid;
+  await updateDoc(doc(db,SEERVI_ITEMS_COLLECTION,id),payload);
+  seerviInvalidateCache('items:');
+  return {id,...payload};
+};
+
+window.seerviDeleteItem=async function(itemId){
+  seerviRequireAdmin();
+  const id=seerviCleanItemValue(itemId,200);
+  if(!id) throw new Error('Item ID is required.');
+  await deleteDoc(doc(db,SEERVI_ITEMS_COLLECTION,id));
+  seerviInvalidateCache('items:');
+  return true;
+};
+
+function seerviBuildCategoryPayload(input={}){
+  const payload={
+    type:seerviCleanItemValue(input.type,30),
+    name:seerviCleanItemValue(input.name,200),
+    parentId:seerviCleanItemValue(input.parentId,200),
+    slug:seerviCleanItemValue(input.slug,220),
+    active:input.active!==false,
+    sortOrder:Number.isFinite(Number(input.sortOrder))?Number(input.sortOrder):0,
+    updatedAt:serverTimestamp()
+  };
+  if(!['category','subcategory'].includes(payload.type)){
+    throw new Error('Invalid category type.');
+  }
+  if(!payload.name) throw new Error('Category name is required.');
+  return payload;
+}
+
+window.seerviCreateItemCategory=async function(input={}){
+  seerviRequireAdmin();
+  const payload=seerviBuildCategoryPayload(input);
+  payload.createdAt=serverTimestamp();
+  payload.createdBy=crmUser.uid;
+  payload.updatedBy=crmUser.uid;
+  const ref=await addDoc(collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),payload);
+  seerviInvalidateCache('itemCategories:');
+  return {id:ref.id,...payload};
+};
+
+window.seerviGetItemCategories=async function(options={}){
+  seerviRequireAdmin();
+  const max=Math.min(Math.max(Number(options.limit)||500,1),1000);
+  const snap=await getDocs(query(collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),limit(max)));
+  return snap.docs.map(d=>({id:d.id,...d.data()}));
+};
+
+window.seerviUpdateItemCategory=async function(categoryId,input={}){
+  seerviRequireAdmin();
+  const id=seerviCleanItemValue(categoryId,200);
+  if(!id) throw new Error('Category ID is required.');
+  const payload=seerviBuildCategoryPayload(input);
+  payload.updatedBy=crmUser.uid;
+  await updateDoc(doc(db,SEERVI_ITEM_CATEGORIES_COLLECTION,id),payload);
+  seerviInvalidateCache('itemCategories:');
+  return {id,...payload};
+};
+
+window.seerviDeleteItemCategory=async function(categoryId){
+  seerviRequireAdmin();
+  const id=seerviCleanItemValue(categoryId,200);
+  if(!id) throw new Error('Category ID is required.');
+  await deleteDoc(doc(db,SEERVI_ITEM_CATEGORIES_COLLECTION,id));
+  seerviInvalidateCache('itemCategories:');
+  return true;
+};
+/* ===== END FIREBASE ITEMS DATA LAYER / STEP 2 ===== */
+
 
 let crmUser = null;
 let crmPartyId = '';
@@ -6967,8 +7508,8 @@ function inventoryLoadPublic(){return Promise.resolve();}
 function inventoryRenderAdmin(){return;}
 function inventoryQuoteDeltas(){return [];}
 function inventoryStampCatalogueContext(){return;}
-function inventoryContextForCard(){return {mother:'',sub:''};}
-function inventoryMotherCategoryForItem(item){return String(item?.motherCategory||'').trim();}
+function inventoryContextForCard(){return {category:'',subcategory:''};}
+function inventoryCategoryForItem(item){return String(item?.category||'').trim();}
 function inventorySubcategoryForItem(item){return String(item?.subcategory||'').trim();}
 window.refreshInventoryStock=async function(){return;};
 
@@ -7178,6 +7719,1304 @@ window.addEventListener('storage',e=>{
 window.addEventListener('beforeunload',()=>{
   if(seerviNotificationUnsubscribe){seerviNotificationUnsubscribe();seerviNotificationUnsubscribe=null;}
 });
+
+
+/* ===== SEERVI ITEMS PANEL / STEP 3 ===== */
+let seerviItemsCache=[];
+let seerviItemCategoriesCache=[];
+let seerviItemsEditingId='';
+
+function seerviItemsEsc(value){
+  return typeof esc==='function' ? esc(value) : String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function seerviItemsAdminGuard(){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){
+    throw new Error('Admin access required.');
+  }
+}
+function seerviItemCategoryName(id){
+  const x=seerviItemCategoriesCache.find(c=>c.id===id);
+  return x?.name||'';
+}
+function seerviItemCategoryLabel(item){
+  const parts=[
+    seerviItemCategoryName(item.categoryId),
+    seerviItemCategoryName(item.subcategoryId)
+  ].filter(Boolean);
+  return parts.join(' / ') || 'Unassigned';
+}
+function seerviItemCategoryTypeName(type){
+  return type==='category'?'CATEGORY':'SUBCATEGORY';
+}
+function seerviItemSortCategories(a,b){
+  return Number(a.sortOrder||0)-Number(b.sortOrder||0) || String(a.name||'').localeCompare(String(b.name||''));
+}
+
+async function seerviItemsLoadCategories(){
+  seerviItemsAdminGuard();
+  seerviItemCategoriesCache=await seerviGetItemCategories({limit:1000});
+  seerviItemCategoriesCache.sort(seerviItemSortCategories);
+  seerviItemsPopulateCategorySelects();
+  seerviRenderCategories();
+}
+
+async function seerviItemsLoadAll(){
+  seerviItemsAdminGuard();
+  const status=$('seerviItemsStatus');
+  if(status) status.textContent='Loading items…';
+  try{
+    seerviItemsCache=await seerviGetItems({limit:1000});
+    seerviItemsCache.sort((a,b)=>String(b.updatedAt?.seconds||b.createdAt?.seconds||0)-String(a.updatedAt?.seconds||a.createdAt?.seconds||0));
+    seerviItemsFilter($('seerviItemsSearch')?.value||'');
+  }catch(e){
+    if(status) status.textContent='Unable to load items: '+(e?.message||'Unknown error');
+    throw e;
+  }
+}
+
+window.seerviItemsRefresh=async function(){
+  try{
+    seerviItemsAdminGuard();
+    await Promise.all([seerviItemsLoadCategories(),seerviItemsLoadAll()]);
+    seerviItemsSetStatus('Items and categories refreshed.');
+  }catch(e){
+    seerviItemsSetStatus(e?.message||'Refresh failed.',true);
+  }
+};
+
+function seerviItemsSetStatus(message,error=false){
+  const el=$('seerviItemsStatus');
+  if(el){
+    el.textContent=message||'';
+    el.style.color=error?'#f28b8b':'';
+  }
+}
+
+function seerviItemsPopulateCategorySelects(){
+  const category=$('seerviItemCategory');
+  const sub=$('seerviItemSubcategory');
+  if(!category||!sub) return;
+  const categories=seerviItemCategoriesCache.filter(x=>x.type==='category');
+  category.innerHTML='<option value="">Select Category</option>'+categories.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
+  sub.innerHTML='<option value="">Select Subcategory</option>';
+}
+
+function seerviItemCategoryChanged(){
+  const categoryId=$('seerviItemCategory')?.value||'';
+  const sub=$('seerviItemSubcategory');
+  if(!sub)return;
+  const rows=seerviItemCategoriesCache.filter(x=>x.type==='subcategory' && x.parentId===categoryId);
+  sub.innerHTML='<option value="">Select Subcategory</option>'+rows.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
+}
+
+function seerviItemsFilter(search=''){
+  const q=String(search||'').trim().toLowerCase();
+  const statusFilter=$('seerviItemsStatusFilter')?.value||'all';
+  let rows=seerviItemsCache.filter(item=>{
+    if(statusFilter==='active' && item.active===false)return false;
+    if(statusFilter==='inactive' && item.active!==false)return false;
+    if(!q)return true;
+    const hay=[
+      item.name,item.model,item.description,
+      seerviItemCategoryLabel(item),
+      item.imageWebpUrl,
+      ...Object.entries(item.specifications||{}).flat()
+    ].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+  const list=$('seerviItemsList');
+  if(!list)return;
+  if(!rows.length){
+    list.innerHTML='<div class="crm-muted" style="padding:16px 4px">No items found.</div>';
+    seerviItemsSetStatus('0 matching items.');
+    return;
+  }
+  seerviItemsSetStatus(`${rows.length} item${rows.length===1?'':'s'} shown.`);
+  list.innerHTML=rows.map(item=>{
+    const active=item.active!==false;
+    const img=item.imageWebpUrl ? `<img class="seervi-item-thumb" src="${seerviItemsEsc(item.imageWebpUrl)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : '<div class="seervi-item-thumb"></div>';
+    return `<div class="seervi-item-row">
+      ${img}
+      <div>
+        <div class="seervi-item-name">${seerviItemsEsc(item.name||'Unnamed Item')}</div>
+        <div class="seervi-item-meta">${item.model?`Model: ${seerviItemsEsc(item.model)}`:'No model/code'} · ID: ${seerviItemsEsc(item.id)}</div>
+      </div>
+      <div class="seervi-item-category">${seerviItemsEsc(seerviItemCategoryLabel(item))}</div>
+      <div class="seervi-item-status ${active?'active':'inactive'}">${active?'ACTIVE':'INACTIVE'}</div>
+      <div class="seervi-item-meta">${Object.keys(item.specifications||{}).length} specs</div>
+      <div class="seervi-item-actions">
+        <button class="crm-secondary small" type="button" onclick="seerviEditItem('${seerviItemsEsc(item.id)}')">EDIT</button>
+        <button class="crm-secondary small" type="button" onclick="seerviDuplicateItem('${seerviItemsEsc(item.id)}')">DUPLICATE</button>
+        <button class="crm-secondary small" type="button" onclick="seerviToggleItemActive('${seerviItemsEsc(item.id)}')">${active?'DEACTIVATE':'ACTIVATE'}</button>
+        <button class="crm-secondary small" type="button" onclick="seerviDeleteItemConfirm('${seerviItemsEsc(item.id)}')">DELETE</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function seerviItemsTab(tab){
+  document.querySelectorAll('.admin-items-tab').forEach(btn=>btn.classList.toggle('active',btn.dataset.itemsTab===tab));
+  $('seerviItemsAllView')?.toggleAttribute('hidden',tab!=='all');
+  $('seerviItemsAddView')?.toggleAttribute('hidden',tab!=='add');
+  $('seerviItemsCategoriesView')?.toggleAttribute('hidden',tab!=='categories');
+  if(tab==='all'){
+    seerviItemsLoadAll().catch(e=>seerviItemsSetStatus(e?.message||'Unable to load items.',true));
+  }else if(tab==='add'){
+    seerviItemsLoadCategories().catch(()=>{});
+    if(!seerviItemsEditingId) seerviAddSpecificationRowIfEmpty();
+  }else if(tab==='categories'){
+    seerviItemsLoadCategories().catch(e=>{
+      const el=$('seerviCategoriesStatus');if(el)el.textContent=e?.message||'Unable to load categories.';
+    });
+  }
+}
+
+function seerviItemsBackToDashboard(){
+  const area=$('adminItemsArea');
+  const global=$('adminGlobalArea');
+  if(area)area.hidden=true;
+  if(global)global.hidden=false;
+}
+
+window.accountDashboardItems=function(){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+  closeAccountDashboard();
+  openAdminPanel();
+  seerviOpenItemsPanel();
+};
+
+window.seerviOpenItemsPanel=function(){
+  seerviItemsAdminGuard();
+  const area=$('adminItemsArea');
+  const global=$('adminGlobalArea');
+  if(!area)return;
+  if(global)global.hidden=true;
+  area.hidden=false;
+  seerviItemsTab('all');
+  seerviItemsLoadCategories().catch(()=>{});
+};
+
+function seerviAddSpecificationRow(name='',value=''){
+  const wrap=$('seerviSpecificationsRows');
+  if(!wrap)return;
+  const row=document.createElement('div');
+  row.className='seervi-spec-row';
+  row.innerHTML=`<input class="seervi-spec-name" maxlength="120" placeholder="Specification name" value="${seerviItemsEsc(name)}">
+    <input class="seervi-spec-value" maxlength="1000" placeholder="Value" value="${seerviItemsEsc(value)}">
+    <button class="crm-secondary small" type="button" title="Remove" onclick="this.parentElement.remove()">×</button>`;
+  wrap.appendChild(row);
+}
+
+function seerviAddSpecificationRowIfEmpty(){
+  const wrap=$('seerviSpecificationsRows');
+  if(wrap && !wrap.children.length)seerviAddSpecificationRow();
+}
+
+function seerviReadSpecificationRows(){
+  const result={};
+  document.querySelectorAll('#seerviSpecificationsRows .seervi-spec-row').forEach(row=>{
+    const key=row.querySelector('.seervi-spec-name')?.value.trim()||'';
+    const value=row.querySelector('.seervi-spec-value')?.value.trim()||'';
+    if(key) result[key]=value;
+  });
+  return result;
+}
+
+function seerviItemsResetForm(){
+  seerviItemsEditingId='';
+  $('seerviItemId').value='';
+  $('seerviItemName').value='';
+  $('seerviItemModel').value='';
+  $('seerviItemImage').value='';
+  $('seerviItemDescription').value='';
+  $('seerviItemActive').checked=true;
+  $('seerviSpecificationsRows').innerHTML='';
+  seerviAddSpecificationRow();
+  $('seerviItemFormMode').textContent='Create a new Firebase item.';
+  $('seerviItemSaveButton').textContent='SAVE ITEM';
+  $('seerviItemCancelEdit').hidden=true;
+  $('seerviItemFormStatus').textContent='';
+  seerviItemsPopulateCategorySelects();
+}
+
+async function seerviEditItem(itemId){
+  try{
+    seerviItemsAdminGuard();
+    const item=seerviItemsCache.find(x=>x.id===itemId) || await seerviGetItem(itemId);
+    if(!item)throw new Error('Item not found.');
+    seerviItemsEditingId=item.id;
+    await seerviItemsLoadCategories();
+    seerviItemsTab('add');
+    seerviItemsRenderSelectValue('seerviItemCategory',item.categoryId);
+    seerviItemCategoryChanged();
+    seerviItemsRenderSelectValue('seerviItemSubcategory',item.subcategoryId);
+    $('seerviItemId').value=item.id;
+    $('seerviItemName').value=item.name||'';
+    $('seerviItemModel').value=item.model||'';
+    $('seerviItemImage').value=item.imageWebpUrl||'';
+    $('seerviItemDescription').value=item.description||'';
+    $('seerviItemActive').checked=item.active!==false;
+    $('seerviSpecificationsRows').innerHTML='';
+    Object.entries(item.specifications||{}).forEach(([k,v])=>seerviAddSpecificationRow(k,v));
+    seerviAddSpecificationRowIfEmpty();
+    $('seerviItemFormMode').textContent=`Editing item: ${item.name||item.id}`;
+    $('seerviItemSaveButton').textContent='UPDATE ITEM';
+    $('seerviItemCancelEdit').hidden=false;
+    $('seerviItemFormStatus').textContent='';
+  }catch(e){
+    seerviItemsSetStatus(e?.message||'Unable to edit item.',true);
+  }
+}
+
+window.seerviSaveItemForm=async function(){
+  try{
+    seerviItemsAdminGuard();
+    const status=$('seerviItemFormStatus');
+    const save=$('seerviItemSaveButton');
+    if(status)status.textContent='Saving…';
+    if(save)save.disabled=true;
+    const category=$('seerviItemCategory').value.trim();
+    const subcategory=$('seerviItemSubcategory').value.trim();
+    const image=$('seerviItemImage').value.trim();
+    if(!category)throw new Error('Category is required.');
+    if(!image)throw new Error('WEBP image URL / path is required.');
+    const data={
+      categoryId:category,
+      subcategoryId:subcategory,
+      name:$('seerviItemName').value.trim(),
+      model:$('seerviItemModel').value.trim(),
+      imageWebpUrl:image,
+      description:$('seerviItemDescription').value.trim(),
+      specifications:seerviReadSpecificationRows(),
+      active:$('seerviItemActive').checked
+    };
+    if(!data.name)throw new Error('Item name is required.');
+    if(seerviItemsEditingId){
+      await seerviUpdateItem(seerviItemsEditingId,data);
+      if(status)status.textContent='Item updated successfully.';
+    }else{
+      await seerviCreateItem(data);
+      if(status)status.textContent='Item created successfully.';
+    }
+    await seerviItemsLoadAll();
+    seerviItemsResetForm();
+    seerviItemsTab('all');
+  }catch(e){
+    const status=$('seerviItemFormStatus');
+    if(status){status.textContent=e?.message||'Save failed.';status.style.color='#f28b8b';}
+  }finally{
+    const save=$('seerviItemSaveButton');if(save)save.disabled=false;
+  }
+};
+
+window.seerviDeleteItemConfirm=async function(itemId){
+  try{
+    seerviItemsAdminGuard();
+    const item=seerviItemsCache.find(x=>x.id===itemId);
+    const label=item?.name||itemId;
+    if(!confirm(`Delete this item?\n\n${label}\n\nThis removes the Firestore item record.`))return;
+    await seerviDeleteItem(itemId);
+    await seerviItemsLoadAll();
+    seerviItemsSetStatus('Item deleted.');
+  }catch(e){
+    seerviItemsSetStatus(e?.message||'Delete failed.',true);
+  }
+};
+
+function seerviCategoryParentOptions(){
+  const type=$('seerviCategoryType')?.value||'';
+  const parent=$('seerviCategoryParent');
+  if(!parent)return;
+  if(type==='category'){
+    parent.innerHTML='<option value="">No Parent</option>';
+    parent.disabled=true;
+    return;
+  }
+  parent.disabled=false;
+  const parentType='category';
+  const rows=seerviItemCategoriesCache.filter(x=>x.type===parentType).sort(seerviItemSortCategories);
+  parent.innerHTML='<option value="">Select Parent</option>'+rows.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
+}
+
+async function seerviCreateCategoryFromForm(){
+  try{
+    seerviItemsAdminGuard();
+    const status=$('seerviCategoryFormStatus');
+    if(status)status.textContent='Saving…';
+    const type=$('seerviCategoryType').value;
+    const parentId=type==='category'?'':$('seerviCategoryParent').value;
+    const name=$('seerviCategoryName').value.trim();
+    const slug=$('seerviCategorySlug').value.trim() || name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    if(!type||!name)throw new Error('Category type and name are required.');
+    if(type==='subcategory'&&!parentId)throw new Error('Select a parent category.');
+    await seerviCreateItemCategory({
+      type,name,parentId,slug,
+      active:$('seerviCategoryActive').checked
+    });
+    if(status)status.textContent='Category created successfully.';
+    $('seerviCategoryName').value='';
+    $('seerviCategorySlug').value='';
+    $('seerviCategoryType').value='';
+    seerviCategoryParentOptions();
+    await seerviItemsLoadCategories();
+  }catch(e){
+    const status=$('seerviCategoryFormStatus');
+    if(status){status.textContent=e?.message||'Category creation failed.';status.style.color='#f28b8b';}
+  }
+}
+
+function seerviRenderCategories(){
+  const status=$('seerviCategoriesStatus');
+  const list=$('seerviCategoriesList');
+  if(!list)return;
+  if(status)status.textContent=`${seerviItemCategoriesCache.length} categories`;
+  if(!seerviItemCategoriesCache.length){
+    list.innerHTML='<div class="crm-muted" style="padding:10px 0">No categories yet. Create your first Category.</div>';
+    return;
+  }
+  const typeOrder={category:0,subcategory:1};
+  const rows=[...seerviItemCategoriesCache].sort((a,b)=>
+    (typeOrder[a.type]??9)-(typeOrder[b.type]??9) ||
+    String(a.name||'').localeCompare(String(b.name||''))
+  );
+  list.innerHTML=rows.map(x=>{
+    const parent=seerviItemCategoryName(x.parentId);
+    return `<div class="seervi-category-row">
+      <div class="seervi-category-type">${seerviItemsEsc(seerviItemCategoryTypeName(x.type))}</div>
+      <div><div class="seervi-category-name">${seerviItemsEsc(x.name)}</div><div class="seervi-category-parent">${parent?`Parent: ${seerviItemsEsc(parent)}`:'Root'}</div></div>
+      <div class="seervi-category-active" style="color:${x.active===false?'#f28b8b':'#6ee7a8'}">${x.active===false?'INACTIVE':'ACTIVE'}</div>
+      <div class="seervi-item-meta">${seerviItemsEsc(x.id)}</div>
+      <div class="seervi-item-actions">
+        <button class="crm-secondary small" type="button" onclick="seerviEditCategory('${seerviItemsEsc(x.id)}')">EDIT</button>
+        <button class="crm-secondary small" type="button" onclick="seerviDeleteCategoryConfirm('${seerviItemsEsc(x.id)}')">DELETE</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.seerviCreateCategoryFromForm=seerviCreateCategoryFromForm;
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',()=>seerviItemsAddSpecificationRowIfEmpty(),{once:true});
+}else{
+  seerviItemsAddSpecificationRowIfEmpty();
+}
+/* ===== END SEERVI ITEMS PANEL / STEP 3 ===== */
+
+
+
+/* ===== SEERVI BULK ADD / STEP 4 ===== */
+let seerviBulkRows=[];
+let seerviBulkValidation=[];
+let seerviBulkImporting=false;
+
+function seerviBulkNormaliseHeader(v){
+  return String(v??'').trim().toLowerCase().replace(/\s+/g,' ').replace(/[_-]+/g,' ');
+}
+function seerviBulkCell(row,...names){
+  const keys=Object.keys(row);
+  for(const name of names){
+    const target=seerviBulkNormaliseHeader(name);
+    const found=keys.find(k=>seerviBulkNormaliseHeader(k)===target);
+    if(found!==undefined && row[found]!==undefined) return String(row[found]??'').trim();
+  }
+  return '';
+}
+function seerviBulkSpecColumns(row){
+  const pairs=[];
+  Object.keys(row).forEach(key=>{
+    const h=seerviBulkNormaliseHeader(key);
+    const m=h.match(/^spec\s*(\d+)\s*(name|value)$/i);
+    if(m)pairs.push({n:Number(m[1]),kind:m[2].toLowerCase(),key});
+  });
+  const names={};
+  const values={};
+  pairs.forEach(x=>{
+    if(x.kind==='name')names[x.n]=String(row[x.key]??'').trim();
+    else values[x.n]=String(row[x.key]??'').trim();
+  });
+  const specs={};
+  Object.keys(names).map(Number).sort((a,b)=>a-b).forEach(n=>{
+    if(names[n]) specs[names[n]]=values[n]||'';
+  });
+  return specs;
+}
+function seerviBulkSlug(v){
+  return String(v||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+}
+function seerviBulkFindCategory(name){
+  const q=String(name||'').trim().toLowerCase();
+  return seerviItemCategoriesCache.find(x=>x.type==='category' && String(x.name||'').trim().toLowerCase()===q);
+}
+function seerviBulkFindSubcategory(name,parentId){
+  const q=String(name||'').trim().toLowerCase();
+  return seerviItemCategoriesCache.find(x=>x.type==='subcategory' && x.parentId===parentId && String(x.name||'').trim().toLowerCase()===q);
+}
+function seerviBulkItemKey(categoryId,subcategoryId,name,model){
+  return [categoryId,subcategoryId,String(name||'').trim().toLowerCase(),String(model||'').trim().toLowerCase()].join('|');
+}
+
+async function seerviBulkPrepare(){
+  seerviItemsAdminGuard();
+  await seerviItemsLoadCategories();
+  if(!seerviItemsCache.length){
+    seerviItemsCache=await seerviGetItems({limit:1000});
+  }
+  const existing=new Set(seerviItemsCache.map(x=>seerviBulkItemKey(x.categoryId,x.subcategoryId,x.name,x.model)));
+  const fileKeys=new Set();
+
+  seerviBulkValidation=seerviBulkRows.map((row,index)=>{
+    const categoryName=seerviBulkCell(row,'Category');
+    const subcategoryName=seerviBulkCell(row,'Subcategory');
+    const name=seerviBulkCell(row,'Item Name','Name');
+    const model=seerviBulkCell(row,'Model','Model / Code','Code');
+    const image=seerviBulkCell(row,'WEBP Image URL / Path','WEBP URL','Image WebP URL','Image URL');
+    const description=seerviBulkCell(row,'Description');
+    const category=seerviBulkFindCategory(categoryName);
+    const subcategory=subcategoryName ? (category ? seerviBulkFindSubcategory(subcategoryName,category.id) : null) : null;
+    const errors=[];
+    if(!categoryName)errors.push('Category is required');
+    else if(!category)errors.push(`Category not found: ${categoryName}`);
+    if(!subcategoryName)errors.push('Subcategory is required');
+    else if(!subcategory)errors.push(`Subcategory not found under ${categoryName}: ${subcategoryName}`);
+    if(!name)errors.push('Item Name is required');
+    if(!image)errors.push('WEBP Image URL / Path is required');
+    else if(!image.split('?')[0].split('#')[0].toLowerCase().endsWith('.webp'))errors.push('WEBP Image URL / Path must end with .webp');
+    const key=seerviBulkItemKey(category?.id||'',subcategory?.id||'',name,model);
+    const duplicateInFile=fileKeys.has(key);
+    if(duplicateInFile)errors.push('Duplicate row in this Excel file');
+    fileKeys.add(key);
+    const duplicate=existing.has(key)||duplicateInFile;
+    if(duplicate)errors.push('Item already exists');
+    return {
+      rowNumber:index+2,
+      raw:row,
+      data:{
+        categoryId:category?.id||'',
+        subcategoryId:subcategory?.id||'',
+        name,model,description,imageWebpUrl:image,
+        specifications:seerviBulkSpecColumns(row),
+        active:!['false','0','no','inactive'].includes(seerviBulkCell(row,'Active','Status').toLowerCase())
+      },
+      errors,
+      duplicate
+    };
+  });
+  seerviBulkRenderPreview();
+}
+
+function seerviBulkRenderPreview(){
+  const area=$('seerviBulkPreviewArea');
+  const table=$('seerviBulkTableWrap');
+  const total=seerviBulkValidation.length;
+  const errorRows=seerviBulkValidation.filter(x=>x.errors.length);
+  const dupRows=seerviBulkValidation.filter(x=>x.duplicate);
+  const valid=seerviBulkValidation.filter(x=>!x.errors.length);
+  if(!area||!table)return;
+  area.hidden=false;
+  $('seerviBulkTotal').textContent=total;
+  $('seerviBulkValid').textContent=valid.length;
+  $('seerviBulkErrors').textContent=errorRows.length;
+  $('seerviBulkDuplicates').textContent=dupRows.length;
+  const btn=$('seerviBulkImportButton');
+  if(btn)btn.disabled=valid.length===0 || seerviBulkImporting;
+  $('seerviBulkValidationStatus').textContent=errorRows.length
+    ? `${valid.length} valid row(s). ${errorRows.length} row(s) require correction.`
+    : `${valid.length} row(s) ready to import.`;
+  table.innerHTML=`<table class="seervi-bulk-table">
+    <thead><tr><th>ROW</th><th>STATUS</th><th>CATEGORY</th><th>SUBCATEGORY</th><th>ITEM</th><th>MODEL</th><th>IMAGE</th><th>SPECS</th><th>ERRORS</th></tr></thead>
+    <tbody>${seerviBulkValidation.map(x=>{
+      const status=x.errors.length?'ERROR':x.duplicate?'DUPLICATE':'READY';
+      const cls=x.errors.length?'bulk-row-error':x.duplicate?'bulk-row-duplicate':'';
+      const badge=x.errors.length?'error':x.duplicate?'duplicate':'ok';
+      return `<tr class="${cls}">
+        <td>${x.rowNumber}</td>
+        <td><span class="seervi-bulk-badge ${badge}">${status}</span></td>
+        <td>${seerviItemsEsc(seerviItemCategoryName(x.data.categoryId)||seerviBulkCell(x.raw,'Category'))}</td>
+        <td>${seerviItemsEsc(seerviItemCategoryName(x.data.subcategoryId)||seerviBulkCell(x.raw,'Subcategory'))}</td>
+        <td>${seerviItemsEsc(x.data.name)}</td>
+        <td>${seerviItemsEsc(x.data.model)}</td>
+        <td>${seerviItemsEsc(x.data.imageWebpUrl)}</td>
+        <td>${Object.keys(x.data.specifications||{}).length}</td>
+        <td class="seervi-bulk-error-text">${seerviItemsEsc(x.errors.join(' · '))}</td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>`;
+}
+
+window.seerviBulkReadFile=async function(){
+  try{
+    seerviItemsAdminGuard();
+    const file=$('seerviBulkFile')?.files?.[0];
+    if(!file)throw new Error('Select an Excel or CSV file first.');
+    if(typeof XLSX==='undefined')throw new Error('Excel reader is not loaded. Refresh the page and try again.');
+    const status=$('seerviBulkFileStatus');
+    if(status)status.textContent='Reading file…';
+    const buffer=await file.arrayBuffer();
+    const wb=XLSX.read(buffer,{type:'array'});
+    const first=wb.SheetNames?.[0];
+    if(!first)throw new Error('No worksheet found.');
+    const ws=wb.Sheets[first];
+    const rows=XLSX.utils.sheet_to_json(ws,{defval:'',raw:false});
+    if(!rows.length)throw new Error('The first worksheet has no data rows.');
+    seerviBulkRows=rows;
+    await seerviBulkPrepare();
+    if(status)status.textContent=`Loaded ${rows.length} row(s) from "${file.name}".`;
+  }catch(e){
+    const status=$('seerviBulkFileStatus');
+    if(status){status.textContent=e?.message||'Unable to read file.';status.style.color='#f28b8b';}
+  }
+};
+
+window.seerviBulkRevalidate=async function(){
+  try{
+    if(!seerviBulkRows.length)throw new Error('Upload a file first.');
+    await seerviBulkPrepare();
+  }catch(e){
+    const el=$('seerviBulkValidationStatus');
+    if(el){el.textContent=e?.message||'Validation failed.';el.style.color='#f28b8b';}
+  }
+};
+
+window.seerviBulkImport=async function(){
+  if(seerviBulkImporting)return;
+  try{
+    seerviItemsAdminGuard();
+    const valid=seerviBulkValidation.filter(x=>!x.errors.length);
+    if(!valid.length)throw new Error('There are no valid rows to import.');
+    if(!confirm(`Import ${valid.length} valid item(s) to Firebase?`))return;
+    seerviBulkImporting=true;
+    const btn=$('seerviBulkImportButton');
+    if(btn){btn.disabled=true;btn.textContent='IMPORTING…';}
+    const status=$('seerviBulkValidationStatus');
+    let done=0;
+    for(const row of valid){
+      await seerviCreateItem(row.data);
+      done++;
+      if(status)status.textContent=`Imported ${done} of ${valid.length} item(s)…`;
+    }
+    await seerviItemsLoadAll();
+    if(status)status.textContent=`Import complete: ${done} item(s) added to Firebase.`;
+    seerviBulkRows=[];
+    seerviBulkValidation=[];
+    $('seerviBulkFile').value='';
+    $('seerviBulkPreviewArea').hidden=true;
+  }catch(e){
+    const status=$('seerviBulkValidationStatus');
+    if(status){status.textContent=e?.message||'Import failed.';status.style.color='#f28b8b';}
+  }finally{
+    seerviBulkImporting=false;
+    const btn=$('seerviBulkImportButton');
+    if(btn){btn.disabled=true;btn.textContent='IMPORT VALID ITEMS';}
+  }
+};
+
+window.seerviBulkDownloadTemplate=function(){
+  if(typeof XLSX==='undefined'){
+    alert('Excel template generator is not loaded. Refresh the page and try again.');
+    return;
+  }
+  const row={
+    'Category':'Example Category',
+    'Subcategory':'Example Subcategory',
+    'Item Name':'Example Item',
+    'Model':'MODEL-001',
+    'WEBP Image URL / Path':'images/items/example.webp',
+    'Description':'Example item description',
+    'Active':'TRUE',
+    'Spec 1 Name':'Material',
+    'Spec 1 Value':'Aluminium',
+    'Spec 2 Name':'Length',
+    'Spec 2 Value':'3 Meter',
+    'Spec 3 Name':'Finish',
+    'Spec 3 Value':'Silver'
+  };
+  const ws=XLSX.utils.json_to_sheet([row]);
+  ws['!cols']=[
+    {wch:24},{wch:24},{wch:30},{wch:18},{wch:48},{wch:45},{wch:12},
+    {wch:20},{wch:24},{wch:20},{wch:24},{wch:20},{wch:24}
+  ];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Items');
+  XLSX.writeFile(wb,'seervi_items_bulk_template.xlsx');
+};
+
+if(!window.seerviItemsTabStep4Wrapped){
+  const previousTab=window.seerviItemsTab;
+  window.seerviItemsTab=function(tab){
+    document.querySelectorAll('.admin-items-tab').forEach(btn=>btn.classList.toggle('active',btn.dataset.itemsTab===tab));
+    ['All','Add','Categories','Bulk'].forEach(name=>{
+      const id='seerviItems'+name+'View';
+      const el=$(id);
+      if(el)el.hidden=(tab!==name.toLowerCase());
+    });
+    if(tab==='all'){
+      seerviItemsLoadAll().catch(e=>seerviItemsSetStatus(e?.message||'Unable to load items.',true));
+    }else if(tab==='add'){
+      seerviItemsLoadCategories().catch(()=>{});
+      if(!seerviItemsEditingId)seerviAddSpecificationRowIfEmpty();
+    }else if(tab==='categories'){
+      seerviItemsLoadCategories().catch(e=>{
+        const el=$('seerviCategoriesStatus');if(el)el.textContent=e?.message||'Unable to load categories.';
+      });
+    }else if(tab==='bulk'){
+      seerviItemsLoadCategories().catch(()=>{});
+    }
+  };
+  window.seerviItemsTabStep4Wrapped=true;
+}
+/* ===== END SEERVI BULK ADD / STEP 4 ===== */
+
+
+
+/* ===== SEERVI ITEM MANAGEMENT / STEP 5 ===== */
+
+function seerviPopulateItemFilters(){
+  const category=$('seerviItemsCategoryFilter');
+  const subcategory=$('seerviItemsSubcategoryFilter');
+  if(!category||!subcategory)return;
+
+  const categories=seerviItemCategoriesCache
+    .filter(x=>x.type==='category')
+    .sort(seerviItemSortCategories);
+
+  const currentCategory=category.value||'all';
+  category.innerHTML='<option value="all">ALL CATEGORIES</option>'+
+    categories.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
+  category.value=categories.some(x=>x.id===currentCategory)?currentCategory:'all';
+
+  const currentSubcategory=subcategory.value||'all';
+  const subs=seerviItemCategoriesCache
+    .filter(x=>x.type==='subcategory' && (category.value==='all' || x.parentId===category.value))
+    .sort(seerviItemSortCategories);
+
+  subcategory.innerHTML='<option value="all">ALL SUBCATEGORIES</option>'+
+    subs.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
+  subcategory.value=subs.some(x=>x.id===currentSubcategory)?currentSubcategory:'all';
+}
+
+const seerviItemsLoadCategoriesStep5=seerviItemsLoadCategories;
+seerviItemsLoadCategories=async function(){
+  await seerviItemsLoadCategoriesStep5();
+  seerviPopulateItemFilters();
+};
+
+const seerviItemsFilterStep5=seerviItemsFilter;
+seerviItemsFilter=function(search=''){
+  const q=String(search||'').trim().toLowerCase();
+  const statusFilter=$('seerviItemsStatusFilter')?.value||'all';
+  const categoryFilter=$('seerviItemsCategoryFilter')?.value||'all';
+  const subcategoryFilter=$('seerviItemsSubcategoryFilter')?.value||'all';
+
+  let rows=seerviItemsCache.filter(item=>{
+    if(statusFilter==='active' && item.active===false)return false;
+    if(statusFilter==='inactive' && item.active!==false)return false;
+    if(categoryFilter!=='all' && item.categoryId!==categoryFilter)return false;
+    if(subcategoryFilter!=='all' && item.subcategoryId!==subcategoryFilter)return false;
+
+    if(!q)return true;
+    const hay=[
+      item.name,item.model,item.description,
+      seerviItemCategoryLabel(item),
+      item.imageWebpUrl,
+      ...Object.entries(item.specifications||{}).flat()
+    ].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+
+  const list=$('seerviItemsList');
+  if(!list)return;
+
+  if(!rows.length){
+    list.innerHTML='<div class="crm-muted" style="padding:16px 4px">No matching items found.</div>';
+    seerviItemsSetStatus('0 matching items.');
+    return;
+  }
+
+  seerviItemsSetStatus(`${rows.length} item${rows.length===1?'':'s'} shown.`);
+
+  list.innerHTML=rows.map(item=>{
+    const active=item.active!==false;
+    const img=item.imageWebpUrl
+      ? `<img class="seervi-item-thumb" src="${seerviItemsEsc(item.imageWebpUrl)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">`
+      : '<div class="seervi-item-thumb"></div>';
+
+    return `<div class="seervi-item-row">
+      ${img}
+      <div>
+        <div class="seervi-item-name">${seerviItemsEsc(item.name||'Unnamed Item')}</div>
+        <div class="seervi-item-meta">${item.model?`Model: ${seerviItemsEsc(item.model)}`:'No model/code'} · ID: ${seerviItemsEsc(item.id)}</div>
+      </div>
+      <div class="seervi-item-category">${seerviItemsEsc(seerviItemCategoryLabel(item))}</div>
+      <div class="seervi-item-status ${active?'active':'inactive'}">${active?'ACTIVE':'INACTIVE'}</div>
+      <div class="seervi-item-meta">${Object.keys(item.specifications||{}).length} specs</div>
+      <div class="seervi-item-actions">
+        <button class="crm-secondary small" type="button" onclick="seerviEditItem('${seerviItemsEsc(item.id)}')">EDIT</button>
+        <button class="crm-secondary small" type="button" onclick="seerviDuplicateItem('${seerviItemsEsc(item.id)}')">DUPLICATE</button>
+        <button class="crm-secondary small" type="button" onclick="seerviToggleItemActive('${seerviItemsEsc(item.id)}')">${active?'DEACTIVATE':'ACTIVATE'}</button>
+        <button class="crm-secondary small" type="button" onclick="seerviDeleteItemConfirm('${seerviItemsEsc(item.id)}')">DELETE</button>
+      </div>
+    </div>`;
+  }).join('');
+};
+
+window.seerviToggleItemActive=async function(itemId){
+  try{
+    seerviItemsAdminGuard();
+    const item=seerviItemsCache.find(x=>x.id===itemId) || await seerviGetItem(itemId);
+    if(!item)throw new Error('Item not found.');
+
+    const nextActive=item.active===false;
+    await seerviUpdateItem(itemId,{
+      categoryId:item.categoryId||'',
+      subcategoryId:item.subcategoryId||'',
+      name:item.name||'',
+      model:item.model||'',
+      description:item.description||'',
+      imageWebpUrl:item.imageWebpUrl||'',
+      specifications:item.specifications||{},
+      active:nextActive
+    });
+
+    await seerviItemsLoadAll();
+    seerviItemsSetStatus(nextActive?'Item activated.':'Item deactivated.');
+  }catch(e){
+    seerviItemsSetStatus(e?.message||'Unable to change item status.',true);
+  }
+};
+
+window.seerviDuplicateItem=async function(itemId){
+  try{
+    seerviItemsAdminGuard();
+    const item=seerviItemsCache.find(x=>x.id===itemId) || await seerviGetItem(itemId);
+    if(!item)throw new Error('Item not found.');
+
+    const duplicateName=`${item.name||'Item'} Copy`;
+    const confirmed=confirm(`Create a duplicate item?\n\n${item.name||item.id}\n\nThe copy will be created as INACTIVE so it cannot accidentally appear as a live item.`);
+    if(!confirmed)return;
+
+    const created=await seerviCreateItem({
+      categoryId:item.categoryId||'',
+      subcategoryId:item.subcategoryId||'',
+      name:duplicateName,
+      model:item.model||'',
+      description:item.description||'',
+      imageWebpUrl:item.imageWebpUrl||'',
+      specifications:{...(item.specifications||{})},
+      active:false
+    });
+
+    await seerviItemsLoadAll();
+    seerviItemsSetStatus(`Duplicate created: ${created.name||duplicateName}`);
+  }catch(e){
+    seerviItemsSetStatus(e?.message||'Unable to duplicate item.',true);
+  }
+};
+
+/* Rebind the All Items view after Step 5 filters/actions are installed. */
+const seerviItemsLoadAllStep5=seerviItemsLoadAll;
+seerviItemsLoadAll=async function(){
+  seerviItemsAdminGuard();
+  const status=$('seerviItemsStatus');
+  if(status)status.textContent='Loading items…';
+  try{
+    seerviItemsCache=await seerviGetItems({limit:1000});
+    seerviItemsCache.sort((a,b)=>{
+      const at=a.updatedAt?.seconds||a.createdAt?.seconds||0;
+      const bt=b.updatedAt?.seconds||b.createdAt?.seconds||0;
+      return Number(bt)-Number(at);
+    });
+    seerviPopulateItemFilters();
+    seerviItemsFilter($('seerviItemsSearch')?.value||'');
+  }catch(e){
+    if(status)status.textContent='Unable to load items: '+(e?.message||'Unknown error');
+    throw e;
+  }
+};
+/* ===== END SEERVI ITEM MANAGEMENT / STEP 5 ===== */
+
+
+
+/* ===== SEERVI CATEGORY MANAGEMENT / STEP 6 ===== */
+window.seerviResetCategoryForm=function(){
+  $('seerviCategoryEditId').value='';
+  $('seerviCategoryType').value='';
+  $('seerviCategoryParent').innerHTML='<option value="">Select Parent</option>';
+  $('seerviCategoryParent').disabled=true;
+  $('seerviCategoryName').value='';
+  $('seerviCategorySlug').value='';
+  $('seerviCategoryActive').checked=true;
+  $('seerviCategoryFormStatus').textContent='';
+  $('seerviCategoryFormStatus').style.color='';
+  $('seerviCategorySaveButton').textContent='CREATE CATEGORY';
+  $('seerviCategoryCancelEdit').hidden=true;
+};
+
+window.seerviEditCategory=function(categoryId){
+  try{
+    seerviItemsAdminGuard();
+    const item=seerviItemCategoriesCache.find(x=>x.id===categoryId);
+    if(!item)throw new Error('Category not found.');
+    $('seerviCategoryEditId').value=item.id;
+    $('seerviCategoryType').value=item.type;
+    seerviCategoryParentOptions();
+    $('seerviCategoryParent').value=item.parentId||'';
+    $('seerviCategoryName').value=item.name||'';
+    $('seerviCategorySlug').value=item.slug||'';
+    $('seerviCategoryActive').checked=item.active!==false;
+    $('seerviCategorySaveButton').textContent='UPDATE CATEGORY';
+    $('seerviCategoryCancelEdit').hidden=false;
+    $('seerviCategoryFormStatus').textContent=`Editing: ${item.name||item.id}`;
+    seerviItemsTab('categories');
+    $('seerviCategoryName').focus();
+  }catch(e){
+    const s=$('seerviCategoriesStatus');
+    if(s){s.textContent=e?.message||'Unable to edit category.';s.style.color='#f28b8b';}
+  }
+};
+
+const seerviCreateCategoryFromFormStep6=seerviCreateCategoryFromForm;
+seerviCreateCategoryFromForm=async function(){
+  try{
+    seerviItemsAdminGuard();
+    const editId=$('seerviCategoryEditId').value.trim();
+    const type=$('seerviCategoryType').value;
+    const parentId=type==='category'?'':$('seerviCategoryParent').value;
+    const name=$('seerviCategoryName').value.trim();
+    const slug=$('seerviCategorySlug').value.trim()||
+      name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    const active=$('seerviCategoryActive').checked;
+    if(!type||!name)throw new Error('Category type and name are required.');
+    if(type==='subcategory'&&!parentId)throw new Error('Select the parent Category.');
+    $('seerviCategoryFormStatus').textContent=editId?'Updating…':'Saving…';
+
+    if(editId){
+      await seerviUpdateItemCategory(editId,{type,name,parentId,slug,active});
+    }else{
+      await seerviCreateItemCategory({type,name,parentId,slug,active});
+    }
+
+    await seerviItemsLoadCategories();
+    seerviResetCategoryForm();
+    $('seerviCategoryFormStatus').textContent=editId?'Category updated successfully.':'Category created successfully.';
+  }catch(e){
+    const s=$('seerviCategoryFormStatus');
+    if(s){s.textContent=e?.message||'Category save failed.';s.style.color='#f28b8b';}
+  }
+};
+
+window.seerviDeleteCategoryConfirm=async function(categoryId){
+  try{
+    seerviItemsAdminGuard();
+    const category=seerviItemCategoriesCache.find(x=>x.id===categoryId);
+    if(!category)throw new Error('Category not found.');
+
+    const children=seerviItemCategoriesCache.filter(x=>x.parentId===categoryId);
+    const linked=seerviItemsCache.filter(x=>x.categoryId===categoryId||x.subcategoryId===categoryId);
+
+    if(children.length){
+      alert(`Cannot delete "${category.name}".\n\nIt has ${children.length} child ${children.length===1?'subcategory':'subcategories'}.\n\nDelete or move them first.`);
+      return;
+    }
+    if(linked.length){
+      alert(`Cannot delete "${category.name}".\n\n${linked.length} item(s) are linked to it.\n\nMove or delete those items first.`);
+      return;
+    }
+    if(!confirm(`Delete category "${category.name}"?\n\nThis action cannot be undone.`))return;
+
+    await seerviDeleteItemCategory(categoryId);
+    await seerviItemsLoadCategories();
+    seerviItemsSetStatus(`Category deleted: ${category.name}`);
+  }catch(e){
+    const s=$('seerviCategoriesStatus');
+    if(s){s.textContent=e?.message||'Category deletion failed.';s.style.color='#f28b8b';}
+  }
+};
+/* ===== END SEERVI CATEGORY MANAGEMENT / STEP 6 ===== */
+
+
+
+/* ===== SEERVI PUBLIC FIREBASE CATALOGUE / STEP 7 ===== */
+let seerviPublicItems=[];
+let seerviPublicCategories=[];
+let seerviPublicSelectedCategory='all';
+let seerviPublicSelectedSubcategory='all';
+
+function seerviPublicMillis(v){
+  if(!v)return 0;
+  if(typeof v.toMillis==='function')return v.toMillis();
+  if(typeof v.seconds==='number')return v.seconds*1000;
+  return Number(v)||0;
+}
+
+async function seerviPublicLoadCatalogue(){
+  const status=$('seerviPublicCatalogueStatus');
+  try{
+    if(status)status.textContent='Loading products…';
+
+    const [catSnap,itemSnap]=await Promise.all([
+      getDocs(query(collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),where('active','==',true),limit(500))),
+      getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000)))
+    ]);
+
+    seerviPublicCategories=catSnap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>Number(a.sortOrder||0)-Number(b.sortOrder||0)||String(a.name||'').localeCompare(String(b.name||'')));
+
+    seerviPublicItems=itemSnap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
+
+    seerviPublicRenderCategories();
+    seerviPublicRenderSubcategories();
+    seerviPublicRenderItems();
+
+    if(status)status.textContent=`${seerviPublicItems.length} product${seerviPublicItems.length===1?'':'s'} available.`;
+  }catch(e){
+    console.error('Seervi public catalogue:',e);
+    if(status){
+      status.textContent='Products are temporarily unavailable.';
+      status.style.color='#f28b8b';
+    }
+  }
+}
+
+function seerviPublicCategoryName(id){
+  return seerviPublicCategories.find(x=>x.id===id)?.name||'';
+}
+
+function seerviPublicRenderCategories(){
+  const bar=$('seerviPublicCategoryBar');
+  if(!bar)return;
+
+  const categories=seerviPublicCategories.filter(x=>x.type==='category');
+  bar.innerHTML=`<button type="button" class="seervi-public-category-btn ${seerviPublicSelectedCategory==='all'?'active':''}" data-category-id="all" onclick="seerviPublicSelectCategory('all')">ALL</button>`+
+    categories.map(x=>`<button type="button" class="seervi-public-category-btn ${seerviPublicSelectedCategory===x.id?'active':''}" data-category-id="${seerviItemsEsc(x.id)}" onclick="seerviPublicSelectCategory('${seerviItemsEsc(x.id)}')">${seerviItemsEsc(x.name)}</button>`).join('');
+}
+
+function seerviPublicRenderSubcategories(){
+  const bar=$('seerviPublicSubcategoryBar');
+  if(!bar)return;
+
+  if(seerviPublicSelectedCategory==='all'){
+    bar.hidden=true;
+    bar.innerHTML='';
+    seerviPublicSelectedSubcategory='all';
+    return;
+  }
+
+  const subs=seerviPublicCategories
+    .filter(x=>x.type==='subcategory' && x.parentId===seerviPublicSelectedCategory);
+
+  if(!subs.length){
+    bar.hidden=true;
+    bar.innerHTML='';
+    seerviPublicSelectedSubcategory='all';
+    return;
+  }
+
+  if(seerviPublicSelectedSubcategory!=='all' && !subs.some(x=>x.id===seerviPublicSelectedSubcategory)){
+    seerviPublicSelectedSubcategory='all';
+  }
+
+  bar.hidden=false;
+  bar.innerHTML=`<button type="button" class="seervi-public-subcategory-btn ${seerviPublicSelectedSubcategory==='all'?'active':''}" onclick="seerviPublicSelectSubcategory('all')">ALL IN CATEGORY</button>`+
+    subs.map(x=>`<button type="button" class="seervi-public-subcategory-btn ${seerviPublicSelectedSubcategory===x.id?'active':''}" onclick="seerviPublicSelectSubcategory('${seerviItemsEsc(x.id)}')">${seerviItemsEsc(x.name)}</button>`).join('');
+}
+
+function seerviPublicSelectCategory(categoryId){
+  seerviPublicSelectedCategory=categoryId||'all';
+  seerviPublicSelectedSubcategory='all';
+  seerviPublicRenderCategories();
+  seerviPublicRenderSubcategories();
+  seerviPublicRenderItems();
+}
+
+function seerviPublicSelectSubcategory(subcategoryId){
+  seerviPublicSelectedSubcategory=subcategoryId||'all';
+  seerviPublicRenderSubcategories();
+  seerviPublicRenderItems();
+}
+
+function seerviPublicRenderItems(){
+  const grid=$('seerviPublicProductGrid');
+  if(!grid)return;
+
+  let rows=seerviPublicItems.filter(item=>{
+    if(seerviPublicSelectedCategory!=='all' && item.categoryId!==seerviPublicSelectedCategory)return false;
+    if(seerviPublicSelectedSubcategory!=='all' && item.subcategoryId!==seerviPublicSelectedSubcategory)return false;
+    return true;
+  });
+
+  if(!rows.length){
+    grid.innerHTML='<div class="seervi-public-empty">No products are available in this selection.</div>';
+    return;
+  }
+
+  grid.innerHTML=rows.map(item=>{
+    const category=seerviPublicCategoryName(item.categoryId);
+    const subcategory=seerviPublicCategoryName(item.subcategoryId);
+    const displayModel=item.model||'';
+    const cartModel=item.model||item.id;
+    const specEntries=Object.entries(item.specifications||{}).slice(0,6);
+    const specHtml=specEntries.map(([k,v])=>`<span class="seervi-public-spec-chip">${seerviItemsEsc(k)}: ${seerviItemsEsc(v)}</span>`).join('');
+    const image=item.imageWebpUrl||'';
+    const imageHtml=image
+      ? `<div class="home-product-thumb" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')"><img src="${seerviItemsEsc(image)}" alt="${seerviItemsEsc(item.name||'Product')}" loading="lazy" onerror="this.style.opacity='.15'"></div>`
+      : `<div class="home-product-thumb" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')"><div class="seervi-public-empty">NO IMAGE</div></div>`;
+
+    return `<article class="home-product-card seervi-public-product-card" data-model="${seerviItemsEsc(cartModel)}" data-subcategory="${seerviItemsEsc(subcategory)}" data-type="Item">
+      ${imageHtml}
+      <div class="home-product-meta">
+        <div class="seervi-public-category-line">${seerviItemsEsc(category)}${subcategory?' / '+seerviItemsEsc(subcategory):''}</div>
+        <h3>${seerviItemsEsc(item.name||'Unnamed Item')}</h3>
+        ${displayModel?`<p>Model: ${seerviItemsEsc(displayModel)}</p>`:''}
+        ${item.description?`<p>${seerviItemsEsc(item.description).slice(0,180)}</p>`:''}
+        ${specHtml?`<div class="seervi-public-specs">${specHtml}</div>`:''}
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">
+          <button class="crm-secondary small" type="button" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')">VIEW DETAILS</button>
+          <button class="crm-primary small" type="button" onclick="seerviPublicAddToCart('${seerviItemsEsc(item.id)}')">ADD TO CART</button>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+window.seerviPublicAddToCart=function(itemId){
+  const item=seerviPublicItems.find(x=>x.id===itemId);
+  if(!item)return;
+  const cartItem={
+    type:'Item',
+    firebaseItemId:item.id,
+    categoryId:item.categoryId||'',
+    subcategoryId:item.subcategoryId||'',
+    category:seerviPublicCategoryName(item.categoryId),
+    subcategory:seerviPublicCategoryName(item.subcategoryId),
+    model:item.model||item.id,
+    name:item.name||item.model||'Item',
+    image:item.imageWebpUrl||'',
+    imageWebpUrl:item.imageWebpUrl||'',
+    description:item.description||'',
+    specifications:{...(item.specifications||{})},
+    specification:Object.entries(item.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(', '),
+    rate:0
+  };
+  addToCart(cartItem);
+};
+
+window.seerviPublicOpenItem=function(itemId){
+  const item=seerviPublicItems.find(x=>x.id===itemId);
+  if(!item)return;
+
+  let modal=document.getElementById('seerviPublicItemModal');
+  if(!modal){
+    modal=document.createElement('div');
+    modal.id='seerviPublicItemModal';
+    modal.className='product-modal';
+    modal.innerHTML='<div class="product-modal-box"><button class="modal-close" type="button" aria-label="Close" onclick="seerviPublicCloseItem()">×</button><div id="seerviPublicItemModalContent"></div></div>';
+    document.body.appendChild(modal);
+  }
+
+  const specs=Object.entries(item.specifications||{});
+  const specTable=specs.length
+    ? `<div style="margin-top:18px;border:1px solid #ffffff12;border-radius:10px;overflow:hidden"><table style="width:100%;border-collapse:collapse">${specs.map(([k,v])=>`<tr><td style="padding:9px;border-bottom:1px solid #ffffff0d;color:#8f99a4;width:35%">${seerviItemsEsc(k)}</td><td style="padding:9px;border-bottom:1px solid #ffffff0d;color:#f2f4f6">${seerviItemsEsc(v)}</td></tr>`).join('')}</table></div>`
+    : '';
+
+  $('seerviPublicItemModalContent').innerHTML=`
+    ${item.imageWebpUrl?`<img src="${seerviItemsEsc(item.imageWebpUrl)}" alt="${seerviItemsEsc(item.name||'Product')}">`:''}
+    <div class="modal-caption">
+      <div class="crm-kicker">${seerviItemsEsc(seerviPublicCategoryName(item.categoryId))}${item.subcategoryId?' / '+seerviItemsEsc(seerviPublicCategoryName(item.subcategoryId)):''}</div>
+      <h3>${seerviItemsEsc(item.name||'Unnamed Item')}</h3>
+      ${item.model?`<p><b>Model:</b> ${seerviItemsEsc(item.model)}</p>`:''}
+      ${item.description?`<p style="margin-top:8px">${seerviItemsEsc(item.description)}</p>`:''}
+      ${specTable}
+      <button class="crm-primary" type="button" style="margin-top:16px" onclick="seerviPublicAddToCart('${seerviItemsEsc(item.id)}');seerviPublicCloseItem()">ADD TO CART</button>
+    </div>`;
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+};
+
+window.seerviPublicCloseItem=function(){
+  const modal=$('seerviPublicItemModal');
+  if(!modal)return;
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden','true');
+  document.body.classList.remove('modal-open');
+};
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(seerviPublicLoadCatalogue,0),{once:true});
+}else{
+  setTimeout(seerviPublicLoadCatalogue,0);
+}
+/* ===== END SEERVI PUBLIC FIREBASE CATALOGUE / STEP 7 ===== */
+
+
+
+/* ===== SEERVI PUBLIC CATALOGUE UX / STEP 8 ===== */
+let seerviPublicSearchQuery='';
+let seerviPublicSortMode='name';
+
+function seerviPublicItemSearchText(item){
+  return [
+    item.name,item.model,item.description,
+    seerviPublicCategoryName(item.categoryId),
+    seerviPublicCategoryName(item.subcategoryId),
+    ...Object.entries(item.specifications||{}).flat()
+  ].join(' ').toLowerCase();
+}
+
+const seerviPublicRenderItemsStep8=seerviPublicRenderItems;
+seerviPublicRenderItems=function(){
+  const grid=$('seerviPublicProductGrid');
+  if(!grid)return;
+
+  let rows=seerviPublicItems.filter(item=>{
+    if(seerviPublicSelectedCategory!=='all' && item.categoryId!==seerviPublicSelectedCategory)return false;
+    if(seerviPublicSelectedSubcategory!=='all' && item.subcategoryId!==seerviPublicSelectedSubcategory)return false;
+    if(seerviPublicSearchQuery && !seerviPublicItemSearchText(item).includes(seerviPublicSearchQuery))return false;
+    return true;
+  });
+
+  rows.sort((a,b)=>{
+    if(seerviPublicSortMode==='name-desc')return String(b.name||'').localeCompare(String(a.name||''));
+    if(seerviPublicSortMode==='newest'){
+      const at=seerviPublicMillis(a.createdAt)||seerviPublicMillis(a.updatedAt);
+      const bt=seerviPublicMillis(b.createdAt)||seerviPublicMillis(b.updatedAt);
+      return bt-at;
+    }
+    return String(a.name||'').localeCompare(String(b.name||''));
+  });
+
+  if(!rows.length){
+    grid.innerHTML='<div class="seervi-public-empty">No products match your search or selected category.</div>';
+    return;
+  }
+
+  grid.innerHTML=rows.map(item=>{
+    const category=seerviPublicCategoryName(item.categoryId);
+    const subcategory=seerviPublicCategoryName(item.subcategoryId);
+    const displayModel=item.model||'';
+    const cartModel=item.model||item.id;
+    const specEntries=Object.entries(item.specifications||{}).slice(0,6);
+    const specHtml=specEntries.map(([k,v])=>`<span class="seervi-public-spec-chip">${seerviItemsEsc(k)}: ${seerviItemsEsc(v)}</span>`).join('');
+    const image=item.imageWebpUrl||'';
+    const imageHtml=image
+      ? `<div class="home-product-thumb" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')"><img src="${seerviItemsEsc(image)}" alt="${seerviItemsEsc(item.name||'Product')}" loading="lazy" onerror="this.style.opacity='.15'"></div>`
+      : `<div class="home-product-thumb" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')"><div class="seervi-public-empty">NO IMAGE</div></div>`;
+
+    return `<article class="home-product-card seervi-public-product-card" data-model="${seerviItemsEsc(cartModel)}" data-subcategory="${seerviItemsEsc(subcategory)}" data-type="Item">
+      ${imageHtml}
+      <div class="home-product-meta">
+        <div class="seervi-public-category-line">${seerviItemsEsc(category)}${subcategory?' / '+seerviItemsEsc(subcategory):''}</div>
+        <h3>${seerviItemsEsc(item.name||'Unnamed Item')}</h3>
+        ${displayModel?`<p>Model: ${seerviItemsEsc(displayModel)}</p>`:''}
+        ${item.description?`<p>${seerviItemsEsc(item.description).slice(0,180)}</p>`:''}
+        ${specHtml?`<div class="seervi-public-specs">${specHtml}</div>`:''}
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">
+          <button class="crm-secondary small" type="button" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')">VIEW DETAILS</button>
+          <button class="crm-primary small" type="button" onclick="seerviPublicAddToCart('${seerviItemsEsc(item.id)}')">ADD TO CART</button>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+};
+
+function seerviPublicWireSearch(){
+  const input=$('seerviPublicSearch');
+  const sort=$('seerviPublicSort');
+  if(input){
+    input.addEventListener('input',function(){
+      seerviPublicSearchQuery=String(input.value||'').trim().toLowerCase();
+      seerviPublicRenderItems();
+    });
+  }
+  if(sort){
+    sort.addEventListener('change',function(){
+      seerviPublicSortMode=sort.value||'name';
+      seerviPublicRenderItems();
+    });
+  }
+}
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',seerviPublicWireSearch,{once:true});
+}else{
+  seerviPublicWireSearch();
+}
+/* ===== END SEERVI PUBLIC CATALOGUE UX / STEP 8 ===== */
+
+
+
+/* ===== SEERVI FIREBASE CART BRIDGE / STEP 9 ===== */
+function seerviFirebaseCartItem(item){
+  if(!item)return null;
+  return {
+    type:'Item',
+    firebaseItemId:item.id||item.firebaseItemId||'',
+    categoryId:item.categoryId||'',
+    subcategoryId:item.subcategoryId||'',
+    category:item.category||seerviPublicCategoryName?.(item.categoryId)||'',
+    subcategory:item.subcategory||seerviPublicCategoryName?.(item.subcategoryId)||'',
+    model:item.model||item.id||'',
+    name:item.name||item.model||'Item',
+    image:item.imageWebpUrl||item.image||'',
+    imageWebpUrl:item.imageWebpUrl||item.image||'',
+    description:item.description||'',
+    specifications:{...(item.specifications||{})},
+    specification:item.specification||Object.entries(item.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(', '),
+    rate:Number(item.rate||0)
+  };
+}
+/* ===== END SEERVI FIREBASE CART BRIDGE / STEP 9 ===== */
+
+
+
+/* ===== SEERVI CATALOGUE STATE / STEP 10 ===== */
+let seerviPublicCatalogueReady=false;
+let seerviPublicCatalogueError='';
+
+const seerviPublicLoadCatalogueStep10=seerviPublicLoadCatalogue;
+seerviPublicLoadCatalogue=async function(){
+  seerviPublicCatalogueReady=false;
+  seerviPublicCatalogueError='';
+  try{
+    await seerviPublicLoadCatalogueStep10();
+    seerviPublicCatalogueReady=Array.isArray(seerviPublicItems);
+  }catch(e){
+    seerviPublicCatalogueError=e?.message||'Catalogue unavailable';
+    throw e;
+  }
+};
+
+function seerviPublicCatalogueStatusText(){
+  if(seerviPublicCatalogueError)return 'Catalogue temporarily unavailable.';
+  if(!seerviPublicCatalogueReady)return 'Catalogue is loading…';
+  return `${seerviPublicItems.length} live product${seerviPublicItems.length===1?'':'s'}.`;
+}
+/* ===== END SEERVI CATALOGUE STATE / STEP 10 ===== */
+
+
+
+/* ===== SEERVI FINAL FIREBASE PRODUCT SYSTEM / STEP 11 ===== */
+/*
+  Final architecture:
+  Admin -> Firebase itemCategories/items -> Public catalogue -> Cart/Quotation.
+  The public catalogue is the single source of truth for new products.
+  Legacy hard-coded product filter logic has been removed.
+*/
+window.seerviProductSystemReady=true;
+/* ===== END SEERVI FINAL FIREBASE PRODUCT SYSTEM / STEP 11 ===== */
+
+
+/* ===== SEERVI FINAL HARDENING / SINGLE ADMIN ===== */
+/*
+  Authorised admin: seervitrading@gmail.com only.
+  Product hierarchy: Category -> Subcategory -> Item.
+  New items require Category, Subcategory, name and a .webp image path.
+*/
+window.SEERVI_SINGLE_ADMIN_EMAIL='seervitrading@gmail.com';
+/* ===== END SEERVI FINAL HARDENING / SINGLE ADMIN ===== */
+
 </script><div id="crmPartyLedgerViewModal" class="crm-quote-view-modal" aria-hidden="true"><div class="crm-quote-view-backdrop" onclick="crmClosePartyLedgerView()"></div><div class="crm-quote-view-card crm-party-ledger-view-card" role="dialog" aria-modal="true" aria-labelledby="crmPartyLedgerViewTitle"><div class="crm-quote-view-head"><div><div class="crm-kicker">PARTY LEDGER</div><h3 id="crmPartyLedgerViewTitle">Party Ledger</h3><div id="crmPartyLedgerViewMeta" class="crm-quote-view-meta"></div></div><button class="crm-close" type="button" onclick="crmClosePartyLedgerView()">×</button></div><div class="crm-ledger-view-toolbar"><div class="crm-ledger-filter-group"><button class="crm-ledger-filter active" data-range="all" type="button" onclick="crmSetPartyLedgerFilter('all')">ALL</button><button class="crm-ledger-filter" data-range="weekly" type="button" onclick="crmSetPartyLedgerFilter('weekly')">WEEKLY</button><button class="crm-ledger-filter" data-range="monthly" type="button" onclick="crmSetPartyLedgerFilter('monthly')">MONTHLY</button><button class="crm-ledger-filter" data-range="quarterly" type="button" onclick="crmSetPartyLedgerFilter('quarterly')">QUARTERLY</button><button class="crm-ledger-filter" data-range="yearly" type="button" onclick="crmSetPartyLedgerFilter('yearly')">YEARLY</button></div><button id="crmPartyLedgerDownload" class="crm-primary small" type="button" onclick="crmDownloadPartyLedger()">DOWNLOAD LEDGER</button></div><div id="crmPartyLedgerViewBody" class="crm-quote-view-body"></div></div></div><div id="crmQuoteViewModal" class="crm-quote-view-modal" aria-hidden="true"><div class="crm-quote-view-backdrop" onclick="crmCloseQuoteView()"></div><div class="crm-quote-view-card" role="dialog" aria-modal="true" aria-labelledby="crmQuoteViewTitle"><div class="crm-quote-view-head"><div><div class="crm-kicker">QUOTATION VIEW</div><h3 id="crmQuoteViewTitle">Quotation</h3><div id="crmQuoteViewMeta" class="crm-quote-view-meta"></div></div><button class="crm-close" type="button" onclick="crmCloseQuoteView()">×</button></div><div id="crmQuoteViewStatusBar" class="crm-quote-status-bar"><span>STATUS</span><select id="crmQuoteViewStatus"><option value="saved">SAVED</option><option value="sent">SENT</option><option value="confirmed">CONFIRMED</option><option value="cancelled">CANCELLED</option></select><button type="button" class="crm-secondary small" onclick="crmSaveQuoteStatus()">SAVE STATUS</button></div><div id="crmQuoteViewBody" class="crm-quote-view-body"></div><div class="crm-quote-view-actions"><button class="crm-secondary" type="button" onclick="crmCloseQuoteView()">CLOSE</button><button id="crmQuoteViewDownload" class="crm-primary" type="button">DOWNLOAD PDF</button></div></div></div><style id="seervi-professional-loading-style">
 #seerviGlobalLoader{
   position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;
