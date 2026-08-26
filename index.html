@@ -5346,7 +5346,7 @@ function seerviValidateWebpPath(value){
 }
 
 function seerviNormaliseItemGalleryImages(value){
-  const raw=Array.isArray(value) ? value : String(value||'').split(/[|\\n\\r]+/);
+  const raw=Array.isArray(value) ? value : String(value||'').split(/[|\n\r]+/);
   const seen=new Set();
   const output=[];
   raw.forEach(entry=>{
