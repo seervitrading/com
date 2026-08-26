@@ -2466,7 +2466,12 @@ body:not(.admin-quote-mode) .cart-note{
 .seervi-watermark-modal-image{position:relative;display:flex;align-items:center;justify-content:center;max-height:calc(100vh - 210px);border-radius:14px;}
 .seervi-watermark-modal-image img{position:relative;z-index:1;display:block;max-width:100%;max-height:calc(100vh - 210px);object-fit:contain;}
 </style>
-<style id="customer-home-profile-hide">#customerHomeProfile{display:none!important}</style><style id="dashboard-child-view-style">#accountDashboardModal{z-index:650}#crmModal,#customerLoginModal,#adminNewPartyModal,#adminStockModal,#notificationPostModal{z-index:760}</style>
+<style id="customer-home-profile-hide">#customerHomeProfile{display:none!important}</style><style id="dashboard-child-view-style">#accountDashboardModal{z-index:650}#crmModal,#customerLoginModal,#adminNewPartyModal,#adminStockModal,#notificationPostModal{z-index:760}#adminNewPartyModal{z-index:1000!important}
+#adminNewPartyModal.show{display:flex!important;visibility:visible!important;opacity:1!important}
+#adminNewPartyModal .crm-panel{display:block!important;visibility:visible!important;opacity:1!important}
+#adminNewPartyModal .crm-panel .crm-party-card{display:block!important}
+#adminNewPartyModal .crm-party-card[hidden]{display:block!important}
+</style>
 
 
 <style id="seervi-admin-font-refinement">
@@ -5764,8 +5769,25 @@ window.accountDashboardAdminPanel=function(){
   $('crmWorkspace')?.removeAttribute('data-active-workspace');
 };
 window.accountDashboardNewParty=function(){
-  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
-  crmNewParty();
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){
+    openAdminPanel();
+    return;
+  }
+
+  // NEW PARTY is its own utility screen. Do not leave the Account Dashboard
+  // underneath it and do not route through the main Admin Panel.
+  closeAccountDashboard();
+
+  // Wait one frame so the parent dashboard is fully closed before the
+  // dedicated modal is mounted/opened.
+  requestAnimationFrame(()=>{
+    try{
+      crmNewParty();
+    }catch(e){
+      console.error('NEW PARTY launcher failed',e);
+      alert('Could not open New Party. Please refresh once and try again.');
+    }
+  });
 };
 window.accountDashboardBackup=function(){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
@@ -5829,16 +5851,45 @@ function ensureAdminUtilityModals(){
 
 window.closeAdminNewParty=function(){
   const m=document.getElementById('adminNewPartyModal');
-  if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');}
+  if(m){
+    m.classList.remove('show');
+    m.setAttribute('aria-hidden','true');
+    m.style.display='none';
+    m.style.visibility='hidden';
+  }
 };
-;
+
 window.openAdminNewParty=function(){
-  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){
+    openAdminPanel();
+    return;
+  }
+
   ensureAdminUtilityModals();
+
   const m=document.getElementById('adminNewPartyModal');
-  if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}
+  const party=document.getElementById('crmPartyMaster');
+
+  if(!m || !party){
+    throw new Error('New Party workspace could not be initialised.');
+  }
+
+  // Ensure the party form belongs to the dedicated modal and is not left
+  // hidden inside the main Admin Panel.
+  const panel=m.querySelector('.crm-panel');
+  if(panel && party.parentElement!==panel) panel.appendChild(party);
+
+  party.hidden=false;
+  party.style.display='block';
+
+  m.classList.add('show');
+  m.setAttribute('aria-hidden','false');
+  m.style.display='flex';
+  m.style.visibility='visible';
+  m.style.opacity='1';
+
+  setTimeout(()=>document.getElementById('crmPartyName')?.focus(),60);
 };
-;
 
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ensureAdminUtilityModals);
 else ensureAdminUtilityModals();
@@ -5988,18 +6039,26 @@ window.crmRefresh = async function(){
 };
 
 window.crmNewParty = function(){
-  if(!crmUser || !isAuthorisedAdmin(crmUser)){crmShowLogin();return;}
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){
+    crmShowLogin();
+    return;
+  }
+
   ensureAdminUtilityModals();
   crmPartyId='';
-  if($('crmPartyMaster')) $('crmPartyMaster').hidden=false;
+
   if($('crmPartySelect')) $('crmPartySelect').value='';
   if(typeof renderCartPartySelector==='function') renderCartPartySelector();
-  ['crmPartyName','crmPartyCompany','crmPartyPhone','crmPartyEmail','crmPartyCity','crmPartyAddress'].forEach(id=>{if($(id)) $(id).value='';});
+
+  ['crmPartyName','crmPartyCompany','crmPartyPhone','crmPartyEmail','crmPartyCity','crmPartyAddress']
+    .forEach(id=>{const el=$(id);if(el)el.value='';});
+
   if($('crmPartyMeta')) $('crmPartyMeta').textContent='New party — enter details and save.';
   crmQuotes=[];crmRates=[];crmLedger=[];
   crmRateSearchText='';
   if($('crmRateSearch')) $('crmRateSearch').value='';
   crmRenderAll();
+
   openAdminNewParty();
 };
 
@@ -6022,17 +6081,37 @@ window.crmSelectParty = async function(id){
 };
 
 window.crmSaveParty = async function(){
-  if(!crmUser){crmShowLogin();return;}
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){
+    alert('Admin login required.');
+    return;
+  }
+
+  const nameEl=$('crmPartyName'), companyEl=$('crmPartyCompany'),
+        phoneEl=$('crmPartyPhone'), emailEl=$('crmPartyEmail'),
+        cityEl=$('crmPartyCity'), addressEl=$('crmPartyAddress');
+
   const data={
-    name:$('crmPartyName').value.trim(),
-    company:$('crmPartyCompany').value.trim(),
-    phone:$('crmPartyPhone').value.trim(),
-    email:$('crmPartyEmail').value.trim(),
-    city:$('crmPartyCity').value.trim(),
-    address:$('crmPartyAddress').value.trim(),
+    name:nameEl?.value.trim()||'',
+    company:companyEl?.value.trim()||'',
+    phone:phoneEl?.value.trim()||'',
+    email:emailEl?.value.trim()||'',
+    city:cityEl?.value.trim()||'',
+    address:addressEl?.value.trim()||'',
     updatedAt:serverTimestamp()
   };
-  if(!data.name && !data.company){alert('Enter at least Party Name or Shop / Company.');return;}
+
+  if(!data.name && !data.company){
+    alert('Enter at least Party Name or Shop / Company.');
+    nameEl?.focus();
+    return;
+  }
+
+  const saveBtn=document.querySelector('#adminNewPartyModal #crmPartyMaster .crm-primary.small');
+  if(saveBtn){
+    saveBtn.disabled=true;
+    saveBtn.textContent='SAVING…';
+  }
+
   try{
     if(crmPartyId){
       await setDoc(doc(db,'parties',crmPartyId),data,{merge:true});
@@ -6041,19 +6120,31 @@ window.crmSaveParty = async function(){
       const ref=await addDoc(collection(db,'parties'),data);
       crmPartyId=ref.id;
     }
+
     seerviInvalidateCache('admin:parties:');
     seerviInvalidateCache('party:'+crmPartyId+':');
-    await crmRefreshParties();
-    $('crmPartySelect').value=crmPartyId;
-    $('crmPartyMeta').textContent='Saved securely in Firebase Cloud.';
-    seerviInvalidateCache('party:'+crmPartyId+':');
     seerviInvalidateCache('admin:');
+
+    await crmRefreshParties();
+    if($('crmPartySelect')) $('crmPartySelect').value=crmPartyId;
+
+    if($('crmPartyMeta')) $('crmPartyMeta').textContent='Saved securely in Firebase Cloud.';
     await crmLoadPartyData(crmPartyId);
     await crmLoadGlobalAdmin();
-    if($('crmPartyMaster')) $('crmPartyMaster').hidden=true;
+
     if(typeof renderCartPartySelector==='function') renderCartPartySelector();
+
+    // Successful New Party flow ends on the dedicated modal, not the main
+    // Admin Panel. The selected party remains available in CRM state.
+    closeAdminNewParty();
   }catch(e){
+    console.error('CRM SAVE PARTY FAILED',e);
     alert('Could not save party: '+(e?.message||'Check Firestore rules.'));
+  }finally{
+    if(saveBtn){
+      saveBtn.disabled=false;
+      saveBtn.textContent='SAVE PARTY';
+    }
   }
 };
 
