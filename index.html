@@ -8017,34 +8017,80 @@ function seerviItemsResetForm(){
   seerviItemsPopulateCategorySelects();
 }
 
+function seerviItemsRenderSelectValue(selectId,value){
+  const select=$(selectId);
+  if(!select)return false;
+  const target=String(value??'');
+  if(!target){
+    select.value='';
+    return true;
+  }
+  const option=[...select.options].find(o=>String(o.value)===target);
+  if(option){
+    select.value=target;
+    return true;
+  }
+  // Keep the existing value untouched if the referenced category/subcategory
+  // no longer exists. This avoids inventing taxonomy data.
+  return false;
+}
+
 async function seerviEditItem(itemId){
   try{
     seerviItemsAdminGuard();
+
     const item=seerviItemsCache.find(x=>x.id===itemId) || await seerviGetItem(itemId);
     if(!item)throw new Error('Item not found.');
+
     seerviItemsEditingId=item.id;
+
+    // Category data must be ready before the form values are assigned.
     await seerviItemsLoadCategories();
+
+    // Open the dedicated Add/Edit workspace without touching the generic
+    // Admin Panel.
     seerviItemsTab('add');
+
+    // The category select is populated by seerviItemsLoadCategories().
     seerviItemsRenderSelectValue('seerviItemCategory',item.categoryId);
+
+    // Rebuild the subcategory list for the selected category, then select it.
     seerviItemCategoryChanged();
     seerviItemsRenderSelectValue('seerviItemSubcategory',item.subcategoryId);
+
     $('seerviItemId').value=item.id;
     $('seerviItemName').value=item.name||'';
     $('seerviItemModel').value=item.model||'';
     $('seerviItemImage').value=item.imageWebpUrl||'';
     $('seerviItemDescription').value=item.description||'';
     $('seerviItemActive').checked=item.active!==false;
+
     $('seerviSpecificationsRows').innerHTML='';
-    Object.entries(item.specifications||{}).forEach(([k,v])=>seerviAddSpecificationRow(k,v));
-    seerviAddSpecificationRowIfEmpty();
+    Object.entries(item.specifications||{}).forEach(([k,v])=>{
+      seerviAddSpecificationRow(k,v);
+    });
+    seerviItemsAddSpecificationRowIfEmpty();
+
     $('seerviItemFormMode').textContent=`Editing item: ${item.name||item.id}`;
     $('seerviItemSaveButton').textContent='UPDATE ITEM';
     $('seerviItemCancelEdit').hidden=false;
     $('seerviItemFormStatus').textContent='';
+    $('seerviItemFormStatus').style.color='';
+
+    // Put the form at the top of the dedicated workspace on mobile/desktop.
+    const addView=$('seerviItemsAddView');
+    if(addView) addView.scrollIntoView({block:'start',behavior:'smooth'});
   }catch(e){
+    console.error('SEERVI ITEMS EDIT FAILED',e);
+    const status=$('seerviItemFormStatus');
+    if(status){
+      status.textContent=e?.message||'Unable to edit item.';
+      status.style.color='#f28b8b';
+    }
     seerviItemsSetStatus(e?.message||'Unable to edit item.',true);
   }
 }
+
 
 window.seerviSaveItemForm=async function(){
   try{
@@ -9181,6 +9227,7 @@ window.seerviEditCategory=seerviEditCategory;
 window.seerviDeleteCategoryConfirm=seerviDeleteCategoryConfirm;
 window.seerviPopulateItemFilters=seerviPopulateItemFilters;
 window.seerviItemsAddSpecificationRowIfEmpty=seerviItemsAddSpecificationRowIfEmpty;
+window.seerviItemsRenderSelectValue=seerviItemsRenderSelectValue;
 window.seerviSaveItemForm=seerviSaveItemForm;
 window.seerviBulkReadFile=seerviBulkReadFile;
 window.seerviBulkRevalidate=seerviBulkRevalidate;
