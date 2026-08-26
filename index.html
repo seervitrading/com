@@ -8422,48 +8422,52 @@ window.seerviBulkDownloadTemplate=function(){
 if(!window.seerviItemsTabStep4Wrapped){
   const previousTab=window.seerviItemsTab;
   window.seerviItemsTab=function(tab){
-    const validTabs=['all','add','categories','bulk'];
-    if(!validTabs.includes(tab))tab='all';
+  const validTabs=['all','add','categories','bulk'];
+  if(!validTabs.includes(tab))tab='all';
 
-    document.querySelectorAll('#adminItemsArea .admin-items-tab').forEach(btn=>{
-      btn.classList.toggle('active',btn.dataset.itemsTab===tab);
-      btn.setAttribute('aria-selected',btn.dataset.itemsTab===tab?'true':'false');
-    });
-
-    const views={
-      all:'seerviItemsAllView',
-      add:'seerviItemsAddView',
-      categories:'seerviItemsCategoriesView',
-      bulk:'seerviItemsBulkView'
-    };
-
-    Object.entries(views).forEach(([name,id])=>{
-      const el=$(id);
-      if(!el)return;
-      el.hidden=(name!==tab);
-      el.setAttribute('aria-hidden',name===tab?'false':'true');
-    });
-
-    if(tab==='all'){
-      seerviItemsLoadAll().catch(e=>seerviItemsSetStatus(e?.message||'Unable to load items.',true));
-    }else if(tab==='add'){
-      seerviItemsLoadCategories().catch(e=>{
-        const status=$('seerviItemFormStatus');
-        if(status)status.textContent=e?.message||'Unable to load categories.';
-      });
-      if(!seerviItemsEditingId)seerviAddSpecificationRowIfEmpty();
-    }else if(tab==='categories'){
-      seerviItemsLoadCategories().catch(e=>{
-        const el=$('seerviCategoriesStatus');
-        if(el)el.textContent=e?.message||'Unable to load categories.';
-      });
-    }else if(tab==='bulk'){
-      seerviItemsLoadCategories().catch(()=>{});
-    }
-
-    return false;
+  const views={
+    all:'seerviItemsAllView',
+    add:'seerviItemsAddView',
+    categories:'seerviItemsCategoriesView',
+    bulk:'seerviItemsBulkView'
   };
-  window.seerviItemsTabStep4Wrapped=true;
+
+  document.querySelectorAll('#adminItemsArea .admin-items-tab').forEach(btn=>{
+    const active=btn.dataset.itemsTab===tab;
+    btn.classList.toggle('active',active);
+    btn.setAttribute('aria-selected',active?'true':'false');
+  });
+
+  Object.entries(views).forEach(([name,id])=>{
+    const el=$(id);
+    if(!el)return;
+    const active=name===tab;
+    el.hidden=!active;
+    el.setAttribute('aria-hidden',active?'false':'true');
+    el.style.display=active?'block':'none';
+  });
+
+  if(tab==='all'){
+    seerviItemsLoadAll().catch(e=>seerviItemsSetStatus(e?.message||'Unable to load items.',true));
+  }else if(tab==='add'){
+    seerviItemsLoadCategories().catch(e=>{
+      const status=$('seerviItemFormStatus');
+      if(status)status.textContent=e?.message||'Unable to load categories.';
+    });
+    if(!seerviItemsEditingId)seerviItemsAddSpecificationRowIfEmpty();
+  }else if(tab==='categories'){
+    seerviItemsLoadCategories().catch(e=>{
+      const el=$('seerviCategoriesStatus');
+      if(el)el.textContent=e?.message||'Unable to load categories.';
+    });
+  }else if(tab==='bulk'){
+    seerviItemsLoadCategories().catch(e=>{
+      const el=$('seerviBulkValidationStatus');
+      if(el)el.textContent=e?.message||'Unable to load categories.';
+    });
+  }
+};
+window.seerviItemsTabStep4Wrapped=true;
 }
 /* ===== END SEERVI BULK ADD / STEP 4 ===== */
 
@@ -9149,6 +9153,12 @@ window.SEERVI_SINGLE_ADMIN_EMAIL='seervitrading@gmail.com';
    This bridge is intentionally placed at the end so final Step 5/6
    redefinitions are exposed.
 */
+function seerviItemsAddSpecificationRowIfEmpty(){
+  const rows=$('seerviSpecificationsRows');
+  if(!rows)return;
+  if(!rows.children.length)seerviAddSpecificationRow();
+}
+
 window.seerviItemsAdminGuard=seerviItemsAdminGuard;
 window.seerviItemCategoryName=seerviItemCategoryName;
 window.seerviItemCategoryLabel=seerviItemCategoryLabel;
@@ -9170,6 +9180,12 @@ window.seerviResetCategoryForm=seerviResetCategoryForm;
 window.seerviEditCategory=seerviEditCategory;
 window.seerviDeleteCategoryConfirm=seerviDeleteCategoryConfirm;
 window.seerviPopulateItemFilters=seerviPopulateItemFilters;
+window.seerviItemsAddSpecificationRowIfEmpty=seerviItemsAddSpecificationRowIfEmpty;
+window.seerviSaveItemForm=seerviSaveItemForm;
+window.seerviBulkReadFile=seerviBulkReadFile;
+window.seerviBulkRevalidate=seerviBulkRevalidate;
+window.seerviBulkImport=seerviBulkImport;
+window.seerviBulkDownloadTemplate=seerviBulkDownloadTemplate;
 window.seerviItemsTab=window.seerviItemsTab;
 /* ===== END SEERVI ITEMS GLOBAL EVENT BRIDGE ===== */
 
