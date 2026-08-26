@@ -616,7 +616,10 @@ a:active,
   min-height:0;
 }
 #seerviItemsModal #adminItemsArea[hidden]{
-  display:block !important;
+  display:none !important;
+}
+#seerviItemsModal .admin-items-view[hidden]{
+  display:none !important;
 }
 @media(max-width:760px){
   #seerviItemsModal .seervi-items-modal-card{inset:0;border-radius:0;}
@@ -8419,24 +8422,46 @@ window.seerviBulkDownloadTemplate=function(){
 if(!window.seerviItemsTabStep4Wrapped){
   const previousTab=window.seerviItemsTab;
   window.seerviItemsTab=function(tab){
-    document.querySelectorAll('.admin-items-tab').forEach(btn=>btn.classList.toggle('active',btn.dataset.itemsTab===tab));
-    ['All','Add','Categories','Bulk'].forEach(name=>{
-      const id='seerviItems'+name+'View';
-      const el=$(id);
-      if(el)el.hidden=(tab!==name.toLowerCase());
+    const validTabs=['all','add','categories','bulk'];
+    if(!validTabs.includes(tab))tab='all';
+
+    document.querySelectorAll('#adminItemsArea .admin-items-tab').forEach(btn=>{
+      btn.classList.toggle('active',btn.dataset.itemsTab===tab);
+      btn.setAttribute('aria-selected',btn.dataset.itemsTab===tab?'true':'false');
     });
+
+    const views={
+      all:'seerviItemsAllView',
+      add:'seerviItemsAddView',
+      categories:'seerviItemsCategoriesView',
+      bulk:'seerviItemsBulkView'
+    };
+
+    Object.entries(views).forEach(([name,id])=>{
+      const el=$(id);
+      if(!el)return;
+      el.hidden=(name!==tab);
+      el.setAttribute('aria-hidden',name===tab?'false':'true');
+    });
+
     if(tab==='all'){
       seerviItemsLoadAll().catch(e=>seerviItemsSetStatus(e?.message||'Unable to load items.',true));
     }else if(tab==='add'){
-      seerviItemsLoadCategories().catch(()=>{});
+      seerviItemsLoadCategories().catch(e=>{
+        const status=$('seerviItemFormStatus');
+        if(status)status.textContent=e?.message||'Unable to load categories.';
+      });
       if(!seerviItemsEditingId)seerviAddSpecificationRowIfEmpty();
     }else if(tab==='categories'){
       seerviItemsLoadCategories().catch(e=>{
-        const el=$('seerviCategoriesStatus');if(el)el.textContent=e?.message||'Unable to load categories.';
+        const el=$('seerviCategoriesStatus');
+        if(el)el.textContent=e?.message||'Unable to load categories.';
       });
     }else if(tab==='bulk'){
       seerviItemsLoadCategories().catch(()=>{});
     }
+
+    return false;
   };
   window.seerviItemsTabStep4Wrapped=true;
 }
@@ -9092,6 +9117,32 @@ window.seerviProductSystemReady=true;
 window.SEERVI_SINGLE_ADMIN_EMAIL='seervitrading@gmail.com';
 /* ===== END SEERVI FINAL HARDENING / SINGLE ADMIN ===== */
 
+/* ===== SEERVI ITEMS TAB CLICK HARDENING ===== */
+(function(){
+  function bindItemsTabClicks(){
+    const area=document.getElementById('adminItemsArea');
+    if(!area || area.dataset.itemsTabClicksBound==='1')return;
+    area.dataset.itemsTabClicksBound='1';
+
+    area.addEventListener('click',function(e){
+      const btn=e.target.closest && e.target.closest('.admin-items-tab');
+      if(!btn || !area.contains(btn))return;
+      const tab=btn.dataset.itemsTab;
+      if(!tab || typeof window.seerviItemsTab!=='function')return;
+      e.preventDefault();
+      e.stopPropagation();
+      window.seerviItemsTab(tab);
+    },true);
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',bindItemsTabClicks,{once:true});
+  }else{
+    bindItemsTabClicks();
+  }
+})();
+ /* ===== END SEERVI ITEMS TAB CLICK HARDENING ===== */
+
 /* ===== SEERVI ITEMS GLOBAL EVENT BRIDGE =====
    Firebase Items controller runs in a module. Inline HTML handlers and
    dynamically rendered action buttons require these functions on window.
@@ -9119,6 +9170,7 @@ window.seerviResetCategoryForm=seerviResetCategoryForm;
 window.seerviEditCategory=seerviEditCategory;
 window.seerviDeleteCategoryConfirm=seerviDeleteCategoryConfirm;
 window.seerviPopulateItemFilters=seerviPopulateItemFilters;
+window.seerviItemsTab=window.seerviItemsTab;
 /* ===== END SEERVI ITEMS GLOBAL EVENT BRIDGE ===== */
 
 document.addEventListener('keydown',function(e){
