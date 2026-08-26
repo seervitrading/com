@@ -5782,10 +5782,11 @@ window.accountDashboardNewParty=function(){
   // dedicated modal is mounted/opened.
   requestAnimationFrame(()=>{
     try{
+      ensureAdminUtilityModals();
       crmNewParty();
     }catch(e){
       console.error('NEW PARTY launcher failed',e);
-      alert('Could not open New Party. Please refresh once and try again.');
+      alert('Could not open New Party: '+(e?.message||'workspace unavailable.'));
     }
   });
 };
@@ -5826,28 +5827,48 @@ function crmErr(msg){
 }
 
 function ensureAdminUtilityModals(){
-  if(document.getElementById('adminNewPartyModal') && document.getElementById('adminStockModal')) return;
+  // Create each utility modal independently. The previous implementation
+  // required BOTH the Party and Stock DOM nodes to exist at the same moment.
+  // If Stock was not mounted yet, the function returned and New Party could
+  // never open.
+  const ensureParty=()=>{
+    let partyModal=document.getElementById('adminNewPartyModal');
+    const party=document.getElementById('crmPartyMaster');
+    if(!partyModal && party){
+      partyModal=document.createElement('div');
+      partyModal.id='adminNewPartyModal';
+      partyModal.className='crm-modal admin-utility-modal';
+      partyModal.setAttribute('aria-hidden','true');
+      partyModal.innerHTML='<div class="crm-backdrop" onclick="closeAdminNewParty()"></div><div class="crm-panel admin-utility-panel" role="dialog" aria-modal="true" aria-labelledby="adminNewPartyTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / PARTY</div><h3 id="adminNewPartyTitle">New Party</h3><div class="crm-auth-status">Create a new customer / party without opening the main Admin Panel.</div></div><button class="crm-close" type="button" onclick="closeAdminNewParty()">×</button></div></div>';
+      document.body.appendChild(partyModal);
+    }
+    if(partyModal && party){
+      const panel=partyModal.querySelector('.crm-panel');
+      if(panel && party.parentElement!==panel) panel.appendChild(party);
+    }
+  };
 
-  const party=document.getElementById('crmPartyMaster');
-  const stock=document.getElementById('inventoryStockPanel');
-  if(!party || !stock) return;
+  const ensureStock=()=>{
+    let stockModal=document.getElementById('adminStockModal');
+    const stock=document.getElementById('inventoryStockPanel');
+    if(!stockModal && stock){
+      stockModal=document.createElement('div');
+      stockModal.id='adminStockModal';
+      stockModal.className='crm-modal admin-utility-modal';
+      stockModal.setAttribute('aria-hidden','true');
+      stockModal.innerHTML='<div class="crm-backdrop" onclick="closeAdminStock()"></div><div class="crm-panel admin-utility-panel" role="dialog" aria-modal="true" aria-labelledby="adminStockTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / STOCK</div><h3 id="adminStockTitle">Stock</h3><div class="crm-auth-status">Control catalogue availability without opening the main Admin Panel.</div></div><button class="crm-close" type="button" onclick="closeAdminStock()">×</button></div></div>';
+      document.body.appendChild(stockModal);
+    }
+    if(stockModal && stock){
+      const panel=stockModal.querySelector('.crm-panel');
+      if(panel && stock.parentElement!==panel) panel.appendChild(stock);
+    }
+  };
 
-  const partyModal=document.createElement('div');
-  partyModal.id='adminNewPartyModal';
-  partyModal.className='crm-modal admin-utility-modal';
-  partyModal.setAttribute('aria-hidden','true');
-  partyModal.innerHTML='<div class="crm-backdrop" onclick="closeAdminNewParty()"></div><div class="crm-panel admin-utility-panel" role="dialog" aria-modal="true" aria-labelledby="adminNewPartyTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / PARTY</div><h3 id="adminNewPartyTitle">New Party</h3><div class="crm-auth-status">Create a new customer / party without opening the main Admin Panel.</div></div><button class="crm-close" type="button" onclick="closeAdminNewParty()">×</button></div></div>';
-  document.body.appendChild(partyModal);
-  partyModal.querySelector('.crm-panel').appendChild(party);
-
-  const stockModal=document.createElement('div');
-  stockModal.id='adminStockModal';
-  stockModal.className='crm-modal admin-utility-modal';
-  stockModal.setAttribute('aria-hidden','true');
-  stockModal.innerHTML='<div class="crm-backdrop" onclick="closeAdminStock()"></div><div class="crm-panel admin-utility-panel" role="dialog" aria-modal="true" aria-labelledby="adminStockTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / STOCK</div><h3 id="adminStockTitle">Stock</h3><div class="crm-auth-status">Control catalogue availability without opening the main Admin Panel.</div></div><button class="crm-close" type="button" onclick="closeAdminStock()">×</button></div></div>';
-  document.body.appendChild(stockModal);
-  stockModal.querySelector('.crm-panel').appendChild(stock);
+  ensureParty();
+  ensureStock();
 }
+
 
 window.closeAdminNewParty=function(){
   const m=document.getElementById('adminNewPartyModal');
@@ -5871,7 +5892,12 @@ window.openAdminNewParty=function(){
   const party=document.getElementById('crmPartyMaster');
 
   if(!m || !party){
-    throw new Error('New Party workspace could not be initialised.');
+    ensureAdminUtilityModals();
+  }
+  const readyModal=document.getElementById('adminNewPartyModal');
+  const readyParty=document.getElementById('crmPartyMaster');
+  if(!readyModal || !readyParty){
+    throw new Error('New Party form is not available in the page.');
   }
 
   // Ensure the party form belongs to the dedicated modal and is not left
