@@ -578,64 +578,6 @@ a:active,
   box-shadow: inherit !important;
 }
 
-
-/* ===== SEERVI SEPARATE ITEMS WORKSPACE ===== */
-#seerviItemsModal{
-  position:fixed;
-  inset:0;
-  z-index:12000;
-  display:none;
-}
-#seerviItemsModal:not([hidden]){
-  display:block;
-}
-#seerviItemsModal .crm-modal-backdrop{
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,.72);
-}
-#seerviItemsModal .seervi-items-modal-card{
-  position:absolute;
-  inset:18px;
-  overflow:auto;
-  background:var(--crm-bg,#0d1217);
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:14px;
-  box-shadow:0 30px 90px rgba(0,0,0,.55);
-}
-#seerviItemsModal .seervi-items-modal-topbar{
-  position:sticky;
-  top:0;
-  z-index:5;
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:20px;
-  padding:20px 24px;
-  background:var(--crm-bg,#0d1217);
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-#seerviItemsModal .seervi-items-modal-topbar h2{
-  margin:4px 0 6px;
-}
-#seerviItemsModal .seervi-items-modal-topbar p{
-  margin:0;
-}
-#seerviItemsModal #adminItemsArea{
-  display:block;
-  position:relative;
-  inset:auto;
-  min-height:0;
-}
-#seerviItemsModal #adminItemsArea[hidden]{
-  display:block !important;
-}
-@media(max-width:760px){
-  #seerviItemsModal .seervi-items-modal-card{inset:0;border-radius:0;}
-  #seerviItemsModal .seervi-items-modal-topbar{padding:16px;}
-}
-/* ===== END SEERVI SEPARATE ITEMS WORKSPACE ===== */
-
 </style><style id="seervi-shark-final-fix">
 .bw-hero{background:#111 !important}
 .bw-hero .bw-hero-image{
@@ -808,8 +750,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 /* V45 — Process section is informational, not a numbered product section */
 .supply-step{padding-top:22px}
 .supply-icon{margin-top:4px}
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><style>
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script><style>
 /* V46 — Cart Rate + PDF Quotation */
 .cart-item{align-items:flex-start!important}
 .cart-item-main{flex:1;min-width:0}
@@ -3389,200 +3330,104 @@ body.nav-is-scrolled{padding-top:76px;}
 
 
 
-
-<style id="seervi-step3-items-style">
-.admin-items-area{margin-top:14px;border-top:1px solid #ffffff12;padding-top:16px}
-.admin-items-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px}
-.admin-items-title{margin:4px 0 5px;font-size:20px;letter-spacing:.02em;color:#f2f4f6}
-.admin-items-subtitle{margin:0;color:#8f99a4;font-size:11px}
-.admin-items-head-actions{display:flex;gap:8px;flex-wrap:wrap}
-.admin-items-tabs{display:flex;gap:7px;flex-wrap:wrap;border-bottom:1px solid #ffffff12;margin-bottom:14px}
-.admin-items-tab{border:1px solid #ffffff12;background:#11171e;color:#9da7b1;border-radius:7px 7px 0 0;padding:10px 13px;font-size:10px;font-weight:800;letter-spacing:.08em;cursor:pointer}
-.admin-items-tab:hover{border-color:#d8b45a55;color:#f2f4f6}
-.admin-items-tab.active{background:#d8b45a;color:#111;border-color:#d8b45a}
-.admin-items-view{min-width:0}
-.admin-items-toolbar{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:10px;margin-bottom:12px}
-.admin-items-toolbar label,.seervi-item-form label,.seervi-category-form label{display:block;color:#7f8b96;font-size:9px;font-weight:800;letter-spacing:.1em;margin-bottom:6px}
-.admin-items-toolbar input,.admin-items-toolbar select,.seervi-item-form input,.seervi-item-form select,.seervi-item-form textarea,.seervi-category-form input,.seervi-category-form select{width:100%;box-sizing:border-box;background:#0d1217;color:#f2f4f6;border:1px solid #283038;border-radius:7px;padding:10px 11px;font:inherit;font-size:12px;outline:none}
-.admin-items-toolbar input:focus,.admin-items-toolbar select:focus,.seervi-item-form input:focus,.seervi-item-form select:focus,.seervi-item-form textarea:focus,.seervi-category-form input:focus,.seervi-category-form select:focus{border-color:#d8b45a88}
-.admin-items-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
-.seervi-item-row{display:grid;grid-template-columns:58px minmax(180px,1.5fr) minmax(130px,1fr) minmax(120px,1fr) 82px auto;gap:10px;align-items:center;border:1px solid #ffffff12;background:#11171e;border-radius:9px;padding:9px 10px}
-.seervi-item-thumb{width:58px;height:58px;border-radius:7px;border:1px solid #ffffff12;background:#0a0e12;object-fit:cover}
-.seervi-item-name{font-weight:800;color:#f2f4f6;font-size:12px}
-.seervi-item-meta{color:#7f8b96;font-size:9px;margin-top:3px;line-height:1.45}
-.seervi-item-category{color:#c9d0d7;font-size:10px;line-height:1.4}
-.seervi-item-status{font-size:9px;font-weight:900;letter-spacing:.08em}
-.seervi-item-status.active{color:#6ee7a8}
-.seervi-item-status.inactive{color:#f28b8b}
-.seervi-item-actions{display:flex;gap:5px;justify-content:flex-end;flex-wrap:wrap}
-.seervi-item-actions button{font-size:9px!important;padding:8px 9px!important}
-.seervi-item-form-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
-.seervi-item-form{display:flex;flex-direction:column;gap:12px}
-.seervi-item-form-section{border:1px solid #ffffff12;background:#11171e;border-radius:10px;padding:13px}
-.seervi-item-form-section-title{font-size:10px;font-weight:900;letter-spacing:.12em;color:#d8b45a;margin-bottom:11px}
-.seervi-item-form-section-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
-.seervi-item-form-section-title-row .seervi-item-form-section-title{margin:0}
-.seervi-item-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-.seervi-item-form-full{grid-column:1/-1}
-.seervi-specifications-rows{display:flex;flex-direction:column;gap:7px;margin-bottom:9px}
-.seervi-spec-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) auto;gap:7px}
-.seervi-spec-row button{align-self:stretch}
-.seervi-check-label{display:flex!important;align-items:center;gap:7px!important;color:#c9d0d7!important;font-size:10px!important;letter-spacing:.05em!important;margin:0!important}
-.seervi-check-label input{width:auto!important}
-.seervi-item-status-section{padding:11px 13px}
-.seervi-item-form-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.seervi-category-form{display:flex;flex-direction:column;gap:7px}
-.seervi-category-form label{margin-top:4px}
-.admin-items-category-layout{display:grid;grid-template-columns:minmax(250px,.75fr) minmax(0,1.25fr);gap:12px}
-.admin-items-category-card{border:1px solid #ffffff12;background:#11171e;border-radius:10px;padding:13px}
-.seervi-categories-list{display:flex;flex-direction:column;gap:6px;margin-top:9px}
-.seervi-category-row{display:grid;grid-template-columns:90px minmax(0,1fr) 80px 70px;gap:8px;align-items:center;border:1px solid #ffffff10;border-radius:7px;padding:8px 9px;background:#0d1217}
-.seervi-category-type{font-size:8px;font-weight:900;letter-spacing:.08em;color:#d8b45a}
-.seervi-category-name{font-size:11px;color:#f2f4f6;font-weight:700}
-.seervi-category-parent{font-size:9px;color:#7f8b96}
-.seervi-category-active{font-size:8px;font-weight:900}
-@media(max-width:900px){
-  .seervi-item-row{grid-template-columns:52px minmax(0,1fr) auto}
-  .seervi-item-thumb{width:52px;height:52px}
-  .seervi-item-row .seervi-item-category,.seervi-item-row .seervi-item-status{grid-column:2/-1}
-  .seervi-item-actions{grid-column:3;grid-row:1/3}
-  .admin-items-category-layout{grid-template-columns:1fr}
+<style id="seervi-items-workspace-style">
+/* ===== SEERVI SEPARATE ITEMS WORKSPACE ===== */
+#seerviItemsModal{
+  position:fixed;
+  inset:0;
+  z-index:12000;
+  display:none;
 }
-@media(max-width:620px){
-  .admin-items-head{flex-direction:column}
-  .admin-items-head-actions{width:100%}
-  .admin-items-head-actions button{flex:1}
-  .admin-items-toolbar{grid-template-columns:1fr}
-  .seervi-item-form-grid{grid-template-columns:1fr}
-  .seervi-item-form-full{grid-column:auto}
-  .seervi-spec-row{grid-template-columns:1fr 1fr auto}
-  .seervi-item-row{grid-template-columns:48px minmax(0,1fr)}
-  .seervi-item-actions{grid-column:1/-1;justify-content:flex-start}
-  .seervi-item-row .seervi-item-category,.seervi-item-row .seervi-item-status{grid-column:2}
-  .seervi-category-row{grid-template-columns:1fr 1fr}
+#seerviItemsModal:not([hidden]){
+  display:block;
 }
-</style>
-
-
-<style id="seervi-step4-bulk-style">
-.seervi-bulk-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.seervi-bulk-preview-area{border:1px solid #ffffff12;background:#11171e;border-radius:10px;padding:13px;margin-top:12px}
-.seervi-bulk-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.seervi-bulk-summary>div{border:1px solid #ffffff10;background:#0d1217;border-radius:8px;padding:10px}
-.seervi-bulk-summary span{display:block;color:#7f8b96;font-size:8px;font-weight:900;letter-spacing:.1em;margin-bottom:5px}
-.seervi-bulk-summary strong{font-size:18px;color:#f2f4f6}
-.seervi-bulk-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
-.seervi-bulk-table-wrap{overflow:auto;border:1px solid #ffffff10;border-radius:8px;background:#0b0f14;max-height:500px}
-.seervi-bulk-table{width:100%;min-width:980px;border-collapse:collapse;font-size:10px}
-.seervi-bulk-table th,.seervi-bulk-table td{padding:9px 8px;border-bottom:1px solid #ffffff0d;text-align:left;vertical-align:top}
-.seervi-bulk-table th{position:sticky;top:0;background:#151a20;color:#89939e;font-size:8px;letter-spacing:.08em;z-index:1}
-.seervi-bulk-table td{color:#d7dde2}
-.seervi-bulk-table tr.bulk-row-error{background:#351719}
-.seervi-bulk-table tr.bulk-row-duplicate{background:#302914}
-.seervi-bulk-badge{display:inline-flex;border-radius:999px;padding:4px 7px;font-size:8px;font-weight:900;letter-spacing:.06em}
-.seervi-bulk-badge.ok{color:#6ee7a8;border:1px solid #2d6843}
-.seervi-bulk-badge.error{color:#ff9999;border:1px solid #713b3b}
-.seervi-bulk-badge.duplicate{color:#f0d27a;border:1px solid #6b5928}
-.seervi-bulk-error-text{color:#ff9a9a;font-size:9px;line-height:1.4}
-@media(max-width:700px){
-  .seervi-bulk-grid{grid-template-columns:1fr}
-  .seervi-bulk-summary{grid-template-columns:1fr 1fr}
+#seerviItemsModal .crm-modal-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.72);
 }
-</style>
-
-
-<style id="seervi-step5-items-style">
-.admin-items-toolbar{grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(145px,.55fr))}
-@media(max-width:900px){.admin-items-toolbar{grid-template-columns:1fr 1fr}}
-@media(max-width:620px){.admin-items-toolbar{grid-template-columns:1fr}}
-</style>
-
-<style id="seervi-step6-category-style">
-.seervi-category-row{grid-template-columns:90px minmax(0,1fr) 80px 100px auto}
-.seervi-category-row .seervi-item-actions{justify-content:flex-end}
-@media(max-width:700px){.seervi-category-row{grid-template-columns:1fr 1fr}.seervi-category-row .seervi-item-actions{grid-column:1/-1;justify-content:flex-start}}
-</style>
-
-
-<style id="seervi-step7-public-catalog-style">
-.firebase-public-catalog{padding:54px 0 36px;scroll-margin-top:70px}
-.firebase-public-catalog .catalog-title{margin-bottom:18px}
-.firebase-public-catalog .catalog-title h2{font-size:32px;margin:10px 0 7px}
-.seervi-public-category-bar,.seervi-public-subcategory-bar{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 10px}
-.seervi-public-category-btn,.seervi-public-subcategory-btn{border:1px solid #ffffff16;background:#11171e;color:#9da7b1;border-radius:999px;padding:9px 13px;font-size:9px;font-weight:900;letter-spacing:.08em;cursor:pointer}
-.seervi-public-category-btn:hover,.seervi-public-subcategory-btn:hover{border-color:#d8b45a66;color:#f2f4f6}
-.seervi-public-category-btn.active,.seervi-public-subcategory-btn.active{background:#d8b45a;border-color:#d8b45a;color:#111}
-.seervi-public-product-grid{margin-top:14px}
-.seervi-public-product-card{min-width:0}
-.seervi-public-product-card .home-product-thumb{cursor:pointer}
-.seervi-public-product-card .seervi-public-specs{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
-.seervi-public-spec-chip{font-size:8px;color:#aab3bc;border:1px solid #ffffff12;border-radius:5px;padding:4px 6px;background:#0d1217}
-.seervi-public-product-card .seervi-public-category-line{color:#7f8b96;font-size:9px;margin-top:4px}
-.seervi-public-empty{grid-column:1/-1;border:1px dashed #ffffff18;border-radius:10px;padding:28px;text-align:center;color:#7f8b96}
-@media(max-width:600px){
-  .firebase-public-catalog{padding:34px 0 24px}
-  .firebase-public-catalog .catalog-title h2{font-size:25px}
-  .seervi-public-category-bar,.seervi-public-subcategory-bar{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
-  .seervi-public-category-btn,.seervi-public-subcategory-btn{flex:0 0 auto}
+#seerviItemsModal .seervi-items-modal-card{
+  position:absolute;
+  inset:18px;
+  overflow:auto;
+  background:var(--crm-bg,#0d1217);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+  box-shadow:0 30px 90px rgba(0,0,0,.55);
 }
+#seerviItemsModal .seervi-items-modal-topbar{
+  position:sticky;
+  top:0;
+  z-index:5;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:20px;
+  padding:20px 24px;
+  background:var(--crm-bg,#0d1217);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+#seerviItemsModal .seervi-items-modal-topbar h2{
+  margin:4px 0 6px;
+}
+#seerviItemsModal .seervi-items-modal-topbar p{
+  margin:0;
+}
+#seerviItemsModal #adminItemsArea{
+  display:block;
+  position:relative;
+  inset:auto;
+  min-height:0;
+}
+#seerviItemsModal #adminItemsArea[hidden]{
+  display:block !important;
+}
+@media(max-width:760px){
+  #seerviItemsModal .seervi-items-modal-card{inset:0;border-radius:0;}
+  #seerviItemsModal .seervi-items-modal-topbar{padding:16px;}
+}
+/* ===== END SEERVI SEPARATE ITEMS WORKSPACE ===== */
+
+
+/* STEP 3 HARDENING: dedicated Items workspace is its own UI layer. */
+#seerviItemsModal{
+  position:fixed!important;
+  inset:0!important;
+  z-index:20000!important;
+  display:none!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:16px!important;
+  pointer-events:none!important;
+}
+#seerviItemsModal.is-open{
+  display:flex!important;
+  pointer-events:auto!important;
+}
+#seerviItemsModal .seervi-items-modal-backdrop{
+  position:absolute!important;
+  inset:0!important;
+  z-index:0!important;
+  background:rgba(0,0,0,.72)!important;
+  pointer-events:auto!important;
+}
+#seerviItemsModal .seervi-items-modal-card{
+  position:relative!important;
+  z-index:1!important;
+  width:min(1500px,100%)!important;
+  max-height:calc(100vh - 32px)!important;
+  overflow:auto!important;
+  pointer-events:auto!important;
+}
+#seerviItemsModal .seervi-items-modal-card *{
+  pointer-events:auto;
+}
+
 </style>
-
-
-<style id="seervi-step8-public-catalog-style">
-.seervi-public-toolbar{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:10px;margin:12px 0 14px}
-.seervi-public-toolbar label{display:block}
-.seervi-public-toolbar label>span{display:block;color:#7f8b96;font-size:8px;font-weight:900;letter-spacing:.1em;margin:0 0 6px}
-.seervi-public-search input,.seervi-public-sort select{width:100%;box-sizing:border-box;border:1px solid #ffffff16;background:#0e141a;color:#f2f4f6;border-radius:8px;padding:11px 12px;outline:none}
-.seervi-public-search input:focus,.seervi-public-sort select:focus{border-color:#d8b45a66}
-@media(max-width:600px){.seervi-public-toolbar{grid-template-columns:1fr}.seervi-public-sort{max-width:220px}}
-</style>
-
-<style id="seervi-step10-live-style">
-.seervi-live-state{display:inline-flex;align-items:center;gap:6px;font-size:8px;font-weight:900;letter-spacing:.08em;color:#6ee7a8}
-.seervi-live-state::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
-</style>
-
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
 </button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url('images/00-old-products/product-image-001-055cde1217d3c801.webp')"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
-
-
-<section id="profiles" class="firebase-public-catalog">
-  <div class="wrap">
-    <div class="catalog-title">
-      <div>
-        <div class="crm-kicker">SEERVI TRADING / PRODUCTS</div>
-        <h2>Our Products</h2>
-        <p>Live catalogue powered by Firebase. Categories, subcategories, items, specifications and WEBP images are managed from the authorised Admin Panel.</p>
-      </div>
-    </div>
-
-    <div id="seerviPublicCategoryBar" class="seervi-public-category-bar" aria-label="Product categories">
-      <button type="button" class="seervi-public-category-btn active" data-category-id="catalogAllButton" onclick="seerviPublicSelectCategory('all')">ALL</button>
-    </div>
-
-    <div id="seerviPublicSubcategoryBar" class="seervi-public-subcategory-bar" hidden></div>
-    <div class="seervi-public-toolbar">
-      <label class="seervi-public-search">
-        <span>SEARCH PRODUCTS</span>
-        <input id="seerviPublicSearch" type="search" placeholder="Search item, model or specification…" autocomplete="off">
-      </label>
-      <label class="seervi-public-sort">
-        <span>SORT</span>
-        <select id="seerviPublicSort">
-          <option value="name">NAME A–Z</option>
-          <option value="name-desc">NAME Z–A</option>
-          <option value="newest">NEWEST</option>
-        </select>
-      </label>
-    </div>
-
-    <div id="seerviPublicCatalogueStatus" class="crm-auth-status">Loading products…</div>
-    <div id="seerviPublicProductGrid" class="home-product-grid seervi-public-product-grid"></div>
-  </div>
-</section>
-
 
 
 
@@ -3600,7 +3445,7 @@ body.nav-is-scrolled{padding-top:76px;}
     </div>
     <div id="adminDashboardOptions" class="account-dashboard-options" hidden aria-label="Admin dashboard options">
       <button class="account-dashboard-option" type="button" onclick="accountDashboardAdminPanel()"><span>▣</span><strong>ADMIN PANEL</strong><small>Manage quotations, parties & ledger</small></button>
-      <button class="account-dashboard-option" type="button" onclick="accountDashboardItems()"><span>▤</span><strong>ITEMS</strong><small>Manage Firebase items & categories</small></button>
+      <button class="account-dashboard-option" type="button" onclick="accountDashboardItems()"><span>▦</span><strong>ITEMS</strong><small>Manage Firebase catalogue</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardNewParty()"><span>＋</span><strong>NEW PARTY</strong><small>Create a new customer / party</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardBackup()"><span>⇩</span><strong>BACKUP DATA</strong><small>Download your CRM business backup</small></button>
       
@@ -3758,238 +3603,7 @@ body.nav-is-scrolled{padding-top:76px;}
 #customerDashboardView .customer-profile-card[hidden],
 #customerDashboardView .customer-portal-tabs[hidden],
 #customerDashboardView .customer-profile-edit[hidden]{display:none !important}
-</style><div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Admin Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-close" type="button" onclick="closeCRM()">×</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div>
-<div id="adminGlobalArea" class="admin-global-area">
-<div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, all quotations and complete party ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span>QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div>
-</div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs"><button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button><button class="crm-tab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button><button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button><button class="crm-tab" data-tab="ledger" onclick="crmTab('ledger')">PAYMENT ENTRY</button></div><div id="crmOverview" class="crm-tab-panel"><div class="crm-stat-grid"><div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div><div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div><div><span>LEDGER BALANCE</span><strong id="crmLedgerBalance">₹0.00</strong></div></div></div><div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div><div id="crmRates" class="crm-tab-panel" hidden><div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div><div id="crmRatesList" class="crm-list"></div></div><div id="crmLedger" class="crm-tab-panel" hidden><div class="crm-ledger-help">Quotation amounts are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.</div><div class="crm-ledger-add"><select id="crmLedgerType"><option value="debit">Debit / Sale</option><option value="credit">Credit / Payment Received</option></select><input id="crmLedgerAmount" type="number" min="0" step="0.01" placeholder="Amount ₹"><input id="crmLedgerNote" placeholder="Note / Reference"><button class="crm-primary small" type="button" onclick="crmAddLedgerEntry()">ADD ENTRY</button></div><div id="crmLedgerList" class="crm-list"></div></div></div></div>
-<div id="seerviItemsModal" class="crm-modal seervi-items-modal" aria-hidden="true" hidden>
-  <div class="crm-modal-backdrop" onclick="seerviCloseItemsPanel()"></div>
-  <div class="crm-modal-card seervi-items-modal-card" role="dialog" aria-modal="true" aria-labelledby="seerviItemsModalTitle">
-    <div class="seervi-items-modal-topbar">
-      <div>
-        <div class="crm-section-title">SEERVI ADMIN / ITEMS</div>
-        <h2 id="seerviItemsModalTitle">ITEM MANAGEMENT</h2>
-        <p>Firebase-based Category → Subcategory → Item catalogue.</p>
-      </div>
-      <button class="crm-close" type="button" aria-label="Close Items" onclick="seerviCloseItemsPanel()">×</button>
-    </div>
-    <div id="adminItemsArea" class="admin-items-area" hidden>
-  <div class="admin-items-head">
-    <div>
-      <div class="crm-section-title">SEERVI ADMIN / ITEMS</div>
-      <h3 class="admin-items-title">ITEM MANAGEMENT</h3>
-      <p class="admin-items-subtitle">Firebase-based Category → Subcategory → Item catalogue. No hard-coded product taxonomy.</p>
-    </div>
-    <div class="admin-items-head-actions">
-      <button class="crm-secondary" type="button" onclick="seerviItemsBackToDashboard()">← DASHBOARD</button>
-      <button class="crm-secondary" type="button" onclick="seerviItemsRefresh()">↻ REFRESH</button>
-    </div>
-  </div>
-
-  <div class="admin-items-tabs" role="tablist" aria-label="Items management">
-    <button class="admin-items-tab active" type="button" data-items-tab="all" onclick="seerviItemsTab('all')">ALL ITEMS</button>
-    <button class="admin-items-tab" type="button" data-items-tab="add" onclick="seerviItemsTab('add')">ADD NEW ITEM</button>
-    <button class="admin-items-tab" type="button" data-items-tab="categories" onclick="seerviItemsTab('categories')">CATEGORIES</button>
-    <button class="admin-items-tab" type="button" data-items-tab="bulk" onclick="seerviItemsTab('bulk')">BULK ADD</button>
-  </div>
-
-  <section id="seerviItemsAllView" class="admin-items-view">
-    <div class="admin-items-toolbar">
-      <div class="admin-items-search-wrap">
-        <label for="seerviItemsSearch">SEARCH ITEMS</label>
-        <input id="seerviItemsSearch" type="search" placeholder="Search name, model, category..." oninput="seerviItemsFilter(this.value)">
-      </div>
-      <div class="admin-items-filter-wrap">
-        <label for="seerviItemsStatusFilter">STATUS</label>
-        <select id="seerviItemsStatusFilter" onchange="seerviItemsFilter(document.getElementById('seerviItemsSearch')?.value||'')">
-          <option value="all">ALL</option>
-          <option value="active">ACTIVE</option>
-          <option value="inactive">INACTIVE</option>
-        </select>
-      </div>
-      <div class="admin-items-filter-wrap">
-        <label for="seerviItemsCategoryFilter">CATEGORY</label>
-        <select id="seerviItemsCategoryFilter" onchange="seerviItemsFilter(document.getElementById('seerviItemsSearch')?.value||'')">
-          <option value="all">ALL CATEGORIES</option>
-        </select>
-      </div>
-      <div class="admin-items-filter-wrap">
-        <label for="seerviItemsSubcategoryFilter">SUBCATEGORY</label>
-        <select id="seerviItemsSubcategoryFilter" onchange="seerviItemsFilter(document.getElementById('seerviItemsSearch')?.value||'')">
-          <option value="all">ALL SUBCATEGORIES</option>
-        </select>
-      </div>
-    </div>
-    <div id="seerviItemsStatus" class="crm-auth-status">Loading items…</div>
-    <div id="seerviItemsList" class="admin-items-list"></div>
-  </section>
-
-  <section id="seerviItemsAddView" class="admin-items-view" hidden>
-    <div class="admin-items-form-head">
-      <div>
-        <div class="crm-section-title">ITEM MASTER</div>
-        <p id="seerviItemFormMode" class="crm-auth-status">Create a new Firebase item.</p>
-      </div>
-      <button id="seerviItemCancelEdit" class="crm-secondary" type="button" onclick="seerviItemsResetForm()" hidden>CANCEL EDIT</button>
-    </div>
-
-    <form id="seerviItemForm" class="seervi-item-form" onsubmit="event.preventDefault();seerviSaveItemForm();">
-      <input id="seerviItemId" type="hidden">
-
-      <div class="seervi-item-form-section">
-        <div class="seervi-item-form-section-title">CATEGORY STRUCTURE</div>
-        <div class="seervi-item-form-grid">
-          <div>
-            <label for="seerviItemCategory">CATEGORY *</label>
-            <select id="seerviItemCategory" required onchange="seerviItemCategoryChanged()">
-              <option value="">Select Category</option>
-            </select>
-          </div>
-          <div>
-            <label for="seerviItemSubcategory">SUBCATEGORY</label>
-            <select id="seerviItemSubcategory" required>
-              <option value="">Select Subcategory</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-<div class="seervi-item-form-section">
-        <div class="seervi-item-form-section-title">ITEM DETAILS</div>
-        <div class="seervi-item-form-grid">
-          <div class="seervi-item-form-full">
-            <label for="seerviItemName">ITEM NAME *</label>
-            <input id="seerviItemName" type="text" maxlength="300" required placeholder="Enter item name">
-          </div>
-          <div>
-            <label for="seerviItemModel">MODEL / CODE</label>
-            <input id="seerviItemModel" type="text" maxlength="200" placeholder="Model or item code">
-          </div>
-          <div>
-            <label for="seerviItemImage">WEBP IMAGE URL / PATH *</label>
-            <input id="seerviItemImage" type="text" maxlength="2000" required placeholder="images/items/example.webp">
-          </div>
-          <div class="seervi-item-form-full">
-            <label for="seerviItemDescription">DESCRIPTION</label>
-            <textarea id="seerviItemDescription" rows="4" maxlength="5000" placeholder="Item description"></textarea>
-          </div>
-        </div>
-      </div>
-
-      <div class="seervi-item-form-section">
-        <div class="seervi-item-form-section-title-row">
-          <div class="seervi-item-form-section-title">SPECIFICATIONS</div>
-          <button class="crm-secondary small" type="button" onclick="seerviAddSpecificationRow()">＋ ADD SPECIFICATION</button>
-        </div>
-        <div id="seerviSpecificationsRows" class="seervi-specifications-rows"></div>
-        <div class="crm-muted">Add only the specifications relevant to this item. Specification names are fully dynamic.</div>
-      </div>
-
-      <div class="seervi-item-form-section seervi-item-status-section">
-        <label class="seervi-check-label"><input id="seerviItemActive" type="checkbox" checked> ACTIVE ITEM</label>
-      </div>
-
-      <div class="seervi-item-form-actions">
-        <button class="crm-primary" type="submit" id="seerviItemSaveButton">SAVE ITEM</button>
-        <button class="crm-secondary" type="button" onclick="seerviItemsResetForm()">CLEAR</button>
-        <span id="seerviItemFormStatus" class="crm-auth-status"></span>
-      </div>
-    </form>
-  </section>
-
-  
-  <section id="seerviItemsBulkView" class="admin-items-view" hidden>
-    <div class="admin-items-form-head">
-      <div>
-        <div class="crm-section-title">BULK ITEM IMPORT</div>
-        <p class="crm-auth-status">Excel → Preview → Validate → Import to Firebase. Nothing is written until you confirm.</p>
-      </div>
-      <button class="crm-secondary" type="button" onclick="seerviBulkDownloadTemplate()">DOWNLOAD TEMPLATE</button>
-    </div>
-
-    <div class="seervi-bulk-grid">
-      <div class="admin-items-category-card">
-        <div class="crm-section-title">1. PREPARE EXCEL</div>
-        <div class="crm-muted" style="margin:8px 0 12px;line-height:1.6">
-          Required: <b>Category</b>, <b>Item Name</b>, <b>WEBP Image URL / Path</b>.<br>
-          Subcategory is optional. Specifications use paired columns:
-          <b>Spec 1 Name / Spec 1 Value</b>, <b>Spec 2 Name / Spec 2 Value</b>…
-        </div>
-        <button class="crm-secondary" type="button" onclick="seerviBulkDownloadTemplate()">DOWNLOAD EXCEL TEMPLATE</button>
-      </div>
-
-      <div class="admin-items-category-card">
-        <div class="crm-section-title">2. UPLOAD FILE</div>
-        <input id="seerviBulkFile" type="file" accept=".xlsx,.xls,.csv" style="margin-top:10px">
-        <div class="crm-muted" style="margin-top:8px">Supported: .xlsx, .xls, .csv</div>
-        <button class="crm-primary" type="button" style="margin-top:12px" onclick="seerviBulkReadFile()">READ & PREVIEW</button>
-        <div id="seerviBulkFileStatus" class="crm-auth-status" style="margin-top:9px"></div>
-      </div>
-    </div>
-
-    <div id="seerviBulkPreviewArea" class="seervi-bulk-preview-area" hidden>
-      <div class="seervi-bulk-summary">
-        <div><span>ROWS</span><strong id="seerviBulkTotal">0</strong></div>
-        <div><span>VALID</span><strong id="seerviBulkValid">0</strong></div>
-        <div><span>ERRORS</span><strong id="seerviBulkErrors">0</strong></div>
-        <div><span>DUPLICATES</span><strong id="seerviBulkDuplicates">0</strong></div>
-      </div>
-
-      <div class="seervi-bulk-actions">
-        <button class="crm-secondary" type="button" onclick="seerviBulkRevalidate()">REVALIDATE</button>
-        <button class="crm-primary" type="button" id="seerviBulkImportButton" onclick="seerviBulkImport()" disabled>IMPORT VALID ITEMS</button>
-      </div>
-
-      <div id="seerviBulkValidationStatus" class="crm-auth-status"></div>
-      <div id="seerviBulkTableWrap" class="seervi-bulk-table-wrap"></div>
-    </div>
-  </section>
-
-<section id="seerviItemsCategoriesView" class="admin-items-view" hidden>
-    <div class="admin-items-category-layout">
-      <div class="admin-items-category-card">
-        <div class="crm-section-title">CREATE CATEGORY</div>
-        <p class="crm-auth-status">Build Category → Subcategory from scratch.</p>
-        <form id="seerviCategoryForm" class="seervi-category-form" onsubmit="event.preventDefault();seerviCreateCategoryFromForm();"><input id="seerviCategoryEditId" type="hidden">
-          <label for="seerviCategoryType">TYPE</label>
-          <select id="seerviCategoryType" required onchange="seerviCategoryParentOptions()">
-            <option value="">Select Type</option>
-            <option value="category">Category</option>
-            <option value="subcategory">Subcategory</option>
-          </select>
-
-          <label for="seerviCategoryParent">PARENT</label>
-          <select id="seerviCategoryParent">
-            <option value="">No Parent</option>
-          </select>
-
-          <label for="seerviCategoryName">NAME *</label>
-          <input id="seerviCategoryName" type="text" maxlength="200" required placeholder="Enter category name">
-
-          <label for="seerviCategorySlug">SLUG</label>
-          <input id="seerviCategorySlug" type="text" maxlength="220" placeholder="Optional slug">
-
-          <label class="seervi-check-label"><input id="seerviCategoryActive" type="checkbox" checked> ACTIVE</label>
-
-          <div class="seervi-item-form-actions">
-          <button class="crm-primary" type="submit" id="seerviCategorySaveButton">CREATE CATEGORY</button>
-          <button class="crm-secondary" type="button" id="seerviCategoryCancelEdit" onclick="seerviResetCategoryForm()" hidden>CANCEL EDIT</button>
-        </div>
-          <span id="seerviCategoryFormStatus" class="crm-auth-status"></span>
-        </form>
-      </div>
-
-      <div class="admin-items-category-card">
-        <div class="crm-section-title">CATEGORY MASTER</div>
-        <div id="seerviCategoriesStatus" class="crm-auth-status">Loading categories…</div>
-        <div id="seerviCategoriesList" class="seervi-categories-list"></div>
-      </div>
-    </div>
-  </section>
-</div>
-  </div>
-</div>
-</div><script>
+</style><div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Admin Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-close" type="button" onclick="closeCRM()">×</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div><div id="adminGlobalArea" class="admin-global-area"><div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, all quotations and complete party ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span>QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs"><button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button><button class="crm-tab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button><button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button><button class="crm-tab" data-tab="ledger" onclick="crmTab('ledger')">PAYMENT ENTRY</button></div><div id="crmOverview" class="crm-tab-panel"><div class="crm-stat-grid"><div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div><div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div><div><span>LEDGER BALANCE</span><strong id="crmLedgerBalance">₹0.00</strong></div></div></div><div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div><div id="crmRates" class="crm-tab-panel" hidden><div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div><div id="crmRatesList" class="crm-list"></div></div><div id="crmLedger" class="crm-tab-panel" hidden><div class="crm-ledger-help">Quotation amounts are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.</div><div class="crm-ledger-add"><select id="crmLedgerType"><option value="debit">Debit / Sale</option><option value="credit">Credit / Payment Received</option></select><input id="crmLedgerAmount" type="number" min="0" step="0.01" placeholder="Amount ₹"><input id="crmLedgerNote" placeholder="Note / Reference"><button class="crm-primary small" type="button" onclick="crmAddLedgerEntry()">ADD ENTRY</button></div><div id="crmLedgerList" class="crm-list"></div></div></div></div></div><script>
 let seerviCart = JSON.parse(localStorage.getItem('seerviCart') || '[]');
 
 function saveCart(){
@@ -3998,10 +3612,6 @@ function saveCart(){
 }
 
 function cartKey(item){
-  // Firebase items use their immutable document ID so two different items
-  // with the same model/name can never collide in the cart.
-  if(item && item.firebaseItemId) return 'firebase|' + String(item.firebaseItemId);
-  // Legacy cart entries remain compatible with the existing quotation/cart flow.
   return item.type + '|' + item.model + '|' + (item.thickness || '') + '|' + (item.subcategory || '');
 }
 
@@ -4058,6 +3668,36 @@ function clearCart(){
   seerviCart = [];
   saveCart();
 }
+
+
+function changeProductQty(type, model, thickness, delta, subcategory){
+  let img = '';
+  if(type === 'Profile'){
+    const control = [...document.querySelectorAll('.product-cart-control')].find(el =>
+      el.dataset.cartType === type &&
+      el.dataset.cartModel === model &&
+      (el.dataset.cartThickness || '') === (thickness || '') &&
+      (!subcategory || (el.dataset.cartSubcategory || '') === subcategory)
+    );
+    img = control?.closest('.profile-product-card')?.querySelector('.profile-product-image img')?.src || '';
+  } else {
+    const card = [...document.querySelectorAll('.home-product-card')].find(el => el.dataset.model === model && (!subcategory || (el.dataset.subcategory || '') === subcategory));
+    img = card?.querySelector('.home-product-thumb img')?.src || '';
+  }
+  const item = {type:type, model:model, thickness:thickness || '', subcategory:subcategory || '', name:model, image:img};
+  const key = cartKey(item);
+  const found = seerviCart.find(x => cartKey(x) === key);
+
+  if(found){
+    found.qty += delta;
+    if(found.qty <= 0) seerviCart = seerviCart.filter(x => cartKey(x) !== key);
+  } else if(delta > 0){
+    seerviCart.push({...item, qty:1, rate:Number(item.rate||0)});
+  }
+
+  saveCart();
+}
+
 
 function formatINR(value){
   const n = Number(value || 0);
@@ -4570,6 +4210,60 @@ document.addEventListener('click',e=>{
   }
 });
 </script><script>
+function filterProfiles(){
+  const q=(document.getElementById('profileSearch')?.value||'').toLowerCase().trim();
+  const t=document.getElementById('profileThickness')?.value||'';
+  const cards=[...document.querySelectorAll('#profiles .profile-product-card')];
+  let visible=0;
+  cards.forEach(card=>{
+    const model=(card.dataset.model||'').toLowerCase();
+    const thick=card.dataset.thickness||'';
+    const ok=(!q||model.includes(q))&&(!t||thick===t);
+    card.style.display=ok?'':'none';
+    if(ok) visible++;
+  });
+  const r=document.getElementById('profileResultCount');
+  if(r) r.textContent=`${visible} profile option${visible===1?'':'s'} shown`;
+}
+function clearProfileFilters(){
+  const q=document.getElementById('profileSearch'),t=document.getElementById('profileThickness');
+  if(q) q.value=''; if(t) t.value=''; filterProfiles();
+}
+function filterBlades(){
+  const q=(document.getElementById('bladeSearch')?.value||'').toLowerCase().trim();
+  const cards=[...document.querySelectorAll('#products .home-product-card')];
+  let visible=0;
+  cards.forEach(card=>{
+    const model=(card.dataset.model||'').toLowerCase();
+    const ok=!q||model.includes(q);
+    card.style.display=ok?'':'none';
+    if(ok) visible++;
+  });
+  const r=document.getElementById('bladeResultCount');
+  if(r) r.textContent=`${visible} blade option${visible===1?'':'s'} shown`;
+}
+function clearBladeFilter(){
+  const q=document.getElementById('bladeSearch'); if(q) q.value=''; filterBlades();
+}
+function filterMounts(){
+  const q=(document.getElementById('mountSearch')?.value||'').toLowerCase().trim();
+  const cards=[...document.querySelectorAll('#tvMounts .tv-mount-product-card')];
+  let visible=0;
+  cards.forEach(card=>{
+    const model=(card.dataset.model||'').toLowerCase();
+    const details=(card.textContent||'').toLowerCase();
+    const ok=!q || model.includes(q) || details.includes(q);
+    card.style.display=ok?'':'none';
+    if(ok) visible++;
+  });
+  const r=document.getElementById('mountResultCount');
+  if(r) r.textContent=`${visible} mount option${visible===1?'':'s'} shown`;
+}
+function clearMountFilter(){
+  const q=document.getElementById('mountSearch'); if(q) q.value=''; filterMounts();
+}
+document.addEventListener('DOMContentLoaded',()=>{filterProfiles();filterBlades();filterMounts();});
+</script><script>
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){
     setMobileMenuState(false);
@@ -4707,72 +4401,19 @@ function addAIMessage(role,text){
   chat.appendChild(el);chat.scrollTop=chat.scrollHeight;
 }
 function aiProductContext(){
-  if(Array.isArray(seerviPublicItems) && seerviPublicItems.length){
-    return seerviPublicItems.map(item=>{
-      const category=seerviPublicCategoryName(item.categoryId);
-      const subcategory=seerviPublicCategoryName(item.subcategoryId);
-      const specs=Object.entries(item.specifications||{}).slice(0,8)
-        .map(([k,v])=>`${k}: ${v}`).join(', ');
-      return [
-        item.name||'Unnamed Item',
-        item.model?`Model: ${item.model}`:'',
-        category?`Category: ${category}`:'',
-        subcategory?`Subcategory: ${subcategory}`:'',
-        specs?`Specs: ${specs}`:'',
-        item.description?String(item.description).slice(0,180):''
-      ].filter(Boolean).join(' — ');
-    });
-  }
-
-  // Public Firebase catalogue is the authoritative product context.
-  // Keep a DOM fallback only for legacy cards that may still exist elsewhere
-  // on the page, without using any product-specific taxonomy.
-  const cards=[...document.querySelectorAll('.home-product-card')];
+  const cards=[...document.querySelectorAll('.profile-product-card,.home-product-card,.tv-mount-product-card,.earth-auger-product-card')];
   const out=[]; const seen=new Set();
   cards.forEach(c=>{
     const model=String(c.dataset.model||c.querySelector('h3')?.textContent||'').trim();
     if(!model || seen.has(model.toLowerCase()))return;
     seen.add(model.toLowerCase());
     const type=String(c.dataset.type||'').trim();
-    const cardText=String(c.textContent||'').replace(/\s+/g,' ').trim();
-    out.push((type?type+': ':'')+model+(cardText?' — '+cardText.slice(0,180):''));
+    const text=String(c.textContent||'').replace(/\\s+/g,' ').trim();
+    out.push((type?type+': ':'')+model+(text?' — '+text.slice(0,180):''));
   });
   return out;
 }
-function aiFindProduct(q){
-  const query=String(q||'').trim().toLowerCase();
-  if(!query || !Array.isArray(seerviPublicItems) || !seerviPublicItems.length)return null;
-
-  const tokens=query.split(/\s+/).filter(x=>x.length>1);
-  let best=null;
-  let bestScore=0;
-
-  seerviPublicItems.forEach(item=>{
-    const fields=[
-      item.name,item.model,item.description,
-      seerviPublicCategoryName(item.categoryId),
-      seerviPublicCategoryName(item.subcategoryId),
-      ...Object.entries(item.specifications||{}).flat()
-    ].map(x=>String(x||'').toLowerCase());
-
-    const hay=fields.join(' ');
-    let score=0;
-
-    if(hay.includes(query))score+=10;
-    tokens.forEach(token=>{
-      if(hay.includes(token))score+=2;
-    });
-    if(String(item.model||'').toLowerCase()===query)score+=20;
-    if(String(item.name||'').toLowerCase()===query)score+=15;
-
-    if(score>bestScore){
-      bestScore=score;
-      best=item;
-    }
-  });
-
-  return bestScore>0 ? best : null;
-}
+function aiFindProduct(q){return null;}
 function aiReply(q){
   const x=String(q||'').trim();
   const l=x.toLowerCase();
@@ -5076,14 +4717,6 @@ function seerviCleanSpecifications(specifications){
   return output;
 }
 
-function seerviValidateWebpPath(value){
-  const v=seerviCleanItemValue(value,2000);
-  if(!v) throw new Error('WEBP image URL/path is required.');
-  const clean=v.split('?')[0].split('#')[0].toLowerCase();
-  if(!clean.endsWith('.webp')) throw new Error('WEBP image URL/path must end with .webp.');
-  return v;
-}
-
 function seerviBuildItemPayload(input={}){
   const nowFields={updatedAt:serverTimestamp()};
   const payload={
@@ -5092,13 +4725,11 @@ function seerviBuildItemPayload(input={}){
     name:seerviCleanItemValue(input.name,300),
     model:seerviCleanItemValue(input.model,200),
     description:seerviCleanItemValue(input.description,5000),
-    imageWebpUrl:seerviValidateWebpPath(input.imageWebpUrl),
+    imageWebpUrl:seerviCleanItemValue(input.imageWebpUrl,2000),
     specifications:seerviCleanSpecifications(input.specifications),
     active:input.active!==false,
     ...nowFields
   };
-  if(!payload.categoryId) throw new Error('Category is required.');
-  if(!payload.subcategoryId) throw new Error('Subcategory is required.');
   if(!payload.name) throw new Error('Item name is required.');
   return payload;
 }
@@ -5771,14 +5402,7 @@ window.closeAccountDashboard=function(){
   const m=$('accountDashboardModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');
 };
 window.accountDashboardAdminPanel=function(){
-  seerviCloseItemsPanel();
-  closeAccountDashboard();
   openAdminPanel();
-  const items=$('adminItemsArea');
-  if(items)items.hidden=false;
-  const global=$('adminGlobalArea');
-  if(global)global.hidden=false;
-  $('crmWorkspace')?.removeAttribute('data-active-workspace');
 };
 window.accountDashboardNewParty=function(){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
@@ -5876,6 +5500,7 @@ window.openAdminPanel = function(){
 window.openCRM = window.openAdminPanel;
 
 window.closeCRM = function(){
+  if(typeof seerviCloseItemsPanel==='function') seerviCloseItemsPanel();
   $('crmModal')?.classList.remove('show');
   $('crmModal')?.setAttribute('aria-hidden','true');
 };
@@ -7586,10 +7211,6 @@ function inventoryApplyToHome(){return;}
 function inventoryLoadPublic(){return Promise.resolve();}
 function inventoryRenderAdmin(){return;}
 function inventoryQuoteDeltas(){return [];}
-function inventoryStampCatalogueContext(){return;}
-function inventoryContextForCard(){return {category:'',subcategory:''};}
-function inventoryCategoryForItem(item){return String(item?.category||'').trim();}
-function inventorySubcategoryForItem(item){return String(item?.subcategory||'').trim();}
 window.refreshInventoryStock=async function(){return;};
 
 /* ===== SEERVI NOTIFICATIONS — isolated from existing login/signup logic ===== */
@@ -7955,18 +7576,12 @@ function seerviItemsBackToDashboard(){
 }
 
 window.accountDashboardItems=function(){
-  closeAccountDashboard();
-
   if(!crmUser || !isAuthorisedAdmin(crmUser)){
-    $('crmModal')?.setAttribute('aria-hidden','false');
-    $('crmModal')?.classList.add('show');
-    crmShowLogin();
-    setTimeout(()=>$('crmEmail')?.focus(),40);
+    closeAccountDashboard();
+    openAdminPanel();
     return;
   }
-
-  // IMPORTANT: Items is a completely separate admin workspace.
-  // Do not open, show, or initialize the generic Admin Panel here.
+  closeAccountDashboard();
   seerviOpenItemsPanel();
 };
 
@@ -7976,18 +7591,18 @@ window.seerviOpenItemsPanel=function(){
   const area=$('adminItemsArea');
   if(!modal || !area)return;
 
-  // Keep the generic Admin Panel completely untouched/closed.
-  const global=$('adminGlobalArea');
-  if(global)global.hidden=true;
-
   modal.hidden=false;
+  modal.classList.add('is-open');
   modal.setAttribute('aria-hidden','false');
   document.body.classList.add('seervi-items-open');
   area.hidden=false;
 
   seerviItemsTab('all');
-  seerviItemsLoadCategories().catch(e=>{
-    seerviItemsSetStatus(e?.message||'Unable to load categories.',true);
+  Promise.all([
+    seerviItemsLoadCategories(),
+    seerviItemsLoadAll()
+  ]).catch(e=>{
+    seerviItemsSetStatus(e?.message||'Unable to load Items.',true);
   });
 };
 
@@ -9103,23 +8718,21 @@ window.seerviProductSystemReady=true;
 /* ===== END SEERVI FINAL FIREBASE PRODUCT SYSTEM / STEP 11 ===== */
 
 
-/* ===== SEERVI FINAL HARDENING / SINGLE ADMIN ===== */
-/*
-  Authorised admin: seervitrading@gmail.com only.
-  Product hierarchy: Category -> Subcategory -> Item.
-  New items require Category, Subcategory, name and a .webp image path.
-*/
-window.SEERVI_SINGLE_ADMIN_EMAIL='seervitrading@gmail.com';
-/* ===== END SEERVI FINAL HARDENING / SINGLE ADMIN ===== */
+
+
+/* Step 3 UI event bridge: module functions used by inline/generated controls. */
+Object.assign(window,{seerviItemsEsc:seerviItemsEsc,seerviItemsAdminGuard:seerviItemsAdminGuard,seerviItemCategoryName:seerviItemCategoryName,seerviItemCategoryLabel:seerviItemCategoryLabel,seerviItemCategoryTypeName:seerviItemCategoryTypeName,seerviItemSortCategories:seerviItemSortCategories,seerviItemsLoadCategories:seerviItemsLoadCategories,seerviItemsLoadAll:seerviItemsLoadAll,seerviItemsSetStatus:seerviItemsSetStatus,seerviItemsPopulateCategorySelects:seerviItemsPopulateCategorySelects,seerviItemCategoryChanged:seerviItemCategoryChanged,seerviItemsFilter:seerviItemsFilter,seerviItemsTab:seerviItemsTab,seerviItemsBackToDashboard:seerviItemsBackToDashboard,seerviAddSpecificationRow:seerviAddSpecificationRow,seerviAddSpecificationRowIfEmpty:seerviAddSpecificationRowIfEmpty,seerviReadSpecificationRows:seerviReadSpecificationRows,seerviItemsResetForm:seerviItemsResetForm,seerviEditItem:seerviEditItem,seerviCategoryParentOptions:seerviCategoryParentOptions,seerviCreateCategoryFromForm:seerviCreateCategoryFromForm,seerviRenderCategories:seerviRenderCategories,seerviBulkNormaliseHeader:seerviBulkNormaliseHeader,seerviBulkCell:seerviBulkCell,seerviBulkSpecColumns:seerviBulkSpecColumns,seerviBulkSlug:seerviBulkSlug,seerviBulkFindCategory:seerviBulkFindCategory,seerviBulkFindSubcategory:seerviBulkFindSubcategory,seerviBulkItemKey:seerviBulkItemKey,seerviBulkPrepare:seerviBulkPrepare,seerviBulkRenderPreview:seerviBulkRenderPreview,seerviPopulateItemFilters:seerviPopulateItemFilters,seerviPublicMillis:seerviPublicMillis,seerviPublicLoadCatalogue:seerviPublicLoadCatalogue,seerviPublicCategoryName:seerviPublicCategoryName,seerviPublicRenderCategories:seerviPublicRenderCategories,seerviPublicRenderSubcategories:seerviPublicRenderSubcategories,seerviPublicSelectCategory:seerviPublicSelectCategory,seerviPublicSelectSubcategory:seerviPublicSelectSubcategory,seerviPublicRenderItems:seerviPublicRenderItems,seerviPublicItemSearchText:seerviPublicItemSearchText,seerviPublicWireSearch:seerviPublicWireSearch,seerviFirebaseCartItem:seerviFirebaseCartItem,seerviPublicCatalogueStatusText:seerviPublicCatalogueStatusText});
+
+
 
 window.seerviCloseItemsPanel=function(){
   const modal=$('seerviItemsModal');
   if(!modal)return;
+  modal.classList.remove('is-open');
   modal.hidden=true;
   modal.setAttribute('aria-hidden','true');
   document.body.classList.remove('seervi-items-open');
 };
-
 </script><div id="crmPartyLedgerViewModal" class="crm-quote-view-modal" aria-hidden="true"><div class="crm-quote-view-backdrop" onclick="crmClosePartyLedgerView()"></div><div class="crm-quote-view-card crm-party-ledger-view-card" role="dialog" aria-modal="true" aria-labelledby="crmPartyLedgerViewTitle"><div class="crm-quote-view-head"><div><div class="crm-kicker">PARTY LEDGER</div><h3 id="crmPartyLedgerViewTitle">Party Ledger</h3><div id="crmPartyLedgerViewMeta" class="crm-quote-view-meta"></div></div><button class="crm-close" type="button" onclick="crmClosePartyLedgerView()">×</button></div><div class="crm-ledger-view-toolbar"><div class="crm-ledger-filter-group"><button class="crm-ledger-filter active" data-range="all" type="button" onclick="crmSetPartyLedgerFilter('all')">ALL</button><button class="crm-ledger-filter" data-range="weekly" type="button" onclick="crmSetPartyLedgerFilter('weekly')">WEEKLY</button><button class="crm-ledger-filter" data-range="monthly" type="button" onclick="crmSetPartyLedgerFilter('monthly')">MONTHLY</button><button class="crm-ledger-filter" data-range="quarterly" type="button" onclick="crmSetPartyLedgerFilter('quarterly')">QUARTERLY</button><button class="crm-ledger-filter" data-range="yearly" type="button" onclick="crmSetPartyLedgerFilter('yearly')">YEARLY</button></div><button id="crmPartyLedgerDownload" class="crm-primary small" type="button" onclick="crmDownloadPartyLedger()">DOWNLOAD LEDGER</button></div><div id="crmPartyLedgerViewBody" class="crm-quote-view-body"></div></div></div><div id="crmQuoteViewModal" class="crm-quote-view-modal" aria-hidden="true"><div class="crm-quote-view-backdrop" onclick="crmCloseQuoteView()"></div><div class="crm-quote-view-card" role="dialog" aria-modal="true" aria-labelledby="crmQuoteViewTitle"><div class="crm-quote-view-head"><div><div class="crm-kicker">QUOTATION VIEW</div><h3 id="crmQuoteViewTitle">Quotation</h3><div id="crmQuoteViewMeta" class="crm-quote-view-meta"></div></div><button class="crm-close" type="button" onclick="crmCloseQuoteView()">×</button></div><div id="crmQuoteViewStatusBar" class="crm-quote-status-bar"><span>STATUS</span><select id="crmQuoteViewStatus"><option value="saved">SAVED</option><option value="sent">SENT</option><option value="confirmed">CONFIRMED</option><option value="cancelled">CANCELLED</option></select><button type="button" class="crm-secondary small" onclick="crmSaveQuoteStatus()">SAVE STATUS</button></div><div id="crmQuoteViewBody" class="crm-quote-view-body"></div><div class="crm-quote-view-actions"><button class="crm-secondary" type="button" onclick="crmCloseQuoteView()">CLOSE</button><button id="crmQuoteViewDownload" class="crm-primary" type="button">DOWNLOAD PDF</button></div></div></div><style id="seervi-professional-loading-style">
 #seerviGlobalLoader{
   position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;
@@ -9870,6 +9483,233 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 
 
 
+<div id="seerviItemsModal" class="seervi-items-modal" aria-hidden="true" hidden>
+  <div class="seervi-items-modal-backdrop" onclick="seerviCloseItemsPanel()"></div>
+  <div class="crm-modal-card seervi-items-modal-card" role="dialog" aria-modal="true" aria-labelledby="seerviItemsModalTitle">
+    <div class="seervi-items-modal-topbar">
+      <div>
+        <div class="crm-section-title">SEERVI ADMIN / ITEMS</div>
+        <h2 id="seerviItemsModalTitle">ITEM MANAGEMENT</h2>
+        <p>Firebase-based Category → Subcategory → Item catalogue.</p>
+      </div>
+      <button class="crm-close" type="button" aria-label="Close Items" onclick="seerviCloseItemsPanel()">×</button>
+    </div>
+    <div id="adminItemsArea" class="admin-items-area" hidden>
+  <div class="admin-items-head">
+    <div>
+      <div class="crm-section-title">SEERVI ADMIN / ITEMS</div>
+      <h3 class="admin-items-title">ITEM MANAGEMENT</h3>
+      <p class="admin-items-subtitle">Firebase-based Category → Subcategory → Item catalogue. No hard-coded product taxonomy.</p>
+    </div>
+    <div class="admin-items-head-actions">
+      <button class="crm-secondary" type="button" onclick="seerviItemsBackToDashboard()">← DASHBOARD</button>
+      <button class="crm-secondary" type="button" onclick="seerviItemsRefresh()">↻ REFRESH</button>
+    </div>
+  </div>
+
+  <div class="admin-items-tabs" role="tablist" aria-label="Items management">
+    <button class="admin-items-tab active" type="button" data-items-tab="all" onclick="seerviItemsTab('all')">ALL ITEMS</button>
+    <button class="admin-items-tab" type="button" data-items-tab="add" onclick="seerviItemsTab('add')">ADD NEW ITEM</button>
+    <button class="admin-items-tab" type="button" data-items-tab="categories" onclick="seerviItemsTab('categories')">CATEGORIES</button>
+    <button class="admin-items-tab" type="button" data-items-tab="bulk" onclick="seerviItemsTab('bulk')">BULK ADD</button>
+  </div>
+
+  <section id="seerviItemsAllView" class="admin-items-view">
+    <div class="admin-items-toolbar">
+      <div class="admin-items-search-wrap">
+        <label for="seerviItemsSearch">SEARCH ITEMS</label>
+        <input id="seerviItemsSearch" type="search" placeholder="Search name, model, category..." oninput="seerviItemsFilter(this.value)">
+      </div>
+      <div class="admin-items-filter-wrap">
+        <label for="seerviItemsStatusFilter">STATUS</label>
+        <select id="seerviItemsStatusFilter" onchange="seerviItemsFilter(document.getElementById('seerviItemsSearch')?.value||'')">
+          <option value="all">ALL</option>
+          <option value="active">ACTIVE</option>
+          <option value="inactive">INACTIVE</option>
+        </select>
+      </div>
+      <div class="admin-items-filter-wrap">
+        <label for="seerviItemsCategoryFilter">CATEGORY</label>
+        <select id="seerviItemsCategoryFilter" onchange="seerviItemsFilter(document.getElementById('seerviItemsSearch')?.value||'')">
+          <option value="all">ALL CATEGORIES</option>
+        </select>
+      </div>
+      <div class="admin-items-filter-wrap">
+        <label for="seerviItemsSubcategoryFilter">SUBCATEGORY</label>
+        <select id="seerviItemsSubcategoryFilter" onchange="seerviItemsFilter(document.getElementById('seerviItemsSearch')?.value||'')">
+          <option value="all">ALL SUBCATEGORIES</option>
+        </select>
+      </div>
+    </div>
+    <div id="seerviItemsStatus" class="crm-auth-status">Loading items…</div>
+    <div id="seerviItemsList" class="admin-items-list"></div>
+  </section>
+
+  <section id="seerviItemsAddView" class="admin-items-view" hidden>
+    <div class="admin-items-form-head">
+      <div>
+        <div class="crm-section-title">ITEM MASTER</div>
+        <p id="seerviItemFormMode" class="crm-auth-status">Create a new Firebase item.</p>
+      </div>
+      <button id="seerviItemCancelEdit" class="crm-secondary" type="button" onclick="seerviItemsResetForm()" hidden>CANCEL EDIT</button>
+    </div>
+
+    <form id="seerviItemForm" class="seervi-item-form" onsubmit="event.preventDefault();seerviSaveItemForm();">
+      <input id="seerviItemId" type="hidden">
+
+      <div class="seervi-item-form-section">
+        <div class="seervi-item-form-section-title">CATEGORY STRUCTURE</div>
+        <div class="seervi-item-form-grid">
+          <div>
+            <label for="seerviItemCategory">CATEGORY *</label>
+            <select id="seerviItemCategory" required onchange="seerviItemCategoryChanged()">
+              <option value="">Select Category</option>
+            </select>
+          </div>
+          <div>
+            <label for="seerviItemSubcategory">SUBCATEGORY</label>
+            <select id="seerviItemSubcategory" required>
+              <option value="">Select Subcategory</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+<div class="seervi-item-form-section">
+        <div class="seervi-item-form-section-title">ITEM DETAILS</div>
+        <div class="seervi-item-form-grid">
+          <div class="seervi-item-form-full">
+            <label for="seerviItemName">ITEM NAME *</label>
+            <input id="seerviItemName" type="text" maxlength="300" required placeholder="Enter item name">
+          </div>
+          <div>
+            <label for="seerviItemModel">MODEL / CODE</label>
+            <input id="seerviItemModel" type="text" maxlength="200" placeholder="Model or item code">
+          </div>
+          <div>
+            <label for="seerviItemImage">WEBP IMAGE URL / PATH *</label>
+            <input id="seerviItemImage" type="text" maxlength="2000" required placeholder="images/items/example.webp">
+          </div>
+          <div class="seervi-item-form-full">
+            <label for="seerviItemDescription">DESCRIPTION</label>
+            <textarea id="seerviItemDescription" rows="4" maxlength="5000" placeholder="Item description"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="seervi-item-form-section">
+        <div class="seervi-item-form-section-title-row">
+          <div class="seervi-item-form-section-title">SPECIFICATIONS</div>
+          <button class="crm-secondary small" type="button" onclick="seerviAddSpecificationRow()">＋ ADD SPECIFICATION</button>
+        </div>
+        <div id="seerviSpecificationsRows" class="seervi-specifications-rows"></div>
+        <div class="crm-muted">Add only the specifications relevant to this item. Specification names are fully dynamic.</div>
+      </div>
+
+      <div class="seervi-item-form-section seervi-item-status-section">
+        <label class="seervi-check-label"><input id="seerviItemActive" type="checkbox" checked> ACTIVE ITEM</label>
+      </div>
+
+      <div class="seervi-item-form-actions">
+        <button class="crm-primary" type="submit" id="seerviItemSaveButton">SAVE ITEM</button>
+        <button class="crm-secondary" type="button" onclick="seerviItemsResetForm()">CLEAR</button>
+        <span id="seerviItemFormStatus" class="crm-auth-status"></span>
+      </div>
+    </form>
+  </section>
+
+  
+  <section id="seerviItemsBulkView" class="admin-items-view" hidden>
+    <div class="admin-items-form-head">
+      <div>
+        <div class="crm-section-title">BULK ITEM IMPORT</div>
+        <p class="crm-auth-status">Excel → Preview → Validate → Import to Firebase. Nothing is written until you confirm.</p>
+      </div>
+      <button class="crm-secondary" type="button" onclick="seerviBulkDownloadTemplate()">DOWNLOAD TEMPLATE</button>
+    </div>
+
+    <div class="seervi-bulk-grid">
+      <div class="admin-items-category-card">
+        <div class="crm-section-title">1. PREPARE EXCEL</div>
+        <div class="crm-muted" style="margin:8px 0 12px;line-height:1.6">
+          Required: <b>Category</b>, <b>Item Name</b>, <b>WEBP Image URL / Path</b>.<br>
+          Subcategory is optional. Specifications use paired columns:
+          <b>Spec 1 Name / Spec 1 Value</b>, <b>Spec 2 Name / Spec 2 Value</b>…
+        </div>
+        <button class="crm-secondary" type="button" onclick="seerviBulkDownloadTemplate()">DOWNLOAD EXCEL TEMPLATE</button>
+      </div>
+
+      <div class="admin-items-category-card">
+        <div class="crm-section-title">2. UPLOAD FILE</div>
+        <input id="seerviBulkFile" type="file" accept=".xlsx,.xls,.csv" style="margin-top:10px">
+        <div class="crm-muted" style="margin-top:8px">Supported: .xlsx, .xls, .csv</div>
+        <button class="crm-primary" type="button" style="margin-top:12px" onclick="seerviBulkReadFile()">READ & PREVIEW</button>
+        <div id="seerviBulkFileStatus" class="crm-auth-status" style="margin-top:9px"></div>
+      </div>
+    </div>
+
+    <div id="seerviBulkPreviewArea" class="seervi-bulk-preview-area" hidden>
+      <div class="seervi-bulk-summary">
+        <div><span>ROWS</span><strong id="seerviBulkTotal">0</strong></div>
+        <div><span>VALID</span><strong id="seerviBulkValid">0</strong></div>
+        <div><span>ERRORS</span><strong id="seerviBulkErrors">0</strong></div>
+        <div><span>DUPLICATES</span><strong id="seerviBulkDuplicates">0</strong></div>
+      </div>
+
+      <div class="seervi-bulk-actions">
+        <button class="crm-secondary" type="button" onclick="seerviBulkRevalidate()">REVALIDATE</button>
+        <button class="crm-primary" type="button" id="seerviBulkImportButton" onclick="seerviBulkImport()" disabled>IMPORT VALID ITEMS</button>
+      </div>
+
+      <div id="seerviBulkValidationStatus" class="crm-auth-status"></div>
+      <div id="seerviBulkTableWrap" class="seervi-bulk-table-wrap"></div>
+    </div>
+  </section>
+
+<section id="seerviItemsCategoriesView" class="admin-items-view" hidden>
+    <div class="admin-items-category-layout">
+      <div class="admin-items-category-card">
+        <div class="crm-section-title">CREATE CATEGORY</div>
+        <p class="crm-auth-status">Build Category → Subcategory from scratch.</p>
+        <form id="seerviCategoryForm" class="seervi-category-form" onsubmit="event.preventDefault();seerviCreateCategoryFromForm();"><input id="seerviCategoryEditId" type="hidden">
+          <label for="seerviCategoryType">TYPE</label>
+          <select id="seerviCategoryType" required onchange="seerviCategoryParentOptions()">
+            <option value="">Select Type</option>
+            <option value="category">Category</option>
+            <option value="subcategory">Subcategory</option>
+          </select>
+
+          <label for="seerviCategoryParent">PARENT</label>
+          <select id="seerviCategoryParent">
+            <option value="">No Parent</option>
+          </select>
+
+          <label for="seerviCategoryName">NAME *</label>
+          <input id="seerviCategoryName" type="text" maxlength="200" required placeholder="Enter category name">
+
+          <label for="seerviCategorySlug">SLUG</label>
+          <input id="seerviCategorySlug" type="text" maxlength="220" placeholder="Optional slug">
+
+          <label class="seervi-check-label"><input id="seerviCategoryActive" type="checkbox" checked> ACTIVE</label>
+
+          <div class="seervi-item-form-actions">
+          <button class="crm-primary" type="submit" id="seerviCategorySaveButton">CREATE CATEGORY</button>
+          <button class="crm-secondary" type="button" id="seerviCategoryCancelEdit" onclick="seerviResetCategoryForm()" hidden>CANCEL EDIT</button>
+        </div>
+          <span id="seerviCategoryFormStatus" class="crm-auth-status"></span>
+        </form>
+      </div>
+
+      <div class="admin-items-category-card">
+        <div class="crm-section-title">CATEGORY MASTER</div>
+        <div id="seerviCategoriesStatus" class="crm-auth-status">Loading categories…</div>
+        <div id="seerviCategoriesList" class="seervi-categories-list"></div>
+      </div>
+    </div>
+  </section>
+</div>
+  </div>
+</div>
 </body>
 
 </html>
