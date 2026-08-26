@@ -11349,6 +11349,14 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
     if(p){p.classList.remove('show');p.setAttribute('aria-hidden','true');}
     document.body.classList.remove('mother-panel-open');
   }
+  /* A category change must never inherit an open product preview from the
+     previous view. Without this guard, an old modal image can appear stuck
+     over the next section (most visibly in the KF X flow). */
+  function closeProductPreview(){
+    var modal=document.getElementById('productModal');
+    if(modal){modal.classList.remove('show');modal.setAttribute('aria-hidden','true');}
+    document.body.classList.remove('modal-open');
+  }
   function resetProductVisibility(){
     document.querySelectorAll(
       '#profiles .profile-product-card,#products .home-product-card,#tvMounts .tv-mount-product-card,#earthAugers .earth-auger-product-card,'+
@@ -11372,7 +11380,7 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   function openMotherDesktop(key){
     var cfg=CFG[key];if(!cfg)return;
     window.__seerviCurrentMotherKey=key;
-    hideAll();resetProductVisibility();closePanel();
+    hideAll();resetProductVisibility();closePanel();closeProductPreview();
     document.body.classList.remove('seervi-category-active','mobile-mother-selected','mobile-products-view');
     var p=panel(),g=grid(),t=document.getElementById('motherCategoryTitle'),d=document.getElementById('motherCategoryDescription');
     if(!p||!g)return;
@@ -11394,7 +11402,7 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   function openSubDesktop(key,index){
     var cfg=CFG[key],item=cfg&&cfg.items[index];if(!item)return;
     window.__seerviCurrentMotherKey=key;
-    hideAll();resetProductVisibility();closePanel();
+    hideAll();resetProductVisibility();closePanel();closeProductPreview();
     document.body.classList.remove('mobile-products-view','mobile-mother-selected','mother-panel-open');
     document.body.classList.add('seervi-category-active');
     applyFilter(item);
