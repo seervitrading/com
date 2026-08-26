@@ -2456,7 +2456,91 @@ body:not(.admin-quote-mode) .cart-note{
     "addressCountry":"IN"
   }
 }
-</script><style id="seervi-watermark-layer-only-v133">
+</script><style id="stock-layout-mobile-fix">
+/* Stock page layout fix — visual/layout only. No stock logic or Firebase behaviour changed. */
+#adminStockModal .inventory-stock-panel{
+  width:100%;max-width:100%;box-sizing:border-box;overflow-x:hidden;
+}
+#adminStockModal .inventory-stock-grid,
+#adminStockModal .inventory-stock-category,
+#adminStockModal .inventory-category-grid{
+  width:100%;max-width:100%;min-width:0;
+}
+#adminStockModal .inventory-stock-category{overflow:hidden;}
+#adminStockModal .inventory-category-grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;
+}
+@media(min-width:1400px){
+  #adminStockModal .inventory-category-grid{grid-template-columns:repeat(5,minmax(0,1fr));}
+}
+@media(min-width:1800px){
+  #adminStockModal .inventory-category-grid{grid-template-columns:repeat(6,minmax(0,1fr));}
+}
+#adminStockModal .inventory-stock-card{
+  width:100%;min-width:0;max-width:100%;min-height:150px;
+  display:grid;grid-template-columns:72px minmax(0,1fr);
+  grid-template-rows:auto auto auto;align-items:start;
+  column-gap:12px;row-gap:10px;padding:12px;overflow:hidden;
+}
+#adminStockModal .inventory-stock-image{
+  grid-column:1;grid-row:1 / span 2;width:72px;height:72px;flex:none;
+}
+#adminStockModal .inventory-stock-info{
+  grid-column:2;grid-row:1;min-width:0;align-self:center;
+}
+#adminStockModal .inventory-stock-name,
+#adminStockModal .inventory-stock-spec{
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;
+}
+#adminStockModal .inventory-available-qty{
+  grid-column:2;grid-row:2;min-width:0;width:100%;
+  display:grid;grid-template-columns:minmax(0,1fr) 92px;
+  align-items:center;gap:8px;
+}
+#adminStockModal .inventory-available-qty label{
+  min-width:0;color:#7f8994;font-size:8px;font-weight:900;
+  letter-spacing:.8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+#adminStockModal .inventory-available-qty input{
+  width:100%;min-width:0;height:34px;box-sizing:border-box;
+  padding:0 9px;background:#0d131a;color:#fff;border:1px solid #ffffff16;
+  border-radius:8px;outline:none;font:inherit;font-size:11px;font-weight:800;text-align:center;
+}
+#adminStockModal .inventory-available-qty input:focus{
+  border-color:#f0c66a66;box-shadow:0 0 0 2px #f0c66a12;
+}
+#adminStockModal .inventory-stock-switch{
+  grid-column:1 / -1;grid-row:3;width:100%;min-width:0;
+  justify-content:flex-start;padding-top:2px;
+}
+#adminStockModal .inventory-stock-state{min-width:0;}
+
+@media(max-width:1100px) and (min-width:601px){
+  #adminStockModal .inventory-category-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+}
+@media(max-width:600px){
+  #adminStockModal .inventory-stock-panel{padding:16px 12px 28px;}
+  #adminStockModal .inventory-stock-head{margin-bottom:12px;}
+  #adminStockModal .inventory-category-grid{
+    grid-template-columns:1fr !important;gap:10px;
+  }
+  #adminStockModal .inventory-stock-card{
+    grid-template-columns:64px minmax(0,1fr);min-height:142px;padding:11px;column-gap:11px;
+  }
+  #adminStockModal .inventory-stock-image{width:64px;height:64px;}
+  #adminStockModal .inventory-available-qty{grid-template-columns:minmax(0,1fr) 96px;}
+  #adminStockModal .inventory-stock-switch{padding-top:1px;}
+}
+@media(max-width:360px){
+  #adminStockModal .inventory-stock-card{grid-template-columns:58px minmax(0,1fr);}
+  #adminStockModal .inventory-stock-image{width:58px;height:58px;}
+  #adminStockModal .inventory-available-qty{grid-template-columns:1fr;gap:5px;}
+  #adminStockModal .inventory-available-qty input{width:110px;}
+}
+</style>
+<style id="seervi-watermark-layer-only-v133">
 /* V133: transparent UI watermark layer only. Product image files are untouched. */
 .tv-mount-product-card .home-product-thumb,.earth-auger-product-card .home-product-thumb,.profile-product-image,.seervi-watermark-modal-image{position:relative !important;overflow:hidden !important;}
 .tv-mount-product-card .home-product-thumb::before,.earth-auger-product-card .home-product-thumb::before,.profile-product-image::before,.seervi-watermark-modal-image::before{content:"SEERVI TRADING   •   SEERVI TRADING   •   SEERVI TRADING   •   SEERVI TRADING";position:absolute;z-index:20;left:-18%;top:43%;width:136%;height:34px;display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden;transform:rotate(-23deg);transform-origin:center;color:rgba(70,70,70,.22);font-size:12px;font-weight:900;letter-spacing:2.2px;pointer-events:none;user-select:none;text-shadow:0 1px 0 rgba(255,255,255,.12);}
@@ -3793,6 +3877,7 @@ body.nav-is-scrolled{padding-top:76px;}
       <button class="account-dashboard-option" type="button" onclick="accountDashboardItems()"><span>▤</span><strong>ITEMS</strong><small>Manage Firebase items & categories</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardNewParty()"><span>＋</span><strong>NEW PARTY</strong><small>Create a new customer / party</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardBackup()"><span>⇩</span><strong>BACKUP DATA</strong><small>Download your CRM business backup</small></button>
+      <button class="account-dashboard-option" type="button" onclick="accountDashboardStock()"><span>▤</span><strong>STOCK</strong><small>Control catalogue item availability</small></button>
       
       <button class="account-dashboard-option" type="button" onclick="accountDashboardNotificationPost()"><span>🔔</span><strong>NOTIFICATION POST</strong><small>Send an important notice to everyone</small></button>
       <button class="account-dashboard-option danger" type="button" onclick="accountDashboardSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your admin session</small></button>
@@ -3923,6 +4008,36 @@ body.nav-is-scrolled{padding-top:76px;}
 @media(max-width:1100px){#adminStockModal .inventory-category-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style>
 
+<style id="inventory-stock-search-filter-style">
+/* Stable PC stock scrolling: one scroll owner, no nested magnetic/rubber-band feeling. */
+#adminStockModal .crm-panel{overscroll-behavior:none;}
+#adminStockModal .inventory-stock-panel{overscroll-behavior:contain;scroll-behavior:auto;-webkit-overflow-scrolling:auto;}
+#adminStockModal .inventory-stock-head{position:relative!important;top:auto!important;backdrop-filter:none;-webkit-backdrop-filter:none;}
+#adminStockModal .inventory-stock-head-copy{min-width:0;}
+.inventory-stock-tools{display:grid;grid-template-columns:minmax(260px,1fr) 220px auto;gap:10px;align-items:center;margin:0 0 18px;padding:12px;border:1px solid #ffffff12;background:#0a0f14;border-radius:12px;position:relative;z-index:3;}
+.inventory-stock-search-wrap{position:relative;min-width:0;}
+.inventory-stock-search{width:100%;box-sizing:border-box;padding:11px 38px 11px 34px!important;border-radius:8px!important;background:#0d131a!important;border:1px solid #ffffff16!important;color:#fff!important;font-size:11px!important;outline:none!important;}
+.inventory-stock-search:focus{border-color:#f0c66a66!important;box-shadow:0 0 0 2px #f0c66a12;}
+.inventory-stock-search::placeholder{color:#68737e;}
+.inventory-stock-search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#f0c66a;font-size:18px;pointer-events:none;z-index:1;}
+.inventory-stock-search-clear{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:25px;height:25px;border:0;border-radius:6px;background:#ffffff08;color:#9ca5ae;cursor:pointer;font-size:16px;line-height:1;}
+.inventory-stock-filter{height:38px!important;padding:0 10px!important;background:#0d131a!important;color:#fff!important;border:1px solid #ffffff16!important;border-radius:8px!important;font-size:9px!important;font-weight:900!important;letter-spacing:.5px;outline:none!important;}
+.inventory-stock-status-filter{display:flex;gap:5px;justify-content:flex-end;flex-wrap:wrap;}
+.inventory-filter-btn{height:38px;padding:0 11px;border:1px solid #ffffff14;border-radius:8px;background:#11171e;color:#78828d;font-size:8px;font-weight:900;letter-spacing:.7px;cursor:pointer;white-space:nowrap;}
+.inventory-filter-btn:hover{border-color:#ffffff30;color:#fff;}
+.inventory-filter-btn.active{background:#f0c66a;color:#111;border-color:#f0c66a;}
+.inventory-stock-no-results{min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;}
+.inventory-stock-no-results strong{font-size:13px;color:#fff;}
+.inventory-stock-no-results span{font-size:9px;color:#737d87;}
+@media(max-width:900px){
+  .inventory-stock-tools{grid-template-columns:1fr 1fr;}
+  .inventory-stock-status-filter{grid-column:1/-1;justify-content:flex-start;}
+}
+@media(max-width:600px){
+  .inventory-stock-tools{grid-template-columns:1fr;padding:10px;}
+  .inventory-stock-status-filter{grid-column:auto;}
+}
+</style>
 <style id="customer-portal-style">
 .customer-portal-panel{width:min(820px,100%)}
 .customer-dashboard{padding:18px 20px 24px}
@@ -3951,6 +4066,31 @@ body.nav-is-scrolled{padding-top:76px;}
 </style><div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Admin Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-close" type="button" onclick="closeCRM()">×</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div>
 <div id="adminGlobalArea" class="admin-global-area">
 <div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, all quotations and complete party ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span>QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div>
+</div><div id="inventoryStockPanel" class="inventory-stock-panel" hidden>
+  <div class="inventory-stock-head">
+    <div class="inventory-stock-head-copy">
+      <div class="crm-section-title">ITEM STOCK CONTROL</div>
+      <h4>Catalogue Availability</h4>
+      <p>Turn an item OFF when it is out of stock. OFF items disappear from the customer Home / Products catalogue until you turn them back ON.</p>
+    </div>
+    <div id="inventoryStockMeta" class="inventory-stock-meta">Loading catalogue…</div>
+  </div>
+  <div class="inventory-stock-tools" aria-label="Stock search and filters">
+    <div class="inventory-stock-search-wrap">
+      <span class="inventory-stock-search-icon">⌕</span>
+      <input id="inventoryStockSearch" class="inventory-stock-search" type="search" placeholder="Search item / model / specification…" autocomplete="off">
+      <button id="inventoryStockSearchClear" class="inventory-stock-search-clear" type="button" aria-label="Clear search" hidden>×</button>
+    </div>
+    <select id="inventoryStockCategoryFilter" class="inventory-stock-filter" aria-label="Filter by category">
+      <option value="all">ALL CATEGORIES</option>
+    </select>
+    <div class="inventory-stock-status-filter" role="group" aria-label="Filter by stock status">
+      <button type="button" class="inventory-filter-btn active" data-stock-filter="all">ALL</button>
+      <button type="button" class="inventory-filter-btn" data-stock-filter="in">IN STOCK</button>
+      <button type="button" class="inventory-filter-btn" data-stock-filter="out">OUT OF STOCK</button>
+    </div>
+  </div>
+  <div id="inventoryStockGrid" class="inventory-stock-grid"></div>
 </div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs"><button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button><button class="crm-tab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button><button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button><button class="crm-tab" data-tab="ledger" onclick="crmTab('ledger')">PAYMENT ENTRY</button></div><div id="crmOverview" class="crm-tab-panel"><div class="crm-stat-grid"><div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div><div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div><div><span>LEDGER BALANCE</span><strong id="crmLedgerBalance">₹0.00</strong></div></div></div><div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div><div id="crmRates" class="crm-tab-panel" hidden><div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div><div id="crmRatesList" class="crm-list"></div></div><div id="crmLedger" class="crm-tab-panel" hidden><div class="crm-ledger-help">Quotation amounts are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.</div><div class="crm-ledger-add"><select id="crmLedgerType"><option value="debit">Debit / Sale</option><option value="credit">Credit / Payment Received</option></select><input id="crmLedgerAmount" type="number" min="0" step="0.01" placeholder="Amount ₹"><input id="crmLedgerNote" placeholder="Note / Reference"><button class="crm-primary small" type="button" onclick="crmAddLedgerEntry()">ADD ENTRY</button></div><div id="crmLedgerList" class="crm-list"></div></div></div></div>
 <div id="seerviItemsModal" class="crm-modal seervi-items-modal" aria-hidden="true" hidden>
   <div class="crm-modal-backdrop" onclick="seerviCloseItemsPanel()"></div>
@@ -6263,10 +6403,30 @@ window.crmSignIn = async function(){
 
 window.crmSignOut = async function(){
   showGlobalActionLoader("Signing out…");
-
-  await signOut(auth);
-  $('cloudConnectedBadge')?.classList.remove('show');
-  updateAuthNav();closeCRM();goHomeAfterAuth();
+  let logoutError=null;
+  try{
+    // Firebase sign-out is the authoritative session termination.
+    // Keep the UI cleanup in finally so a transient Firebase/network error
+    // can never leave the Admin Dashboard visually stuck as logged in.
+    await signOut(auth);
+  }catch(e){
+    logoutError=e;
+    console.error('Admin sign-out failed:',e);
+  }finally{
+    crmUser=null;
+    crmPartyId='';
+    if(typeof closeAdminNewParty==='function') closeAdminNewParty();
+    if(typeof closeAdminStock==='function') closeAdminStock();
+    $('cloudConnectedBadge')?.classList.remove('show');
+    updateAuthNav();
+    closeCRM();
+    closeAccountDashboard?.();
+    goHomeAfterAuth();
+    hideGlobalActionLoader();
+  }
+  if(logoutError){
+    alert('Logout could not be confirmed by Firebase. Please check your internet connection and try again.');
+  }
 };
 
 onAuthStateChanged(auth,user=>{
@@ -7905,24 +8065,314 @@ window.crmAddLedgerEntry = async function(){
   }
 };
 /* ===== FIREBASE ITEMS / STOCK BRIDGE =====
-   Legacy catalogue-based stock taxonomy removed.
-   New Items and Stock will be driven from Firebase.
+   Stock is driven by the Firebase `items` catalogue.
+   Inventory document id = Firebase item id. No legacy hard-coded catalogue taxonomy.
 */
 let seerviInventoryState=Object.create(null);
 let seerviInventoryQty=Object.create(null);
 let seerviInventoryItems=[];
-function inventoryNormaliseKey(v){return String(v||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,120);}
-function inventoryItemKey(type,model,spec){return inventoryNormaliseKey([type,model,spec||''].join('|'));}
-function inventoryCollectItems(){return [];}
-function inventoryApplyToHome(){return;}
-function inventoryLoadPublic(){return Promise.resolve();}
-function inventoryRenderAdmin(){return;}
-function inventoryQuoteDeltas(){return [];}
-function inventoryStampCatalogueContext(){return;}
-function inventoryContextForCard(){return {category:'',subcategory:''};}
-function inventoryCategoryForItem(item){return String(item?.category||'').trim();}
-function inventorySubcategoryForItem(item){return String(item?.subcategory||'').trim();}
-window.refreshInventoryStock=async function(){return;};
+
+function inventoryNormaliseKey(v){
+  return String(v||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,120);
+}
+function inventoryItemKey(type,model,spec){
+  return inventoryNormaliseKey([type,model,spec||''].join('|'));
+}
+function inventoryCategoryName(id){
+  return seerviItemCategoriesCache.find(x=>x.id===id)?.name||'';
+}
+function inventoryCollectItems(){
+  const source=Array.isArray(seerviItemsCache)?seerviItemsCache:[];
+  const items=source.map(item=>({
+    key:item.id,
+    id:item.id,
+    categoryId:item.categoryId||'',
+    subcategoryId:item.subcategoryId||'',
+    category:inventoryCategoryName(item.categoryId),
+    subcategory:inventoryCategoryName(item.subcategoryId),
+    type:inventoryCategoryName(item.categoryId)||'Category',
+    model:item.model||'',
+    name:item.name||'',
+    spec:Object.entries(item.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(' · '),
+    image:item.imageWebpUrl||'',
+    active:item.active!==false
+  })).filter(item=>item.id);
+  seerviInventoryItems=items;
+  return items;
+}
+
+function inventoryApplyToHome(){
+  if(typeof seerviPublicRenderItems==='function' && Array.isArray(seerviPublicItems)){
+    try{seerviPublicRenderItems();}catch(e){console.warn('Inventory public render skipped:',e);}
+  }
+}
+
+async function inventoryLoadPublic(){
+  try{
+    const snap=await getDocs(query(collection(db,'inventory'),where('public','==',true),limit(2000)));
+    const next=Object.create(null);
+    const qty=Object.create(null);
+    snap.forEach(d=>{
+      const data=d.data()||{};
+      next[d.id]=data.stock!==false;
+      if(Number.isFinite(Number(data.availableQty))) qty[d.id]=Math.max(0,Number(data.availableQty));
+    });
+    seerviInventoryState=next;
+    seerviInventoryQty=qty;
+  }catch(e){
+    console.warn('Inventory availability load skipped:',e?.message||e);
+    seerviInventoryState=Object.create(null);
+    seerviInventoryQty=Object.create(null);
+  }
+  inventoryApplyToHome();
+}
+
+function inventorySubcategoryKey(item){
+  return `${item.categoryId}||${item.subcategoryId}`;
+}
+
+function inventoryRenderAdmin(){
+  const grid=document.getElementById('inventoryStockGrid');
+  const meta=document.getElementById('inventoryStockMeta');
+  if(!grid)return;
+  const items=inventoryCollectItems();
+  const inStock=items.filter(item=>seerviInventoryState[item.key]!==false).length;
+  if(meta)meta.textContent=`${inStock} IN STOCK · ${items.length-inStock} OUT OF STOCK · ${items.length} TOTAL`;
+
+  const searchEl=document.getElementById('inventoryStockSearch');
+  const categoryEl=document.getElementById('inventoryStockCategoryFilter');
+  const search=String(searchEl?.value||'').trim().toLowerCase();
+  const category=String(categoryEl?.value||'all');
+  const status=document.querySelector('.inventory-filter-btn.active')?.dataset.stockFilter||'all';
+
+  if(categoryEl){
+    const current=categoryEl.value||'all';
+    const categories=[...new Map(items.map(x=>[x.categoryId,x.category||'CATEGORY']))].sort((a,b)=>a[1].localeCompare(b[1]));
+    categoryEl.innerHTML='<option value="all">ALL CATEGORIES</option>'+categories.map(([id,name])=>`<option value="${esc(id)}">${esc(name.toUpperCase())}</option>`).join('');
+    categoryEl.value=categories.some(([id])=>id===current)?current:'all';
+  }
+
+  const matches=item=>{
+    const stock=seerviInventoryState[item.key]!==false;
+    const hay=[item.category,item.subcategory,item.name,item.model,item.spec].filter(Boolean).join(' ').toLowerCase();
+    const searchOk=!search||hay.includes(search);
+    const categoryOk=category==='all'||item.categoryId===category;
+    const statusOk=status==='all'||(status==='in'?stock:!stock);
+    return searchOk&&categoryOk&&statusOk;
+  };
+  const filtered=items.filter(matches);
+  if(!items.length){grid.innerHTML='<div class="inventory-stock-empty">No Firebase items found.</div>';return;}
+  if(!filtered.length){grid.innerHTML='<div class="inventory-stock-empty inventory-stock-no-results"><strong>No matching items</strong><span>Try a different search or filter.</span></div>';return;}
+
+  const groups={};
+  filtered.forEach(item=>{
+    const mother=item.category||'CATEGORY';
+    const sub=item.subcategory||'NO SUBCATEGORY';
+    const key=inventorySubcategoryKey(item);
+    (groups[key] ||= {mother,sub,categoryId:item.categoryId,subcategoryId:item.subcategoryId,items:[]}).items.push(item);
+  });
+
+  let switchIndex=0;
+  grid.innerHTML=Object.values(groups).map(bucket=>{
+    const group=bucket.items;
+    const fullGroup=items.filter(item=>inventorySubcategoryKey(item)===inventorySubcategoryKey(bucket.items[0]));
+    const allStock=fullGroup.every(item=>seerviInventoryState[item.key]!==false);
+    const noneStock=fullGroup.every(item=>seerviInventoryState[item.key]===false);
+    const categoryState=allStock?'STOCK':(noneStock?'NO STOCK':'MIXED');
+    const groupId='inventorySubcategory_'+String(inventorySubcategoryKey(group[0])).replace(/[^a-z0-9]+/gi,'_');
+    const cards=group.map(item=>{
+      const stock=seerviInventoryState[item.key]!==false;
+      const id='inventorySwitch_'+(switchIndex++);
+      const spec=item.spec?`<span class="inventory-stock-spec">${esc(item.spec)}</span>`:'';
+      return `<div class="inventory-stock-card" data-inventory-card="${esc(item.key)}">
+        <div class="inventory-stock-image">${item.image?`<img src="${esc(item.image)}" alt="${esc(item.name||item.model||'Item')}">`:'<span>NO IMAGE</span>'}</div>
+        <div class="inventory-stock-info">
+          <span class="inventory-stock-type">${esc(item.subcategory||item.category||'ITEM')}</span>
+          <strong class="inventory-stock-name" title="${esc(item.name||item.model||'Item')}">${esc(item.name||item.model||'Unnamed Item')}</strong>
+          ${item.model?`<span class="inventory-stock-spec">Model: ${esc(item.model)}</span>`:''}
+          ${spec}
+        </div>
+        <div class="inventory-available-qty">
+          <label for="inventoryQty_${switchIndex}">AVAILABLE QTY</label>
+          <input id="inventoryQty_${switchIndex}" type="number" min="0" step="1" value="${Number.isFinite(Number(seerviInventoryQty[item.key]))?Math.max(0,Number(seerviInventoryQty[item.key])):''}" placeholder="SET" onchange="setInventoryQuantity('${esc(item.key)}',this.value,this)" onkeydown="if(event.key==='Enter')this.blur()">
+        </div>
+        <label class="inventory-stock-switch" for="${id}">
+          <input id="${id}" type="checkbox" ${stock?'checked':''} onchange="setInventoryStock('${esc(item.key)}',this.checked,this)">
+          <span class="inventory-stock-slider"></span>
+          <span class="inventory-stock-state">${stock?'STOCK':'NO STOCK'}</span>
+        </label>
+      </div>`;
+    }).join('');
+    return `<section class="inventory-stock-category" data-inventory-category="${esc(bucket.categoryId)}" data-inventory-subcategory="${esc(bucket.subcategoryId)}">
+      <div class="inventory-category-head">
+        <div><span class="inventory-category-kicker">${esc(bucket.mother)}</span><h5>${esc(bucket.sub)}</h5><span class="inventory-category-count">${fullGroup.length} ITEM${fullGroup.length===1?'':'S'}${group.length!==fullGroup.length?' · '+group.length+' SHOWN':''}</span></div>
+        <label class="inventory-category-switch" for="${groupId}">
+          <input id="${groupId}" type="checkbox" ${allStock?'checked':''} data-category-state="${categoryState}" onchange="setInventorySubcategoryStock('${esc(bucket.categoryId)}','${esc(bucket.subcategoryId)}',this.checked,this)">
+          <span class="inventory-stock-slider"></span><span class="inventory-category-state">${categoryState}</span>
+        </label>
+      </div>
+      <div class="inventory-category-grid">${cards}</div>
+    </section>`;
+  }).join('');
+
+  grid.querySelectorAll('.inventory-category-switch input').forEach(input=>{
+    const section=input.closest('.inventory-stock-category');
+    const categoryId=section?.dataset.inventoryCategory||'';
+    const subcategoryId=section?.dataset.inventorySubcategory||'';
+    const group=items.filter(item=>item.categoryId===categoryId&&item.subcategoryId===subcategoryId);
+    input.indeterminate=group.some(item=>seerviInventoryState[item.key]!==false)&&group.some(item=>seerviInventoryState[item.key]===false);
+  });
+}
+
+async function inventoryEnsureItemsLoaded(){
+  if(!crmUser||!isAuthorisedAdmin(crmUser))throw new Error('Admin login required.');
+  if(!Array.isArray(seerviItemsCache)||!seerviItemsCache.length) await seerviItemsLoadAll();
+  if(!Array.isArray(seerviItemCategoriesCache)||!seerviItemCategoriesCache.length) await seerviItemsLoadCategories();
+}
+
+window.setInventorySubcategoryStock=async function(categoryId,subcategoryId,stock,input){
+  if(!crmUser||!isAuthorisedAdmin(crmUser)){if(input)input.checked=!stock;alert('Admin login required.');return;}
+  const items=seerviInventoryItems.filter(item=>item.categoryId===categoryId&&item.subcategoryId===subcategoryId);
+  if(!items.length)return;
+  const section=input?.closest('.inventory-stock-category');
+  if(section)section.classList.add('inventory-stock-saving');
+  if(input)input.disabled=true;
+  try{
+    await Promise.all(items.map(item=>setDoc(doc(db,'inventory',item.key),{
+      key:item.key,itemId:item.id,categoryId:item.categoryId,subcategoryId:item.subcategoryId,
+      category:item.category,subcategory:item.subcategory,name:item.name,model:item.model,spec:item.spec||'',
+      stock:!!stock,...(Number.isFinite(Number(seerviInventoryQty[item.key]))?{availableQty:Math.max(0,Number(seerviInventoryQty[item.key])),qtyTracking:true}:{}),
+      public:true,updatedBy:crmUser.email||crmUser.uid,updatedAt:serverTimestamp()
+    },{merge:true})));
+    items.forEach(item=>{seerviInventoryState[item.key]=!!stock;});
+    inventoryApplyToHome();inventoryRenderAdmin();
+  }catch(e){alert('Subcategory stock update failed: '+(e?.message||'Check Firebase rules.'));inventoryRenderAdmin();}
+  finally{if(input)input.disabled=false;}
+};
+
+function inventoryInitFilters(){
+  const search=document.getElementById('inventoryStockSearch');
+  const category=document.getElementById('inventoryStockCategoryFilter');
+  const clear=document.getElementById('inventoryStockSearchClear');
+  if(search&&!search.dataset.bound){search.dataset.bound='1';const refresh=()=>{if(clear)clear.hidden=!search.value;inventoryRenderAdmin();};search.addEventListener('input',refresh);search.addEventListener('search',refresh);}
+  if(category&&!category.dataset.bound){category.dataset.bound='1';category.addEventListener('change',()=>inventoryRenderAdmin());}
+  if(clear&&!clear.dataset.bound){clear.dataset.bound='1';clear.addEventListener('click',()=>{if(search){search.value='';search.focus();}clear.hidden=true;inventoryRenderAdmin();});}
+  document.querySelectorAll('.inventory-filter-btn').forEach(btn=>{if(btn.dataset.bound)return;btn.dataset.bound='1';btn.addEventListener('click',()=>{document.querySelectorAll('.inventory-filter-btn').forEach(b=>b.classList.toggle('active',b===btn));inventoryRenderAdmin();});});
+}
+
+window.setInventoryCategoryStock=async function(categoryId,stock,input){
+  if(!crmUser||!isAuthorisedAdmin(crmUser)){if(input)input.checked=!stock;alert('Admin login required.');return;}
+  const items=seerviInventoryItems.filter(item=>item.categoryId===categoryId);
+  if(!items.length)return;
+  try{
+    await Promise.all(items.map(item=>setDoc(doc(db,'inventory',item.key),{key:item.key,itemId:item.id,categoryId:item.categoryId,subcategoryId:item.subcategoryId,stock:!!stock,public:true,updatedBy:crmUser.email||crmUser.uid,updatedAt:serverTimestamp()},{merge:true})));
+    items.forEach(item=>{seerviInventoryState[item.key]=!!stock;});
+    inventoryApplyToHome();inventoryRenderAdmin();
+  }catch(e){alert('Category stock update failed: '+(e?.message||'Check Firebase rules.'));inventoryRenderAdmin();}
+};
+
+window.setInventoryQuantity=async function(key,value,input){
+  if(!crmUser||!isAuthorisedAdmin(crmUser)){alert('Admin login required.');return;}
+  const qty=Math.floor(Number(value));
+  if(!Number.isFinite(qty)||qty<0){inventoryRenderAdmin();return;}
+  const item=seerviInventoryItems.find(x=>x.key===key);if(!item)return;
+  if(input)input.disabled=true;
+  try{
+    await setDoc(doc(db,'inventory',key),{key,itemId:item.id,categoryId:item.categoryId,subcategoryId:item.subcategoryId,category:item.category,subcategory:item.subcategory,name:item.name,model:item.model,spec:item.spec||'',stock:seerviInventoryState[key]!==false,availableQty:qty,qtyTracking:true,public:true,updatedBy:crmUser.email||crmUser.uid,updatedAt:serverTimestamp()},{merge:true});
+    seerviInventoryQty[key]=qty;
+    if(qty===0)seerviInventoryState[key]=false;
+    inventoryApplyToHome();inventoryRenderAdmin();
+  }catch(e){alert('Available quantity update failed: '+(e?.message||'Check Firebase rules.'));inventoryRenderAdmin();}
+  finally{if(input)input.disabled=false;}
+};
+
+function inventoryQuoteDeltas(oldItems,newItems){
+  const map=Object.create(null);
+  const add=(x,sign)=>{
+    if(x?.manual)return;
+    let key=x.firebaseItemId||x.itemId||'';
+    if(!key){
+      const model=String(x.model||x.name||'').trim().toLowerCase();
+      const candidates=seerviInventoryItems.filter(i=>String(i.model||i.name||'').trim().toLowerCase()===model);
+      if(candidates.length===1)key=candidates[0].key;
+    }
+    if(!key)return;
+    map[key]=(map[key]||0)+sign*Math.max(0,Number(x.qty||0));
+  };
+  (oldItems||[]).forEach(x=>add(x,-1));
+  (newItems||[]).forEach(x=>add(x,1));
+  return Object.entries(map).filter(([,delta])=>delta!==0).map(([key,delta])=>({key,delta}));
+}
+
+async function adjustInventoryForQuoteDeltas(deltas,{strict=true}={}){
+  const changes=(deltas||[]).filter(x=>Number(x.delta)!==0);if(!changes.length)return[];
+  await inventoryEnsureItemsLoaded();
+  const itemMap=new Map(seerviInventoryItems.map(x=>[x.key,x]));
+  const applied=[];
+  await runTransaction(db,async(tx)=>{
+    const pending=[];
+    for(const ch of changes){
+      const item=itemMap.get(ch.key);if(!item){if(strict)throw new Error('Firebase item not found for stock update.');continue;}
+      const ref=doc(db,'inventory',item.key);const snap=await tx.get(ref);
+      if(!snap.exists()){if(strict)throw new Error(`Stock quantity is not set for ${item.name||item.model}. Please set AVAILABLE QTY first.`);continue;}
+      const data=snap.data()||{};const current=Number(data.availableQty);
+      if(!Number.isFinite(current)){if(strict)throw new Error(`Stock quantity is not set for ${item.name||item.model}. Please set AVAILABLE QTY first.`);continue;}
+      const delta=Number(ch.delta);const next=current-delta;
+      if(next<0)throw new Error(`Insufficient stock for ${item.name||item.model}. Available: ${current}, required: ${delta}.`);
+      pending.push({ref,item,data,next,ch});
+    }
+    pending.forEach(({ref,item,data,next,ch})=>{
+      tx.set(ref,{key:item.key,itemId:item.id,categoryId:item.categoryId,subcategoryId:item.subcategoryId,category:item.category,subcategory:item.subcategory,name:item.name,model:item.model,spec:item.spec||'',availableQty:next,qtyTracking:true,stock:next>0?data.stock!==false:false,public:true,updatedBy:crmUser.email||crmUser.uid,updatedAt:serverTimestamp()},{merge:true});
+      applied.push(ch);
+    });
+  });
+  for(const ch of applied){seerviInventoryQty[ch.key]=Math.max(0,Number(seerviInventoryQty[ch.key]||0)-Number(ch.delta));if(seerviInventoryQty[ch.key]===0)seerviInventoryState[ch.key]=false;}
+  inventoryApplyToHome();
+  return applied;
+}
+
+async function rollbackInventoryQuoteDeltas(applied){
+  if(!applied?.length)return;
+  const reverse=applied.map(x=>({key:x.key,delta:-Number(x.delta)}));
+  try{await adjustInventoryForQuoteDeltas(reverse,{strict:false});}catch(e){console.warn('Inventory rollback failed:',e);}
+}
+
+window.toggleInventoryStock=async function(force){
+  if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+  ensureAdminUtilityModals();
+  const panel=document.getElementById('inventoryStockPanel');
+  const modal=document.getElementById('adminStockModal');
+  if(!panel||!modal)return;
+  const show=typeof force==='boolean'?force:!modal.classList.contains('show');
+  if(show){
+    panel.hidden=false;modal.classList.add('show');modal.setAttribute('aria-hidden','false');
+    inventoryInitFilters();
+    const grid=document.getElementById('inventoryStockGrid');if(grid)grid.innerHTML='<div class="inventory-stock-empty">Loading Firebase items…</div>';
+    try{await inventoryEnsureItemsLoaded();inventoryRenderAdmin();}catch(e){if(grid)grid.innerHTML=`<div class="inventory-stock-empty">Unable to load Firebase items: ${esc(e?.message||'Unknown error')}</div>`;}
+  }else{closeAdminStock();panel.hidden=true;}
+};
+
+window.setInventoryStock=async function(key,stock,input){
+  if(!crmUser||!isAuthorisedAdmin(crmUser)){if(input)input.checked=!stock;alert('Admin login required.');return;}
+  const item=seerviInventoryItems.find(x=>x.key===key);if(!item)return;
+  const card=input?.closest('.inventory-stock-card');if(card)card.classList.add('inventory-stock-saving');
+  try{
+    await setDoc(doc(db,'inventory',key),{key,itemId:item.id,categoryId:item.categoryId,subcategoryId:item.subcategoryId,category:item.category,subcategory:item.subcategory,name:item.name,model:item.model,spec:item.spec||'',stock:!!stock,...(Number.isFinite(Number(seerviInventoryQty[key]))?{availableQty:Math.max(0,Number(seerviInventoryQty[key])),qtyTracking:true}:{}),public:true,updatedBy:crmUser.email||crmUser.uid,updatedAt:serverTimestamp()},{merge:true});
+    seerviInventoryState[key]=!!stock;inventoryApplyToHome();inventoryRenderAdmin();
+  }catch(e){if(input)input.checked=!stock;alert('Stock update failed: '+(e?.message||'Check Firebase rules.'));inventoryRenderAdmin();}
+  finally{if(card)card.classList.remove('inventory-stock-saving');}
+};
+
+window.refreshInventoryStock=async function(){
+  await inventoryLoadPublic();
+  if(crmUser){try{await inventoryEnsureItemsLoaded();inventoryRenderAdmin();}catch(e){console.warn('Admin stock refresh:',e);}}
+};
+
+document.addEventListener('DOMContentLoaded',()=>{
+  inventoryLoadPublic().catch(()=>{});
+});
+
+/* ===== END FIREBASE ITEMS / STOCK BRIDGE ===== */
 
 /* ===== SEERVI NOTIFICATIONS — isolated from existing login/signup logic ===== */
 const SEERVI_NOTIFICATION_TTL_MS = 7*24*60*60*1000;
@@ -10323,6 +10773,7 @@ window.seerviPublicOpenItem=function(itemId){
 seerviPublicRenderItems=function(){
   const grid=$('seerviPublicProductGrid'); if(!grid)return;
   let rows=seerviPublicItems.filter(item=>{
+    if(seerviInventoryState[item.id]===false)return false;
     if(seerviPublicSelectedCategory!=='all' && item.categoryId!==seerviPublicSelectedCategory)return false;
     if(seerviPublicSelectedSubcategory!=='all' && item.subcategoryId!==seerviPublicSelectedSubcategory)return false;
     if(seerviPublicSearchQuery && !seerviPublicItemSearchText(item).includes(seerviPublicSearchQuery))return false;
