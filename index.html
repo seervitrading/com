@@ -7880,20 +7880,33 @@ function seerviItemsBackToDashboard(){
 }
 
 window.accountDashboardItems=function(){
+  closeAccountDashboard();
+
+  // IMPORTANT: do not call openAdminPanel() or crmShowWorkspace() here.
+  // Those functions intentionally open the generic Admin Panel and load the
+  // global admin workspace. The ITEMS shortcut must open only the Firebase
+  // Items workspace.
+  $('crmModal')?.setAttribute('aria-hidden','false');
+  $('crmModal')?.classList.add('show');
+
   if(!crmUser || !isAuthorisedAdmin(crmUser)){
-    openAdminPanel();
+    crmShowLogin();
+    setTimeout(()=>$('crmEmail')?.focus(),40);
     return;
   }
-  closeAccountDashboard();
-  openAdminPanel();
 
-  // crmShowWorkspace() starts an async global-admin refresh. Select the
-  // Firebase Items workspace after that initialization so the generic Admin
-  // Panel does not remain visible over the Items screen.
-  requestAnimationFrame(()=>{
-    seerviOpenItemsPanel();
-    setTimeout(()=>seerviOpenItemsPanel(),250);
-  });
+  $('crmLogin').hidden=true;
+  $('crmWorkspace').hidden=false;
+  $('cloudConnectedBadge')?.classList.add('show');
+  crmSetStatus('Cloud connected: '+(crmUser.email||'Admin'), true);
+
+  // Explicitly hide the generic admin workspace and show only Items.
+  const global=$('adminGlobalArea');
+  const items=$('adminItemsArea');
+  if(global)global.hidden=true;
+  if(items)items.hidden=false;
+
+  seerviOpenItemsPanel();
 };
 
 window.seerviOpenItemsPanel=function(){
