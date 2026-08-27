@@ -12245,24 +12245,31 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 })();
 </script>
 
-<script id="seervi-universal-mobile-back-final">
+
+<script id="seervi-genuine-mobile-navigation">
 (function(){
   const MOBILE_MAX=700;
-  let backGuardReady=false;
-  let handlingBack=false;
+  const KEY='seerviApp';
+  let internal=false;
 
-  function isMobile(){ return window.matchMedia && window.matchMedia('(max-width:'+MOBILE_MAX+'px)').matches; }
-
-  function visible(id){
-    const el=document.getElementById(id);
-    if(!el) return false;
-    const cs=getComputedStyle(el);
-    return !el.hidden && cs.display!=='none' && cs.visibility!=='hidden' &&
-           (el.classList.contains('show') || el.getAttribute('aria-hidden')==='false' || el.offsetParent!==null);
+  function mobile(){
+    return window.matchMedia && window.matchMedia('(max-width:'+MOBILE_MAX+'px)').matches;
   }
-
-  function closeTransient(){
-    const closers=[
+  function appView(){
+    const body=document.body;
+    if(body.classList.contains('mobile-products-view')) return 'products';
+    const cart=document.getElementById('cartDrawer');
+    if(cart && cart.classList.contains('show')) return 'cart';
+    return 'home';
+  }
+  function push(view){
+    try{ history.pushState({[KEY]:view},'', '#'+view); }catch(e){}
+  }
+  function replace(view){
+    try{ history.replaceState({[KEY]:view},'', '#'+view); }catch(e){}
+  }
+  function closeOverlay(){
+    const checks=[
       ['crmQuoteViewModal','crmCloseQuoteView'],
       ['seerviPublicItemModal','seerviPublicCloseItem'],
       ['supportModal','closeSupportModal'],
@@ -12272,93 +12279,106 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
       ['crmModal','closeCRM'],
       ['accountDashboardModal','closeAccountDashboard']
     ];
-    for(const [id,fn] of closers){
-      if(visible(id) && typeof window[fn]==='function'){
-        window[fn]();
-        return true;
-      }
+    for(const [id,fn] of checks){
+      const el=document.getElementById(id);
+      if(!el) continue;
+      const open=el.classList.contains('show') || el.getAttribute('aria-hidden')==='false';
+      if(open && typeof window[fn]==='function'){ window[fn](); return true; }
     }
     return false;
   }
-
-  function currentAppView(){
-    const path=(location.hash||'#home').toLowerCase();
-    if(path==='#products' || document.body.classList.contains('mobile-products-view')) return 'products';
-    if(path==='#cart' || document.getElementById('cartDrawer')?.classList.contains('show')) return 'cart';
-    return 'home';
-  }
-
-  function goHomeCanonical(){
+  function home(){
     try{
-      document.body.classList.remove('mobile-products-view');
       if(typeof window.showHomeView==='function') window.showHomeView();
+      document.body.classList.remove('mobile-products-view');
+      window.scrollTo({top:0,behavior:'auto'});
     }catch(e){}
+  }
+  function products(){
     try{
-      if(location.hash!=='#home') history.replaceState({seerviApp:'home'},'', '#home');
-      else history.replaceState({seerviApp:'home'},'', location.href.split('#')[0]+'#home');
+      if(typeof window.showProductsView==='function') window.showProductsView();
+      else document.body.classList.add('mobile-products-view');
+      window.scrollTo({top:0,behavior:'auto'});
     }catch(e){}
-    try{ window.scrollTo({top:0,behavior:'auto'}); }catch(e){}
+  }
+  function cart(){
+    try{
+      if(typeof window.openCart==='function') window.openCart();
+      window.scrollTo({top:0,behavior:'auto'});
+    }catch(e){}
   }
 
-  function install(){
-    if(backGuardReady) return;
-    backGuardReady=true;
+  function normalizeInitial(){
+    if(!mobile()) return;
+    // The current page is the only canonical root entry.
+    const initial=appView();
+    replace(initial);
+  }
 
-    // Canonical starting state. Do not create a growing history stack.
-    try{
-      const view=currentAppView();
-      history.replaceState({seerviApp:view},'', '#'+view);
-      history.pushState({seerviApp:view},'', '#'+view);
-    }catch(e){}
+  function navigate(view){
+    if(!mobile()) return;
+    const current=appView();
+    if(current===view) return;
+    internal=true;
+    if(view==='home') home();
+    else if(view==='products') products();
+    else if(view==='cart') cart();
+    push(view);
+    setTimeout(()=>internal=false,0);
+  }
 
-    window.addEventListener('popstate',function(){
-      if(handlingBack || !isMobile()) return;
-      handlingBack=true;
-      try{
-        // First Back closes any open child/modal layer.
-        if(closeTransient()){
-          history.pushState({seerviApp:currentAppView()},'', '#'+currentAppView());
-          return;
-        }
-
-        const state=history.state;
-        const view=state && state.seerviApp ? state.seerviApp : 'home';
-
-        if(view==='home'){
-          // Home is the terminal point. Re-pin it so Back never exits the site.
-          goHomeCanonical();
-          history.pushState({seerviApp:'home'},'', '#home');
-          return;
-        }
-
-        if(view==='products'){
-          try{
-            if(typeof window.showHomeView==='function') window.showHomeView();
-            else document.body.classList.remove('mobile-products-view');
-          }catch(e){}
-          history.replaceState({seerviApp:'home'},'', '#home');
-          history.pushState({seerviApp:'home'},'', '#home');
-          try{window.scrollTo({top:0,behavior:'auto'});}catch(e){}
-          return;
-        }
-
-        if(view==='cart'){
-          try{ if(typeof window.closeCart==='function') window.closeCart(); }catch(e){}
-          history.replaceState({seerviApp:'products'},'', '#products');
-          history.pushState({seerviApp:'products'},'', '#products');
-          return;
-        }
-
-        goHomeCanonical();
-        history.pushState({seerviApp:'home'},'', '#home');
-      }finally{
-        setTimeout(()=>{handlingBack=false;},0);
+  // Universal bottom-bar switching. Capture only on mobile and only for the
+  // three primary destinations; WhatsApp remains its own panel action.
+  document.addEventListener('click',function(e){
+    if(!mobile()) return;
+    const a=e.target.closest('a,button');
+    if(!a) return;
+    const txt=(a.getAttribute('aria-label')||a.textContent||'').trim().toLowerCase();
+    const id=(a.id||'').toLowerCase();
+    const cls=(a.className||'').toString().toLowerCase();
+    if(cls.includes('bottom') || id.includes('mobile') || txt){
+      if(txt==='home' || id.includes('home')){
+        e.preventDefault(); e.stopPropagation(); navigate('home'); return;
       }
-    },false);
-  }
+      if(txt==='products' || id.includes('products')){
+        e.preventDefault(); e.stopPropagation(); navigate('products'); return;
+      }
+      if(txt==='cart' || id.includes('cart')){
+        e.preventDefault(); e.stopPropagation(); navigate('cart'); return;
+      }
+    }
+  },true);
 
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install,{once:true});
-  else install();
+  window.addEventListener('popstate',function(){
+    if(!mobile() || internal) return;
+
+    // App-like rule: Back first dismisses a transient screen.
+    if(closeOverlay()){
+      // Re-pin the current main view so the next Back continues through app history.
+      replace(appView());
+      return;
+    }
+
+    const state=history.state || {};
+    const target=state[KEY] || 'home';
+    if(target==='cart'){ cart(); return; }
+    if(target==='products'){ products(); return; }
+
+    // Home is the terminal state. Replacing (not pushing) prevents a runaway stack.
+    home();
+    replace('home');
+  });
+
+  // If a user changes hash/view through an existing app function, keep the
+  // history state aligned without adding forced redirects.
+  window.addEventListener('hashchange',function(){
+    if(!mobile() || internal) return;
+    const view=appView();
+    if((history.state||{})[KEY]!==view) replace(view);
+  });
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',normalizeInitial,{once:true});
+  else normalizeInitial();
 })();
 </script>
 </body>
