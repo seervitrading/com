@@ -3960,6 +3960,20 @@ body.nav-is-scrolled{padding-top:76px;}
   }
 }
 </style>
+
+<style id="seervi-public-item-qty-controls">
+.seervi-public-qty-control{display:grid;grid-template-columns:38px minmax(58px,1fr) 38px;gap:5px;align-items:center;margin-top:10px;max-width:210px}
+.seervi-public-qty-control button{width:38px;height:38px;border:1px solid #ffffff22;background:#11161c;color:#f0c66a;border-radius:7px;cursor:pointer;font-size:19px;font-weight:900;line-height:1}
+.seervi-public-qty-control button:hover{border-color:#f0c66a;background:#171d24}
+.seervi-public-qty-control input{width:100%;height:38px;box-sizing:border-box;text-align:center;border:1px solid #ffffff22;background:#0b0f14;color:#f2f4f6;border-radius:7px;font-size:14px;font-weight:800;outline:none;appearance:textfield;-moz-appearance:textfield}
+.seervi-public-qty-control input:focus{border-color:#d9b55a;box-shadow:0 0 0 2px #d9b55a18}
+.seervi-public-qty-control input::-webkit-outer-spin-button,.seervi-public-qty-control input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.seervi-public-qty-label{display:block;margin-top:5px;color:#7f8994;font-size:8px;letter-spacing:.8px;text-transform:uppercase}
+@media(max-width:600px){
+  .seervi-public-qty-control{grid-template-columns:42px minmax(64px,1fr) 42px;max-width:100%;gap:6px}
+  .seervi-public-qty-control button,.seervi-public-qty-control input{height:40px}
+}
+</style>
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -11933,6 +11947,155 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 
 
 
+<script id="seervi-public-item-qty-final">
+(function(){
+  function getEntry(itemId){
+    return (typeof seerviCart!=='undefined' && Array.isArray(seerviCart))
+      ? seerviCart.find(x=>String(x.firebaseItemId||'')===String(itemId))
+      : null;
+  }
+
+  function syncControls(){
+    document.querySelectorAll('.seervi-public-qty-control[data-item-id]').forEach(control=>{
+      const id=control.dataset.itemId||'';
+      const entry=getEntry(id);
+      const qty=entry ? Math.max(1,Number(entry.qty)||1) : 0;
+      const input=control.querySelector('.seervi-public-qty-input');
+      const label=control.querySelector('.seervi-public-qty-label');
+      if(input && document.activeElement!==input) input.value=String(qty);
+      if(label) label.textContent=qty>0?'IN CART':'QUANTITY';
+      control.classList.toggle('has-items',qty>0);
+    });
+  }
+
+  function save(){
+    if(typeof saveCart==='function') saveCart();
+    else {
+      localStorage.setItem('seerviCart',JSON.stringify(
+        (typeof seerviCart!=='undefined'&&Array.isArray(seerviCart))?seerviCart:[]
+      ));
+      syncControls();
+    }
+    setTimeout(syncControls,0);
+  }
+
+  function addBase(itemId){
+    if(typeof window.seerviPublicAddToCart==='function') window.seerviPublicAddToCart(itemId);
+    setTimeout(syncRenderedCards,0);
+    return getEntry(itemId);
+  }
+
+  window.seerviPublicCardQtyChange=function(itemId,delta){
+    const id=String(itemId||'');
+    if(!id)return;
+    let entry=getEntry(id);
+    if(!entry && delta>0){
+      addBase(id);
+      return;
+    }
+    if(!entry)return;
+    const next=Math.max(0,Math.floor(Number(entry.qty)||0)+Number(delta||0));
+    if(next<=0){
+      const idx=seerviCart.indexOf(entry);
+      if(idx>=0)seerviCart.splice(idx,1);
+    }else{
+      entry.qty=Math.min(next,1000000);
+    }
+    save();
+  };
+
+  window.seerviPublicCardQtyNormalize=function(itemId,input){
+    const id=String(itemId||'');
+    if(!id)return;
+    const raw=String(input?.value??'').trim();
+    const entry=getEntry(id);
+    if(raw===''){
+      if(input)input.value=String(entry?.qty||0);
+      return;
+    }
+    const n=parseInt(raw,10);
+    if(!Number.isFinite(n) || n<0){
+      if(input)input.value=String(entry?.qty||0);
+      return;
+    }
+    if(n===0){
+      if(entry){
+        const idx=seerviCart.indexOf(entry);
+        if(idx>=0)seerviCart.splice(idx,1);
+        save();
+      }else{
+        if(input)input.value='0';
+        syncControls();
+      }
+      return;
+    }
+    let target=entry||addBase(id);
+    if(target){
+      target.qty=Math.min(n,1000000);
+      save();
+    }
+  };
+
+  function controlHtml(item){
+    const id=String(item.id||'');
+    const entry=getEntry(id);
+    const qty=entry ? Math.max(1,Number(entry.qty)||1) : 0;
+    const model=String(item.model||item.id||'');
+    return `<div class="seervi-public-qty-control product-cart-control ${qty>0?'has-items':''}" data-item-id="${seerviItemsEsc(id)}" aria-label="Quantity controls">
+      <button type="button" class="cart-minus" onclick="seerviPublicCardQtyChange('${seerviItemsEsc(id)}',-1)" aria-label="Decrease quantity">−</button>
+      <input class="seervi-public-qty-input product-qty" type="number" min="0" max="1000000" step="1" inputmode="numeric" value="${qty}" aria-label="Quantity for ${seerviItemsEsc(item.name||model||'product')}" onblur="seerviPublicCardQtyNormalize('${seerviItemsEsc(id)}',this)" onkeydown="if(event.key==='Enter'){event.preventDefault();seerviPublicCardQtyNormalize('${seerviItemsEsc(id)}',this);this.blur();}">
+      <button type="button" class="cart-plus" onclick="seerviPublicCardQtyChange('${seerviItemsEsc(id)}',1)" aria-label="Increase quantity">+</button>
+    </div><span class="seervi-public-qty-label">${qty>0?'IN CART':'QUANTITY'}</span>`;
+  }
+
+  function addButtonHtml(item){
+    const id=String(item.id||'');
+    return `<button class="crm-primary small" type="button" onclick="seerviPublicAddToCart('${seerviItemsEsc(id)}')">ADD TO CART</button>`;
+  }
+
+  function syncRenderedCards(){
+    document.querySelectorAll('.seervi-public-product-card').forEach(card=>{
+      const control=card.querySelector('.seervi-public-qty-control[data-item-id]');
+      const addBtn=card.querySelector('[onclick*="seerviPublicAddToCart"]');
+      let id=control?.dataset.itemId||'';
+      if(!id && addBtn){
+        const onclick=addBtn.getAttribute('onclick')||'';
+        id=onclick.match(/seerviPublicAddToCart\('([^']+)'\)/)?.[1]||'';
+      }
+      if(!id)return;
+      const item=(typeof seerviPublicItems!=='undefined' && Array.isArray(seerviPublicItems))
+        ? seerviPublicItems.find(x=>String(x.id)===String(id))
+        : null;
+      if(!item)return;
+      const entry=getEntry(id);
+      if(entry && !control && addBtn){
+        addBtn.outerHTML=controlHtml(item);
+      }else if(!entry && control){
+        control.outerHTML=addButtonHtml(item);
+        card.querySelector('.seervi-public-qty-label')?.remove();
+      }
+    });
+    syncControls();
+  }
+
+  function install(){
+    if(typeof window.seerviPublicRenderItems!=='function')return;
+    const original=window.seerviPublicRenderItems;
+    if(original.__seerviQtyWrapped)return;
+    function wrapped(){
+      const result=original.apply(this,arguments);
+      try{syncRenderedCards();}catch(e){console.warn('Public item quantity controls skipped:',e);}
+      return result;
+    }
+    wrapped.__seerviQtyWrapped=true;
+    window.seerviPublicRenderItems=wrapped;
+    setTimeout(syncRenderedCards,0);
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
+  else install();
+})();
+</script>
 </body>
 
 </html>
