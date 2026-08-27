@@ -4849,8 +4849,11 @@ function downloadCartPDF(){
   y=tableTop+8;
   doc.setFont('helvetica','normal');
 
-  for(let i=0;i<seerviCart.length;i++){
-    const item=seerviCart[i];
+  const outputCart=(typeof window.seerviPrepareQuotationItems==='function'
+    ? window.seerviPrepareQuotationItems(seerviCart)
+    : seerviCart);
+  for(let i=0;i<outputCart.length;i++){
+    const item=outputCart[i];
 
     if(y>258){
       doc.addPage();
@@ -6219,13 +6222,34 @@ window.saveCustomerCartRequest=async function(){
 
   const now=new Date();
   const qNo='SQ-'+now.toISOString().replace(/[-:TZ.]/g,'').slice(0,14);
-  const items=seerviCart.map(item=>({
-    type:item.type||'', categoryId:item.categoryId||'', subcategoryId:item.subcategoryId||'',
-    category:item.category||seerviPublicCategoryName?.(item.categoryId)||'',
-    subcategory:item.subcategory||seerviPublicCategoryName?.(item.subcategoryId)||'',
-    name:item.name||'', model:item.model||'', spec:item.spec||'', thickness:item.thickness||'',
-    qty:Number(item.qty)||1, rate:0, source:'customer-request'
-  }));
+  const items=seerviCart.map(item=>{
+    const resolvedSubcategory =
+      String(item.subcategory||'').trim() ||
+      (typeof window.seerviQuoteItemSubcategory==='function'
+        ? String(window.seerviQuoteItemSubcategory(item)||'').trim()
+        : '') ||
+      (item.subcategoryId && typeof seerviPublicCategoryName==='function'
+        ? String(seerviPublicCategoryName(item.subcategoryId)||'').trim()
+        : '');
+    const resolvedCategory =
+      String(item.category||'').trim() ||
+      (item.categoryId && typeof seerviPublicCategoryName==='function'
+        ? String(seerviPublicCategoryName(item.categoryId)||'').trim()
+        : '');
+    return {
+      type:item.type||'',
+      categoryId:item.categoryId||'',
+      subcategoryId:item.subcategoryId||'',
+      category:resolvedCategory,
+      subcategory:resolvedSubcategory,
+      name:item.name||'',
+      model:item.model||'',
+      spec:item.thickness||item.spec||'',
+      qty:Number(item.qty)||1,
+      rate:0,
+      source:'customer-request'
+    };
+  });
   const qRef=await addDoc(collection(publicSignupDb,'quotations'),{
     partyId:party.id, customerUid:customerUser.uid, quoteNo:qNo, dateISO:now.toISOString(),
     customer:{name:party.name||'',company:party.company||'',phone:party.phone||'',email:party.email||customerUser.email||'',city:party.city||'',address:party.address||''},
@@ -6363,7 +6387,10 @@ window.customerViewQuote=function(id){
   if(!title||!meta||!body||!dl)return;
   title.textContent=q.quoteNo||'Quotation';
   meta.textContent=(q.dateISO?new Date(q.dateISO).toLocaleDateString('en-IN'):'')+' · '+(party.company||party.name||'');
-  const rows=(q.items||[]).map((item,i)=>`<tr><td>${i+1}</td><td>${esc(seerviQuoteProductLabel(item))}</td><td>${esc(item.spec||'—')}</td><td class="num">${Number(item.qty||0)}</td><td class="num">${money(item.rate)}</td><td class="num">${money(item.amount ?? Number(item.qty||0)*Number(item.rate||0))}</td></tr>`).join('');
+  const quoteItems=(typeof window.seerviPrepareQuotationItems==='function'
+    ? window.seerviPrepareQuotationItems(q.items||[])
+    : (q.items||[]));
+  const rows=quoteItems.map((item,i)=>`<tr><td>${i+1}</td><td>${esc(seerviQuoteProductLabel(item))}</td><td>${esc(item.spec||'—')}</td><td class="num">${Number(item.qty||0)}</td><td class="num">${money(item.rate)}</td><td class="num">${money(item.amount ?? Number(item.qty||0)*Number(item.rate||0))}</td></tr>`).join('');
   body.innerHTML=`<div class="crm-qv-customer"><div class="crm-qv-box"><small>Party</small><strong>${esc(party.company||party.name||'—')}</strong></div><div class="crm-qv-box"><small>Contact</small><strong>${esc(party.name||party.phone||'—')}</strong></div><div class="crm-qv-box"><small>City</small><strong>${esc(party.city||'—')}</strong></div></div><table class="crm-qv-table"><thead><tr><th>#</th><th>Product / Model</th><th>Spec</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead><tbody>${rows||'<tr><td colspan="6">No items in this quotation.</td></tr>'}</tbody></table><div class="crm-qv-totals"><div class="crm-qv-total"><span>Subtotal</span><strong>${money(q.subtotal)}</strong></div>${q.gstEnabled?`<div class="crm-qv-total"><span>GST (${Number(q.gstRate||0)}%)</span><strong>${money(q.gst)}</strong></div>`:''}<div class="crm-qv-total crm-qv-grand"><span>Grand Total</span><strong>${money(q.grandTotal)}</strong></div></div>`;
   if(statusBar)statusBar.hidden=true;
   dl.textContent='DOWNLOAD PDF';dl.onclick=()=>customerDownloadQuote(id);
@@ -7529,7 +7556,9 @@ window.crmViewQuote=function(id){
   meta.textContent=(q.dateISO ? new Date(q.dateISO).toLocaleDateString('en-IN') : '')+
     (party ? ' · '+(party.company||party.name||'') : '');
 
-  const items=q.items||[];
+  const items=(typeof window.seerviPrepareQuotationItems==='function'
+    ? window.seerviPrepareQuotationItems(q.items||[])
+    : (q.items||[]));
   const customer=party || q.customer || {};
   const rows=items.map((item,i)=>`
     <tr>
@@ -7675,7 +7704,9 @@ window.crmDownloadQuote=async function(id){
     y+=Math.max(7,addrLines.length*4.3);
 
     // Items
-    const items=q.items||[];
+    const items=(typeof window.seerviPrepareQuotationItems==='function'
+      ? window.seerviPrepareQuotationItems(q.items||[])
+      : (q.items||[]));
     const drawHeader=()=>{
       if(y>250){
         footer();
@@ -7893,7 +7924,9 @@ window.customerDownloadQuote=async function(id){
     y+=Math.max(7,addrLines.length*4.3);
 
     // Items
-    const items=q.items||[];
+    const items=(typeof window.seerviPrepareQuotationItems==='function'
+      ? window.seerviPrepareQuotationItems(q.items||[])
+      : (q.items||[]));
     const drawHeader=()=>{
       if(y>250){
         footer();
@@ -8134,20 +8167,37 @@ window.crmSaveCurrentQuote = async function(){
     city:selectedParty.city||'',
     notes:''
   };
-  const items=seerviCart.map(x=>({
-    type:x.type||'',
-    categoryId:x.categoryId||'',
-    subcategoryId:x.subcategoryId||'',
-    category:x.category||'',
-    subcategory:x.subcategory||'',
-    name:x.name||'',
-    model:x.model||x.name||'',
-    spec:x.thickness||x.spec||'',
-    qty:Number(x.qty||0),
-    rate:Number(x.rate||0),
-    amount:getLineTotal(x),
-    manual:!!x.manual
-  }));
+  const items=seerviCart.map(x=>{
+    const resolvedSubcategory =
+      String(x.subcategory||'').trim() ||
+      (typeof window.seerviQuoteItemSubcategory==='function'
+        ? String(window.seerviQuoteItemSubcategory(x)||'').trim()
+        : '') ||
+      (x.subcategoryId && typeof seerviPublicCategoryName==='function'
+        ? String(seerviPublicCategoryName(x.subcategoryId)||'').trim()
+        : '');
+    const resolvedCategory =
+      String(x.category||'').trim() ||
+      (x.categoryId && typeof seerviPublicCategoryName==='function'
+        ? String(seerviPublicCategoryName(x.categoryId)||'').trim()
+        : '');
+    return {
+      type:x.type||'',
+      categoryId:x.categoryId||'',
+      subcategoryId:x.subcategoryId||'',
+      category:resolvedCategory,
+      subcategory:resolvedSubcategory,
+      firebaseItemId:x.firebaseItemId||x.itemId||x.id||'',
+      itemId:x.itemId||x.firebaseItemId||x.id||'',
+      name:x.name||'',
+      model:x.model||x.name||'',
+      spec:x.thickness||x.spec||'',
+      qty:Number(x.qty||0),
+      rate:Number(x.rate||0),
+      amount:getLineTotal(x),
+      manual:!!x.manual
+    };
+  });
 
   let stockApplied=[];
   try{
@@ -8184,6 +8234,10 @@ window.crmSaveCurrentQuote = async function(){
             quoteNo:oldQ.quoteNo,
             productType:item.type,
             productModel:item.model,
+            categoryId:item.categoryId||'',
+            subcategoryId:item.subcategoryId||'',
+            category:item.category||'',
+            subcategory:item.subcategory||'',
             spec:item.spec||'',
             rate:item.rate,
             dateISO:now.toISOString().slice(0,10),
@@ -12294,8 +12348,29 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 
   window.seerviQuoteProductLabel = function(item){
     const sub=window.seerviQuoteItemSubcategory(item);
-    const model=item?.model||item?.name||'Item';
+    const model=String(item?.model||item?.name||'Item').trim();
     return [sub,model].filter(Boolean).join(' — ');
+  };
+
+  window.seerviPrepareQuotationItems = function(items){
+    return (Array.isArray(items)?items:[]).map(item=>{
+      if(!item || typeof item!=='object') return item;
+      const resolvedSubcategory =
+        String(item.subcategory||'').trim() ||
+        String(window.seerviQuoteItemSubcategory(item)||'').trim();
+      const resolvedCategory =
+        String(item.category||'').trim() ||
+        (item.categoryId && typeof window.seerviPublicCategoryName==='function'
+          ? String(window.seerviPublicCategoryName(item.categoryId)||'').trim()
+          : '');
+      return {
+        ...item,
+        category:resolvedCategory,
+        subcategory:resolvedSubcategory,
+        model:item.model||item.name||'Item',
+        name:item.name||item.model||'Item'
+      };
+    });
   };
 })();
 </script>
@@ -12328,6 +12403,16 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   window.seerviNormalizeQuotationSubcategories=function(){
     if(Array.isArray(window.seerviCart)) window.seerviCart.forEach(normalizeQuoteItem);
     return window.seerviCart||[];
+  };
+
+  window.seerviNormalizeSavedQuotation=function(q){
+    if(!q || typeof q!=='object') return q;
+    return {
+      ...q,
+      items:(typeof window.seerviPrepareQuotationItems==='function'
+        ? window.seerviPrepareQuotationItems(q.items||[])
+        : (q.items||[]))
+    };
   };
   document.addEventListener('DOMContentLoaded',function(){
     try{ window.seerviNormalizeQuotationSubcategories(); }catch(_){}
