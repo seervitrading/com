@@ -4321,7 +4321,13 @@ body.nav-is-scrolled{padding-top:76px;}
       </div>
     </div>
     <div id="seerviItemsStatus" class="crm-auth-status">Loading items…</div>
-    <div id="seerviItemsList" class="admin-items-list"></div>
+    <div id="seerviItemsBulkToolbar" class="seervi-items-bulk-toolbar" hidden>
+  <label class="seervi-bulk-select-all"><input id="seerviItemsSelectAll" type="checkbox" onchange="seerviItemsToggleSelectAll(this.checked)"><span>SELECT ALL</span></label>
+  <span id="seerviItemsSelectedCount" class="seervi-bulk-selected-count">0 selected</span>
+  <button class="crm-secondary small" type="button" onclick="seerviItemsOpenBulkEdit()">BULK EDIT</button>
+  <button class="crm-secondary small danger" type="button" onclick="seerviItemsBulkDelete()">BULK DELETE</button>
+</div>
+<div id="seerviItemsList" class="admin-items-list"></div>
   </section>
 
   <section id="seerviItemsAddView" class="admin-items-view" hidden>
@@ -10062,6 +10068,7 @@ seerviItemsFilter=function(search=''){
       : '<div class="seervi-item-thumb"></div>';
 
     return `<div class="seervi-item-row">
+      <label class="seervi-item-select-wrap" title="Select item"><input class="seervi-item-select" type="checkbox" value="${seerviItemsEsc(item.id)}" onchange="seerviItemsSelectionChanged()"></label>
       ${img}
       <div>
         <div class="seervi-item-name">${seerviItemsEsc(item.name||'Unnamed Item')}</div>
@@ -12224,6 +12231,24 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   window.addEventListener('storage',sync);
 })();
 </script>
+<div id="seerviItemsBulkEditModal" class="seervi-bulk-modal" hidden aria-hidden="true">
+  <div class="seervi-bulk-modal-box" role="dialog" aria-modal="true">
+    <div class="seervi-bulk-modal-head">
+      <div><div class="crm-kicker">ITEM MANAGEMENT</div><h3>Bulk Edit Items</h3><div id="seerviBulkEditCount" class="crm-muted">0 selected</div></div>
+      <button class="crm-secondary small" type="button" onclick="seerviItemsCloseBulkEdit()">← BACK</button>
+    </div>
+    <div class="seervi-bulk-edit-grid">
+      <label>Category<select id="seerviBulkEditCategory"><option value="">KEEP UNCHANGED</option></select></label>
+      <label>Subcategory<select id="seerviBulkEditSubcategory"><option value="">KEEP UNCHANGED</option></select></label>
+      <label>Status<select id="seerviBulkEditActive"><option value="">KEEP UNCHANGED</option><option value="true">ACTIVE</option><option value="false">INACTIVE</option></select></label>
+      <label>Main WEBP Image<input id="seerviBulkEditImage" type="text" maxlength="2000" placeholder="Leave blank to keep unchanged"></label>
+      <label class="seervi-bulk-edit-full">Description<textarea id="seerviBulkEditDescription" rows="3" placeholder="Leave blank to keep unchanged"></textarea></label>
+    </div>
+    <div class="crm-muted seervi-bulk-edit-note">Only fields you fill/select will be changed. Blank fields remain unchanged.</div>
+    <div id="seerviBulkEditStatus" class="seervi-form-status"></div>
+    <div class="seervi-bulk-modal-actions"><button class="crm-secondary" type="button" onclick="seerviItemsCloseBulkEdit()">CANCEL</button><button class="crm-primary" type="button" id="seerviBulkEditSaveButton" onclick="seerviItemsApplyBulkEdit()">UPDATE SELECTED</button></div>
+  </div>
+</div>
 </body>
 
 </html>
@@ -12460,6 +12485,109 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
     else closeLayers();
   };
 })();
+
+/* ===== SEERVI BULK ITEM EDIT / DELETE ===== */
+window.seerviItemsGetSelectedIds=function(){
+  return [...document.querySelectorAll('#seerviItemsList .seervi-item-select:checked')].map(x=>x.value).filter(Boolean);
+};
+window.seerviItemsSelectionChanged=function(){
+  const ids=seerviItemsGetSelectedIds(), toolbar=$('seerviItemsBulkToolbar'), count=$('seerviItemsSelectedCount'), all=$('seerviItemsSelectAll');
+  if(toolbar)toolbar.hidden=ids.length===0;
+  if(count)count.textContent=`${ids.length} selected`;
+  if(all){
+    const boxes=[...document.querySelectorAll('#seerviItemsList .seervi-item-select')];
+    all.checked=boxes.length>0&&boxes.every(x=>x.checked);
+    all.indeterminate=boxes.some(x=>x.checked)&&!all.checked;
+  }
+};
+window.seerviItemsToggleSelectAll=function(checked){
+  document.querySelectorAll('#seerviItemsList .seervi-item-select').forEach(x=>x.checked=!!checked);
+  seerviItemsSelectionChanged();
+};
+window.seerviItemsOpenBulkEdit=function(){
+  const ids=seerviItemsGetSelectedIds();
+  if(!ids.length){seerviItemsSetStatus('Select at least one item first.',true);return;}
+  seerviItemsPopulateBulkEditCategories();
+  $('seerviBulkEditCount').textContent=`${ids.length} selected`;
+  $('seerviBulkEditCategory').value='';
+  $('seerviBulkEditSubcategory').innerHTML='<option value="">KEEP UNCHANGED</option>';
+  $('seerviBulkEditActive').value='';
+  $('seerviBulkEditImage').value='';
+  $('seerviBulkEditDescription').value='';
+  $('seerviBulkEditStatus').textContent='';
+  $('seerviItemsBulkEditModal').hidden=false;
+  $('seerviItemsBulkEditModal').setAttribute('aria-hidden','false');
+};
+window.seerviItemsCloseBulkEdit=function(){
+  $('seerviItemsBulkEditModal').hidden=true;
+  $('seerviItemsBulkEditModal').setAttribute('aria-hidden','true');
+};
+window.seerviItemsPopulateBulkEditCategories=function(){
+  const category=$('seerviBulkEditCategory'); if(!category)return;
+  const cats=seerviItemCategoriesCache.filter(x=>x.type==='category').sort(seerviItemSortCategories);
+  category.innerHTML='<option value="">KEEP UNCHANGED</option>'+cats.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
+};
+window.seerviItemsBulkEditCategoryHandler=function(){
+  const sub=$('seerviBulkEditSubcategory'); if(!sub)return;
+  const categoryId=$('seerviBulkEditCategory').value;
+  const subs=categoryId?seerviItemCategoriesCache.filter(x=>x.type==='subcategory'&&x.parentId===categoryId).sort(seerviItemSortCategories):[];
+  sub.innerHTML='<option value="">KEEP UNCHANGED</option>'+subs.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
+};
+window.seerviItemsApplyBulkEdit=async function(){
+  try{
+    seerviItemsAdminGuard();
+    const ids=seerviItemsGetSelectedIds();
+    if(!ids.length)throw new Error('No items selected.');
+    const categoryId=$('seerviBulkEditCategory').value, subcategoryId=$('seerviBulkEditSubcategory').value;
+    const activeValue=$('seerviBulkEditActive').value, image=$('seerviBulkEditImage').value.trim(), description=$('seerviBulkEditDescription').value.trim();
+    if(!categoryId&&!subcategoryId&&!activeValue&&!image&&!description)throw new Error('Choose or enter at least one field to update.');
+    const selected=ids.map(id=>seerviItemsCache.find(x=>x.id===id)).filter(Boolean);
+    const save=$('seerviBulkEditSaveButton'), status=$('seerviBulkEditStatus');
+    if(save)save.disabled=true;
+    if(status)status.textContent=`Updating ${selected.length} item(s)…`;
+    for(const item of selected){
+      await seerviUpdateItem(item.id,{
+        categoryId:categoryId||item.categoryId||'',
+        subcategoryId:subcategoryId||item.subcategoryId||'',
+        name:item.name||'', model:item.model||'',
+        description:description||item.description||'',
+        imageWebpUrl:image||item.imageWebpUrl||'',
+        specifications:{...(item.specifications||{})},
+        active:activeValue===''?item.active!==false:activeValue==='true'
+      });
+    }
+    await seerviItemsLoadAll();
+    seerviItemsCloseBulkEdit();
+    if($('seerviItemsSelectAll'))$('seerviItemsSelectAll').checked=false;
+    seerviItemsSetStatus(`${selected.length} item${selected.length===1?'':'s'} updated successfully.`);
+  }catch(e){
+    const status=$('seerviBulkEditStatus'); if(status)status.textContent=e?.message||'Bulk edit failed.';
+    seerviItemsSetStatus(e?.message||'Bulk edit failed.',true);
+  }finally{
+    const save=$('seerviBulkEditSaveButton');if(save)save.disabled=false;
+  }
+};
+window.seerviItemsBulkDelete=async function(){
+  try{
+    seerviItemsAdminGuard();
+    const ids=seerviItemsGetSelectedIds();
+    if(!ids.length){seerviItemsSetStatus('Select at least one item first.',true);return;}
+    const selected=ids.map(id=>seerviItemsCache.find(x=>x.id===id)).filter(Boolean);
+    const names=selected.slice(0,8).map(x=>`• ${x.name||x.id}`).join('\n');
+    const more=selected.length>8?`\n• …and ${selected.length-8} more`:'';
+    if(!confirm(`Delete ${selected.length} selected item${selected.length===1?'':'s'}?\n\n${names}${more}\n\nThis permanently removes the selected Firestore item records.`))return;
+    seerviItemsSetStatus(`Deleting ${selected.length} item(s)…`);
+    for(const item of selected)await seerviDeleteItem(item.id);
+    await seerviItemsLoadAll();
+    if($('seerviItemsSelectAll'))$('seerviItemsSelectAll').checked=false;
+    seerviItemsSetStatus(`${selected.length} item${selected.length===1?'':'s'} deleted successfully.`);
+  }catch(e){seerviItemsSetStatus(e?.message||'Bulk delete failed.',true);}
+};
+
+document.addEventListener('change',function(e){
+  if(e.target?.id==='seerviBulkEditCategory')seerviItemsBulkEditCategoryHandler();
+});
+/* ===== END SEERVI BULK ITEM EDIT / DELETE ===== */
 </script>
 
 <style id="seervi-final-back-and-mobile-all-fix">
@@ -12486,6 +12614,24 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 .home-product-thumb{position:relative}
 .seervi-gallery-count{position:absolute;right:8px;bottom:8px;padding:5px 8px;border-radius:999px;background:#111a;color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em}
 @media(max-width:700px){.seervi-item-gallery-main{max-height:360px}.seervi-item-gallery-main img{max-height:360px}}
+/* Bulk item management */
+.seervi-items-bulk-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0;padding:10px 12px;border:1px solid #ffffff14;border-radius:10px;background:#ffffff05}
+.seervi-items-bulk-toolbar[hidden]{display:none!important}
+.seervi-bulk-select-all{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;letter-spacing:.04em}
+.seervi-bulk-selected-count{font-size:12px;color:#8f99a4;margin-right:auto}
+.seervi-item-select-wrap{display:flex;align-items:center;justify-content:center;width:28px;flex:0 0 28px}
+.seervi-item-select{width:17px;height:17px;accent-color:#d9b55a;cursor:pointer}
+.crm-secondary.danger{border-color:#8b3a3a;color:#ff9a9a}
+.seervi-bulk-modal{position:fixed;inset:0;z-index:99990;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.68)}
+.seervi-bulk-modal[hidden]{display:none!important}
+.seervi-bulk-modal-box{width:min(760px,100%);max-height:min(88vh,760px);overflow:auto;border:1px solid #ffffff18;border-radius:14px;background:#111820;box-shadow:0 20px 70px rgba(0,0,0,.45);padding:18px}
+.seervi-bulk-modal-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:16px}
+.seervi-bulk-edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.seervi-bulk-edit-grid label{display:flex;flex-direction:column;gap:6px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#9aa4ae}
+.seervi-bulk-edit-grid input,.seervi-bulk-edit-grid select,.seervi-bulk-edit-grid textarea{width:100%;box-sizing:border-box}
+.seervi-bulk-edit-full{grid-column:1/-1}
+.seervi-bulk-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+@media(max-width:700px){.seervi-bulk-edit-grid{grid-template-columns:1fr}.seervi-bulk-edit-full{grid-column:auto}.seervi-bulk-modal{align-items:flex-end;padding:0}.seervi-bulk-modal-box{width:100%;max-height:92vh;border-radius:14px 14px 0 0}}
 </style>
 
 
