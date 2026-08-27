@@ -5119,7 +5119,7 @@ document.addEventListener('keydown',function(e){
     if(typeof closeProfile==='function') closeProfile();
   }
 });
-</script><button class="float-support" type="button" onclick="openSupportModal()" aria-label="Open Seervi AI Assistance"><span class="support-icon" aria-hidden="true">✦</span><span class="float-support-label">AI Assistance</span></button><div class="mobile-bottom-bar" aria-label="Mobile quick navigation"><a href="#home" onclick="showMobileHome(event)"><b>⌂</b><span>HOME</span></a><a href="#profiles" onclick="showMobileProducts(event)"><b>▦</b><span>PRODUCTS</span></a><button type="button" onclick="openCart()"><b>🛒</b><span>CART</span></button><a href="https://wa.me/917073741650" target="_blank" rel="noopener"><svg class="wa-icon" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M19.11 17.26c-.28-.14-1.65-.81-1.9-.9-.26-.1-.45-.14-.64.14-.19.28-.73.9-.9 1.09-.16.19-.33.21-.61.07-.28-.14-1.17-.43-2.24-1.38-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.57.12-.12.28-.31.42-.47.14-.16.19-.28.28-.47.09-.19.05-.35-.02-.49-.07-.14-.64-1.54-.88-2.11-.23-.55-.47-.48-.64-.49h-.54c-.19 0-.49.07-.75.35-.26.28-.99.97-.99 2.36s1.02 2.74 1.16 2.93c.14.19 2 3.05 4.84 4.28.68.29 1.21.46 1.62.59.68.22 1.3.19 1.79.12.55-.08 1.65-.67 1.88-1.31.23-.64.23-1.19.16-1.31-.07-.12-.26-.19-.54-.33Z"/><path fill="currentColor" d="M16.01 4.02c-6.61 0-11.98 5.37-11.98 11.98 0 2.11.55 4.09 1.51 5.81L4 27.98l6.31-1.5a11.94 11.94 0 0 0 5.7 1.45h.01c6.61 0 11.98-5.37 11.98-11.98S22.63 4.02 16.01 4.02Zm0 21.75h-.01a9.75 9.75 0 0 1-4.98-1.37l-.36-.21-3.74.89.9-3.65-.23-.37a9.73 9.73 0 1 1 8.42 4.71Z"/></svg><span>WHATSAPP</span></a></div><script>
+</script><button class="float-support" type="button" onclick="openSupportModal()" aria-label="Open Seervi AI Assistance"><span class="support-icon" aria-hidden="true">✦</span><span class="float-support-label">AI Assistance</span></button><div class="mobile-bottom-bar" aria-label="Mobile quick navigation"><a href="#home" onclick="showMobileHome(event)"><b>⌂</b><span>HOME</span></a><a href="#profiles" onclick="showMobileProducts(event)"><b>▦</b><span>PRODUCTS</span></a><button type="button" onclick="openCart()"><b>🛒</b><span>CART</span></button><button type="button" onclick="openWhatsAppPanel()" aria-label="Open WhatsApp contact options"><svg class="wa-icon" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M19.11 17.26c-.28-.14-1.65-.81-1.9-.9-.26-.1-.45-.14-.64.14-.19.28-.73.9-.9 1.09-.16.19-.33.21-.61.07-.28-.14-1.17-.43-2.24-1.38-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.57.12-.12.28-.31.42-.47.14-.16.19-.28.28-.47.09-.19.05-.35-.02-.49-.07-.14-.64-1.54-.88-2.11-.23-.55-.47-.48-.64-.49h-.54c-.19 0-.49.07-.75.35-.26.28-.99.97-.99 2.36s1.02 2.74 1.16 2.93c.14.19 2 3.05 4.84 4.28.68.29 1.21.46 1.62.59.68.22 1.3.19 1.79.12.55-.08 1.65-.67 1.88-1.31.23-.64.23-1.19.16-1.31-.07-.12-.26-.19-.54-.33Z"/><path fill="currentColor" d="M16.01 4.02c-6.61 0-11.98 5.37-11.98 11.98 0 2.11.55 4.09 1.51 5.81L4 27.98l6.31-1.5a11.94 11.94 0 0 0 5.7 1.45h.01c6.61 0 11.98-5.37 11.98-11.98S22.63 4.02 16.01 4.02Zm0 21.75h-.01a9.75 9.75 0 0 1-4.98-1.37l-.36-.21-3.74.89.9-3.65-.23-.37a9.73 9.73 0 1 1 8.42 4.71Z"/></svg><span>WHATSAPP</span></button></div><script>
 /* ===== V42 UX ENHANCEMENTS ===== */
 (function(){
   const input = document.querySelector('.catalog-search input');
@@ -5222,7 +5222,74 @@ document.addEventListener('keydown',function(e){
     };
   }
 })();
-</script><script>
+</script>
+<style id="seervi-whatsapp-panel-style">
+/* WhatsApp contact panel: bottom navigation opens this first; external WhatsApp opens only from the CTA. */
+#seerviWhatsAppPanel{position:fixed;inset:0;z-index:20000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.62);backdrop-filter:blur(8px)}
+#seerviWhatsAppPanel.show{display:flex}
+.seervi-wa-card{width:min(520px,calc(100vw - 28px));max-height:min(720px,calc(100vh - 28px));overflow:auto;background:#0d1218;border:1px solid #ffffff18;border-radius:18px;box-shadow:0 28px 90px #000b;padding:22px}
+.seervi-wa-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+.seervi-wa-kicker{color:#d8b45a;font-size:10px;font-weight:900;letter-spacing:1.4px}
+.seervi-wa-title{margin:5px 0 0;font-size:25px;font-weight:900;color:#f2f4f6}
+.seervi-wa-sub{margin:7px 0 0;color:#8f99a4;font-size:13px;line-height:1.5}
+.seervi-wa-close,.seervi-wa-back{border:1px solid #ffffff18;background:#151b22;color:#d9dde2;border-radius:10px;cursor:pointer;font-weight:900}
+.seervi-wa-close{width:42px;height:42px;font-size:22px}
+.seervi-wa-options{display:grid;gap:10px}
+.seervi-wa-option{width:100%;text-align:left;border:1px solid #ffffff14;background:#11171e;color:#f2f4f6;border-radius:13px;padding:15px;cursor:pointer}
+.seervi-wa-option.active{border-color:#d8b45a;background:#171b20}
+.seervi-wa-option strong{display:block;font-size:14px}
+.seervi-wa-option span{display:block;margin-top:4px;color:#8f99a4;font-size:11px;line-height:1.45}
+.seervi-wa-actions{display:flex;gap:10px;margin-top:18px}
+.seervi-wa-open{flex:1;border:0;border-radius:11px;background:#25d366;color:#061108;padding:14px;font-weight:900;cursor:pointer}
+.seervi-wa-back{padding:0 18px}
+.seervi-wa-note{margin-top:13px;color:#707985;font-size:10px;line-height:1.45}
+@media(max-width:600px){#seerviWhatsAppPanel{padding:12px;align-items:flex-end}.seervi-wa-card{width:100%;border-radius:18px 18px 12px 12px;padding:18px;max-height:calc(100vh - 24px)}.seervi-wa-title{font-size:22px}.seervi-wa-actions{position:sticky;bottom:0;padding-top:10px;background:linear-gradient(transparent,#0d1218 28%)}}
+</style>
+<div id="seerviWhatsAppPanel" aria-hidden="true">
+  <div class="seervi-wa-card" role="dialog" aria-modal="true" aria-labelledby="seerviWhatsAppTitle">
+    <div class="seervi-wa-head">
+      <div><div class="seervi-wa-kicker">SEERVI TRADING / CONTACT</div><h3 id="seerviWhatsAppTitle" class="seervi-wa-title">WhatsApp</h3><p class="seervi-wa-sub">Choose what you want to discuss. WhatsApp will open only after you press the button below.</p></div>
+      <button type="button" class="seervi-wa-close" onclick="closeWhatsAppPanel()" aria-label="Close WhatsApp panel">×</button>
+    </div>
+    <div class="seervi-wa-options">
+      <button type="button" class="seervi-wa-option active" data-wa-type="general" onclick="selectWhatsAppOption('general')"><strong>General Enquiry</strong><span>Talk to Seervi Trading about a general requirement.</span></button>
+      <button type="button" class="seervi-wa-option" data-wa-type="product" onclick="selectWhatsAppOption('product')"><strong>Product Enquiry</strong><span>Ask about a product, model, specification or availability.</span></button>
+      <button type="button" class="seervi-wa-option" data-wa-type="quote" onclick="selectWhatsAppOption('quote')"><strong>Request a Quote</strong><span>Send your requirement and quotation request to Seervi Trading.</span></button>
+    </div>
+    <div class="seervi-wa-actions"><button type="button" class="seervi-wa-back" onclick="closeWhatsAppPanel()">← BACK</button><button type="button" class="seervi-wa-open" onclick="openSelectedWhatsApp()">OPEN WHATSAPP</button></div>
+    <div class="seervi-wa-note">Your browser will open WhatsApp only when you choose OPEN WHATSAPP.</div>
+  </div>
+</div>
+<script id="seervi-whatsapp-panel-script">
+(function(){
+  let selected='general';
+  window.openWhatsAppPanel=function(){
+    const m=document.getElementById('seerviWhatsAppPanel'); if(!m)return;
+    selected='general';
+    m.classList.add('show'); m.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-open');
+    selectWhatsAppOption('general');
+  };
+  window.closeWhatsAppPanel=function(){
+    const m=document.getElementById('seerviWhatsAppPanel'); if(!m)return;
+    m.classList.remove('show'); m.setAttribute('aria-hidden','true');
+    document.body.classList.remove('modal-open');
+  };
+  window.selectWhatsAppOption=function(type){
+    selected=type||'general';
+    document.querySelectorAll('#seerviWhatsAppPanel .seervi-wa-option').forEach(function(btn){btn.classList.toggle('active',btn.dataset.waType===selected);});
+  };
+  window.openSelectedWhatsApp=function(){
+    let message='Hello Seervi Trading, I would like to make a general enquiry.';
+    if(selected==='product') message='Hello Seervi Trading, I would like to enquire about a product/model. Please share the details and availability.';
+    if(selected==='quote') message='Hello Seervi Trading, I would like to request a quotation. I will share my required items and quantities.';
+    const url='https://wa.me/917073741650?text='+encodeURIComponent(message);
+    window.open(url,'_blank','noopener');
+  };
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeWhatsAppPanel();});
+})();
+</script>
+<script>
 /* ===== V140 AI ASSISTANCE ===== */
 function openSupportModal(){
   const m=document.getElementById('supportModal');
