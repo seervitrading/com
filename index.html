@@ -2555,6 +2555,10 @@ body:not(.admin-quote-mode) .cart-note{
 #adminNewPartyModal .crm-panel{display:block!important;visibility:visible!important;opacity:1!important}
 #adminNewPartyModal .crm-panel .crm-party-card{display:block!important}
 #adminNewPartyModal .crm-party-card[hidden]{display:block!important}
+
+/* Universal admin workspace navigation */
+.admin-universal-back{white-space:nowrap;min-width:86px;justify-content:center}
+@media(max-width:700px){.admin-universal-back{min-width:78px;padding:9px 12px!important;font-size:10px!important}.admin-items-head-actions{gap:7px}.crm-head .admin-universal-back{margin-left:8px}}
 </style>
 
 
@@ -4083,7 +4087,7 @@ body.nav-is-scrolled{padding-top:76px;}
         <h3 id="notificationPostTitle">Notification Post</h3>
         <div class="crm-auth-status">This notice will appear in everyone's notification bell for 7 days.</div>
       </div>
-      <button class="crm-close" type="button" onclick="closeNotificationPost()">×</button>
+      <button class="crm-secondary admin-universal-back" type="button" onclick="seerviAdminBackToPrevious()">← BACK</button>
     </div>
     <form class="notification-admin-box" onsubmit="submitNotificationPost(event)">
       <div class="crm-section-title">CREATE NOTICE</div>
@@ -4188,7 +4192,7 @@ body.nav-is-scrolled{padding-top:76px;}
 #customerDashboardView .customer-profile-card[hidden],
 #customerDashboardView .customer-portal-tabs[hidden],
 #customerDashboardView .customer-profile-edit[hidden]{display:none !important}
-</style><div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Admin Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-close" type="button" onclick="closeCRM()">×</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div>
+</style><div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Admin Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-secondary admin-universal-back" type="button" onclick="seerviAdminBackToPrevious()">← BACK</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div>
 <div id="adminGlobalArea" class="admin-global-area">
 <div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, all quotations and complete party ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span>QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div>
 </div><div id="inventoryStockPanel" class="inventory-stock-panel" hidden>
@@ -4229,7 +4233,7 @@ body.nav-is-scrolled{padding-top:76px;}
       <p class="admin-items-subtitle">Firebase-based Category → Subcategory → Item catalogue. No hard-coded product taxonomy.</p>
     </div>
     <div class="admin-items-head-actions">
-      <button class="crm-secondary" type="button" onclick="seerviItemsBackToDashboard()">← DASHBOARD</button>
+      <button class="crm-secondary admin-universal-back" type="button" onclick="seerviAdminBackToPrevious()">← BACK</button>
       <button class="crm-secondary" type="button" onclick="seerviItemsRefresh()">↻ REFRESH</button>
     </div>
   </div>
@@ -6317,7 +6321,24 @@ window.openAccountDashboard=function(role){
 window.closeAccountDashboard=function(){
   const m=$('accountDashboardModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');
 };
+let seerviAdminReturnTarget='home';
+
+window.seerviAdminBackToPrevious=function(){
+  try{if(typeof closeAdminNewParty==='function')closeAdminNewParty();}catch(e){console.warn('Back: New Party close failed',e);}
+  try{if(typeof closeAdminStock==='function')closeAdminStock();}catch(e){console.warn('Back: Stock close failed',e);}
+  try{if(typeof seerviCloseItemsPanel==='function')seerviCloseItemsPanel();}catch(e){console.warn('Back: Items close failed',e);}
+  try{if(typeof closeNotificationPost==='function')closeNotificationPost();}catch(e){console.warn('Back: Notification close failed',e);}
+  try{if(typeof closeCRM==='function')closeCRM();}catch(e){console.warn('Back: Admin close failed',e);}
+  if(seerviAdminReturnTarget==='dashboard' && crmUser && isAuthorisedAdmin(crmUser)){
+    openAccountDashboard('admin');
+  }else{
+    closeAccountDashboard();
+    if(typeof goHomeAfterAuth==='function')goHomeAfterAuth();
+  }
+};
+
 window.accountDashboardAdminPanel=function(){
+  seerviAdminReturnTarget='dashboard';
   seerviCloseItemsPanel();
   closeAccountDashboard();
   openAdminPanel();
@@ -6328,6 +6349,7 @@ window.accountDashboardAdminPanel=function(){
   $('crmWorkspace')?.removeAttribute('data-active-workspace');
 };
 window.accountDashboardStock=function(){
+  seerviAdminReturnTarget='dashboard';
   if(!crmUser || !isAuthorisedAdmin(crmUser)){
     openAdminPanel();
     return;
@@ -6344,6 +6366,7 @@ window.accountDashboardStock=function(){
   });
 };
 window.accountDashboardNewParty=function(){
+  seerviAdminReturnTarget='dashboard';
   if(!crmUser || !isAuthorisedAdmin(crmUser)){
     openAdminPanel();
     return;
@@ -6365,6 +6388,7 @@ window.accountDashboardBackup=function(){
 };
 ;
 window.accountDashboardNotificationPost=function(){
+  seerviAdminReturnTarget='dashboard';
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
   openNotificationPost();
 };
@@ -6411,7 +6435,7 @@ function ensureAdminUtilityModals(){
       partyModal.id='adminNewPartyModal';
       partyModal.className='crm-modal admin-utility-modal';
       partyModal.setAttribute('aria-hidden','true');
-      partyModal.innerHTML='<div class="crm-backdrop" onclick="closeAdminNewParty()"></div><div class="crm-panel admin-utility-panel" role="dialog" aria-modal="true" aria-labelledby="adminNewPartyTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / PARTY</div><h3 id="adminNewPartyTitle">New Party</h3><div class="crm-auth-status">Create a new customer / party without opening the main Admin Panel.</div></div><button class="crm-close" type="button" onclick="closeAdminNewParty()">×</button></div></div>';
+      partyModal.innerHTML='<div class="crm-backdrop" onclick="closeAdminNewParty()"></div><div class="crm-panel admin-utility-panel" role="dialog" aria-modal="true" aria-labelledby="adminNewPartyTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / PARTY</div><h3 id="adminNewPartyTitle">New Party</h3><div class="crm-auth-status">Create a new customer / party without opening the main Admin Panel.</div></div><button class="crm-secondary admin-universal-back" type="button" onclick="seerviAdminBackToPrevious()">← BACK</button></div></div>';
       document.body.appendChild(partyModal);
     }
     if(partyModal && party){
@@ -6427,7 +6451,7 @@ function ensureAdminUtilityModals(){
       stockModal.id='adminStockModal';
       stockModal.className='crm-modal admin-utility-modal';
       stockModal.setAttribute('aria-hidden','true');
-      stockModal.innerHTML='<div class="crm-backdrop" onclick="closeAdminStock()"></div><div class="crm-panel admin-utility-panel" role="dialog" aria-modal="true" aria-labelledby="adminStockTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / STOCK</div><h3 id="adminStockTitle">Stock</h3><div class="crm-auth-status">Control catalogue availability without opening the main Admin Panel.</div></div><button class="crm-close" type="button" onclick="closeAdminStock()">×</button></div></div>';
+      stockModal.innerHTML='<div class="crm-backdrop" onclick="closeAdminStock()"></div><div class="crm-panel admin-utility-panel" role="dialog" aria-modal="true" aria-labelledby="adminStockTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / STOCK</div><h3 id="adminStockTitle">Stock</h3><div class="crm-auth-status">Control catalogue availability without opening the main Admin Panel.</div></div><button class="crm-secondary admin-universal-back" type="button" onclick="seerviAdminBackToPrevious()">← BACK</button></div></div>';
       document.body.appendChild(stockModal);
     }
     if(stockModal && stock){
@@ -6481,6 +6505,8 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
 else ensureAdminUtilityModals();
 
 window.openAdminPanel = function(){
+  const dashboardIsOpen=!!document.getElementById('accountDashboardModal')?.classList.contains('show');
+  if(!dashboardIsOpen) seerviAdminReturnTarget='home';
   $('crmModal')?.setAttribute('aria-hidden','false');
   $('crmModal')?.classList.add('show');
 
@@ -8899,7 +8925,7 @@ function seerviItemsTab(tab){
 }
 
 function seerviItemsBackToDashboard(){
-  seerviCloseItemsPanel();
+  seerviAdminBackToPrevious();
 }
 
 window.accountDashboardItems=function(){
