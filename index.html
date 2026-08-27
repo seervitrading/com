@@ -4564,6 +4564,11 @@ let seerviCart = JSON.parse(localStorage.getItem('seerviCart') || '[]');
 function saveCart(){
   localStorage.setItem('seerviCart', JSON.stringify(seerviCart));
   renderCart();
+  // Public catalogue cards must immediately reflect cart quantity without
+  // navigating away from the current product/category view.
+  if(typeof window.seerviPublicSyncCartControls==='function'){
+    setTimeout(()=>window.seerviPublicSyncCartControls(),0);
+  }
 }
 
 function cartKey(item){
@@ -4580,8 +4585,11 @@ function addToCart(item){
   if(found) found.qty += 1;
   else seerviCart.push({...item, qty:1, rate:Number(item.rate||0)});
   saveCart();
-  // Keep the page where the customer is browsing.
-  // The cart drawer opens only when the CART button is clicked.
+  // Keep the page where the customer is browsing. The cart drawer opens
+  // only when the CART button is clicked. Sync the visible item card now.
+  if(typeof window.seerviPublicSyncCartControls==='function'){
+    setTimeout(()=>window.seerviPublicSyncCartControls(),0);
+  }
 }
 
 
@@ -12078,6 +12086,9 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
     syncControls();
   }
 
+  // Expose only the synchronisation hook. Cart data and rendering remain private.
+  window.seerviPublicSyncCartControls=syncRenderedCards;
+
   function install(){
     if(typeof window.seerviPublicRenderItems!=='function')return;
     const original=window.seerviPublicRenderItems;
@@ -12094,6 +12105,18 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
   else install();
+})();
+</script>
+<script id="seervi-public-item-qty-bootstrap">
+(function(){
+  function boot(){
+    if(typeof window.seerviPublicSyncCartControls==='function'){
+      window.seerviPublicSyncCartControls();
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0),{once:true});
+  else setTimeout(boot,0);
+  window.addEventListener('storage',boot);
 })();
 </script>
 </body>
