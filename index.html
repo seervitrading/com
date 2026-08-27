@@ -8908,6 +8908,24 @@ window.addEventListener('beforeunload',()=>{
 let seerviItemsCache=[];
 let seerviItemCategoriesCache=[];
 let seerviItemsEditingId='';
+/* Bridge the module-scoped item panel state/helpers to the existing
+   non-module bulk-action controller. This keeps one source of truth. */
+Object.defineProperty(window,'seerviItemsCache',{
+  configurable:true,
+  get:()=>seerviItemsCache,
+  set:v=>{seerviItemsCache=v;}
+});
+Object.defineProperty(window,'seerviItemCategoriesCache',{
+  configurable:true,
+  get:()=>seerviItemCategoriesCache,
+  set:v=>{seerviItemCategoriesCache=v;}
+});
+window.seerviItemsEsc=(value)=>seerviItemsEsc(value);
+window.seerviItemsAdminGuard=()=>seerviItemsAdminGuard();
+window.seerviItemSortCategories=(a,b)=>seerviItemSortCategories(a,b);
+window.seerviItemsSetStatus=(message,error=false)=>seerviItemsSetStatus(message,error);
+window.seerviItemsLoadAll=(...args)=>seerviItemsLoadAll(...args);
+
 
 function seerviItemsEsc(value){
   return typeof esc==='function' ? esc(value) : String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -12521,10 +12539,10 @@ window.seerviItemsToggleSelectAll=function(checked){
 window.seerviItemsPopulateBulkEditCategories=function(){
   const category=document.getElementById('seerviBulkEditCategory');
   if(!category)return;
-  const cats=(Array.isArray(seerviItemCategoriesCache)?seerviItemCategoriesCache:[])
-    .filter(x=>x.type==='category').sort(seerviItemSortCategories);
+  const cats=(Array.isArray(window.seerviItemCategoriesCache)?window.seerviItemCategoriesCache:[])
+    .filter(x=>x.type==='category').sort(window.seerviItemSortCategories);
   category.innerHTML='<option value="">KEEP UNCHANGED</option>'+
-    cats.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
+    cats.map(x=>`<option value="${window.seerviItemsEsc(x.id)}">${window.seerviItemsEsc(x.name)}</option>`).join('');
 };
 
 window.seerviItemsBulkEditCategoryHandler=function(){
@@ -12533,18 +12551,18 @@ window.seerviItemsBulkEditCategoryHandler=function(){
   if(!category||!sub)return;
   const categoryId=category.value;
   const subs=categoryId
-    ? (Array.isArray(seerviItemCategoriesCache)?seerviItemCategoriesCache:[])
-      .filter(x=>x.type==='subcategory'&&x.parentId===categoryId).sort(seerviItemSortCategories)
+    ? (Array.isArray(window.seerviItemCategoriesCache)?window.seerviItemCategoriesCache:[])
+      .filter(x=>x.type==='subcategory'&&x.parentId===categoryId).sort(window.seerviItemSortCategories)
     : [];
   sub.innerHTML='<option value="">KEEP UNCHANGED</option>'+
-    subs.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
+    subs.map(x=>`<option value="${window.seerviItemsEsc(x.id)}">${window.seerviItemsEsc(x.name)}</option>`).join('');
 };
 
 window.seerviItemsOpenBulkEdit=function(){
   try{
-    seerviItemsAdminGuard();
+    window.seerviItemsAdminGuard();
     const ids=window.seerviItemsGetSelectedIds();
-    if(!ids.length){seerviItemsSetStatus('Select at least one item first.',true);return false;}
+    if(!ids.length){window.seerviItemsSetStatus('Select at least one item first.',true);return false;}
     window.seerviItemsPopulateBulkEditCategories();
     const count=document.getElementById('seerviBulkEditCount');
     const modal=document.getElementById('seerviItemsBulkEditModal');
@@ -12568,7 +12586,7 @@ window.seerviItemsOpenBulkEdit=function(){
     return false;
   }catch(e){
     console.error('SEERVI BULK EDIT OPEN FAILED',e);
-    seerviItemsSetStatus(e?.message||'Unable to open Bulk Edit.',true);
+    window.seerviItemsSetStatus(e?.message||'Unable to open Bulk Edit.',true);
     return false;
   }
 };
@@ -12586,7 +12604,7 @@ window.seerviItemsApplyBulkEdit=async function(){
   const status=document.getElementById('seerviBulkEditStatus');
   const save=document.getElementById('seerviBulkEditSaveButton');
   try{
-    seerviItemsAdminGuard();
+    window.seerviItemsAdminGuard();
     const ids=window.seerviItemsGetSelectedIds();
     if(!ids.length)throw new Error('No items selected.');
 
@@ -12599,7 +12617,7 @@ window.seerviItemsApplyBulkEdit=async function(){
     if(!categoryId&&!subcategoryId&&!activeValue&&!image&&!description)
       throw new Error('Choose or enter at least one field to update.');
 
-    const selected=ids.map(id=>(Array.isArray(seerviItemsCache)?seerviItemsCache:[]).find(x=>x.id===id)).filter(Boolean);
+    const selected=ids.map(id=>(Array.isArray(window.seerviItemsCache)?window.seerviItemsCache:[]).find(x=>x.id===id)).filter(Boolean);
     if(selected.length!==ids.length)throw new Error('One or more selected items are no longer loaded. Refresh the item list and try again.');
 
     if(save)save.disabled=true;
@@ -12618,14 +12636,14 @@ window.seerviItemsApplyBulkEdit=async function(){
       });
     }
 
-    await seerviItemsLoadAll();
+    await window.seerviItemsLoadAll();
     window.seerviItemsCloseBulkEdit();
     if(document.getElementById('seerviItemsSelectAll'))document.getElementById('seerviItemsSelectAll').checked=false;
-    seerviItemsSetStatus(`${selected.length} item${selected.length===1?'':'s'} updated successfully.`);
+    window.seerviItemsSetStatus(`${selected.length} item${selected.length===1?'':'s'} updated successfully.`);
   }catch(e){
     console.error('SEERVI BULK EDIT FAILED',e);
     if(status)status.textContent=e?.message||'Bulk edit failed.';
-    seerviItemsSetStatus(e?.message||'Bulk edit failed.',true);
+    window.seerviItemsSetStatus(e?.message||'Bulk edit failed.',true);
   }finally{
     if(save)save.disabled=false;
   }
@@ -12633,11 +12651,11 @@ window.seerviItemsApplyBulkEdit=async function(){
 
 window.seerviItemsBulkDelete=async function(){
   try{
-    seerviItemsAdminGuard();
+    window.seerviItemsAdminGuard();
     const ids=window.seerviItemsGetSelectedIds();
-    if(!ids.length){seerviItemsSetStatus('Select at least one item first.',true);return false;}
+    if(!ids.length){window.seerviItemsSetStatus('Select at least one item first.',true);return false;}
 
-    const selected=ids.map(id=>(Array.isArray(seerviItemsCache)?seerviItemsCache:[]).find(x=>x.id===id)).filter(Boolean);
+    const selected=ids.map(id=>(Array.isArray(window.seerviItemsCache)?window.seerviItemsCache:[]).find(x=>x.id===id)).filter(Boolean);
     if(selected.length!==ids.length)throw new Error('One or more selected items are no longer loaded. Refresh the item list and try again.');
 
     const names=selected.slice(0,8).map(x=>`• ${x.name||x.id}`).join('\n');
@@ -12645,15 +12663,15 @@ window.seerviItemsBulkDelete=async function(){
     const ok=window.confirm(`Delete ${selected.length} selected item${selected.length===1?'':'s'}?\n\n${names}${more}\n\nThis permanently removes the selected Firestore item records.`);
     if(!ok)return false;
 
-    seerviItemsSetStatus(`Deleting ${selected.length} item(s)…`);
+    window.seerviItemsSetStatus(`Deleting ${selected.length} item(s)…`);
     for(const item of selected)await window.seerviDeleteItem(item.id);
-    await seerviItemsLoadAll();
+    await window.seerviItemsLoadAll();
     if(document.getElementById('seerviItemsSelectAll'))document.getElementById('seerviItemsSelectAll').checked=false;
-    seerviItemsSetStatus(`${selected.length} item${selected.length===1?'':'s'} deleted successfully.`);
+    window.seerviItemsSetStatus(`${selected.length} item${selected.length===1?'':'s'} deleted successfully.`);
     return false;
   }catch(e){
     console.error('SEERVI BULK DELETE FAILED',e);
-    seerviItemsSetStatus(e?.message||'Bulk delete failed.',true);
+    window.seerviItemsSetStatus(e?.message||'Bulk delete failed.',true);
     return false;
   }
 };
