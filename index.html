@@ -4322,10 +4322,17 @@ body.nav-is-scrolled{padding-top:76px;}
     </div>
     <div id="seerviItemsStatus" class="crm-auth-status">Loading items…</div>
     <div id="seerviItemsBulkToolbar" class="seervi-items-bulk-toolbar" hidden>
-  <label class="seervi-bulk-select-all"><input id="seerviItemsSelectAll" type="checkbox" onchange="seerviItemsToggleSelectAll(this.checked)"><span>SELECT ALL</span></label>
-  <span id="seerviItemsSelectedCount" class="seervi-bulk-selected-count">0 selected</span>
-  <button class="crm-secondary small" type="button" onclick="seerviItemsOpenBulkEdit()">BULK EDIT</button>
-  <button class="crm-secondary small danger" type="button" onclick="seerviItemsBulkDelete()">BULK DELETE</button>
+  <div class="seervi-bulk-toolbar-left">
+    <label class="seervi-bulk-select-all">
+      <input id="seerviItemsSelectAll" type="checkbox" onchange="seerviItemsToggleSelectAll(this.checked)">
+      <span>SELECT ALL</span>
+    </label>
+    <span id="seerviItemsSelectedCount" class="seervi-bulk-selected-count">0 selected</span>
+  </div>
+  <div class="seervi-bulk-toolbar-actions">
+    <button class="crm-secondary small" type="button" onclick="seerviItemsOpenBulkEdit()">BULK EDIT</button>
+    <button class="crm-secondary small danger" type="button" onclick="seerviItemsBulkDelete()">BULK DELETE</button>
+  </div>
 </div>
 <div id="seerviItemsList" class="admin-items-list"></div>
   </section>
@@ -12588,6 +12595,32 @@ document.addEventListener('change',function(e){
   if(e.target?.id==='seerviBulkEditCategory')seerviItemsBulkEditCategoryHandler();
 });
 /* ===== END SEERVI BULK ITEM EDIT / DELETE ===== */
+
+/* Final bulk toolbar visibility sync */
+(function(){
+  const sync=function(){
+    const toolbar=document.getElementById('seerviItemsBulkToolbar');
+    if(!toolbar)return;
+    const boxes=[...document.querySelectorAll('#seerviItemsList .seervi-item-select')];
+    const selected=boxes.filter(x=>x.checked).length;
+    toolbar.hidden=selected===0;
+    const count=document.getElementById('seerviItemsSelectedCount');
+    if(count)count.textContent=`${selected} selected`;
+    const all=document.getElementById('seerviItemsSelectAll');
+    if(all){
+      all.checked=boxes.length>0&&selected===boxes.length;
+      all.indeterminate=selected>0&&selected<boxes.length;
+    }
+  };
+  window.seerviItemsSelectionChanged=sync;
+  window.seerviItemsToggleSelectAll=function(checked){
+    document.querySelectorAll('#seerviItemsList .seervi-item-select').forEach(x=>x.checked=!!checked);
+    sync();
+  };
+  document.addEventListener('change',function(e){
+    if(e.target&&e.target.classList&&e.target.classList.contains('seervi-item-select'))sync();
+  });
+})();
 </script>
 
 <style id="seervi-final-back-and-mobile-all-fix">
@@ -12632,6 +12665,11 @@ document.addEventListener('change',function(e){
 .seervi-bulk-edit-full{grid-column:1/-1}
 .seervi-bulk-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
 @media(max-width:700px){.seervi-bulk-edit-grid{grid-template-columns:1fr}.seervi-bulk-edit-full{grid-column:auto}.seervi-bulk-modal{align-items:flex-end;padding:0}.seervi-bulk-modal-box{width:100%;max-height:92vh;border-radius:14px 14px 0 0}}
+/* Bulk action toolbar visibility */
+#seerviItemsBulkToolbar{display:flex!important;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%;box-sizing:border-box;margin:12px 0;padding:12px 14px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:#151d25;position:relative;z-index:20}
+#seerviItemsBulkToolbar[hidden]{display:none!important}
+.seervi-bulk-toolbar-left,.seervi-bulk-toolbar-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.seervi-bulk-toolbar-actions button{min-height:36px}
 </style>
 
 
