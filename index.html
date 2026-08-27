@@ -624,6 +624,17 @@ a:active,
 @media(max-width:760px){
   #seerviItemsModal .seervi-items-modal-card{inset:0;border-radius:0;}
 }
+/* V100 — Separate Items workspace: hide the public site top navigation while Items is open.
+   The Items workspace already has its own BACK control, so the Home/Dashboard
+   navigation row (including date and notification bell) must not remain visible.
+   The body class is added/removed by seerviOpenItemsPanel/seerviCloseItemsPanel. */
+body.seervi-items-open > nav{
+  display:none !important;
+}
+body.seervi-items-open{
+  padding-top:0 !important;
+}
+
 /* ===== END SEERVI SEPARATE ITEMS WORKSPACE ===== */
 
 </style><style id="seervi-shark-final-fix">
