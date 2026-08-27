@@ -12495,106 +12495,205 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 
 /* ===== SEERVI BULK ITEM EDIT / DELETE ===== */
 window.seerviItemsGetSelectedIds=function(){
-  return [...document.querySelectorAll('#seerviItemsList .seervi-item-select:checked')].map(x=>x.value).filter(Boolean);
+  return Array.from(document.querySelectorAll('#seerviItemsList input.seervi-item-select:checked'))
+    .map(el=>String(el.value||'').trim()).filter(Boolean);
 };
+
 window.seerviItemsSelectionChanged=function(){
-  const ids=seerviItemsGetSelectedIds(), toolbar=$('seerviItemsBulkToolbar'), count=$('seerviItemsSelectedCount'), all=$('seerviItemsSelectAll');
-  if(toolbar)toolbar.hidden=ids.length===0;
-  if(count)count.textContent=`${ids.length} selected`;
+  const boxes=Array.from(document.querySelectorAll('#seerviItemsList input.seervi-item-select'));
+  const ids=boxes.filter(el=>el.checked).map(el=>el.value);
+  const toolbar=document.getElementById('seerviItemsBulkToolbar');
+  const count=document.getElementById('seerviItemsSelectedCount');
+  const all=document.getElementById('seerviItemsSelectAll');
+  if(toolbar) toolbar.hidden=ids.length===0;
+  if(count) count.textContent=`${ids.length} selected`;
   if(all){
-    const boxes=[...document.querySelectorAll('#seerviItemsList .seervi-item-select')];
-    all.checked=boxes.length>0&&boxes.every(x=>x.checked);
-    all.indeterminate=boxes.some(x=>x.checked)&&!all.checked;
+    all.checked=boxes.length>0 && ids.length===boxes.length;
+    all.indeterminate=ids.length>0 && ids.length<boxes.length;
   }
 };
+
 window.seerviItemsToggleSelectAll=function(checked){
-  document.querySelectorAll('#seerviItemsList .seervi-item-select').forEach(x=>x.checked=!!checked);
-  seerviItemsSelectionChanged();
+  document.querySelectorAll('#seerviItemsList input.seervi-item-select').forEach(el=>{el.checked=!!checked;});
+  window.seerviItemsSelectionChanged();
 };
-window.seerviItemsOpenBulkEdit=function(){
-  const ids=seerviItemsGetSelectedIds();
-  if(!ids.length){seerviItemsSetStatus('Select at least one item first.',true);return;}
-  seerviItemsPopulateBulkEditCategories();
-  $('seerviBulkEditCount').textContent=`${ids.length} selected`;
-  $('seerviBulkEditCategory').value='';
-  $('seerviBulkEditSubcategory').innerHTML='<option value="">KEEP UNCHANGED</option>';
-  $('seerviBulkEditActive').value='';
-  $('seerviBulkEditImage').value='';
-  $('seerviBulkEditDescription').value='';
-  $('seerviBulkEditStatus').textContent='';
-  $('seerviItemsBulkEditModal').hidden=false;
-  $('seerviItemsBulkEditModal').setAttribute('aria-hidden','false');
-};
-window.seerviItemsCloseBulkEdit=function(){
-  $('seerviItemsBulkEditModal').hidden=true;
-  $('seerviItemsBulkEditModal').setAttribute('aria-hidden','true');
-};
+
 window.seerviItemsPopulateBulkEditCategories=function(){
-  const category=$('seerviBulkEditCategory'); if(!category)return;
-  const cats=seerviItemCategoriesCache.filter(x=>x.type==='category').sort(seerviItemSortCategories);
-  category.innerHTML='<option value="">KEEP UNCHANGED</option>'+cats.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
+  const category=document.getElementById('seerviBulkEditCategory');
+  if(!category)return;
+  const cats=(Array.isArray(seerviItemCategoriesCache)?seerviItemCategoriesCache:[])
+    .filter(x=>x.type==='category').sort(seerviItemSortCategories);
+  category.innerHTML='<option value="">KEEP UNCHANGED</option>'+
+    cats.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
 };
+
 window.seerviItemsBulkEditCategoryHandler=function(){
-  const sub=$('seerviBulkEditSubcategory'); if(!sub)return;
-  const categoryId=$('seerviBulkEditCategory').value;
-  const subs=categoryId?seerviItemCategoriesCache.filter(x=>x.type==='subcategory'&&x.parentId===categoryId).sort(seerviItemSortCategories):[];
-  sub.innerHTML='<option value="">KEEP UNCHANGED</option>'+subs.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
+  const category=document.getElementById('seerviBulkEditCategory');
+  const sub=document.getElementById('seerviBulkEditSubcategory');
+  if(!category||!sub)return;
+  const categoryId=category.value;
+  const subs=categoryId
+    ? (Array.isArray(seerviItemCategoriesCache)?seerviItemCategoriesCache:[])
+      .filter(x=>x.type==='subcategory'&&x.parentId===categoryId).sort(seerviItemSortCategories)
+    : [];
+  sub.innerHTML='<option value="">KEEP UNCHANGED</option>'+
+    subs.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
 };
-window.seerviItemsApplyBulkEdit=async function(){
+
+window.seerviItemsOpenBulkEdit=function(){
   try{
     seerviItemsAdminGuard();
-    const ids=seerviItemsGetSelectedIds();
+    const ids=window.seerviItemsGetSelectedIds();
+    if(!ids.length){seerviItemsSetStatus('Select at least one item first.',true);return false;}
+    window.seerviItemsPopulateBulkEditCategories();
+    const count=document.getElementById('seerviBulkEditCount');
+    const modal=document.getElementById('seerviItemsBulkEditModal');
+    if(!modal)throw new Error('Bulk Edit window is unavailable.');
+    if(count)count.textContent=`${ids.length} selected`;
+    const cat=document.getElementById('seerviBulkEditCategory');
+    const sub=document.getElementById('seerviBulkEditSubcategory');
+    const active=document.getElementById('seerviBulkEditActive');
+    const image=document.getElementById('seerviBulkEditImage');
+    const desc=document.getElementById('seerviBulkEditDescription');
+    const status=document.getElementById('seerviBulkEditStatus');
+    if(cat)cat.value='';
+    if(sub)sub.innerHTML='<option value="">KEEP UNCHANGED</option>';
+    if(active)active.value='';
+    if(image)image.value='';
+    if(desc)desc.value='';
+    if(status)status.textContent='';
+    modal.hidden=false;
+    modal.setAttribute('aria-hidden','false');
+    document.body.classList.add('seervi-bulk-edit-open');
+    return false;
+  }catch(e){
+    console.error('SEERVI BULK EDIT OPEN FAILED',e);
+    seerviItemsSetStatus(e?.message||'Unable to open Bulk Edit.',true);
+    return false;
+  }
+};
+
+window.seerviItemsCloseBulkEdit=function(){
+  const modal=document.getElementById('seerviItemsBulkEditModal');
+  if(modal){
+    modal.hidden=true;
+    modal.setAttribute('aria-hidden','true');
+  }
+  document.body.classList.remove('seervi-bulk-edit-open');
+};
+
+window.seerviItemsApplyBulkEdit=async function(){
+  const status=document.getElementById('seerviBulkEditStatus');
+  const save=document.getElementById('seerviBulkEditSaveButton');
+  try{
+    seerviItemsAdminGuard();
+    const ids=window.seerviItemsGetSelectedIds();
     if(!ids.length)throw new Error('No items selected.');
-    const categoryId=$('seerviBulkEditCategory').value, subcategoryId=$('seerviBulkEditSubcategory').value;
-    const activeValue=$('seerviBulkEditActive').value, image=$('seerviBulkEditImage').value.trim(), description=$('seerviBulkEditDescription').value.trim();
-    if(!categoryId&&!subcategoryId&&!activeValue&&!image&&!description)throw new Error('Choose or enter at least one field to update.');
-    const selected=ids.map(id=>seerviItemsCache.find(x=>x.id===id)).filter(Boolean);
-    const save=$('seerviBulkEditSaveButton'), status=$('seerviBulkEditStatus');
+
+    const categoryId=(document.getElementById('seerviBulkEditCategory')?.value||'').trim();
+    const subcategoryId=(document.getElementById('seerviBulkEditSubcategory')?.value||'').trim();
+    const activeValue=document.getElementById('seerviBulkEditActive')?.value||'';
+    const image=(document.getElementById('seerviBulkEditImage')?.value||'').trim();
+    const description=(document.getElementById('seerviBulkEditDescription')?.value||'').trim();
+
+    if(!categoryId&&!subcategoryId&&!activeValue&&!image&&!description)
+      throw new Error('Choose or enter at least one field to update.');
+
+    const selected=ids.map(id=>(Array.isArray(seerviItemsCache)?seerviItemsCache:[]).find(x=>x.id===id)).filter(Boolean);
+    if(selected.length!==ids.length)throw new Error('One or more selected items are no longer loaded. Refresh the item list and try again.');
+
     if(save)save.disabled=true;
     if(status)status.textContent=`Updating ${selected.length} item(s)…`;
+
     for(const item of selected){
-      await seerviUpdateItem(item.id,{
+      await window.seerviUpdateItem(item.id,{
         categoryId:categoryId||item.categoryId||'',
         subcategoryId:subcategoryId||item.subcategoryId||'',
-        name:item.name||'', model:item.model||'',
+        name:item.name||'',
+        model:item.model||'',
         description:description||item.description||'',
         imageWebpUrl:image||item.imageWebpUrl||'',
         specifications:{...(item.specifications||{})},
-        active:activeValue===''?item.active!==false:activeValue==='true'
+        active:activeValue==='' ? item.active!==false : activeValue==='true'
       });
     }
+
     await seerviItemsLoadAll();
-    seerviItemsCloseBulkEdit();
-    if($('seerviItemsSelectAll'))$('seerviItemsSelectAll').checked=false;
+    window.seerviItemsCloseBulkEdit();
+    if(document.getElementById('seerviItemsSelectAll'))document.getElementById('seerviItemsSelectAll').checked=false;
     seerviItemsSetStatus(`${selected.length} item${selected.length===1?'':'s'} updated successfully.`);
   }catch(e){
-    const status=$('seerviBulkEditStatus'); if(status)status.textContent=e?.message||'Bulk edit failed.';
+    console.error('SEERVI BULK EDIT FAILED',e);
+    if(status)status.textContent=e?.message||'Bulk edit failed.';
     seerviItemsSetStatus(e?.message||'Bulk edit failed.',true);
   }finally{
-    const save=$('seerviBulkEditSaveButton');if(save)save.disabled=false;
+    if(save)save.disabled=false;
   }
 };
+
 window.seerviItemsBulkDelete=async function(){
   try{
     seerviItemsAdminGuard();
-    const ids=seerviItemsGetSelectedIds();
-    if(!ids.length){seerviItemsSetStatus('Select at least one item first.',true);return;}
-    const selected=ids.map(id=>seerviItemsCache.find(x=>x.id===id)).filter(Boolean);
+    const ids=window.seerviItemsGetSelectedIds();
+    if(!ids.length){seerviItemsSetStatus('Select at least one item first.',true);return false;}
+
+    const selected=ids.map(id=>(Array.isArray(seerviItemsCache)?seerviItemsCache:[]).find(x=>x.id===id)).filter(Boolean);
+    if(selected.length!==ids.length)throw new Error('One or more selected items are no longer loaded. Refresh the item list and try again.');
+
     const names=selected.slice(0,8).map(x=>`• ${x.name||x.id}`).join('\n');
     const more=selected.length>8?`\n• …and ${selected.length-8} more`:'';
-    if(!confirm(`Delete ${selected.length} selected item${selected.length===1?'':'s'}?\n\n${names}${more}\n\nThis permanently removes the selected Firestore item records.`))return;
+    const ok=window.confirm(`Delete ${selected.length} selected item${selected.length===1?'':'s'}?\n\n${names}${more}\n\nThis permanently removes the selected Firestore item records.`);
+    if(!ok)return false;
+
     seerviItemsSetStatus(`Deleting ${selected.length} item(s)…`);
-    for(const item of selected)await seerviDeleteItem(item.id);
+    for(const item of selected)await window.seerviDeleteItem(item.id);
     await seerviItemsLoadAll();
-    if($('seerviItemsSelectAll'))$('seerviItemsSelectAll').checked=false;
+    if(document.getElementById('seerviItemsSelectAll'))document.getElementById('seerviItemsSelectAll').checked=false;
     seerviItemsSetStatus(`${selected.length} item${selected.length===1?'':'s'} deleted successfully.`);
-  }catch(e){seerviItemsSetStatus(e?.message||'Bulk delete failed.',true);}
+    return false;
+  }catch(e){
+    console.error('SEERVI BULK DELETE FAILED',e);
+    seerviItemsSetStatus(e?.message||'Bulk delete failed.',true);
+    return false;
+  }
 };
 
-document.addEventListener('change',function(e){
-  if(e.target?.id==='seerviBulkEditCategory')seerviItemsBulkEditCategoryHandler();
-});
+/* Bind the buttons directly so this feature does not depend on inline onclick execution. */
+(function(){
+  const bind=function(){
+    const edit=document.querySelector('#seerviItemsBulkToolbar button[onclick*="seerviItemsOpenBulkEdit"]');
+    const del=document.querySelector('#seerviItemsBulkToolbar button[onclick*="seerviItemsBulkDelete"]');
+    const all=document.getElementById('seerviItemsSelectAll');
+    const cat=document.getElementById('seerviBulkEditCategory');
+
+    if(edit && !edit.dataset.bulkBound){
+      edit.dataset.bulkBound='1';
+      edit.removeAttribute('onclick');
+      edit.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();window.seerviItemsOpenBulkEdit();});
+    }
+    if(del && !del.dataset.bulkBound){
+      del.dataset.bulkBound='1';
+      del.removeAttribute('onclick');
+      del.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();window.seerviItemsBulkDelete();});
+    }
+    if(all && !all.dataset.bulkBound){
+      all.dataset.bulkBound='1';
+      all.addEventListener('change',function(){window.seerviItemsToggleSelectAll(all.checked);});
+    }
+    if(cat && !cat.dataset.bulkBound){
+      cat.dataset.bulkBound='1';
+      cat.addEventListener('change',window.seerviItemsBulkEditCategoryHandler);
+    }
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});
+  else bind();
+  window.seerviBindBulkItemActions=bind;
+})();
+window.seerviItemsOpenBulkEdit=window.seerviItemsOpenBulkEdit;
+window.seerviItemsApplyBulkEdit=window.seerviItemsApplyBulkEdit;
+window.seerviItemsBulkDelete=window.seerviItemsBulkDelete;
 /* ===== END SEERVI BULK ITEM EDIT / DELETE ===== */
+
 
 /* Final bulk toolbar visibility sync */
 (function(){
@@ -12620,6 +12719,18 @@ document.addEventListener('change',function(e){
   document.addEventListener('change',function(e){
     if(e.target&&e.target.classList&&e.target.classList.contains('seervi-item-select'))sync();
   });
+})();
+
+(function(){
+  const rebindBulk=()=>{
+    try{ window.seerviBindBulkItemActions?.(); window.seerviItemsSelectionChanged?.(); }catch(e){console.warn('Bulk action rebind skipped',e);}
+  };
+  const list=document.getElementById('seerviItemsList');
+  if(list && window.MutationObserver){
+    new MutationObserver(rebindBulk).observe(list,{childList:true,subtree:true});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',rebindBulk,{once:true});
+  else rebindBulk();
 })();
 </script>
 
