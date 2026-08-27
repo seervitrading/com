@@ -12244,6 +12244,123 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   window.addEventListener('storage',sync);
 })();
 </script>
+
+<script id="seervi-universal-mobile-back-final">
+(function(){
+  const MOBILE_MAX=700;
+  let backGuardReady=false;
+  let handlingBack=false;
+
+  function isMobile(){ return window.matchMedia && window.matchMedia('(max-width:'+MOBILE_MAX+'px)').matches; }
+
+  function visible(id){
+    const el=document.getElementById(id);
+    if(!el) return false;
+    const cs=getComputedStyle(el);
+    return !el.hidden && cs.display!=='none' && cs.visibility!=='hidden' &&
+           (el.classList.contains('show') || el.getAttribute('aria-hidden')==='false' || el.offsetParent!==null);
+  }
+
+  function closeTransient(){
+    const closers=[
+      ['crmQuoteViewModal','crmCloseQuoteView'],
+      ['seerviPublicItemModal','seerviPublicCloseItem'],
+      ['supportModal','closeSupportModal'],
+      ['seerviWhatsAppPanel','closeWhatsAppPanel'],
+      ['partySignupModal','closePartySignup'],
+      ['customerLoginModal','closeCustomerLogin'],
+      ['crmModal','closeCRM'],
+      ['accountDashboardModal','closeAccountDashboard']
+    ];
+    for(const [id,fn] of closers){
+      if(visible(id) && typeof window[fn]==='function'){
+        window[fn]();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function currentAppView(){
+    const path=(location.hash||'#home').toLowerCase();
+    if(path==='#products' || document.body.classList.contains('mobile-products-view')) return 'products';
+    if(path==='#cart' || document.getElementById('cartDrawer')?.classList.contains('show')) return 'cart';
+    return 'home';
+  }
+
+  function goHomeCanonical(){
+    try{
+      document.body.classList.remove('mobile-products-view');
+      if(typeof window.showHomeView==='function') window.showHomeView();
+    }catch(e){}
+    try{
+      if(location.hash!=='#home') history.replaceState({seerviApp:'home'},'', '#home');
+      else history.replaceState({seerviApp:'home'},'', location.href.split('#')[0]+'#home');
+    }catch(e){}
+    try{ window.scrollTo({top:0,behavior:'auto'}); }catch(e){}
+  }
+
+  function install(){
+    if(backGuardReady) return;
+    backGuardReady=true;
+
+    // Canonical starting state. Do not create a growing history stack.
+    try{
+      const view=currentAppView();
+      history.replaceState({seerviApp:view},'', '#'+view);
+      history.pushState({seerviApp:view},'', '#'+view);
+    }catch(e){}
+
+    window.addEventListener('popstate',function(){
+      if(handlingBack || !isMobile()) return;
+      handlingBack=true;
+      try{
+        // First Back closes any open child/modal layer.
+        if(closeTransient()){
+          history.pushState({seerviApp:currentAppView()},'', '#'+currentAppView());
+          return;
+        }
+
+        const state=history.state;
+        const view=state && state.seerviApp ? state.seerviApp : 'home';
+
+        if(view==='home'){
+          // Home is the terminal point. Re-pin it so Back never exits the site.
+          goHomeCanonical();
+          history.pushState({seerviApp:'home'},'', '#home');
+          return;
+        }
+
+        if(view==='products'){
+          try{
+            if(typeof window.showHomeView==='function') window.showHomeView();
+            else document.body.classList.remove('mobile-products-view');
+          }catch(e){}
+          history.replaceState({seerviApp:'home'},'', '#home');
+          history.pushState({seerviApp:'home'},'', '#home');
+          try{window.scrollTo({top:0,behavior:'auto'});}catch(e){}
+          return;
+        }
+
+        if(view==='cart'){
+          try{ if(typeof window.closeCart==='function') window.closeCart(); }catch(e){}
+          history.replaceState({seerviApp:'products'},'', '#products');
+          history.pushState({seerviApp:'products'},'', '#products');
+          return;
+        }
+
+        goHomeCanonical();
+        history.pushState({seerviApp:'home'},'', '#home');
+      }finally{
+        setTimeout(()=>{handlingBack=false;},0);
+      }
+    },false);
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install,{once:true});
+  else install();
+})();
+</script>
 </body>
 
 </html>
