@@ -4863,7 +4863,7 @@ function downloadCartPDF(){
     doc.setTextColor(45,50,56);
 
     doc.text(String(i+1),18,y);
-    doc.text(String(item.model||'').slice(0,34),30,y);
+    doc.text(String([item.subcategory,item.model||item.name||''].filter(Boolean).join(' — ')).slice(0,34),30,y);
     doc.text(String(item.thickness||'—').slice(0,18),102,y);
     doc.text(String(item.qty||0),137,y);
 
@@ -5105,7 +5105,7 @@ async function sendCartToWhatsApp(){
 
     const pricing=getCartPricing();
     seerviCart.forEach((item,i)=>{
-      msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent(item.model)}`;
+      msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent([item.subcategory,item.model||item.name||'Item'].filter(Boolean).join(' — '))}`;
       if(item.thickness) msg+=` | Thickness: ${encodeURIComponent(item.thickness)}`;
       msg+=` | Qty: ${item.qty}`;
       if(Number(item.rate)>0) msg+=` | Rate: ₹${encodeURIComponent(formatINR(item.rate))} | Amount: ₹${encodeURIComponent(formatINR(getLineTotal(item)))}`;
@@ -5122,7 +5122,7 @@ async function sendCartToWhatsApp(){
     msg=`Hello Seervi Trading,%0A%0AI would like to enquire about the following products:%0A%0A`;
     if(requestNo) msg+=`Request No: ${encodeURIComponent(requestNo)}%0A%0A`;
     seerviCart.forEach((item,i)=>{
-      msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent(item.model)}`;
+      msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent([item.subcategory,item.model||item.name||'Item'].filter(Boolean).join(' — '))}`;
       if(item.thickness) msg+=` | Thickness: ${encodeURIComponent(item.thickness)}`;
       msg+=` | Qty: ${item.qty}%0A`;
     });
@@ -6220,7 +6220,10 @@ window.saveCustomerCartRequest=async function(){
   const now=new Date();
   const qNo='SQ-'+now.toISOString().replace(/[-:TZ.]/g,'').slice(0,14);
   const items=seerviCart.map(item=>({
-    type:item.type||'', model:item.model||'', spec:item.spec||'', thickness:item.thickness||'',
+    type:item.type||'', categoryId:item.categoryId||'', subcategoryId:item.subcategoryId||'',
+    category:item.category||seerviPublicCategoryName?.(item.categoryId)||'',
+    subcategory:item.subcategory||seerviPublicCategoryName?.(item.subcategoryId)||'',
+    name:item.name||'', model:item.model||'', spec:item.spec||'', thickness:item.thickness||'',
     qty:Number(item.qty)||1, rate:0, source:'customer-request'
   }));
   const qRef=await addDoc(collection(publicSignupDb,'quotations'),{
@@ -6360,7 +6363,7 @@ window.customerViewQuote=function(id){
   if(!title||!meta||!body||!dl)return;
   title.textContent=q.quoteNo||'Quotation';
   meta.textContent=(q.dateISO?new Date(q.dateISO).toLocaleDateString('en-IN'):'')+' · '+(party.company||party.name||'');
-  const rows=(q.items||[]).map((item,i)=>`<tr><td>${i+1}</td><td>${esc(item.model||item.name||'Item')}</td><td>${esc(item.spec||'—')}</td><td class="num">${Number(item.qty||0)}</td><td class="num">${money(item.rate)}</td><td class="num">${money(item.amount ?? Number(item.qty||0)*Number(item.rate||0))}</td></tr>`).join('');
+  const rows=(q.items||[]).map((item,i)=>`<tr><td>${i+1}</td><td>${esc([item.subcategory,item.model||item.name||'Item'].filter(Boolean).join(' — '))}</td><td>${esc(item.spec||'—')}</td><td class="num">${Number(item.qty||0)}</td><td class="num">${money(item.rate)}</td><td class="num">${money(item.amount ?? Number(item.qty||0)*Number(item.rate||0))}</td></tr>`).join('');
   body.innerHTML=`<div class="crm-qv-customer"><div class="crm-qv-box"><small>Party</small><strong>${esc(party.company||party.name||'—')}</strong></div><div class="crm-qv-box"><small>Contact</small><strong>${esc(party.name||party.phone||'—')}</strong></div><div class="crm-qv-box"><small>City</small><strong>${esc(party.city||'—')}</strong></div></div><table class="crm-qv-table"><thead><tr><th>#</th><th>Product / Model</th><th>Spec</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead><tbody>${rows||'<tr><td colspan="6">No items in this quotation.</td></tr>'}</tbody></table><div class="crm-qv-totals"><div class="crm-qv-total"><span>Subtotal</span><strong>${money(q.subtotal)}</strong></div>${q.gstEnabled?`<div class="crm-qv-total"><span>GST (${Number(q.gstRate||0)}%)</span><strong>${money(q.gst)}</strong></div>`:''}<div class="crm-qv-total crm-qv-grand"><span>Grand Total</span><strong>${money(q.grandTotal)}</strong></div></div>`;
   if(statusBar)statusBar.hidden=true;
   dl.textContent='DOWNLOAD PDF';dl.onclick=()=>customerDownloadQuote(id);
@@ -7531,7 +7534,7 @@ window.crmViewQuote=function(id){
   const rows=items.map((item,i)=>`
     <tr>
       <td>${i+1}</td>
-      <td>${esc(item.model||item.name||'Item')}</td>
+      <td>${esc([item.subcategory,item.model||item.name||'Item'].filter(Boolean).join(' — '))}</td>
       <td>${esc(item.spec||'—')}</td>
       <td class="num">${Number(item.qty||0)}</td>
       <td class="num">${money(item.rate)}</td>
@@ -7716,7 +7719,7 @@ window.crmDownloadQuote=async function(id){
       doc.setFontSize(8);
       doc.setTextColor(45,50,56);
       doc.text(String(i+1),18,y);
-      doc.text(safeText(item.model||item.name||'').slice(0,34),30,y);
+      doc.text(safeText([item.subcategory,item.model||item.name||''].filter(Boolean).join(' — ')).slice(0,34),30,y);
       doc.text(safeText(item.spec||'—').slice(0,18),102,y);
       doc.text(String(qty),137,y);
       doc.text(inr(rate),151,y);
@@ -7934,7 +7937,7 @@ window.customerDownloadQuote=async function(id){
       doc.setFontSize(8);
       doc.setTextColor(45,50,56);
       doc.text(String(i+1),18,y);
-      doc.text(safeText(item.model||item.name||'').slice(0,34),30,y);
+      doc.text(safeText([item.subcategory,item.model||item.name||''].filter(Boolean).join(' — ')).slice(0,34),30,y);
       doc.text(safeText(item.spec||'—').slice(0,18),102,y);
       doc.text(String(qty),137,y);
       doc.text(inr(rate),151,y);
@@ -10414,6 +10417,10 @@ window.seerviPublicAddToCart=function(itemId){
     subcategoryId:item.subcategoryId||'',
     category:seerviPublicCategoryName(item.categoryId),
     subcategory:seerviPublicCategoryName(item.subcategoryId),
+    categoryId:item.categoryId||'',
+    subcategoryId:item.subcategoryId||'',
+    category:seerviPublicCategoryName(item.categoryId),
+    subcategory:seerviPublicCategoryName(item.subcategoryId),
     model:item.model||item.id,
     name:item.name||item.model||'Item',
     image:item.imageWebpUrl||'',
@@ -12222,6 +12229,42 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   else start();
   window.addEventListener('load',sync,{once:true});
   window.addEventListener('storage',sync);
+})();
+</script>
+
+<script>
+/* ===== QUOTATION SUBCATEGORY LABEL COMPATIBILITY ===== */
+(function(){
+  function resolveSubcategory(item){
+    if(!item) return '';
+    if(item.subcategory) return String(item.subcategory);
+    try{
+      if(item.subcategoryId && typeof window.seerviPublicCategoryName==='function'){
+        return String(window.seerviPublicCategoryName(item.subcategoryId)||'');
+      }
+    }catch(_){}
+    return '';
+  }
+  function normalizeQuoteItem(item){
+    if(!item || typeof item!=='object') return item;
+    const sub=resolveSubcategory(item);
+    if(sub) item.subcategory=sub;
+    if(!item.category){
+      try{
+        if(item.categoryId && typeof window.seerviPublicCategoryName==='function'){
+          item.category=String(window.seerviPublicCategoryName(item.categoryId)||'');
+        }
+      }catch(_){}
+    }
+    return item;
+  }
+  window.seerviNormalizeQuotationSubcategories=function(){
+    if(Array.isArray(window.seerviCart)) window.seerviCart.forEach(normalizeQuoteItem);
+    return window.seerviCart||[];
+  };
+  document.addEventListener('DOMContentLoaded',function(){
+    try{ window.seerviNormalizeQuotationSubcategories(); }catch(_){}
+  });
 })();
 </script>
 </body>
