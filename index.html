@@ -5256,7 +5256,7 @@ document.addEventListener('keydown',function(e){
       <button type="button" class="seervi-wa-option" data-wa-type="product" onclick="selectWhatsAppOption('product')"><strong>Product Enquiry</strong><span>Ask about a product, model, specification or availability.</span></button>
       <button type="button" class="seervi-wa-option" data-wa-type="quote" onclick="selectWhatsAppOption('quote')"><strong>Request a Quote</strong><span>Send your requirement and quotation request to Seervi Trading.</span></button>
     </div>
-    <div class="seervi-wa-actions"><button type="button" class="seervi-wa-back" onclick="closeWhatsAppPanel()">← BACK</button><button type="button" class="seervi-wa-open" onclick="openSelectedWhatsApp()">OPEN WHATSAPP</button></div>
+    <div class="seervi-wa-actions"><button type="button" class="seervi-wa-back admin-universal-back" onclick="closeWhatsAppPanel()">← BACK</button><button type="button" class="seervi-wa-open" onclick="openSelectedWhatsApp()">OPEN WHATSAPP</button></div>
     <div class="seervi-wa-note">Your browser will open WhatsApp only when you choose OPEN WHATSAPP.</div>
   </div>
 </div>
@@ -11524,26 +11524,41 @@ body.seervi-non-home-view nav{display:none !important;}
 </script>
 
 
-<style id="seervi-universal-cart-back-final">
-/* Universal overlay navigation: Cart uses BACK, matching Panel/Stock navigation. */
-.cart-close.cart-back-btn{
-  width:auto !important;
-  min-width:82px !important;
+<style id="seervi-universal-back-size-final">
+/* One universal Back-button geometry for public users, customers and admin. */
+.cart-close.cart-back-btn,
+.admin-universal-back,
+.seervi-wa-back{
+  width:96px !important;
+  min-width:96px !important;
   height:38px !important;
-  padding:0 12px !important;
-  border-radius:8px !important;
+  min-height:38px !important;
+  padding:0 10px !important;
+  margin:0 !important;
+  box-sizing:border-box !important;
   display:inline-flex !important;
   align-items:center !important;
   justify-content:center !important;
   gap:5px !important;
-  font-size:11px !important;
+  border-radius:8px !important;
+  font-size:10px !important;
+  line-height:1 !important;
   font-weight:900 !important;
   letter-spacing:.8px !important;
   white-space:nowrap !important;
+  cursor:pointer !important;
 }
-.cart-close.cart-back-btn span{font-size:10px;letter-spacing:1px}
+.cart-close.cart-back-btn span{font-size:10px !important;letter-spacing:.8px !important}
+.seervi-wa-back{border-radius:8px !important}
 @media(max-width:600px){
-  .cart-close.cart-back-btn{min-width:76px !important;height:36px !important;padding:0 10px !important}
+  .cart-close.cart-back-btn,
+  .admin-universal-back,
+  .seervi-wa-back{
+    width:96px !important;
+    min-width:96px !important;
+    height:38px !important;
+    min-height:38px !important;
+  }
 }
 </style>
 <style id="mobile-hero-right-crop-final">
@@ -11947,18 +11962,16 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   .mobile-bottom-bar button.active b{color:#fff!important}
 }
 </style>
-<script id="seervi-mobile-universal-navigation-v1">
+<script id="seervi-universal-navigation-v2">
 (function(){
-  /*
-   * Mobile navigation is treated as a small, real history stack.
-   * Home / Products / Cart are sibling application views, not unrelated
-   * overlays. Browser/Android Back therefore returns to the previous view.
-   * No URL redirect or forced navigation is used.
-   */
+  /* Universal navigation history for public customers and admin users.
+     Main Home / Products / Cart switching remains mobile-only because the
+     existing desktop catalogue is a continuous page. Overlay Back behavior
+     is available at every viewport width and for every user. */
   const MOBILE_MAX=600;
-  const STATE_KEY='seerviMobileNav';
+  const STATE_KEY='seerviUniversalNav';
   let handlingPop=false;
-  let ready=false;
+  let initialized=false;
 
   const baseOpenCart=window.openCart;
   const baseCloseCart=window.closeCart;
@@ -11974,7 +11987,7 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   function isMobile(){return window.innerWidth<=MOBILE_MAX;}
   function current(){
     const s=history.state;
-    return s && s[STATE_KEY] ? s : { [STATE_KEY]:true, view:'home', overlay:null };
+    return s && s[STATE_KEY] ? s : {[STATE_KEY]:true,view:(isMobile()?'home':'page'),overlay:null};
   }
   function setBar(view){
     document.querySelectorAll('.mobile-bottom-bar a,.mobile-bottom-bar button').forEach(function(el){
@@ -11983,94 +11996,84 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
       if((view==='home'&&label==='home')||(view==='products'&&label==='products')||(view==='cart'&&label==='cart')) el.classList.add('active');
     });
   }
-  function closePublicOverlays(){
+  function closeLayers(){
     try{baseCloseWhatsApp?.();}catch(e){}
     try{baseCloseSupport?.();}catch(e){}
     try{baseCloseItem?.();}catch(e){}
-  }
-  function closeAppOverlays(){
-    closePublicOverlays();
     try{baseCloseCart?.();}catch(e){}
     try{window.closeProduct?.();}catch(e){}
     try{window.closeProfile?.();}catch(e){}
     try{window.closeNotifications?.();}catch(e){}
+    try{window.closeNotificationPost?.();}catch(e){}
+    try{window.closeCustomerLogin?.();}catch(e){}
+    try{window.closePartySignup?.();}catch(e){}
+    try{window.closeAccountDashboard?.();}catch(e){}
   }
   function showView(view){
     if(!isMobile()) return;
-    closePublicOverlays();
+    closeLayers();
     if(view==='cart'){
-      try{baseCloseSupport?.();}catch(e){}
-      try{baseCloseWhatsApp?.();}catch(e){}
       try{baseShowHome?.({preventDefault(){}});}catch(e){}
       try{baseOpenCart?.();}catch(e){}
       document.body.classList.remove('mobile-products-view');
     }else if(view==='products'){
-      try{baseCloseCart?.();}catch(e){}
       try{baseShowProducts?.({preventDefault(){}});}catch(e){}
     }else{
-      try{baseCloseCart?.();}catch(e){}
       try{baseShowHome?.({preventDefault(){}});}catch(e){}
     }
     setBar(view);
-    if(window.seerviSyncTopbarHomeOnly) window.seerviSyncTopbarHomeOnly();
+    window.seerviSyncTopbarHomeOnly?.();
   }
   function navigate(view){
     if(!isMobile()) return;
     const cur=current();
-    if(cur.view===view && !cur.overlay){ showView(view); return; }
-    closeAppOverlays();
+    if(cur.view===view && !cur.overlay){showView(view);return;}
+    closeLayers();
     history.pushState({[STATE_KEY]:true,view:view,overlay:null},'', '#'+view);
     showView(view);
   }
-
   function installBottomBar(){
     const bar=document.querySelector('.mobile-bottom-bar');
-    if(!bar) return;
-    const home=bar.querySelector('a[href="#home"]');
+    if(!bar)return;
+    const home=bar.querySelector('a[href="#home"]') || bar.querySelector('a');
     const products=bar.querySelector('a[href="#profiles"]');
     const cart=Array.from(bar.querySelectorAll('button')).find(b=>(b.textContent||'').trim().toLowerCase().includes('cart'));
     if(home){home.removeAttribute('href');home.removeAttribute('onclick');home.onclick=function(e){e.preventDefault();navigate('home');};}
     if(products){products.removeAttribute('href');products.removeAttribute('onclick');products.onclick=function(e){e.preventDefault();navigate('products');};}
     if(cart){cart.removeAttribute('onclick');cart.onclick=function(e){e.preventDefault();navigate('cart');};}
   }
-
   function ensureInitialState(){
-    if(!isMobile()) return;
     const s=history.state;
     if(!(s && s[STATE_KEY])){
       const hash=(location.hash||'').toLowerCase();
-      const view=hash==='#products'||hash==='#profiles'?'products':hash==='#cart'?'cart':'home';
+      const view=hash==='#products'||hash==='#profiles'?'products':hash==='#cart'?'cart':(isMobile()?'home':'page');
       history.replaceState({[STATE_KEY]:true,view:view,overlay:null},'',location.href);
-      showView(view);
-    }else{
+      if(isMobile())showView(view);
+    }else if(isMobile()){
       showView(s.view||'home');
     }
   }
-
-  /* Public modal layers also get a history entry, so Android/browser Back
-     closes the layer first instead of leaving the site. */
   function wrapOpen(name,base,overlay){
-    if(typeof base!=='function') return;
+    if(typeof base!=='function')return;
     window[name]=function(){
-      if(!isMobile() || handlingPop) return base.apply(this,arguments);
+      if(handlingPop) return base.apply(this,arguments);
       const cur=current();
       if(cur.overlay===overlay) return base.apply(this,arguments);
-      history.pushState({[STATE_KEY]:true,view:cur.view||'home',overlay:overlay},'',location.href);
+      history.pushState({[STATE_KEY]:true,view:cur.view||'page',overlay:overlay},'',location.href);
       return base.apply(this,arguments);
     };
   }
   function wrapClose(name,base,overlay){
-    if(typeof base!=='function') return;
+    if(typeof base!=='function')return;
     window[name]=function(){
-      if(!isMobile() || handlingPop) return base.apply(this,arguments);
+      if(handlingPop) return base.apply(this,arguments);
       const cur=current();
-      if(cur.overlay===overlay){ history.back(); return; }
+      if(cur.overlay===overlay){history.back();return;}
       return base.apply(this,arguments);
     };
   }
 
-  /* These wrappers cover the public layers the user can reach from the
-     catalogue without changing their existing Firebase/data logic. */
+  /* Public/customer overlays: history-backed at desktop and mobile. */
   wrapOpen('openWhatsAppPanel',baseOpenWhatsApp,'whatsapp');
   wrapClose('closeWhatsAppPanel',baseCloseWhatsApp,'whatsapp');
   wrapOpen('openSupportModal',baseOpenSupport,'support');
@@ -12078,64 +12081,79 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   wrapOpen('seerviPublicOpenItem',baseOpenItem,'item');
   wrapClose('seerviPublicCloseItem',baseCloseItem,'item');
 
+  /* Customer authentication/dashboard layers also get a Back entry. */
+  const authOpen=window.openCustomerLogin, authClose=window.closeCustomerLogin;
+  const signupOpen=window.openPartySignup, signupClose=window.closePartySignup;
+  const dashOpen=window.openAccountDashboard, dashClose=window.closeAccountDashboard;
+  wrapOpen('openCustomerLogin',authOpen,'login');
+  wrapClose('closeCustomerLogin',authClose,'login');
+  wrapOpen('openPartySignup',signupOpen,'signup');
+  wrapClose('closePartySignup',signupClose,'signup');
+  wrapOpen('openAccountDashboard',dashOpen,'dashboard');
+  wrapClose('closeAccountDashboard',dashClose,'dashboard');
+
+  /* Cart is a primary application view on mobile, and an overlay elsewhere. */
+  window.openCart=function(){
+    if(handlingPop)return baseOpenCart?.();
+    if(isMobile()){navigate('cart');return;}
+    const cur=current();
+    if(cur.overlay==='cart'){return baseOpenCart?.();}
+    history.pushState({[STATE_KEY]:true,view:'page',overlay:'cart'},'',location.href);
+    return baseOpenCart?.();
+  };
+  window.closeCart=function(){
+    if(handlingPop)return baseCloseCart?.();
+    const cur=current();
+    if(cur.overlay==='cart'){history.back();return;}
+    return baseCloseCart?.();
+  };
+
   window.addEventListener('popstate',function(e){
-    if(!isMobile()) return;
-    const s=e.state;
     handlingPop=true;
     try{
+      const s=e.state;
       if(s && s[STATE_KEY]){
-        /* The popped state is now authoritative. */
-        const view=s.view||'home';
-        closeAppOverlays();
-        showView(view);
-        if(s.overlay){
-          /* Re-open the layer represented by the state we landed on. */
-          if(s.overlay==='whatsapp') baseOpenWhatsApp?.();
+        closeLayers();
+        if(isMobile() && (s.view==='home'||s.view==='products'||s.view==='cart')){
+          showView(s.view);
+        }else{
+          setBar('');
+          if(s.overlay==='cart') baseOpenCart?.();
+          else if(s.overlay==='whatsapp') baseOpenWhatsApp?.();
           else if(s.overlay==='support') baseOpenSupport?.();
-          else if(s.overlay==='item'){
-            /* Item modal needs its original item id; if unavailable, leave it
-               closed rather than inventing a product. */
-          }
+          else if(s.overlay==='login') authOpen?.();
+          else if(s.overlay==='signup') signupOpen?.();
+          else if(s.overlay==='dashboard') dashOpen?.(customerUser?'customer':'admin');
+          /* Item overlays intentionally stay closed because the selected item
+             id is not stored in history and must never be guessed. */
         }
       }else{
-        /* Leaving the app's own history: close any transient layer first and
-           let the browser continue to the real previous document on another
-           Back press. */
-        closeAppOverlays();
-        showView('home');
+        closeLayers();
+        if(isMobile())showView('home');
+        else setBar('');
       }
     }finally{handlingPop=false;}
   });
 
-  /* Existing modal closes should work naturally. For an item modal we keep
-     the close button usable even when no history entry exists. */
-  window.addEventListener('hashchange',function(){
-    if(!isMobile()||handlingPop)return;
-    const h=(location.hash||'').toLowerCase();
-    if(h==='#home') navigate('home');
-    else if(h==='#products'||h==='#profiles') navigate('products');
-    else if(h==='#cart') navigate('cart');
-  });
-
   window.addEventListener('resize',function(){
-    if(isMobile()){
-      installBottomBar();
-      if(!ready) ensureInitialState();
-    }else{
-      setBar('');
-    }
+    installBottomBar();
+    if(isMobile())setBar((history.state&&history.state[STATE_KEY]&&history.state.view)||'home');
+    else setBar('');
   });
 
   function init(){
     installBottomBar();
-    if(isMobile()) ensureInitialState();
-    ready=true;
+    ensureInitialState();
+    initialized=true;
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});
   else init();
 
-  /* Expose one clean navigation entry point for future internal mobile links. */
   window.seerviMobileNavigate=function(view){navigate(view);};
+  window.seerviUniversalBack=function(){
+    if(history.state && history.state[STATE_KEY]) history.back();
+    else closeLayers();
+  };
 })();
 </script>
 
