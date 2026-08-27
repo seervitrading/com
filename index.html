@@ -3960,30 +3960,7 @@ body.nav-is-scrolled{padding-top:76px;}
   }
 }
 </style>
-
-<style id="seervi-public-item-qty-controls">
-.seervi-public-qty-control{display:grid;grid-template-columns:38px minmax(58px,1fr) 38px;gap:5px;align-items:center;margin-top:10px;max-width:210px}
-.seervi-public-qty-control button{width:38px;height:38px;border:1px solid #ffffff22;background:#11161c;color:#f0c66a;border-radius:7px;cursor:pointer;font-size:19px;font-weight:900;line-height:1}
-.seervi-public-qty-control button:hover{border-color:#f0c66a;background:#171d24}
-.seervi-public-qty-control input{width:100%;height:38px;box-sizing:border-box;text-align:center;border:1px solid #ffffff22;background:#0b0f14;color:#f2f4f6;border-radius:7px;font-size:14px;font-weight:800;outline:none;appearance:textfield;-moz-appearance:textfield}
-.seervi-public-qty-control input:focus{border-color:#d9b55a;box-shadow:0 0 0 2px #d9b55a18}
-.seervi-public-qty-control input::-webkit-outer-spin-button,.seervi-public-qty-control input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.seervi-public-qty-label{display:block;margin-top:5px;color:#7f8994;font-size:8px;letter-spacing:.8px;text-transform:uppercase}
-@media(max-width:600px){
-  .seervi-public-qty-control{grid-template-columns:42px minmax(64px,1fr) 42px;max-width:100%;gap:6px}
-  .seervi-public-qty-control button,.seervi-public-qty-control input{height:40px}
-}
-</style>
-
-<style id="seervi-card-qty-real-fix">
-.seervi-card-qty-control{display:grid;grid-template-columns:38px minmax(58px,110px) 38px;gap:5px;align-items:center;margin-top:0;max-width:190px}
-.seervi-card-qty-control button{width:38px;height:38px;border:1px solid #ffffff22;background:#11161c;color:#f0c66a;border-radius:7px;cursor:pointer;font-size:19px;font-weight:900;line-height:1}
-.seervi-card-qty-control input{width:100%;height:38px;box-sizing:border-box;text-align:center;border:1px solid #ffffff22;background:#0b0f14;color:#f2f4f6;border-radius:7px;font-size:14px;font-weight:800;outline:none;appearance:textfield;-moz-appearance:textfield}
-.seervi-card-qty-control input:focus{border-color:#d9b55a;box-shadow:0 0 0 2px #d9b55a18}
-.seervi-card-qty-control input::-webkit-outer-spin-button,.seervi-card-qty-control input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-@media(max-width:600px){.seervi-card-qty-control{grid-template-columns:42px minmax(64px,1fr) 42px;max-width:100%}.seervi-card-qty-control button,.seervi-card-qty-control input{height:40px}}
-</style>
-</head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
+</head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()" aria-label="Open menu">☰</button><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
 </button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url('images/00-old-products/product-image-001-055cde1217d3c801.webp')"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
@@ -4573,11 +4550,6 @@ let seerviCart = JSON.parse(localStorage.getItem('seerviCart') || '[]');
 function saveCart(){
   localStorage.setItem('seerviCart', JSON.stringify(seerviCart));
   renderCart();
-  // Public catalogue cards must immediately reflect cart quantity without
-  // navigating away from the current product/category view.
-  if(typeof window.seerviPublicSyncCartControls==='function'){
-    setTimeout(()=>window.seerviPublicSyncCartControls(),0);
-  }
 }
 
 function cartKey(item){
@@ -4594,11 +4566,8 @@ function addToCart(item){
   if(found) found.qty += 1;
   else seerviCart.push({...item, qty:1, rate:Number(item.rate||0)});
   saveCart();
-  // Keep the page where the customer is browsing. The cart drawer opens
-  // only when the CART button is clicked. Sync the visible item card now.
-  if(typeof window.seerviPublicSyncCartControls==='function'){
-    setTimeout(()=>window.seerviPublicSyncCartControls(),0);
-  }
+  // Keep the page where the customer is browsing.
+  // The cart drawer opens only when the CART button is clicked.
 }
 
 
@@ -4849,11 +4818,8 @@ function downloadCartPDF(){
   y=tableTop+8;
   doc.setFont('helvetica','normal');
 
-  const outputCart=(typeof window.seerviPrepareQuotationItems==='function'
-    ? window.seerviPrepareQuotationItems(seerviCart)
-    : seerviCart);
-  for(let i=0;i<outputCart.length;i++){
-    const item=outputCart[i];
+  for(let i=0;i<seerviCart.length;i++){
+    const item=seerviCart[i];
 
     if(y>258){
       doc.addPage();
@@ -4866,7 +4832,7 @@ function downloadCartPDF(){
     doc.setTextColor(45,50,56);
 
     doc.text(String(i+1),18,y);
-    doc.text(String(seerviQuoteProductLabel(item)).slice(0,34),30,y);
+    doc.text(String(item.model||'').slice(0,34),30,y);
     doc.text(String(item.thickness||'—').slice(0,18),102,y);
     doc.text(String(item.qty||0),137,y);
 
@@ -5108,7 +5074,7 @@ async function sendCartToWhatsApp(){
 
     const pricing=getCartPricing();
     seerviCart.forEach((item,i)=>{
-      msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent(seerviQuoteProductLabel(item))}`;
+      msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent(item.model)}`;
       if(item.thickness) msg+=` | Thickness: ${encodeURIComponent(item.thickness)}`;
       msg+=` | Qty: ${item.qty}`;
       if(Number(item.rate)>0) msg+=` | Rate: ₹${encodeURIComponent(formatINR(item.rate))} | Amount: ₹${encodeURIComponent(formatINR(getLineTotal(item)))}`;
@@ -5125,7 +5091,7 @@ async function sendCartToWhatsApp(){
     msg=`Hello Seervi Trading,%0A%0AI would like to enquire about the following products:%0A%0A`;
     if(requestNo) msg+=`Request No: ${encodeURIComponent(requestNo)}%0A%0A`;
     seerviCart.forEach((item,i)=>{
-      msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent(seerviQuoteProductLabel(item))}`;
+      msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent(item.model)}`;
       if(item.thickness) msg+=` | Thickness: ${encodeURIComponent(item.thickness)}`;
       msg+=` | Qty: ${item.qty}%0A`;
     });
@@ -6222,34 +6188,10 @@ window.saveCustomerCartRequest=async function(){
 
   const now=new Date();
   const qNo='SQ-'+now.toISOString().replace(/[-:TZ.]/g,'').slice(0,14);
-  const items=seerviCart.map(item=>{
-    const resolvedSubcategory =
-      String(item.subcategory||'').trim() ||
-      (typeof window.seerviQuoteItemSubcategory==='function'
-        ? String(window.seerviQuoteItemSubcategory(item)||'').trim()
-        : '') ||
-      (item.subcategoryId && typeof seerviPublicCategoryName==='function'
-        ? String(seerviPublicCategoryName(item.subcategoryId)||'').trim()
-        : '');
-    const resolvedCategory =
-      String(item.category||'').trim() ||
-      (item.categoryId && typeof seerviPublicCategoryName==='function'
-        ? String(seerviPublicCategoryName(item.categoryId)||'').trim()
-        : '');
-    return {
-      type:item.type||'',
-      categoryId:item.categoryId||'',
-      subcategoryId:item.subcategoryId||'',
-      category:resolvedCategory,
-      subcategory:resolvedSubcategory,
-      name:item.name||'',
-      model:item.model||'',
-      spec:item.thickness||item.spec||'',
-      qty:Number(item.qty)||1,
-      rate:0,
-      source:'customer-request'
-    };
-  });
+  const items=seerviCart.map(item=>({
+    type:item.type||'', model:item.model||'', spec:item.spec||'', thickness:item.thickness||'',
+    qty:Number(item.qty)||1, rate:0, source:'customer-request'
+  }));
   const qRef=await addDoc(collection(publicSignupDb,'quotations'),{
     partyId:party.id, customerUid:customerUser.uid, quoteNo:qNo, dateISO:now.toISOString(),
     customer:{name:party.name||'',company:party.company||'',phone:party.phone||'',email:party.email||customerUser.email||'',city:party.city||'',address:party.address||''},
@@ -6387,10 +6329,7 @@ window.customerViewQuote=function(id){
   if(!title||!meta||!body||!dl)return;
   title.textContent=q.quoteNo||'Quotation';
   meta.textContent=(q.dateISO?new Date(q.dateISO).toLocaleDateString('en-IN'):'')+' · '+(party.company||party.name||'');
-  const quoteItems=(typeof window.seerviPrepareQuotationItems==='function'
-    ? window.seerviPrepareQuotationItems(q.items||[])
-    : (q.items||[]));
-  const rows=quoteItems.map((item,i)=>`<tr><td>${i+1}</td><td>${esc(seerviQuoteProductLabel(item))}</td><td>${esc(item.spec||'—')}</td><td class="num">${Number(item.qty||0)}</td><td class="num">${money(item.rate)}</td><td class="num">${money(item.amount ?? Number(item.qty||0)*Number(item.rate||0))}</td></tr>`).join('');
+  const rows=(q.items||[]).map((item,i)=>`<tr><td>${i+1}</td><td>${esc(item.model||item.name||'Item')}</td><td>${esc(item.spec||'—')}</td><td class="num">${Number(item.qty||0)}</td><td class="num">${money(item.rate)}</td><td class="num">${money(item.amount ?? Number(item.qty||0)*Number(item.rate||0))}</td></tr>`).join('');
   body.innerHTML=`<div class="crm-qv-customer"><div class="crm-qv-box"><small>Party</small><strong>${esc(party.company||party.name||'—')}</strong></div><div class="crm-qv-box"><small>Contact</small><strong>${esc(party.name||party.phone||'—')}</strong></div><div class="crm-qv-box"><small>City</small><strong>${esc(party.city||'—')}</strong></div></div><table class="crm-qv-table"><thead><tr><th>#</th><th>Product / Model</th><th>Spec</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead><tbody>${rows||'<tr><td colspan="6">No items in this quotation.</td></tr>'}</tbody></table><div class="crm-qv-totals"><div class="crm-qv-total"><span>Subtotal</span><strong>${money(q.subtotal)}</strong></div>${q.gstEnabled?`<div class="crm-qv-total"><span>GST (${Number(q.gstRate||0)}%)</span><strong>${money(q.gst)}</strong></div>`:''}<div class="crm-qv-total crm-qv-grand"><span>Grand Total</span><strong>${money(q.grandTotal)}</strong></div></div>`;
   if(statusBar)statusBar.hidden=true;
   dl.textContent='DOWNLOAD PDF';dl.onclick=()=>customerDownloadQuote(id);
@@ -7556,14 +7495,12 @@ window.crmViewQuote=function(id){
   meta.textContent=(q.dateISO ? new Date(q.dateISO).toLocaleDateString('en-IN') : '')+
     (party ? ' · '+(party.company||party.name||'') : '');
 
-  const items=(typeof window.seerviPrepareQuotationItems==='function'
-    ? window.seerviPrepareQuotationItems(q.items||[])
-    : (q.items||[]));
+  const items=q.items||[];
   const customer=party || q.customer || {};
   const rows=items.map((item,i)=>`
     <tr>
       <td>${i+1}</td>
-      <td>${esc(seerviQuoteProductLabel(item))}</td>
+      <td>${esc(item.model||item.name||'Item')}</td>
       <td>${esc(item.spec||'—')}</td>
       <td class="num">${Number(item.qty||0)}</td>
       <td class="num">${money(item.rate)}</td>
@@ -7704,9 +7641,7 @@ window.crmDownloadQuote=async function(id){
     y+=Math.max(7,addrLines.length*4.3);
 
     // Items
-    const items=(typeof window.seerviPrepareQuotationItems==='function'
-      ? window.seerviPrepareQuotationItems(q.items||[])
-      : (q.items||[]));
+    const items=q.items||[];
     const drawHeader=()=>{
       if(y>250){
         footer();
@@ -7750,7 +7685,7 @@ window.crmDownloadQuote=async function(id){
       doc.setFontSize(8);
       doc.setTextColor(45,50,56);
       doc.text(String(i+1),18,y);
-      doc.text(safeText(seerviQuoteProductLabel(item)).slice(0,34),30,y);
+      doc.text(safeText(item.model||item.name||'').slice(0,34),30,y);
       doc.text(safeText(item.spec||'—').slice(0,18),102,y);
       doc.text(String(qty),137,y);
       doc.text(inr(rate),151,y);
@@ -7924,9 +7859,7 @@ window.customerDownloadQuote=async function(id){
     y+=Math.max(7,addrLines.length*4.3);
 
     // Items
-    const items=(typeof window.seerviPrepareQuotationItems==='function'
-      ? window.seerviPrepareQuotationItems(q.items||[])
-      : (q.items||[]));
+    const items=q.items||[];
     const drawHeader=()=>{
       if(y>250){
         footer();
@@ -7970,7 +7903,7 @@ window.customerDownloadQuote=async function(id){
       doc.setFontSize(8);
       doc.setTextColor(45,50,56);
       doc.text(String(i+1),18,y);
-      doc.text(safeText(seerviQuoteProductLabel(item)).slice(0,34),30,y);
+      doc.text(safeText(item.model||item.name||'').slice(0,34),30,y);
       doc.text(safeText(item.spec||'—').slice(0,18),102,y);
       doc.text(String(qty),137,y);
       doc.text(inr(rate),151,y);
@@ -8167,37 +8100,15 @@ window.crmSaveCurrentQuote = async function(){
     city:selectedParty.city||'',
     notes:''
   };
-  const items=seerviCart.map(x=>{
-    const resolvedSubcategory =
-      String(x.subcategory||'').trim() ||
-      (typeof window.seerviQuoteItemSubcategory==='function'
-        ? String(window.seerviQuoteItemSubcategory(x)||'').trim()
-        : '') ||
-      (x.subcategoryId && typeof seerviPublicCategoryName==='function'
-        ? String(seerviPublicCategoryName(x.subcategoryId)||'').trim()
-        : '');
-    const resolvedCategory =
-      String(x.category||'').trim() ||
-      (x.categoryId && typeof seerviPublicCategoryName==='function'
-        ? String(seerviPublicCategoryName(x.categoryId)||'').trim()
-        : '');
-    return {
-      type:x.type||'',
-      categoryId:x.categoryId||'',
-      subcategoryId:x.subcategoryId||'',
-      category:resolvedCategory,
-      subcategory:resolvedSubcategory,
-      firebaseItemId:x.firebaseItemId||x.itemId||x.id||'',
-      itemId:x.itemId||x.firebaseItemId||x.id||'',
-      name:x.name||'',
-      model:x.model||x.name||'',
-      spec:x.thickness||x.spec||'',
-      qty:Number(x.qty||0),
-      rate:Number(x.rate||0),
-      amount:getLineTotal(x),
-      manual:!!x.manual
-    };
-  });
+  const items=seerviCart.map(x=>({
+    type:x.type||'',
+    model:x.model||x.name||'',
+    spec:x.thickness||'',
+    qty:Number(x.qty||0),
+    rate:Number(x.rate||0),
+    amount:getLineTotal(x),
+    manual:!!x.manual
+  }));
 
   let stockApplied=[];
   try{
@@ -8234,10 +8145,6 @@ window.crmSaveCurrentQuote = async function(){
             quoteNo:oldQ.quoteNo,
             productType:item.type,
             productModel:item.model,
-            categoryId:item.categoryId||'',
-            subcategoryId:item.subcategoryId||'',
-            category:item.category||'',
-            subcategory:item.subcategory||'',
             spec:item.spec||'',
             rate:item.rate,
             dateISO:now.toISOString().slice(0,10),
@@ -10476,10 +10383,6 @@ window.seerviPublicAddToCart=function(itemId){
     subcategoryId:item.subcategoryId||'',
     category:seerviPublicCategoryName(item.categoryId),
     subcategory:seerviPublicCategoryName(item.subcategoryId),
-    categoryId:item.categoryId||'',
-    subcategoryId:item.subcategoryId||'',
-    category:seerviPublicCategoryName(item.categoryId),
-    subcategory:seerviPublicCategoryName(item.subcategoryId),
     model:item.model||item.id,
     name:item.name||item.model||'Item',
     image:item.imageWebpUrl||'',
@@ -10556,23 +10459,6 @@ function seerviPublicItemSearchText(item){
 }
 
 const seerviPublicRenderItemsStep8=seerviPublicRenderItems;
-
-function seerviPublicCardCartControl(item){
-  const id=String(item?.id||'');
-  const entry=(typeof seerviCart!=='undefined' && Array.isArray(seerviCart)) ? seerviCart.find(x=>String(x.firebaseItemId||'')===id) : null;
-  const qty=entry ? Math.max(1,Number(entry.qty)||1) : 0;
-  const safeId=seerviItemsEsc(id);
-  const safeName=seerviItemsEsc(item?.name||item?.model||'product');
-  if(!qty){
-    return `<button class="crm-primary small seervi-card-add-to-cart" type="button" onclick="seerviPublicAddToCart('${safeId}')">ADD TO CART</button>`;
-  }
-  return `<div class="seervi-public-qty-control seervi-card-qty-control" data-item-id="${safeId}" aria-label="Quantity for ${safeName}">
-    <button type="button" class="cart-minus" onclick="seerviPublicCardQtyChange('${safeId}',-1)" aria-label="Decrease quantity">−</button>
-    <input class="seervi-public-qty-input" type="number" min="0" max="1000000" step="1" inputmode="numeric" value="${qty}" aria-label="Quantity for ${safeName}" onblur="seerviPublicCardQtyNormalize('${safeId}',this)" onkeydown="if(event.key==='Enter'){event.preventDefault();seerviPublicCardQtyNormalize('${safeId}',this);this.blur();}">
-    <button type="button" class="cart-plus" onclick="seerviPublicCardQtyChange('${safeId}',1)" aria-label="Increase quantity">+</button>
-  </div>`;
-}
-
 seerviPublicRenderItems=function(){
   const grid=$('seerviPublicProductGrid');
   if(!grid)return;
@@ -11133,7 +11019,6 @@ window.seerviPublicAddToCart=function(itemId){
     specification:Object.entries(item.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(', '),
     rate:0
   });
-  if(typeof seerviPublicRenderItems==='function') seerviPublicRenderItems();
 };
 
 window.seerviPublicOpenItem=function(itemId){
@@ -11194,7 +11079,7 @@ seerviPublicRenderItems=function(){
         ${specHtml?`<div class="seervi-public-specs">${specHtml}</div>`:''}
         <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">
           <button class="crm-secondary small" type="button" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')">VIEW DETAILS</button>
-          ${seerviPublicCardCartControl(item)}
+          <button class="crm-primary small" type="button" onclick="seerviPublicAddToCart('${seerviItemsEsc(item.id)}')">ADD TO CART</button>
         </div>
       </div></article>`;
   }).join('');
@@ -12048,377 +11933,6 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 
 
 
-<script id="seervi-public-item-qty-final">
-(function(){
-  function getEntry(itemId){
-    return (typeof seerviCart!=='undefined' && Array.isArray(seerviCart))
-      ? seerviCart.find(x=>String(x.firebaseItemId||'')===String(itemId))
-      : null;
-  }
-
-  function syncControls(){
-    document.querySelectorAll('.seervi-public-qty-control[data-item-id]').forEach(control=>{
-      const id=control.dataset.itemId||'';
-      const entry=getEntry(id);
-      const qty=entry ? Math.max(1,Number(entry.qty)||1) : 0;
-      const input=control.querySelector('.seervi-public-qty-input');
-      const label=control.querySelector('.seervi-public-qty-label');
-      if(input && document.activeElement!==input) input.value=String(qty);
-      if(label) label.textContent=qty>0?'IN CART':'QUANTITY';
-      control.classList.toggle('has-items',qty>0);
-    });
-  }
-
-  function save(){
-    if(typeof saveCart==='function') saveCart();
-    else {
-      localStorage.setItem('seerviCart',JSON.stringify(
-        (typeof seerviCart!=='undefined'&&Array.isArray(seerviCart))?seerviCart:[]
-      ));
-      syncControls();
-    }
-    setTimeout(syncControls,0);
-  }
-
-  function addBase(itemId){
-    if(typeof window.seerviPublicAddToCart==='function') window.seerviPublicAddToCart(itemId);
-    setTimeout(syncRenderedCards,0);
-    return getEntry(itemId);
-  }
-
-  window.seerviPublicCardQtyChange=function(itemId,delta){
-    const id=String(itemId||'');
-    if(!id)return;
-    let entry=getEntry(id);
-    if(!entry && delta>0){
-      addBase(id);
-      return;
-    }
-    if(!entry)return;
-    const next=Math.max(0,Math.floor(Number(entry.qty)||0)+Number(delta||0));
-    if(next<=0){
-      const idx=seerviCart.indexOf(entry);
-      if(idx>=0)seerviCart.splice(idx,1);
-    }else{
-      entry.qty=Math.min(next,1000000);
-    }
-    save();
-  };
-
-  window.seerviPublicCardQtyNormalize=function(itemId,input){
-    const id=String(itemId||'');
-    if(!id)return;
-    const raw=String(input?.value??'').trim();
-    const entry=getEntry(id);
-    if(raw===''){
-      if(input)input.value=String(entry?.qty||0);
-      return;
-    }
-    const n=parseInt(raw,10);
-    if(!Number.isFinite(n) || n<0){
-      if(input)input.value=String(entry?.qty||0);
-      return;
-    }
-    if(n===0){
-      if(entry){
-        const idx=seerviCart.indexOf(entry);
-        if(idx>=0)seerviCart.splice(idx,1);
-        save();
-      }else{
-        if(input)input.value='0';
-        syncControls();
-      }
-      return;
-    }
-    let target=entry||addBase(id);
-    if(target){
-      target.qty=Math.min(n,1000000);
-      save();
-    }
-  };
-
-  function controlHtml(item){
-    const id=String(item.id||'');
-    const entry=getEntry(id);
-    const qty=entry ? Math.max(1,Number(entry.qty)||1) : 0;
-    const model=String(item.model||item.id||'');
-    return `<div class="seervi-public-qty-control product-cart-control ${qty>0?'has-items':''}" data-item-id="${seerviItemsEsc(id)}" aria-label="Quantity controls">
-      <button type="button" class="cart-minus" onclick="seerviPublicCardQtyChange('${seerviItemsEsc(id)}',-1)" aria-label="Decrease quantity">−</button>
-      <input class="seervi-public-qty-input product-qty" type="number" min="0" max="1000000" step="1" inputmode="numeric" value="${qty}" aria-label="Quantity for ${seerviItemsEsc(item.name||model||'product')}" onblur="seerviPublicCardQtyNormalize('${seerviItemsEsc(id)}',this)" onkeydown="if(event.key==='Enter'){event.preventDefault();seerviPublicCardQtyNormalize('${seerviItemsEsc(id)}',this);this.blur();}">
-      <button type="button" class="cart-plus" onclick="seerviPublicCardQtyChange('${seerviItemsEsc(id)}',1)" aria-label="Increase quantity">+</button>
-    </div><span class="seervi-public-qty-label">${qty>0?'IN CART':'QUANTITY'}</span>`;
-  }
-
-  function addButtonHtml(item){
-    const id=String(item.id||'');
-    return `<button class="crm-primary small" type="button" onclick="seerviPublicAddToCart('${seerviItemsEsc(id)}')">ADD TO CART</button>`;
-  }
-
-  function syncRenderedCards(){
-    document.querySelectorAll('.seervi-public-product-card').forEach(card=>{
-      const control=card.querySelector('.seervi-public-qty-control[data-item-id]');
-      const addBtn=card.querySelector('[onclick*="seerviPublicAddToCart"]');
-      let id=control?.dataset.itemId||'';
-      if(!id && addBtn){
-        const onclick=addBtn.getAttribute('onclick')||'';
-        id=onclick.match(/seerviPublicAddToCart\('([^']+)'\)/)?.[1]||'';
-      }
-      if(!id)return;
-      const item=(typeof seerviPublicItems!=='undefined' && Array.isArray(seerviPublicItems))
-        ? seerviPublicItems.find(x=>String(x.id)===String(id))
-        : null;
-      if(!item)return;
-      const entry=getEntry(id);
-      if(entry && !control && addBtn){
-        addBtn.outerHTML=controlHtml(item);
-      }else if(!entry && control){
-        control.outerHTML=addButtonHtml(item);
-        card.querySelector('.seervi-public-qty-label')?.remove();
-      }
-    });
-    syncControls();
-  }
-
-  // Expose only the synchronisation hook. Cart data and rendering remain private.
-  window.seerviPublicSyncCartControls=syncRenderedCards;
-
-  function install(){
-    if(typeof window.seerviPublicRenderItems!=='function')return;
-    const original=window.seerviPublicRenderItems;
-    if(original.__seerviQtyWrapped)return;
-    function wrapped(){
-      const result=original.apply(this,arguments);
-      try{syncRenderedCards();}catch(e){console.warn('Public item quantity controls skipped:',e);}
-      return result;
-    }
-    wrapped.__seerviQtyWrapped=true;
-    window.seerviPublicRenderItems=wrapped;
-    setTimeout(syncRenderedCards,0);
-  }
-
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
-  else install();
-})();
-</script>
-<script id="seervi-public-item-qty-bootstrap">
-(function(){
-  function boot(){
-    if(typeof window.seerviPublicSyncCartControls==='function'){
-      window.seerviPublicSyncCartControls();
-    }
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0),{once:true});
-  else setTimeout(boot,0);
-  window.addEventListener('storage',boot);
-})();
-</script>
-
-<script id="seervi-final-item-cart-qty-bridge">
-(function(){
-  /*
-   * Final item-card bridge.
-   * The catalogue has several historical render paths, so the quantity UI is
-   * synchronized from the actual cart state at the DOM boundary. This avoids
-   * depending on any single renderer or on render order.
-   */
-  function cartEntry(id){
-    if(typeof seerviCart==='undefined' || !Array.isArray(seerviCart)) return null;
-    return seerviCart.find(x=>String(x.firebaseItemId||'')===String(id||'')) || null;
-  }
-
-  function itemById(id){
-    if(typeof seerviPublicItems==='undefined' || !Array.isArray(seerviPublicItems)) return null;
-    return seerviPublicItems.find(x=>String(x.id)===String(id||'')) || null;
-  }
-
-  function controlMarkup(id,qty){
-    const safeId=seerviItemsEsc(String(id||''));
-    const item=itemById(id);
-    const label=seerviItemsEsc(item?.name||item?.model||'product');
-    if(qty<=0){
-      return `<button class="crm-primary small seervi-card-add-to-cart" type="button" onclick="seerviPublicAddToCart('${safeId}')">ADD TO CART</button>`;
-    }
-    return `<div class="seervi-public-qty-control seervi-card-qty-control" data-item-id="${safeId}" aria-label="Quantity for ${label}">
-      <button type="button" class="cart-minus" onclick="seerviPublicCardQtyChange('${safeId}',-1)" aria-label="Decrease quantity">−</button>
-      <input class="seervi-public-qty-input" type="number" min="0" max="1000000" step="1" inputmode="numeric" value="${qty}" aria-label="Quantity for ${label}" onblur="seerviPublicCardQtyNormalize('${safeId}',this)" onkeydown="if(event.key==='Enter'){event.preventDefault();seerviPublicCardQtyNormalize('${safeId}',this);this.blur();}">
-      <button type="button" class="cart-plus" onclick="seerviPublicCardQtyChange('${safeId}',1)" aria-label="Increase quantity">+</button>
-    </div>`;
-  }
-
-  function extractId(card){
-    const control=card.querySelector('.seervi-card-qty-control[data-item-id], .seervi-public-qty-control[data-item-id]');
-    if(control?.dataset.itemId) return control.dataset.itemId;
-    const button=card.querySelector('button[onclick*="seerviPublicAddToCart"]');
-    if(!button) return '';
-    const m=(button.getAttribute('onclick')||'').match(/seerviPublicAddToCart\('([^']+)'\)/);
-    return m ? m[1] : '';
-  }
-
-  function sync(){
-    document.querySelectorAll('.seervi-public-product-card').forEach(card=>{
-      const id=extractId(card);
-      if(!id) return;
-      const entry=cartEntry(id);
-      const qty=entry ? Math.max(1,Number(entry.qty)||1) : 0;
-      const control=card.querySelector('.seervi-card-qty-control[data-item-id], .seervi-public-qty-control[data-item-id]');
-      const addButton=card.querySelector('button[onclick*="seerviPublicAddToCart"]');
-      if(qty>0){
-        if(!control){
-          addButton?.replaceWith(document.createRange().createContextualFragment(controlMarkup(id,qty)));
-        }else{
-          const input=control.querySelector('.seervi-public-qty-input');
-          if(input && document.activeElement!==input) input.value=String(qty);
-        }
-      }else if(control){
-        control.outerHTML=controlMarkup(id,0);
-      }
-    });
-  }
-
-  window.seerviPublicSyncCartControls=sync;
-
-  /* Catch every catalogue rerender, including Firebase/module-driven renders. */
-  const observer=new MutationObserver(()=>sync());
-  function start(){
-    const grid=document.getElementById('seerviPublicProductGrid');
-    if(grid) observer.observe(grid,{childList:true,subtree:true});
-    sync();
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start,{once:true});
-  else start();
-  window.addEventListener('load',sync,{once:true});
-  window.addEventListener('storage',sync);
-})();
-</script>
-
-<script>
-/* ===== QUOTATION SUBCATEGORY RESOLVER =====
-   Handles both new quotations (subcategory stored on quote item) and older
-   quotations created before subcategory was persisted. */
-(function(){
-  function norm(v){ return String(v||'').trim().toLowerCase(); }
-
-  window.seerviQuoteItemSubcategory = function(item){
-    if(!item) return '';
-
-    if(String(item.subcategory||'').trim()){
-      return String(item.subcategory).trim();
-    }
-
-    try{
-      if(item.subcategoryId && typeof window.seerviPublicCategoryName==='function'){
-        const n=window.seerviPublicCategoryName(item.subcategoryId);
-        if(String(n||'').trim()) return String(n).trim();
-      }
-    }catch(_){}
-
-    const sources=[];
-    try{
-      if(Array.isArray(window.seerviInventoryItems)) sources.push(...window.seerviInventoryItems);
-    }catch(_){}
-    try{
-      if(Array.isArray(window.seerviPublicItems)) sources.push(...window.seerviPublicItems);
-    }catch(_){}
-
-    const firebaseId=norm(item.firebaseItemId||item.itemId||'');
-    const model=norm(item.model||'');
-    const name=norm(item.name||'');
-
-    const found=sources.find(x=>{
-      const xid=norm(x.firebaseItemId||x.itemId||x.id||'');
-      const xmodel=norm(x.model||'');
-      const xname=norm(x.name||'');
-      return (firebaseId && xid===firebaseId) ||
-             (model && xmodel===model) ||
-             (name && xname===name);
-    });
-
-    if(found){
-      if(String(found.subcategory||'').trim()) return String(found.subcategory).trim();
-      try{
-        if(found.subcategoryId && typeof window.seerviPublicCategoryName==='function'){
-          const n=window.seerviPublicCategoryName(found.subcategoryId);
-          if(String(n||'').trim()) return String(n).trim();
-        }
-      }catch(_){}
-    }
-
-    return '';
-  };
-
-  window.seerviQuoteProductLabel = function(item){
-    const sub=window.seerviQuoteItemSubcategory(item);
-    const model=String(item?.model||item?.name||'Item').trim();
-    return [sub,model].filter(Boolean).join(' — ');
-  };
-
-  window.seerviPrepareQuotationItems = function(items){
-    return (Array.isArray(items)?items:[]).map(item=>{
-      if(!item || typeof item!=='object') return item;
-      const resolvedSubcategory =
-        String(item.subcategory||'').trim() ||
-        String(window.seerviQuoteItemSubcategory(item)||'').trim();
-      const resolvedCategory =
-        String(item.category||'').trim() ||
-        (item.categoryId && typeof window.seerviPublicCategoryName==='function'
-          ? String(window.seerviPublicCategoryName(item.categoryId)||'').trim()
-          : '');
-      return {
-        ...item,
-        category:resolvedCategory,
-        subcategory:resolvedSubcategory,
-        model:item.model||item.name||'Item',
-        name:item.name||item.model||'Item'
-      };
-    });
-  };
-})();
-</script>
-<script>
-/* ===== QUOTATION SUBCATEGORY LABEL COMPATIBILITY ===== */
-(function(){
-  function resolveSubcategory(item){
-    if(!item) return '';
-    if(item.subcategory) return String(item.subcategory);
-    try{
-      if(item.subcategoryId && typeof window.seerviPublicCategoryName==='function'){
-        return String(window.seerviPublicCategoryName(item.subcategoryId)||'');
-      }
-    }catch(_){}
-    return '';
-  }
-  function normalizeQuoteItem(item){
-    if(!item || typeof item!=='object') return item;
-    const sub=resolveSubcategory(item);
-    if(sub) item.subcategory=sub;
-    if(!item.category){
-      try{
-        if(item.categoryId && typeof window.seerviPublicCategoryName==='function'){
-          item.category=String(window.seerviPublicCategoryName(item.categoryId)||'');
-        }
-      }catch(_){}
-    }
-    return item;
-  }
-  window.seerviNormalizeQuotationSubcategories=function(){
-    if(Array.isArray(window.seerviCart)) window.seerviCart.forEach(normalizeQuoteItem);
-    return window.seerviCart||[];
-  };
-
-  window.seerviNormalizeSavedQuotation=function(q){
-    if(!q || typeof q!=='object') return q;
-    return {
-      ...q,
-      items:(typeof window.seerviPrepareQuotationItems==='function'
-        ? window.seerviPrepareQuotationItems(q.items||[])
-        : (q.items||[]))
-    };
-  };
-  document.addEventListener('DOMContentLoaded',function(){
-    try{ window.seerviNormalizeQuotationSubcategories(); }catch(_){}
-  });
-})();
-</script>
 </body>
 
 </html>
