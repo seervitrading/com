@@ -8623,11 +8623,19 @@ async function adjustInventoryForQuoteDeltas(deltas,{strict=true}={}){
     for(const ch of changes){
       const item=itemMap.get(ch.key);if(!item){if(strict)throw new Error('Firebase item not found for stock update.');continue;}
       const ref=doc(db,'inventory',item.key);const snap=await tx.get(ref);
-      if(!snap.exists()){if(strict)throw new Error(`Stock quantity is not set for ${item.name||item.model}. Please set AVAILABLE QTY first.`);continue;}
-      const data=snap.data()||{};const current=Number(data.availableQty);
-      if(!Number.isFinite(current)){if(strict)throw new Error(`Stock quantity is not set for ${item.name||item.model}. Please set AVAILABLE QTY first.`);continue;}
-      const delta=Number(ch.delta);const next=current-delta;
-      if(next<0)throw new Error(`Insufficient stock for ${item.name||item.model}. Available: ${current}, required: ${delta}.`);
+      /*
+       * QUOTATION MUST NOT FAIL BECAUSE STOCK IS ZERO / UNSET.
+       * Stock is availability information, not a quotation permission gate.
+       * When there is no inventory document or availableQty is missing, treat
+       * the current quantity as 0. A quotation may therefore move stock to
+       * -1, -2, etc. The inventory document is created/updated accordingly.
+       */
+      const data=snap.exists()?(snap.data()||{}):{};
+      const rawCurrent=Number(data.availableQty);
+      const current=Number.isFinite(rawCurrent)?rawCurrent:0;
+      const delta=Number(ch.delta);
+      if(!Number.isFinite(delta)){if(strict)throw new Error(`Invalid stock quantity change for ${item.name||item.model}.`);continue;}
+      const next=current-delta;
       pending.push({ref,item,data,next,ch});
     }
     pending.forEach(({ref,item,data,next,ch})=>{
