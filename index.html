@@ -5287,7 +5287,7 @@ function downloadCartPDF(){
   doc.setFont('helvetica','bold');
   doc.setFontSize(12);
   doc.setTextColor(18,22,27);
-  doc.text('GRAND TOTAL',135,y+6);
+  doc.text('GRAND TOTAL',128,y+6);
   doc.text(pdfINR(p.grandTotal),right,y+6,{align:'right'});
   y+=18;
 
@@ -8136,7 +8136,7 @@ window.crmDownloadQuote=async function(id){
     doc.setFont('helvetica','bold');
     doc.setFontSize(12);
     doc.setTextColor(18,22,27);
-    doc.text('GRAND TOTAL',135,y+6);
+    doc.text('GRAND TOTAL',128,y+6);
     doc.text(inr(grand),right,y+6,{align:'right'});
     y+=18;
 
@@ -8354,7 +8354,7 @@ window.customerDownloadQuote=async function(id){
     doc.setFont('helvetica','bold');
     doc.setFontSize(12);
     doc.setTextColor(18,22,27);
-    doc.text('GRAND TOTAL',135,y+6);
+    doc.text('GRAND TOTAL',128,y+6);
     doc.text(inr(grand),right,y+6,{align:'right'});
     y+=18;
 
