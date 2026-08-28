@@ -5517,15 +5517,13 @@ document.addEventListener('keydown',function(e){
   if(e.key==='Escape')closeSupportModal();
 });
 </script><script>
-/* ===== V55 MOBILE HOME / PRODUCTS VIEWS ===== */
+/* ===== MOBILE HOME / PRODUCTS VIEWS ===== */
 (function(){
   window.showMobileProducts=function(e){
     if(window.innerWidth>600) return;
     if(e) e.preventDefault();
     document.body.classList.add('mobile-products-view');
-    setTimeout(function(){
-      window.scrollTo({top:0,behavior:'smooth'});
-    },30);
+    setTimeout(function(){ window.scrollTo({top:0,behavior:'smooth'}); },30);
   };
 
   window.showMobileHome=function(e){
@@ -5533,93 +5531,6 @@ document.addEventListener('keydown',function(e){
     if(e) e.preventDefault();
     document.body.classList.remove('mobile-products-view');
     window.scrollTo({top:0,behavior:'smooth'});
-  };
-
-  // Keep existing cart behavior, but lock page scroll while the full-screen mobile cart is open.
-  const existingOpenCart=window.openCart;
-  const existingCloseCart=window.closeCart;
-  if(typeof existingOpenCart==='function'){
-    window.openCart=function(){
-      existingOpenCart.apply(this,arguments);
-      if(window.innerWidth<=600) document.body.classList.add('cart-open');
-    };
-  }
-  if(typeof existingCloseCart==='function'){
-    window.closeCart=function(){
-      existingCloseCart.apply(this,arguments);
-      document.body.classList.remove('cart-open');
-    };
-  }
-})();
-</script><script>
-document.addEventListener('DOMContentLoaded',function(){
-  if(window.innerWidth<=600) document.body.classList.remove('mobile-products-view');
-});
-</script><script>
-/* ===== V58 PRODUCT CATEGORY FILTER ===== */
-(function(){
-  window.showProductCategory=function(category){
-    const bar=document.getElementById('productCategoryBar');
-    if(!bar) return;
-
-    bar.querySelectorAll('.product-category-btn').forEach(function(btn){
-      btn.classList.toggle('active',btn.dataset.category===category);
-    });
-
-    const sections={
-      profiles:document.getElementById('profiles'),
-      blades:document.getElementById('products'),
-      coming:document.getElementById('applications')
-    };
-
-    // On category selection, show only the requested product category.
-    ['profiles','blades','coming'].forEach(function(key){
-      const el=sections[key];
-      if(!el) return;
-      if(Array.isArray(el)){ el.forEach(function(x){if(x)x.style.display=(category==='all' || category===key)?'block':'none';}); }
-      else el.style.display=(category==='all' || category===key)?'block':'none';
-    });
-
-    if(category!=='all'){
-      const target=sections[category];
-      const firstTarget=Array.isArray(target)?target.find(Boolean):target;
-      if(firstTarget) setTimeout(function(){ firstTarget.scrollIntoView({behavior:'smooth',block:'start'}); },20);
-    }
-  };
-
-  // When mobile PRODUCTS is opened, show all product categories initially.
-  const oldShow=window.showMobileProducts;
-  window.showMobileProducts=function(e){
-    if(typeof oldShow==='function') oldShow(e);
-    setTimeout(function(){ window.showProductCategory('all'); },40);
-  };
-
-  // Desktop/mobile resize safety: reset inline section visibility when returning to desktop.
-  window.addEventListener('resize',function(){
-    if(window.innerWidth>600){
-      ['profiles','products','applications'].forEach(function(id){
-        const el=document.getElementById(id);
-        if(el) el.style.display='';
-      });
-    }
-  });
-})();
-</script><script>
-/* V60 mobile category reset */
-(function(){
-  const oldHome=window.showMobileHome;
-  window.showMobileHome=function(e){
-    if(typeof oldHome==='function') oldHome(e);
-    const bar=document.getElementById('productCategoryBar');
-    if(bar){
-      bar.querySelectorAll('.product-category-btn').forEach(function(btn){
-        btn.classList.toggle('active',btn.dataset.category==='all');
-      });
-    }
-    ['profiles','products','applications'].forEach(function(id){
-      const el=document.getElementById(id);
-      if(el) el.style.display='';
-    });
   };
 })();
 </script><script>
@@ -10388,118 +10299,14 @@ function seerviPublicSelectSubcategory(subcategoryId){
   seerviPublicRenderItems();
 }
 
-function seerviPublicRenderItems(){
-  const grid=$('seerviPublicProductGrid');
-  if(!grid)return;
+/* Renderer is assigned once by the final catalogue implementation below.
+   Keeping a callable no-op during module initialization prevents early references
+   from becoming undefined before Firebase catalogue data is ready. */
+let seerviPublicRenderItems=function(){};
 
-  let rows=seerviPublicItems.filter(item=>{
-    if(seerviPublicSelectedCategory!=='all' && item.categoryId!==seerviPublicSelectedCategory)return false;
-    if(seerviPublicSelectedSubcategory!=='all' && item.subcategoryId!==seerviPublicSelectedSubcategory)return false;
-    return true;
-  });
+/* Legacy public item action implementations removed from the duplicate render path.
+   Final multi-image item actions below are the single runtime implementation. */
 
-  if(!rows.length){
-    grid.innerHTML='<div class="seervi-public-empty">No products are available in this selection.</div>';
-    return;
-  }
-
-  grid.innerHTML=rows.map(item=>{
-    const category=seerviPublicCategoryName(item.categoryId);
-    const subcategory=seerviPublicCategoryName(item.subcategoryId);
-    const displayModel=item.model||'';
-    const cartModel=item.model||item.id;
-    const specEntries=Object.entries(item.specifications||{}).slice(0,6);
-    const specHtml=specEntries.map(([k,v])=>`<span class="seervi-public-spec-chip">${seerviItemsEsc(k)}: ${seerviItemsEsc(v)}</span>`).join('');
-    const image=item.imageWebpUrl||'';
-    const imageHtml=image
-      ? `<div class="home-product-thumb" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')"><img src="${seerviItemsEsc(image)}" alt="${seerviItemsEsc(item.name||'Product')}" loading="lazy" onerror="this.style.opacity='.15'"></div>`
-      : `<div class="home-product-thumb" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')"><div class="seervi-public-empty">NO IMAGE</div></div>`;
-
-    return `<article class="home-product-card seervi-public-product-card" data-model="${seerviItemsEsc(cartModel)}" data-subcategory="${seerviItemsEsc(subcategory)}" data-type="Item">
-      ${imageHtml}
-      <div class="home-product-meta">
-        <div class="seervi-public-category-line">${seerviItemsEsc(category)}${subcategory?' / '+seerviItemsEsc(subcategory):''}</div>
-        <h3>${seerviItemsEsc(item.name||'Unnamed Item')}</h3>
-        ${displayModel?`<p>Model: ${seerviItemsEsc(displayModel)}</p>`:''}
-        ${item.description?`<p>${seerviItemsEsc(item.description).slice(0,180)}</p>`:''}
-        ${specHtml?`<div class="seervi-public-specs">${specHtml}</div>`:''}
-        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">
-          <button class="crm-secondary small" type="button" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')">VIEW DETAILS</button>
-          <button class="crm-primary small" type="button" onclick="seerviPublicAddToCart('${seerviItemsEsc(item.id)}')">ADD TO CART</button>
-        </div>
-      </div>
-    </article>`;
-  }).join('');
-}
-
-window.seerviPublicAddToCart=function(itemId){
-  const item=seerviPublicItems.find(x=>x.id===itemId);
-  if(!item)return;
-  const cartItem={
-    type:'Item',
-    firebaseItemId:item.id,
-    categoryId:item.categoryId||'',
-    subcategoryId:item.subcategoryId||'',
-    category:seerviPublicCategoryName(item.categoryId),
-    subcategory:seerviPublicCategoryName(item.subcategoryId),
-    model:item.model||item.id,
-    name:item.name||item.model||'Item',
-    image:item.imageWebpUrl||'',
-    imageWebpUrl:item.imageWebpUrl||'',
-    description:item.description||'',
-    specifications:{...(item.specifications||{})},
-    specification:Object.entries(item.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(', '),
-    rate:0
-  };
-  addToCart(cartItem);
-};
-
-window.seerviPublicOpenItem=function(itemId){
-  const item=seerviPublicItems.find(x=>x.id===itemId);
-  if(!item)return;
-
-  let modal=document.getElementById('seerviPublicItemModal');
-  if(!modal){
-    modal=document.createElement('div');
-    modal.id='seerviPublicItemModal';
-    modal.className='product-modal';
-    modal.innerHTML='<div class="product-modal-box"><button class="modal-close" type="button" aria-label="Close" onclick="seerviPublicCloseItem()">×</button><div id="seerviPublicItemModalContent"></div></div>';
-    document.body.appendChild(modal);
-  }
-
-  const specs=Object.entries(item.specifications||{});
-  const specTable=specs.length
-    ? `<div style="margin-top:18px;border:1px solid #ffffff12;border-radius:10px;overflow:hidden"><table style="width:100%;border-collapse:collapse">${specs.map(([k,v])=>`<tr><td style="padding:9px;border-bottom:1px solid #ffffff0d;color:#8f99a4;width:35%">${seerviItemsEsc(k)}</td><td style="padding:9px;border-bottom:1px solid #ffffff0d;color:#f2f4f6">${seerviItemsEsc(v)}</td></tr>`).join('')}</table></div>`
-    : '';
-
-  $('seerviPublicItemModalContent').innerHTML=`
-    ${item.imageWebpUrl?`<img src="${seerviItemsEsc(item.imageWebpUrl)}" alt="${seerviItemsEsc(item.name||'Product')}">`:''}
-    <div class="modal-caption">
-      <div class="crm-kicker">${seerviItemsEsc(seerviPublicCategoryName(item.categoryId))}${item.subcategoryId?' / '+seerviItemsEsc(seerviPublicCategoryName(item.subcategoryId)):''}</div>
-      <h3>${seerviItemsEsc(item.name||'Unnamed Item')}</h3>
-      ${item.model?`<p><b>Model:</b> ${seerviItemsEsc(item.model)}</p>`:''}
-      ${item.description?`<p style="margin-top:8px">${seerviItemsEsc(item.description)}</p>`:''}
-      ${specTable}
-      <button class="crm-primary" type="button" style="margin-top:16px" onclick="seerviPublicAddToCart('${seerviItemsEsc(item.id)}');seerviPublicCloseItem()">ADD TO CART</button>
-    </div>`;
-  modal.classList.add('show');
-  modal.setAttribute('aria-hidden','false');
-  document.body.classList.add('modal-open');
-};
-
-window.seerviPublicCloseItem=function(){
-  const modal=$('seerviPublicItemModal');
-  if(!modal)return;
-  modal.classList.remove('show');
-  modal.setAttribute('aria-hidden','true');
-  document.body.classList.remove('modal-open');
-};
-
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',()=>setTimeout(seerviPublicLoadCatalogue,0),{once:true});
-}else{
-  setTimeout(seerviPublicLoadCatalogue,0);
-}
 /* ===== END SEERVI PUBLIC FIREBASE CATALOGUE / STEP 7 ===== */
 
 
@@ -10517,8 +10324,6 @@ function seerviPublicItemSearchText(item){
   ].join(' ').toLowerCase();
 }
 
-const seerviPublicRenderItemsStep8=seerviPublicRenderItems;
-
 function seerviPublicCardCartControl(item){
   const id=String(item?.id||'');
   const entry=(typeof seerviCart!=='undefined' && Array.isArray(seerviCart)) ? seerviCart.find(x=>String(x.firebaseItemId||'')===id) : null;
@@ -10534,61 +10339,6 @@ function seerviPublicCardCartControl(item){
     <button type="button" class="cart-plus" onclick="seerviPublicCardQtyChange('${safeId}',1)" aria-label="Increase quantity">+</button>
   </div>`;
 }
-
-seerviPublicRenderItems=function(){
-  const grid=$('seerviPublicProductGrid');
-  if(!grid)return;
-
-  let rows=seerviPublicItems.filter(item=>{
-    if(seerviPublicSelectedCategory!=='all' && item.categoryId!==seerviPublicSelectedCategory)return false;
-    if(seerviPublicSelectedSubcategory!=='all' && item.subcategoryId!==seerviPublicSelectedSubcategory)return false;
-    if(seerviPublicSearchQuery && !seerviPublicItemSearchText(item).includes(seerviPublicSearchQuery))return false;
-    return true;
-  });
-
-  rows.sort((a,b)=>{
-    if(seerviPublicSortMode==='name-desc')return String(b.name||'').localeCompare(String(a.name||''));
-    if(seerviPublicSortMode==='newest'){
-      const at=seerviPublicMillis(a.createdAt)||seerviPublicMillis(a.updatedAt);
-      const bt=seerviPublicMillis(b.createdAt)||seerviPublicMillis(b.updatedAt);
-      return bt-at;
-    }
-    return String(a.name||'').localeCompare(String(b.name||''));
-  });
-
-  if(!rows.length){
-    grid.innerHTML='<div class="seervi-public-empty">No products match your search or selected category.</div>';
-    return;
-  }
-
-  grid.innerHTML=rows.map(item=>{
-    const category=seerviPublicCategoryName(item.categoryId);
-    const subcategory=seerviPublicCategoryName(item.subcategoryId);
-    const displayModel=item.model||'';
-    const cartModel=item.model||item.id;
-    const specEntries=Object.entries(item.specifications||{}).slice(0,6);
-    const specHtml=specEntries.map(([k,v])=>`<span class="seervi-public-spec-chip">${seerviItemsEsc(k)}: ${seerviItemsEsc(v)}</span>`).join('');
-    const image=item.imageWebpUrl||'';
-    const imageHtml=image
-      ? `<div class="home-product-thumb" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')"><img src="${seerviItemsEsc(image)}" alt="${seerviItemsEsc(item.name||'Product')}" loading="lazy" onerror="this.style.opacity='.15'"></div>`
-      : `<div class="home-product-thumb" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')"><div class="seervi-public-empty">NO IMAGE</div></div>`;
-
-    return `<article class="home-product-card seervi-public-product-card" data-model="${seerviItemsEsc(cartModel)}" data-subcategory="${seerviItemsEsc(subcategory)}" data-type="Item">
-      ${imageHtml}
-      <div class="home-product-meta">
-        <div class="seervi-public-category-line">${seerviItemsEsc(category)}${subcategory?' / '+seerviItemsEsc(subcategory):''}</div>
-        <h3>${seerviItemsEsc(item.name||'Unnamed Item')}</h3>
-        ${displayModel?`<p>Model: ${seerviItemsEsc(displayModel)}</p>`:''}
-        ${item.description?`<p>${seerviItemsEsc(item.description).slice(0,180)}</p>`:''}
-        ${specHtml?`<div class="seervi-public-specs">${specHtml}</div>`:''}
-        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">
-          <button class="crm-secondary small" type="button" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')">VIEW DETAILS</button>
-          <button class="crm-primary small" type="button" onclick="seerviPublicAddToCart('${seerviItemsEsc(item.id)}')">ADD TO CART</button>
-        </div>
-      </div>
-    </article>`;
-  }).join('');
-};
 
 function seerviPublicWireSearch(){
   const input=$('seerviPublicSearch');
@@ -10754,71 +10504,6 @@ seerviPublicSelectSubcategory=function(subcategoryId){
   seerviPublicRenderItems();
 }
 
-const seerviPublicRenderItemsCategoryFirst=seerviPublicRenderItems;
-seerviPublicRenderItems=function(){
-  const grid=$('seerviPublicProductGrid');
-  if(!grid)return;
-
-  // Ground state must contain category cards only.
-  if(seerviPublicSelectedCategory==='all'){
-    grid.innerHTML='';
-    grid.hidden=true;
-    return;
-  }
-
-  grid.hidden=false;
-
-  let rows=seerviPublicItems.filter(item=>{
-    if(item.categoryId!==seerviPublicSelectedCategory)return false;
-    if(seerviPublicSelectedSubcategory!=='all' && item.subcategoryId!==seerviPublicSelectedSubcategory)return false;
-    if(seerviPublicSearchQuery && !seerviPublicItemSearchText(item).includes(seerviPublicSearchQuery))return false;
-    return true;
-  });
-
-  rows.sort((a,b)=>{
-    if(seerviPublicSortMode==='name-desc')return String(b.name||'').localeCompare(String(a.name||''));
-    if(seerviPublicSortMode==='newest'){
-      const at=seerviPublicMillis(a.createdAt)||seerviPublicMillis(a.updatedAt);
-      const bt=seerviPublicMillis(b.createdAt)||seerviPublicMillis(b.updatedAt);
-      return bt-at;
-    }
-    return String(a.name||'').localeCompare(String(b.name||''));
-  });
-
-  if(!rows.length){
-    grid.innerHTML='<div class="seervi-public-empty">No products are available in this selection.</div>';
-    return;
-  }
-
-  grid.innerHTML=rows.map(item=>{
-    const category=seerviPublicCategoryName(item.categoryId);
-    const subcategory=seerviPublicCategoryName(item.subcategoryId);
-    const displayModel=item.model||'';
-    const cartModel=item.model||item.id;
-    const specEntries=Object.entries(item.specifications||{}).slice(0,6);
-    const specHtml=specEntries.map(([k,v])=>`<span class="seervi-public-spec-chip">${seerviItemsEsc(k)}: ${seerviItemsEsc(v)}</span>`).join('');
-    const image=item.imageWebpUrl||'';
-    const imageHtml=image
-      ? `<div class="home-product-thumb" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')"><img src="${seerviItemsEsc(image)}" alt="${seerviItemsEsc(item.name||'Product')}" loading="lazy" onerror="this.style.opacity='.15'"></div>`
-      : `<div class="home-product-thumb" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')"><div class="seervi-public-empty">NO IMAGE</div></div>`;
-
-    return `<article class="home-product-card seervi-public-product-card" data-model="${seerviItemsEsc(cartModel)}" data-subcategory="${seerviItemsEsc(subcategory)}" data-type="Item">
-      ${imageHtml}
-      <div class="home-product-meta">
-        <div class="seervi-public-category-line">${seerviItemsEsc(category)}${subcategory?' / '+seerviItemsEsc(subcategory):''}</div>
-        <h3>${seerviItemsEsc(item.name||'Unnamed Item')}</h3>
-        ${displayModel?`<p>Model: ${seerviItemsEsc(displayModel)}</p>`:''}
-        ${item.description?`<p>${seerviItemsEsc(item.description).slice(0,180)}</p>`:''}
-        ${specHtml?`<div class="seervi-public-specs">${specHtml}</div>`:''}
-        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">
-          <button class="crm-secondary small" type="button" onclick="seerviPublicOpenItem('${seerviItemsEsc(item.id)}')">VIEW DETAILS</button>
-          <button class="crm-primary small" type="button" onclick="seerviPublicAddToCart('${seerviItemsEsc(item.id)}')">ADD TO CART</button>
-        </div>
-      </div>
-    </article>`;
-  }).join('');
-};
-
 window.seerviPublicBackToCategories=seerviPublicBackToCategories;
 /* ===== END SEERVI CATEGORY-FIRST PUBLIC CATALOGUE / STEP 12 ===== */
 
@@ -10926,9 +10611,7 @@ window.SEERVI_SINGLE_ADMIN_EMAIL='seervitrading@gmail.com';
 window.seerviPublicSelectCategory=seerviPublicSelectCategory;
 window.seerviPublicBackToCategories=seerviPublicBackToCategories;
 window.seerviPublicSelectSubcategory=seerviPublicSelectSubcategory;
-window.seerviPublicOpenItem=seerviPublicOpenItem;
-window.seerviPublicCloseItem=seerviPublicCloseItem;
-window.seerviPublicAddToCart=seerviPublicAddToCart;
+/* Public item action handlers are exposed by the final item system below. */
 /* ===== END SEERVI PUBLIC CATALOGUE GLOBAL EVENT BRIDGE ===== */
 
 
@@ -11096,6 +10779,14 @@ window.seerviPublicAddToCart=function(itemId){
     rate:0
   });
   if(typeof seerviPublicRenderItems==='function') seerviPublicRenderItems();
+};
+
+window.seerviPublicCloseItem=function(){
+  const modal=$('seerviPublicItemModal');
+  if(!modal)return;
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden','true');
+  document.body.classList.remove('modal-open');
 };
 
 window.seerviPublicOpenItem=function(itemId){
@@ -11519,55 +11210,79 @@ function seerviShowSaveSuccess(message){
   body.mobile-products-view .tv-mount-product-grid{display:grid!important}
 }
 </style><script>
-/* V116: PRODUCT CATEGORY EXTENSION */
+/* ===== SEERVI PRODUCT CATEGORY VIEW CONTROLLER =====
+   Single canonical controller for the existing category UI.
+   The rendered interface and category behaviour are preserved; historical
+   wrappers are consolidated so one function owns category visibility.
+*/
 (function(){
+  const SECTION_IDS={
+    profiles:['profiles'],
+    blades:['products'],
+    mounts:['tvMounts'],
+    coming:['applications'],
+    augers:['earthAugers'],
+    curtains:[
+      'curtainRods','curtainFinials01','curtainFinials02','curtainFinials03',
+      'curtainFinials04','curtainBrackets','curtainBrackets01',
+      'curtainDesignRods','curtainHooks','curtainRings','curtainAccessories','magneticClip'
+    ]
+  };
+  const ALL_SECTION_IDS=[...new Set(Object.values(SECTION_IDS).flat().concat('curtainFinials'))];
+  const CATEGORY_KEYS=Object.keys(SECTION_IDS);
+
+  function resetSectionVisibility(){
+    ALL_SECTION_IDS.forEach(id=>{
+      const el=document.getElementById(id);
+      if(el)el.style.display='';
+    });
+  }
+
   function setCategory(category){
+    const selected=category||'all';
     const bar=document.getElementById('productCategoryBar');
-    if(!bar) return;
-    bar.querySelectorAll('.product-category-btn').forEach(function(btn){
-      btn.classList.toggle('active',btn.dataset.category===category);
+    if(bar){
+      bar.querySelectorAll('.product-category-btn').forEach(btn=>{
+        btn.classList.toggle('active',btn.dataset.category===selected);
+      });
+    }
+    CATEGORY_KEYS.forEach(key=>{
+      SECTION_IDS[key].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el)el.style.display=(selected==='all'||selected===key)?'block':'none';
+      });
     });
-    const sections={
-      profiles:document.getElementById('profiles'),
-      blades:document.getElementById('products'),
-      mounts:document.getElementById('tvMounts'),
-      coming:document.getElementById('applications'),
-      augers:document.getElementById('earthAugers'),
-      curtains:[document.getElementById('curtainRods'),document.getElementById('curtainFinials01'),document.getElementById('curtainFinials02'),document.getElementById('curtainFinials03'),document.getElementById('curtainFinials04'),document.getElementById('curtainBrackets'),document.getElementById('curtainBrackets01'),document.getElementById('curtainDesignRods'),document.getElementById('curtainHooks'),document.getElementById('curtainRings'),document.getElementById('curtainAccessories'),document.getElementById('magneticClip')]
-    };
-    ['profiles','blades','mounts','coming','augers','curtains'].forEach(function(key){
-      const el=sections[key];
-      if(!el) return;
-      if(Array.isArray(el)){ el.forEach(function(x){if(x)x.style.display=(category==='all' || category===key)?'block':'none';}); }
-      else el.style.display=(category==='all' || category===key)?'block':'none';
-    });
-    if(category!=='all'){
-      const target=sections[category];
-      const firstTarget=Array.isArray(target)?target.find(Boolean):target;
-      if(firstTarget) setTimeout(function(){ firstTarget.scrollIntoView({behavior:'smooth',block:'start'}); },20);
+    if(selected!=='all'){
+      const target=SECTION_IDS[selected]?.map(id=>document.getElementById(id)).find(Boolean);
+      if(target)setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'start'}),20);
     }
   }
-  /* Legacy generic Finials section is retired; only Finials 01–04 are exposed. */
-  const legacyFinials=document.getElementById('curtainFinials');
-  if(legacyFinials) legacyFinials.style.display='none';
-  window.showProductCategory=setCategory;
 
-  const oldHome=window.showMobileHome;
+  // The generic legacy Finials section is intentionally not exposed.
+  const legacyFinials=document.getElementById('curtainFinials');
+  if(legacyFinials)legacyFinials.style.display='none';
+
+  const baseShowMobileProducts=window.showMobileProducts;
+  const baseShowMobileHome=window.showMobileHome;
+
+  window.showProductCategory=setCategory;
+  window.showMobileProducts=function(e){
+    if(typeof baseShowMobileProducts==='function')baseShowMobileProducts(e);
+    setTimeout(()=>setCategory('all'),40);
+  };
   window.showMobileHome=function(e){
-    if(typeof oldHome==='function') oldHome(e);
-    ['profiles','products','tvMounts','earthAugers','curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04','curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods','curtainHooks','curtainRings','curtainAccessories','magneticClip','applications'].forEach(function(id){
-      const el=document.getElementById(id);
-      if(el) el.style.display='';
-    });
+    if(typeof baseShowMobileHome==='function')baseShowMobileHome(e);
+    const bar=document.getElementById('productCategoryBar');
+    if(bar){
+      bar.querySelectorAll('.product-category-btn').forEach(btn=>{
+        btn.classList.toggle('active',btn.dataset.category==='all');
+      });
+    }
+    resetSectionVisibility();
   };
 
   window.addEventListener('resize',function(){
-    if(window.innerWidth>600){
-      ['profiles','products','tvMounts','earthAugers','curtainFinials','curtainFinials01','curtainFinials02','curtainFinials03','curtainFinials04','curtainBrackets','curtainBrackets01','curtainDesignRods','curtainRods','curtainHooks','curtainRings','curtainAccessories','magneticClip','applications'].forEach(function(id){
-        const el=document.getElementById(id);
-        if(el) el.style.display='';
-      });
-    }
+    if(window.innerWidth>600)resetSectionVisibility();
   });
 })();
 </script>
@@ -12160,238 +11875,17 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
   else install();
-})();
-</script>
-<script id="seervi-public-item-qty-bootstrap">
-(function(){
-  function boot(){
-    if(typeof window.seerviPublicSyncCartControls==='function'){
-      window.seerviPublicSyncCartControls();
-    }
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0),{once:true});
-  else setTimeout(boot,0);
-  window.addEventListener('storage',boot);
-})();
-</script>
 
-<script id="seervi-final-item-cart-qty-bridge">
-(function(){
-  /*
-   * Final item-card bridge.
-   * The catalogue has several historical render paths, so the quantity UI is
-   * synchronized from the actual cart state at the DOM boundary. This avoids
-   * depending on any single renderer or on render order.
-   */
-  function cartEntry(id){
-    if(typeof seerviCart==='undefined' || !Array.isArray(seerviCart)) return null;
-    return seerviCart.find(x=>String(x.firebaseItemId||'')===String(id||'')) || null;
-  }
-
-  function itemById(id){
-    if(typeof seerviPublicItems==='undefined' || !Array.isArray(seerviPublicItems)) return null;
-    return seerviPublicItems.find(x=>String(x.id)===String(id||'')) || null;
-  }
-
-  function controlMarkup(id,qty){
-    const safeId=seerviItemsEsc(String(id||''));
-    const item=itemById(id);
-    const label=seerviItemsEsc(item?.name||item?.model||'product');
-    if(qty<=0){
-      return `<button class="crm-primary small seervi-card-add-to-cart" type="button" onclick="seerviPublicAddToCart('${safeId}')">ADD TO CART</button>`;
-    }
-    return `<div class="seervi-public-qty-control seervi-card-qty-control" data-item-id="${safeId}" aria-label="Quantity for ${label}">
-      <button type="button" class="cart-minus" onclick="seerviPublicCardQtyChange('${safeId}',-1)" aria-label="Decrease quantity">−</button>
-      <input class="seervi-public-qty-input" type="number" min="0" max="1000000" step="1" inputmode="numeric" value="${qty}" aria-label="Quantity for ${label}" onblur="seerviPublicCardQtyNormalize('${safeId}',this)" onkeydown="if(event.key==='Enter'){event.preventDefault();seerviPublicCardQtyNormalize('${safeId}',this);this.blur();}">
-      <button type="button" class="cart-plus" onclick="seerviPublicCardQtyChange('${safeId}',1)" aria-label="Increase quantity">+</button>
-    </div>`;
-  }
-
-  function extractId(card){
-    const control=card.querySelector('.seervi-card-qty-control[data-item-id], .seervi-public-qty-control[data-item-id]');
-    if(control?.dataset.itemId) return control.dataset.itemId;
-    const button=card.querySelector('button[onclick*="seerviPublicAddToCart"]');
-    if(!button) return '';
-    const m=(button.getAttribute('onclick')||'').match(/seerviPublicAddToCart\('([^']+)'\)/);
-    return m ? m[1] : '';
-  }
-
-  function sync(){
-    document.querySelectorAll('.seervi-public-product-card').forEach(card=>{
-      const id=extractId(card);
-      if(!id) return;
-      const entry=cartEntry(id);
-      const qty=entry ? Math.max(1,Number(entry.qty)||1) : 0;
-      const control=card.querySelector('.seervi-card-qty-control[data-item-id], .seervi-public-qty-control[data-item-id]');
-      const addButton=card.querySelector('button[onclick*="seerviPublicAddToCart"]');
-      if(qty>0){
-        if(!control){
-          addButton?.replaceWith(document.createRange().createContextualFragment(controlMarkup(id,qty)));
-        }else{
-          const input=control.querySelector('.seervi-public-qty-input');
-          if(input && document.activeElement!==input) input.value=String(qty);
-        }
-      }else if(control){
-        control.outerHTML=controlMarkup(id,0);
-      }
-    });
-  }
-
-  window.seerviPublicSyncCartControls=sync;
-
-  /* Catch every catalogue rerender, including Firebase/module-driven renders. */
-  const observer=new MutationObserver(()=>sync());
-  function start(){
-    const grid=document.getElementById('seerviPublicProductGrid');
-    if(grid) observer.observe(grid,{childList:true,subtree:true});
-    sync();
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start,{once:true});
-  else start();
-  window.addEventListener('load',sync,{once:true});
-  window.addEventListener('storage',sync);
+  window.addEventListener('storage',()=>setTimeout(syncRenderedCards,0));
 })();
 </script>
 
 
-<script id="seervi-genuine-mobile-navigation">
-(function(){
-  const MOBILE_MAX=700;
-  const KEY='seerviApp';
-  let internal=false;
 
-  function mobile(){
-    return window.matchMedia && window.matchMedia('(max-width:'+MOBILE_MAX+'px)').matches;
-  }
-  function appView(){
-    const body=document.body;
-    if(body.classList.contains('mobile-products-view')) return 'products';
-    const cart=document.getElementById('cartDrawer');
-    if(cart && cart.classList.contains('show')) return 'cart';
-    return 'home';
-  }
-  function push(view){
-    try{ history.pushState({[KEY]:view},'', '#'+view); }catch(e){}
-  }
-  function replace(view){
-    try{ history.replaceState({[KEY]:view},'', '#'+view); }catch(e){}
-  }
-  function closeOverlay(){
-    const checks=[
-      ['crmQuoteViewModal','crmCloseQuoteView'],
-      ['seerviPublicItemModal','seerviPublicCloseItem'],
-      ['supportModal','closeSupportModal'],
-      ['seerviWhatsAppPanel','closeWhatsAppPanel'],
-      ['partySignupModal','closePartySignup'],
-      ['customerLoginModal','closeCustomerLogin'],
-      ['crmModal','closeCRM'],
-      ['accountDashboardModal','closeAccountDashboard']
-    ];
-    for(const [id,fn] of checks){
-      const el=document.getElementById(id);
-      if(!el) continue;
-      const open=el.classList.contains('show') || el.getAttribute('aria-hidden')==='false';
-      if(open && typeof window[fn]==='function'){ window[fn](); return true; }
-    }
-    return false;
-  }
-  function home(){
-    try{
-      if(typeof window.showHomeView==='function') window.showHomeView();
-      document.body.classList.remove('mobile-products-view');
-      window.scrollTo({top:0,behavior:'auto'});
-    }catch(e){}
-  }
-  function products(){
-    try{
-      if(typeof window.showProductsView==='function') window.showProductsView();
-      else document.body.classList.add('mobile-products-view');
-      window.scrollTo({top:0,behavior:'auto'});
-    }catch(e){}
-  }
-  function cart(){
-    try{
-      if(typeof window.openCart==='function') window.openCart();
-      window.scrollTo({top:0,behavior:'auto'});
-    }catch(e){}
-  }
 
-  function normalizeInitial(){
-    if(!mobile()) return;
-    // The current page is the only canonical root entry.
-    const initial=appView();
-    replace(initial);
-  }
 
-  function navigate(view){
-    if(!mobile()) return;
-    const current=appView();
-    if(current===view) return;
-    internal=true;
-    if(view==='home') home();
-    else if(view==='products') products();
-    else if(view==='cart') cart();
-    push(view);
-    setTimeout(()=>internal=false,0);
-  }
 
-  // Universal bottom-bar switching. Capture only on mobile and only for the
-  // three primary destinations; WhatsApp remains its own panel action.
-  document.addEventListener('click',function(e){
-    if(!mobile()) return;
-    const a=e.target.closest('a,button');
-    if(!a) return;
-    const txt=(a.getAttribute('aria-label')||a.textContent||'').trim().toLowerCase();
-    const id=(a.id||'').toLowerCase();
-    const cls=(a.className||'').toString().toLowerCase();
-    if(cls.includes('bottom') || id.includes('mobile') || txt){
-      if(txt==='home' || id.includes('home')){
-        e.preventDefault(); e.stopPropagation(); navigate('home'); return;
-      }
-      if(txt==='products' || id.includes('products')){
-        e.preventDefault(); e.stopPropagation(); navigate('products'); return;
-      }
-      if(txt==='cart' || id.includes('cart')){
-        e.preventDefault(); e.stopPropagation(); navigate('cart'); return;
-      }
-    }
-  },true);
 
-  window.addEventListener('popstate',function(){
-    if(!mobile() || internal) return;
-
-    // App-like rule: Back first dismisses a transient screen.
-    if(closeOverlay()){
-      // Re-pin the current main view so the next Back continues through app history.
-      replace(appView());
-      return;
-    }
-
-    const state=history.state || {};
-    const target=state[KEY] || 'home';
-    if(target==='cart'){ cart(); return; }
-    if(target==='products'){ products(); return; }
-
-    // Home is the terminal state. Replacing (not pushing) prevents a runaway stack.
-    home();
-    replace('home');
-  });
-
-  // If a user changes hash/view through an existing app function, keep the
-  // history state aligned without adding forced redirects.
-  window.addEventListener('hashchange',function(){
-    if(!mobile() || internal) return;
-    const view=appView();
-    if((history.state||{})[KEY]!==view) replace(view);
-  });
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',normalizeInitial,{once:true});
-  else normalizeInitial();
-})();
-</script>
-</body>
-
-</html>
 
 <style id="seervi-non-home-topspace-fix-v1">
 /* NON-HOME VIEWS: the Home-only fixed topbar is hidden, so its reserved mobile space must also be removed. */
@@ -12405,16 +11899,6 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
   }
 }
 </style>
-
-
-<!-- RESTORED OLD PRODUCT FLOW — keeps ALL current products/items intact -->
-
-
-
-
-
-
-
 
 
 
@@ -12682,3 +12166,6 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 
 
 
+
+</body>
+</html>
