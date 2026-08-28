@@ -6633,6 +6633,7 @@ window.customerSignIn=async function(){
     // customer and is authenticated only against the public customer portal.
     if(isAuthorisedAdmin(email)){
       const adminCred=await signInWithEmailAndPassword(auth,email,pass);
+      if(typeof seerviPlayNotificationSound==='function')seerviPlayNotificationSound('login');
       if(!isAuthorisedAdmin(adminCred.user)){
         showGlobalActionLoader("Signing out…");
 
@@ -7419,19 +7420,8 @@ window.crmSignOut = async function(){
   }
 };
 
-let seerviAuthSoundReady=false;
-let seerviAuthSoundUser='';
-function seerviHandleAuthSound(user){
-  const uid=user?.uid||'';
-  if(user&&seerviAuthSoundReady&&uid&&uid!==seerviAuthSoundUser&&typeof seerviPlayNotificationSound==='function'){
-    seerviPlayNotificationSound('login');
-  }
-  seerviAuthSoundUser=uid;
-  seerviAuthSoundReady=true;
-}
 
-onAuthStateChanged(auth,user=>
-  seerviHandleAuthSound(user);{
+onAuthStateChanged(auth,user=>{
   // Never allow a non-admin Firebase account to become crmUser, even if it
   // was authenticated directly or an old browser session is restored.
   if(user && !isAuthorisedAdmin(user)){
