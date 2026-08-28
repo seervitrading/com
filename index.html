@@ -6108,6 +6108,43 @@ observer.observe(document.body,{subtree:true,attributes:true,attributeFilter:['c
 })();
 </script>
 
+<script id="seervi-notification-sound-core">
+(function(){
+'use strict';
+let ctx=null;
+function getCtx(){
+  if(ctx)return ctx;
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC)return null;
+  try{ctx=new AC();return ctx;}catch(_){return null;}
+}
+function tone(a,f,t,d,v){
+  const o=a.createOscillator(),g=a.createGain();
+  o.type='sine';o.frequency.setValueAtTime(f,t);
+  g.gain.setValueAtTime(.0001,t);
+  g.gain.exponentialRampToValueAtTime(v,t+.018);
+  g.gain.exponentialRampToValueAtTime(.0001,t+d);
+  o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02);
+}
+window.seerviPlayNotificationSound=function(kind){
+  const a=getCtx();if(!a)return;
+  const play=()=>{
+    const t=a.currentTime+.01;
+    if(kind==='login'){
+      tone(a,523.25,t,.10,.04);tone(a,659.25,t+.09,.13,.045);tone(a,783.99,t+.18,.17,.05);
+    }else if(kind==='signup'){
+      tone(a,587.33,t,.10,.038);tone(a,739.99,t+.09,.13,.043);tone(a,880,t+.18,.18,.048);
+    }else{
+      tone(a,659.25,t,.12,.045);tone(a,880,t+.105,.18,.05);
+    }
+  };
+  if(a.state==='suspended')a.resume().then(play).catch(()=>{});else play();
+};
+const unlock=()=>{const a=getCtx();if(a&&a.state==='suspended')a.resume().catch(()=>{});};
+['pointerdown','keydown','touchstart'].forEach(e=>document.addEventListener(e,unlock,{once:true,passive:true}));
+})();
+</script>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import {
@@ -6454,6 +6491,7 @@ window.createPublicCustomerAccount=async function(){
     if(step1)step1.hidden=true;
     if(step2)step2.hidden=false;
     if(status){status.textContent='Account created. Complete your party details below.';status.style.color='#7ee2a4';}
+    if(typeof seerviPlayNotificationSound==='function')seerviPlayNotificationSound('signup');
     $('publicPartyName')?.focus();
   }catch(err){
     console.error('Customer account creation failed:',err);
@@ -7381,7 +7419,19 @@ window.crmSignOut = async function(){
   }
 };
 
-onAuthStateChanged(auth,user=>{
+let seerviAuthSoundReady=false;
+let seerviAuthSoundUser='';
+function seerviHandleAuthSound(user){
+  const uid=user?.uid||'';
+  if(user&&seerviAuthSoundReady&&uid&&uid!==seerviAuthSoundUser&&typeof seerviPlayNotificationSound==='function'){
+    seerviPlayNotificationSound('login');
+  }
+  seerviAuthSoundUser=uid;
+  seerviAuthSoundReady=true;
+}
+
+onAuthStateChanged(auth,user=>
+  seerviHandleAuthSound(user);{
   // Never allow a non-admin Firebase account to become crmUser, even if it
   // was authenticated directly or an old browser session is restored.
   if(user && !isAuthorisedAdmin(user)){
@@ -8919,6 +8969,7 @@ window.crmSaveCurrentQuote = async function(){
       inventoryApplyToHome();
       if(document.getElementById('inventoryStockPanel') && !document.getElementById('inventoryStockPanel').hidden) inventoryRenderAdmin();
       seerviShowSaveSuccess('Quotation saved successfully.');
+       if(typeof seerviPlayNotificationSound==='function')seerviPlayNotificationSound('success');
       return;
     }
 
