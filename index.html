@@ -10852,6 +10852,32 @@ seerviPublicRenderItems=function(){
       </div></article>`;
   }).join('');
 };
+
+/* ===== SEERVI PUBLIC CATALOGUE BOOTSTRAP / FINAL FIX =====
+   The catalogue renderer is defined inside this Firebase module, so its initial
+   Firestore load must also be started from this same module scope. The previous
+   cleanup left the loader defined but never invoked, which resulted in an empty
+   Our Products section even though the Firebase query/rendering code was valid.
+*/
+let seerviPublicCatalogueBooted=false;
+async function seerviBootPublicCatalogue(){
+  if(seerviPublicCatalogueBooted)return;
+  seerviPublicCatalogueBooted=true;
+  try{
+    await seerviPublicLoadCatalogue();
+  }catch(e){
+    // seerviPublicLoadCatalogue already updates the visible status and logs the
+    // original Firebase error. Keep boot failure isolated from the rest of CRM.
+    console.error('Seervi public catalogue bootstrap failed:',e);
+  }
+}
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',seerviBootPublicCatalogue,{once:true});
+}else{
+  seerviBootPublicCatalogue();
+}
+/* ===== END SEERVI PUBLIC CATALOGUE BOOTSTRAP / FINAL FIX ===== */
+
 /* ===== END SEERVI FINAL MULTI-IMAGE ITEM SYSTEM ===== */
 
 /* ===== SEERVI ITEMS GLOBAL EVENT BRIDGE =====
@@ -11017,19 +11043,6 @@ window.seerviCloseItemsPanel=function(){
   setTimeout(install,250);
   setTimeout(install,1000);
 })();
-
-/* ===== PUBLIC CATALOGUE BOOTSTRAP =====
-   The catalogue loader is defined above but must be invoked after the module
-   has finished defining the Firebase-backed catalogue system. This keeps the
-   existing UI/data flow intact and makes the live products appear on page load.
-*/
-if(document.readyState==='loading') {
-  document.addEventListener('DOMContentLoaded',()=>{
-    seerviPublicLoadCatalogue().catch(()=>{});
-  },{once:true});
-} else {
-  seerviPublicLoadCatalogue().catch(()=>{});
-}
 </script><script>document.addEventListener('DOMContentLoaded',()=>{try{updateAuthNav();}catch(e){}});</script><div id="globalActionLoader" aria-hidden="true"><div class="global-action-loader-box"><div class="global-action-spinner"></div><div class="global-action-loader-text">Signing out…</div></div></div><style>
   #globalActionLoader{
     position:fixed;inset:0;z-index:999999;display:none;align-items:center;
