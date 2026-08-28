@@ -8642,20 +8642,60 @@ window.setInventoryQuantity=async function(key,value,input){
 
 function inventoryQuoteDeltas(oldItems,newItems){
   const map=Object.create(null);
+
+  const findCatalogueItem=(x)=>{
+    const explicitId=String(x?.firebaseItemId||x?.itemId||'').trim();
+    const sources=[];
+    if(Array.isArray(seerviInventoryItems))sources.push(seerviInventoryItems);
+    if(Array.isArray(seerviItemsCache))sources.push(seerviItemsCache);
+    if(Array.isArray(window.seerviPublicItems))sources.push(window.seerviPublicItems);
+
+    if(explicitId){
+      for(const source of sources){
+        const found=source.find(i=>String(i?.key||i?.id||'')===explicitId);
+        if(found)return found;
+      }
+    }
+
+    const model=String(x?.model||x?.name||'').trim().toLowerCase();
+    const subcategoryId=String(x?.subcategoryId||'').trim();
+    const subcategory=String(x?.subcategory||'').trim().toLowerCase();
+    const categoryId=String(x?.categoryId||'').trim();
+    const category=String(x?.category||'').trim().toLowerCase();
+
+    if(!model)return null;
+    const candidates=[];
+    for(const source of sources){
+      source.forEach(item=>{
+        const itemModel=String(item?.model||item?.name||'').trim().toLowerCase();
+        if(itemModel!==model)return;
+        const itemSubId=String(item?.subcategoryId||'').trim();
+        const itemSub=String(item?.subcategory||'').trim().toLowerCase();
+        const itemCatId=String(item?.categoryId||'').trim();
+        const itemCat=String(item?.category||'').trim().toLowerCase();
+        const subMatch=!subcategoryId&&!subcategory || (subcategoryId&&itemSubId===subcategoryId) || (subcategory&&!subcategoryId&&itemSub===subcategory);
+        const catMatch=!categoryId&&!category || (categoryId&&itemCatId===categoryId) || (category&&!categoryId&&itemCat===category);
+        if(subMatch&&catMatch&&!candidates.some(existing=>String(existing?.key||existing?.id||'')===String(item?.key||item?.id||''))) candidates.push(item);
+      });
+    }
+    return candidates.length===1 ? candidates[0] : null;
+  };
+
   const add=(x,sign)=>{
     if(x?.manual)return;
-    let key=x.firebaseItemId||x.itemId||'';
-    if(!key){
-      const model=String(x.model||x.name||'').trim().toLowerCase();
-      const candidates=seerviInventoryItems.filter(i=>String(i.model||i.name||'').trim().toLowerCase()===model);
-      if(candidates.length===1)key=candidates[0].key;
-    }
+    const item=findCatalogueItem(x);
+    const explicitId=String(x?.firebaseItemId||x?.itemId||'').trim();
+    const key=String(item?.key||item?.id||explicitId||'').trim();
     if(!key)return;
-    map[key]=(map[key]||0)+sign*Math.max(0,Number(x.qty||0));
+    if(!map[key]){
+      map[key]={key,delta:0,item:item||null};
+    }
+    map[key].delta+=sign*Math.max(0,Number(x.qty||0));
   };
+
   (oldItems||[]).forEach(x=>add(x,-1));
   (newItems||[]).forEach(x=>add(x,1));
-  return Object.entries(map).filter(([,delta])=>delta!==0).map(([key,delta])=>({key,delta}));
+  return Object.values(map).filter(x=>x.delta!==0);
 }
 
 async function adjustInventoryForQuoteDeltas(deltas,{strict=true}={}){
@@ -8666,8 +8706,9 @@ async function adjustInventoryForQuoteDeltas(deltas,{strict=true}={}){
   await runTransaction(db,async(tx)=>{
     const pending=[];
     for(const ch of changes){
-      const item=itemMap.get(ch.key);if(!item){if(strict)throw new Error('Firebase item not found for stock update.');continue;}
-      const ref=doc(db,'inventory',item.key);const snap=await tx.get(ref);
+      const item=itemMap.get(ch.key)||ch.item||null;
+      if(!item && !ch.key){if(strict)throw new Error('Firebase item could not be resolved for stock update.');continue;}
+      const ref=doc(db,'inventory',ch.key);const snap=await tx.get(ref);
       /*
        * QUOTATION MUST NOT FAIL BECAUSE STOCK IS ZERO / UNSET.
        * Stock is availability information, not a quotation permission gate.
@@ -8681,7 +8722,7 @@ async function adjustInventoryForQuoteDeltas(deltas,{strict=true}={}){
       const delta=Number(ch.delta);
       if(!Number.isFinite(delta)){if(strict)throw new Error(`Invalid stock quantity change for ${item.name||item.model}.`);continue;}
       const next=current-delta;
-      pending.push({ref,item,data,next,ch});
+      pending.push({ref,item:item||{key:ch.key,id:ch.key},data,next,ch});
     }
     pending.forEach(({ref,item,data,next,ch})=>{
       tx.set(ref,{key:item.key,itemId:item.id,categoryId:item.categoryId,subcategoryId:item.subcategoryId,category:item.category,subcategory:item.subcategory,name:item.name,model:item.model,spec:item.spec||'',availableQty:next,qtyTracking:true,stock:next>0?data.stock!==false:false,public:true,updatedBy:crmUser.email||crmUser.uid,updatedAt:serverTimestamp()},{merge:true});
