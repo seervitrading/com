@@ -7164,6 +7164,87 @@ window.crmEditParty=async function(id){
   $('crmPartyMeta').textContent='Editing party — make changes and press SAVE PARTY.';
 };
 
+async function seerviResolveQuotationCartItem(x){
+  const base={
+    type:x?.type||'Item',
+    name:x?.name||x?.model||'',
+    model:x?.model||x?.name||'',
+    firebaseItemId:x?.firebaseItemId||x?.itemId||'',
+    categoryId:x?.categoryId||'',
+    category:x?.category||'',
+    subcategoryId:x?.subcategoryId||'',
+    subcategory:x?.subcategory||'',
+    thickness:x?.spec||x?.thickness||'',
+    qty:Number(x?.qty||0),
+    rate:Number(x?.rate||0),
+    image:x?.image||x?.imageWebpUrl||'',
+    imageWebpUrl:x?.imageWebpUrl||x?.image||'',
+    galleryImages:Array.isArray(x?.galleryImages)?x.galleryImages.slice():[],
+    description:x?.description||'',
+    specifications:x?.specifications&&typeof x.specifications==='object'?{...x.specifications}:{},
+    specification:x?.specification||'',
+    manual:!!x?.manual
+  };
+
+  // Manual quote items have no catalogue document and therefore no image to resolve.
+  if(base.manual) return base;
+
+  let source=null;
+  const id=String(base.firebaseItemId||'').trim();
+
+  // Prefer the already-loaded public catalogue so editing a quote does not make
+  // an unnecessary Firestore read for every item.
+  if(id && Array.isArray(window.seerviPublicItems)){
+    source=window.seerviPublicItems.find(item=>String(item.id)===id)||null;
+  }
+
+  // If the public catalogue is not loaded, resolve the immutable Firebase document
+  // directly. This is also what makes older quotations recover their image reliably.
+  if(!source && id && typeof db!=='undefined'){
+    try{
+      const snap=await getDoc(doc(db,SEERVI_ITEMS_COLLECTION,id));
+      if(snap.exists()) source={id:snap.id,...snap.data()};
+    }catch(e){
+      console.warn('Quotation item image lookup failed:',e);
+    }
+  }
+
+  // Backward compatibility for quotations created before firebaseItemId was stored.
+  // Match on model + subcategory/category rather than guessing by model alone.
+  if(!source && Array.isArray(window.seerviPublicItems)){
+    source=window.seerviPublicItems.find(item=>{
+      const modelMatch=String(item.model||item.name||'').trim().toLowerCase()===String(base.model).trim().toLowerCase();
+      if(!modelMatch)return false;
+      if(base.subcategoryId)return String(item.subcategoryId||'')===String(base.subcategoryId);
+      if(base.subcategory)return String(seerviPublicCategoryName(item.subcategoryId)||'').trim().toLowerCase()===String(base.subcategory).trim().toLowerCase();
+      return !item.subcategoryId;
+    })||null;
+  }
+
+  if(!source) return base;
+
+  const images=typeof seerviPublicItemImageList==='function'
+    ? seerviPublicItemImageList(source)
+    : [source.imageWebpUrl||source.image||'',...(Array.isArray(source.galleryImages)?source.galleryImages:[])].filter(Boolean);
+
+  return {
+    ...base,
+    firebaseItemId:source.id||base.firebaseItemId,
+    name:source.name||base.name,
+    model:source.model||source.name||base.model,
+    categoryId:source.categoryId||base.categoryId,
+    category:seerviPublicCategoryName?.(source.categoryId)||source.category||base.category,
+    subcategoryId:source.subcategoryId||base.subcategoryId,
+    subcategory:seerviPublicCategoryName?.(source.subcategoryId)||source.subcategory||base.subcategory,
+    image:source.imageWebpUrl||source.image||base.image||'',
+    imageWebpUrl:source.imageWebpUrl||source.image||base.imageWebpUrl||'',
+    galleryImages:images.slice(1),
+    description:source.description||base.description,
+    specifications:source.specifications&&typeof source.specifications==='object'?{...source.specifications}:base.specifications,
+    specification:source.specification||Object.entries(source.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(', ')||base.specification
+  };
+}
+
 window.crmEditQuote=async function(id){
   if(typeof seerviSetAdminQuoteReturnState==='function') seerviSetAdminQuoteReturnState();
   if(!crmUser){crmShowLogin();return;}
@@ -7172,20 +7253,17 @@ window.crmEditQuote=async function(id){
   if(!q.partyId){alert('This quotation has no linked party.');return;}
 
   crmEditingQuoteId=id;
-  seerviCart=(q.items||[]).map(x=>({
-    type:x.type||'',
-    name:x.name||x.model||'',
-    model:x.model||x.name||'',
-    categoryId:x.categoryId||'',
-    category:x.category||'',
-    subcategoryId:x.subcategoryId||'',
-    subcategory:x.subcategory||'',
-    thickness:x.spec||x.thickness||'',
-    qty:Number(x.qty||0),
-    rate:Number(x.rate||0),
-    image:'',
-    manual:!!x.manual
-  }));
+  // Rehydrate catalogue-backed items before rendering the cart. If the public
+  // catalogue is not ready yet, load it once so older quotations (which may not
+  // contain firebaseItemId/image fields) can still resolve their current product image.
+  if(Array.isArray(q.items) && q.items.some(x=>!x?.manual && !(x?.image||x?.imageWebpUrl||x?.firebaseItemId||x?.itemId))){
+    try{
+      if(typeof seerviPublicLoadCatalogue==='function') await seerviPublicLoadCatalogue();
+    }catch(e){
+      console.warn('Catalogue refresh during quotation edit skipped:',e);
+    }
+  }
+  seerviCart=await Promise.all((q.items||[]).map(seerviResolveQuotationCartItem));
   localStorage.setItem('seerviCart',JSON.stringify(seerviCart));
 
   const gstEnabled=$('gstEnabled');
@@ -8088,14 +8166,18 @@ window.crmSaveCurrentQuote = async function(){
     type:x.type||'',
     name:x.name||x.model||'',
     model:x.model||x.name||'',
+    firebaseItemId:x.firebaseItemId||'',
     categoryId:x.categoryId||'',
     category:x.category||'',
     subcategoryId:x.subcategoryId||'',
     subcategory:x.subcategory||'',
-    spec:x.thickness||'',
+    spec:x.thickness||x.spec||'',
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
     amount:getLineTotal(x),
+    image:x.image||x.imageWebpUrl||'',
+    imageWebpUrl:x.imageWebpUrl||x.image||'',
+    galleryImages:Array.isArray(x.galleryImages)?x.galleryImages:[],
     manual:!!x.manual
   }));
 
