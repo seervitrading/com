@@ -11017,6 +11017,19 @@ window.seerviCloseItemsPanel=function(){
   setTimeout(install,250);
   setTimeout(install,1000);
 })();
+
+/* ===== PUBLIC CATALOGUE BOOTSTRAP =====
+   The catalogue loader is defined above but must be invoked after the module
+   has finished defining the Firebase-backed catalogue system. This keeps the
+   existing UI/data flow intact and makes the live products appear on page load.
+*/
+if(document.readyState==='loading') {
+  document.addEventListener('DOMContentLoaded',()=>{
+    seerviPublicLoadCatalogue().catch(()=>{});
+  },{once:true});
+} else {
+  seerviPublicLoadCatalogue().catch(()=>{});
+}
 </script><script>document.addEventListener('DOMContentLoaded',()=>{try{updateAuthNav();}catch(e){}});</script><div id="globalActionLoader" aria-hidden="true"><div class="global-action-loader-box"><div class="global-action-spinner"></div><div class="global-action-loader-text">Signing out…</div></div></div><style>
   #globalActionLoader{
     position:fixed;inset:0;z-index:999999;display:none;align-items:center;
@@ -11875,13 +11888,98 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
   else install();
-
-  window.addEventListener('storage',()=>setTimeout(syncRenderedCards,0));
+})();
+</script>
+<script id="seervi-public-item-qty-bootstrap">
+(function(){
+  function boot(){
+    if(typeof window.seerviPublicSyncCartControls==='function'){
+      window.seerviPublicSyncCartControls();
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0),{once:true});
+  else setTimeout(boot,0);
+  window.addEventListener('storage',boot);
 })();
 </script>
 
+<script id="seervi-final-item-cart-qty-bridge">
+(function(){
+  /*
+   * Final item-card bridge.
+   * The catalogue has several historical render paths, so the quantity UI is
+   * synchronized from the actual cart state at the DOM boundary. This avoids
+   * depending on any single renderer or on render order.
+   */
+  function cartEntry(id){
+    if(typeof seerviCart==='undefined' || !Array.isArray(seerviCart)) return null;
+    return seerviCart.find(x=>String(x.firebaseItemId||'')===String(id||'')) || null;
+  }
 
+  function itemById(id){
+    if(typeof seerviPublicItems==='undefined' || !Array.isArray(seerviPublicItems)) return null;
+    return seerviPublicItems.find(x=>String(x.id)===String(id||'')) || null;
+  }
 
+  function controlMarkup(id,qty){
+    const safeId=seerviItemsEsc(String(id||''));
+    const item=itemById(id);
+    const label=seerviItemsEsc(item?.name||item?.model||'product');
+    if(qty<=0){
+      return `<button class="crm-primary small seervi-card-add-to-cart" type="button" onclick="seerviPublicAddToCart('${safeId}')">ADD TO CART</button>`;
+    }
+    return `<div class="seervi-public-qty-control seervi-card-qty-control" data-item-id="${safeId}" aria-label="Quantity for ${label}">
+      <button type="button" class="cart-minus" onclick="seerviPublicCardQtyChange('${safeId}',-1)" aria-label="Decrease quantity">−</button>
+      <input class="seervi-public-qty-input" type="number" min="0" max="1000000" step="1" inputmode="numeric" value="${qty}" aria-label="Quantity for ${label}" onblur="seerviPublicCardQtyNormalize('${safeId}',this)" onkeydown="if(event.key==='Enter'){event.preventDefault();seerviPublicCardQtyNormalize('${safeId}',this);this.blur();}">
+      <button type="button" class="cart-plus" onclick="seerviPublicCardQtyChange('${safeId}',1)" aria-label="Increase quantity">+</button>
+    </div>`;
+  }
+
+  function extractId(card){
+    const control=card.querySelector('.seervi-card-qty-control[data-item-id], .seervi-public-qty-control[data-item-id]');
+    if(control?.dataset.itemId) return control.dataset.itemId;
+    const button=card.querySelector('button[onclick*="seerviPublicAddToCart"]');
+    if(!button) return '';
+    const m=(button.getAttribute('onclick')||'').match(/seerviPublicAddToCart\('([^']+)'\)/);
+    return m ? m[1] : '';
+  }
+
+  function sync(){
+    document.querySelectorAll('.seervi-public-product-card').forEach(card=>{
+      const id=extractId(card);
+      if(!id) return;
+      const entry=cartEntry(id);
+      const qty=entry ? Math.max(1,Number(entry.qty)||1) : 0;
+      const control=card.querySelector('.seervi-card-qty-control[data-item-id], .seervi-public-qty-control[data-item-id]');
+      const addButton=card.querySelector('button[onclick*="seerviPublicAddToCart"]');
+      if(qty>0){
+        if(!control){
+          addButton?.replaceWith(document.createRange().createContextualFragment(controlMarkup(id,qty)));
+        }else{
+          const input=control.querySelector('.seervi-public-qty-input');
+          if(input && document.activeElement!==input) input.value=String(qty);
+        }
+      }else if(control){
+        control.outerHTML=controlMarkup(id,0);
+      }
+    });
+  }
+
+  window.seerviPublicSyncCartControls=sync;
+
+  /* Catch every catalogue rerender, including Firebase/module-driven renders. */
+  const observer=new MutationObserver(()=>sync());
+  function start(){
+    const grid=document.getElementById('seerviPublicProductGrid');
+    if(grid) observer.observe(grid,{childList:true,subtree:true});
+    sync();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start,{once:true});
+  else start();
+  window.addEventListener('load',sync,{once:true});
+  window.addEventListener('storage',sync);
+})();
+</script>
 
 
 
