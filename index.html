@@ -4548,6 +4548,12 @@ main,#about,#why-seervi,#contact,footer{
 }
 </style>
 
+<style id="seervi-admin-backup-options-style">
+.admin-backup-options-panel{max-width:760px}
+.admin-backup-options-list{margin-top:8px}
+.admin-backup-options-list .account-dashboard-option{width:100%;text-align:left}
+.admin-backup-options-list .account-dashboard-option small{line-height:1.45}
+</style>
 </head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -4612,7 +4618,7 @@ main,#about,#why-seervi,#contact,footer{
       <button class="account-dashboard-option" type="button" onclick="accountDashboardAdminPanel()"><span>▣</span><strong>PANEL</strong><small>Manage quotations, parties & ledger</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardItems()"><span>▤</span><strong>ITEMS</strong><small>Manage Firebase items & categories</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardNewParty()"><span>＋</span><strong>NEW PARTY</strong><small>Create a new customer / party</small></button>
-      <button class="account-dashboard-option" type="button" onclick="accountDashboardBackup()"><span>⇩</span><strong>BACKUP DATA</strong><small>Download your CRM business backup</small></button>
+      <button class="account-dashboard-option" type="button" onclick="accountDashboardBackup()"><span>⇩</span><strong>BACKUP DATA</strong><small>Backup items, categories &amp; quotations</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardStock()"><span>▤</span><strong>STOCK</strong><small>Control catalogue item availability</small></button>
       
       <button class="account-dashboard-option" type="button" onclick="accountDashboardNotificationPost()"><span>🔔</span><strong>NOTIFICATION POST</strong><small>Send an important notice to everyone</small></button>
@@ -4622,6 +4628,30 @@ main,#about,#why-seervi,#contact,footer{
       <button class="account-dashboard-option" type="button" onclick="accountDashboardEditProfile()"><span>✎</span><strong>EDIT PROFILE</strong><small>Update your business & contact details</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardMyOrder()"><span>▣</span><strong>MY ORDER</strong><small>View your quotations & order requests</small></button>
       <button class="account-dashboard-option danger" type="button" onclick="accountDashboardCustomerSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your customer session</small></button>
+    </div>
+  </div>
+</div>
+<div id="adminBackupOptionsModal" class="crm-modal admin-backup-options-modal" aria-hidden="true">
+  <div class="crm-backdrop" onclick="closeAdminBackupOptions()"></div>
+  <div class="crm-panel admin-backup-options-panel" role="dialog" aria-modal="true" aria-labelledby="adminBackupOptionsTitle">
+    <div class="crm-head">
+      <div>
+        <div class="crm-kicker">SEERVI TRADING / BACKUP DATA</div>
+        <h3 id="adminBackupOptionsTitle">Backup Data</h3>
+        <div id="adminBackupOptionsStatus" class="crm-auth-status">Choose what you want to backup.</div>
+      </div>
+      <button class="crm-close" type="button" onclick="closeAdminBackupOptions()" aria-label="Close backup options">×</button>
+    </div>
+    <div class="account-dashboard-options admin-backup-options-list" aria-label="Backup options">
+      <button class="account-dashboard-option" type="button" onclick="seerviBackupItems()">
+        <span>▤</span><strong>BACKUP ITEMS</strong><small>Download all Firebase items from the <b>items</b> collection</small>
+      </button>
+      <button class="account-dashboard-option" type="button" onclick="seerviBackupCategories()">
+        <span>⌂</span><strong>BACKUP CATEGORIES</strong><small>Download categories &amp; subcategories from <b>itemCategories</b></small>
+      </button>
+      <button class="account-dashboard-option" type="button" onclick="seerviBackupQuotationsWithParty()">
+        <span>▣</span><strong>BACKUP QUOTATIONS WITH PARTY</strong><small>Download quotations together with their linked party details</small>
+      </button>
     </div>
   </div>
 </div>
@@ -6926,7 +6956,112 @@ window.accountDashboardNewParty=function(){
 };
 window.accountDashboardBackup=function(){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
-  crmDownloadBusinessBackup();
+  const modal=$('adminBackupOptionsModal');
+  if(!modal)return;
+  const status=$('adminBackupOptionsStatus');
+  if(status){status.textContent='Choose what you want to backup.';status.style.color='';}
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden','false');
+};
+
+window.closeAdminBackupOptions=function(){
+  const modal=$('adminBackupOptionsModal');
+  if(!modal)return;
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden','true');
+};
+
+function seerviBackupSetStatus(message,error=false){
+  const el=$('adminBackupOptionsStatus');
+  if(el){el.textContent=message||'';el.style.color=error?'#f28b8b':'';}
+}
+
+function seerviBackupDownloadJson(filename,payload){
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+async function seerviBackupReadCollection(collectionName){
+  seerviRequireAdmin();
+  const snap=await getDocs(collection(db,collectionName));
+  return snap.docs.map(d=>({id:d.id,...crmBackupSafeValue(d.data())}));
+}
+
+window.seerviBackupItems=async function(){
+  try{
+    seerviRequireAdmin();
+    seerviBackupSetStatus('Reading Firebase items…');
+    const documents=await seerviBackupReadCollection('items');
+    const payload={
+      backupVersion:'Seervi-Items-1.0',
+      exportedAt:new Date().toISOString(),
+      exportedBy:crmUser?.email||crmUser?.uid||'admin',
+      collection:'items',documentCount:documents.length,documents
+    };
+    const stamp=new Date().toISOString().slice(0,10);
+    seerviBackupDownloadJson(`Seervi_Items_Backup_${stamp}.json`,payload);
+    seerviBackupSetStatus(`Items backup downloaded: ${documents.length} item(s).`);
+  }catch(e){
+    console.error('Seervi items backup:',e);
+    seerviBackupSetStatus(e?.message||'Items backup failed. Check Firestore rules.',true);
+  }
+};
+
+window.seerviBackupCategories=async function(){
+  try{
+    seerviRequireAdmin();
+    seerviBackupSetStatus('Reading Firebase categories & subcategories…');
+    const documents=await seerviBackupReadCollection('itemCategories');
+    const categories=documents.filter(x=>x.type==='category');
+    const subcategories=documents.filter(x=>x.type==='subcategory');
+    const payload={
+      backupVersion:'Seervi-Categories-1.0',
+      exportedAt:new Date().toISOString(),
+      exportedBy:crmUser?.email||crmUser?.uid||'admin',
+      collection:'itemCategories',documentCount:documents.length,
+      categoryCount:categories.length,subcategoryCount:subcategories.length,documents
+    };
+    const stamp=new Date().toISOString().slice(0,10);
+    seerviBackupDownloadJson(`Seervi_Categories_Backup_${stamp}.json`,payload);
+    seerviBackupSetStatus(`Categories backup downloaded: ${categories.length} categor${categories.length===1?'y':'ies'} + ${subcategories.length} subcategor${subcategories.length===1?'y':'ies'}.`);
+  }catch(e){
+    console.error('Seervi categories backup:',e);
+    seerviBackupSetStatus(e?.message||'Categories backup failed. Check Firestore rules.',true);
+  }
+};
+
+window.seerviBackupQuotationsWithParty=async function(){
+  try{
+    seerviRequireAdmin();
+    seerviBackupSetStatus('Reading quotations and linked parties…');
+    const [quoteSnap,partySnap]=await Promise.all([
+      getDocs(collection(db,'quotations')),
+      getDocs(collection(db,'parties'))
+    ]);
+    const parties=partySnap.docs.map(d=>({id:d.id,...crmBackupSafeValue(d.data())}));
+    const partyMap=new Map(parties.map(p=>[p.id,p]));
+    const quotations=quoteSnap.docs.map(d=>{
+      const q={id:d.id,...crmBackupSafeValue(d.data())};
+      return {...q,party:partyMap.get(q.partyId)||null};
+    });
+    const payload={
+      backupVersion:'Seervi-Quotations-With-Party-1.0',
+      exportedAt:new Date().toISOString(),
+      exportedBy:crmUser?.email||crmUser?.uid||'admin',
+      collections:['quotations','parties'],
+      quotationCount:quotations.length,partyCount:parties.length,quotations
+    };
+    const stamp=new Date().toISOString().slice(0,10);
+    seerviBackupDownloadJson(`Seervi_Quotations_With_Party_Backup_${stamp}.json`,payload);
+    seerviBackupSetStatus(`Quotation backup downloaded: ${quotations.length} quotation(s) with linked party data.`);
+  }catch(e){
+    console.error('Seervi quotations backup:',e);
+    seerviBackupSetStatus(e?.message||'Quotation backup failed. Check Firestore rules.',true);
+  }
 };
 ;
 window.accountDashboardNotificationPost=function(){
