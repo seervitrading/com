@@ -4479,6 +4479,37 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 .seervi-gallery-count{position:absolute;right:8px;bottom:8px;padding:5px 8px;border-radius:999px;background:#111a;color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em}
 @media(max-width:700px){.seervi-item-gallery-main{max-height:360px}.seervi-item-gallery-main img{max-height:360px}}
 
+
+/* ===== SEERVI HOME VANTA NET BACKGROUND ===== */
+#home.bw-hero{position:relative;isolation:isolate;overflow:hidden}
+#home .seervi-vanta-home-bg{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  overflow:hidden!important;
+  background:#000!important;
+}
+#home .seervi-vanta-home-bg canvas{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+}
+#home.bw-hero.has-vanta .bw-hero-image{opacity:0!important}
+#home.bw-hero .bw-hero-wash,
+#home.bw-hero .bw-hero-vignette{z-index:1!important}
+#home.bw-hero .bw-hero-content{position:relative;z-index:3}
+#home.bw-hero .bw-bottom-bar{position:relative;z-index:3}
+@media(prefers-reduced-motion:reduce){
+  #home.bw-hero .seervi-vanta-home-bg{display:none!important}
+  #home.bw-hero.has-vanta .bw-hero-image{opacity:1!important}
+}
+@media(max-width:600px){
+  #home.bw-hero .seervi-vanta-home-bg{min-height:320px}
+}
+
 /* ===== END SEERVI CONSOLIDATED STYLES ===== */
 </style></style><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script type="application/ld+json">
@@ -4505,7 +4536,7 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 </head><body><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
-</button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" style="background-image:url('images/00-old-products/product-image-001-055cde1217d3c801.webp')"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
+</button></div></nav><main><section id="home" class="bw-hero"><div id="seerviVantaHomeBackground" class="seervi-vanta-home-bg" aria-hidden="true"></div><div class="bw-hero-image" style="background-image:url('images/00-old-products/product-image-001-055cde1217d3c801.webp')"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
 
 
 <section id="profiles" class="firebase-public-catalog">
@@ -12138,6 +12169,76 @@ function seerviShowSaveSuccess(message){
     if(history.state && history.state[STATE_KEY]) history.back();
     else closeLayers();
   };
+})();
+</script>
+
+
+<!-- SEERVI HOME BACKGROUND: Vanta.js NET -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.net.min.js"></script>
+<script id="seervi-vanta-home-init">
+(function(){
+  'use strict';
+
+  let effect=null;
+
+  function destroy(){
+    if(effect){
+      try{effect.destroy();}catch(_){}
+      effect=null;
+    }
+    const host=document.getElementById('seerviVantaHomeBackground');
+    const hero=document.getElementById('home');
+    if(host) host.innerHTML='';
+    if(hero) hero.classList.remove('has-vanta');
+  }
+
+  function init(){
+    const host=document.getElementById('seerviVantaHomeBackground');
+    const hero=document.getElementById('home');
+    if(!host||!hero||window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if(!window.VANTA||!window.THREE||typeof window.VANTA.NET!=='function') return;
+    if(effect) return;
+
+    try{
+      effect=window.VANTA.NET({
+        el:host,
+        THREE:window.THREE,
+        mouseControls:true,
+        touchControls:true,
+        gyroControls:false,
+        minHeight:200,
+        minWidth:200,
+        scale:1,
+        scaleMobile:1,
+        color:0xff3f81,
+        backgroundColor:0x000000,
+        points:20,
+        maxDistance:20,
+        spacing:20,
+        showDots:true
+      });
+      hero.classList.add('has-vanta');
+    }catch(error){
+      console.warn('[Seervi] Vanta home background unavailable:',error);
+      destroy();
+    }
+  }
+
+  function start(){
+    requestAnimationFrame(init);
+  }
+
+  window.Seervi=window.Seervi||{};
+  window.Seervi.vantaHome={init,destroy};
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',start,{once:true});
+  }else{
+    start();
+  }
+
+  window.addEventListener('pagehide',destroy,{once:true});
 })();
 </script>
 
