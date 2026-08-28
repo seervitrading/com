@@ -4877,7 +4877,7 @@ function downloadCartPDF(){
     doc.setTextColor(45,50,56);
 
     doc.text(String(i+1),18,y);
-    doc.text(String(item.model||'').slice(0,34),30,y);
+    doc.text(seerviQuotationItemLabel(item).slice(0,34),30,y);
     doc.text(String(item.thickness||'—').slice(0,18),102,y);
     doc.text(String(item.qty||0),137,y);
 
@@ -4944,6 +4944,18 @@ function downloadCartPDF(){
   doc.save('Seervi_Quotation_'+new Date().toISOString().slice(0,10)+'.pdf');
 }
 
+function seerviQuotationItemLabel(item){
+  const model=String(item?.model||item?.name||'').trim();
+  let subcategory=String(item?.subcategory||'').trim();
+  if(!subcategory && item?.subcategoryId && typeof window.seerviPublicCategoryName==='function'){
+    subcategory=String(window.seerviPublicCategoryName(item.subcategoryId)||'').trim();
+  }
+  if(!subcategory && item?.subcategoryId && typeof seerviPublicCategoryName==='function'){
+    subcategory=String(seerviPublicCategoryName(item.subcategoryId)||'').trim();
+  }
+  return subcategory ? `${model} — ${subcategory}` : model;
+}
+
 function renderCart(){
   const itemsEl = document.getElementById('cartItems');
   const emptyEl = document.getElementById('cartEmpty');
@@ -5005,7 +5017,7 @@ function renderCart(){
 
       <div class="cart-item-info">
         <span class="cart-item-type">${escapeHtml(item.type||'PRODUCT')}</span>
-        <strong>${escapeHtml(item.model||'')}</strong>
+        <strong>${escapeHtml(seerviQuotationItemLabel(item))}</strong>
         ${item.thickness ? `<span class="cart-item-spec">Thickness: ${escapeHtml(item.thickness)}</span>` : ''}
       </div>
 
@@ -5119,7 +5131,7 @@ async function sendCartToWhatsApp(){
 
     const pricing=getCartPricing();
     seerviCart.forEach((item,i)=>{
-      msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent(item.model)}`;
+      msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent(seerviQuotationItemLabel(item))}`;
       if(item.thickness) msg+=` | Thickness: ${encodeURIComponent(item.thickness)}`;
       msg+=` | Qty: ${item.qty}`;
       if(Number(item.rate)>0) msg+=` | Rate: ₹${encodeURIComponent(formatINR(item.rate))} | Amount: ₹${encodeURIComponent(formatINR(getLineTotal(item)))}`;
@@ -5136,7 +5148,7 @@ async function sendCartToWhatsApp(){
     msg=`Hello Seervi Trading,%0A%0AI would like to enquire about the following products:%0A%0A`;
     if(requestNo) msg+=`Request No: ${encodeURIComponent(requestNo)}%0A%0A`;
     seerviCart.forEach((item,i)=>{
-      msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent(item.model)}`;
+      msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent(seerviQuotationItemLabel(item))}`;
       if(item.thickness) msg+=` | Thickness: ${encodeURIComponent(item.thickness)}`;
       msg+=` | Qty: ${item.qty}%0A`;
     });
@@ -5593,7 +5605,7 @@ import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously, createUserWithEmailAndPassword, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 import {
-  getFirestore, collection, addDoc, setDoc, updateDoc, doc, getDoc, getDocs, deleteDoc, runTransaction,
+  getFirestore, collection, addDoc, setDoc, updateDoc, doc, getDoc, getDocs, deleteDoc, runTransaction, writeBatch,
   query, where, orderBy, limit, serverTimestamp, onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
@@ -6145,7 +6157,10 @@ window.saveCustomerCartRequest=async function(){
   const now=new Date();
   const qNo='SQ-'+now.toISOString().replace(/[-:TZ.]/g,'').slice(0,14);
   const items=seerviCart.map(item=>({
-    type:item.type||'', model:item.model||'', spec:item.spec||'', thickness:item.thickness||'',
+    type:item.type||'', name:item.name||item.model||'', model:item.model||'',
+    categoryId:item.categoryId||'', category:item.category||'',
+    subcategoryId:item.subcategoryId||'', subcategory:item.subcategory||'',
+    spec:item.spec||'', thickness:item.thickness||'',
     qty:Number(item.qty)||1, rate:0, source:'customer-request'
   }));
   const qRef=await addDoc(collection(publicSignupDb,'quotations'),{
@@ -6208,7 +6223,8 @@ function customerRenderRates(){
   customerRates.forEach(r=>{
     const model=String(r.productModel||r.model||r.item||'Item');
     const spec=String(r.spec||r.thickness||'');
-    const key=model+'|'+spec;
+    const subcategory=String(r.subcategory||'').trim();
+     const key=model+'|'+subcategory+'|'+spec;
     if(!groups.has(key))groups.set(key,[]);
     groups.get(key).push(r);
   });
@@ -6218,7 +6234,7 @@ function customerRenderRates(){
     const model=String(latest.productModel||latest.model||latest.item||'Item');
     const spec=String(latest.spec||latest.thickness||'');
     const details=list.map(r=>`<div class="customer-rate-history-row"><span>${esc(r.dateISO||'—')}</span><span>${esc(r.quoteNo ? ('Quotation '+r.quoteNo) : (r.note||r.source||'Rate quoted'))}</span><strong>${money(r.rate)}</strong></div>`).join('');
-    return `<div class="customer-rate-history-card"><div class="customer-rate-history-top"><div><div class="customer-rate-history-product">${esc(model)}</div><div class="customer-rate-history-meta">${esc(spec||'Standard specification')} · ${list.length} saved rate${list.length===1?'':'s'}</div></div><div class="customer-rate-history-latest"><small>LATEST RATE</small>${money(latest.rate)}</div></div>${list.length>1?`<details class="customer-rate-history-details"><summary>VIEW PREVIOUS RATES</summary>${details}</details>`:`<div class="customer-rate-history-details"><div class="customer-rate-history-row"><span>${esc(latest.dateISO||'—')}</span><span>${esc(latest.note||latest.source||'Rate quoted')}</span><strong>${money(latest.rate)}</strong></div></div>`}</div>`;
+    return `<div class="customer-rate-history-card"><div class="customer-rate-history-top"><div><div class="customer-rate-history-product">${esc([model,latest.subcategory].filter(Boolean).join(' — '))}</div><div class="customer-rate-history-meta">${esc([latest.subcategory,spec].filter(Boolean).join(' · ')||'Standard specification')} · ${list.length} saved rate${list.length===1?'':'s'}</div></div><div class="customer-rate-history-latest"><small>LATEST RATE</small>${money(latest.rate)}</div></div>${list.length>1?`<details class="customer-rate-history-details"><summary>VIEW PREVIOUS RATES</summary>${details}</details>`:`<div class="customer-rate-history-details"><div class="customer-rate-history-row"><span>${esc(latest.dateISO||'—')}</span><span>${esc(latest.note||latest.source||'Rate quoted')}</span><strong>${money(latest.rate)}</strong></div></div>`}</div>`;
   }).join('');
 }
 function customerRenderLedger(){
@@ -6857,7 +6873,8 @@ function crmRenderRates(){
   crmRates.forEach(r=>{
     const model=String(r.productModel||r.model||r.item||'Item');
     const spec=String(r.spec||r.thickness||'');
-    const key=model+'|'+spec;
+    const subcategory=String(r.subcategory||'').trim();
+     const key=model+'|'+subcategory+'|'+spec;
     if(!groups.has(key)) groups.set(key,[]);
     groups.get(key).push(r);
   });
@@ -6866,7 +6883,8 @@ function crmRenderRates(){
     .map(list=>list.sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||''))))
     .filter(list=>!crmRateSearchText || list[0] && (
       String(list[0].productModel||list[0].model||list[0].item||'').toLowerCase().includes(crmRateSearchText) ||
-      String(list[0].spec||list[0].thickness||'').toLowerCase().includes(crmRateSearchText)
+      String(list[0].spec||list[0].thickness||'').toLowerCase().includes(crmRateSearchText) ||
+       String(list[0].subcategory||'').toLowerCase().includes(crmRateSearchText)
     ))
     .sort((a,b)=>String(b[0]?.dateISO||'').localeCompare(String(a[0]?.dateISO||'')));
 
@@ -6889,8 +6907,8 @@ function crmRenderRates(){
     return `<div class="rate-history-card">
       <div class="rate-history-top">
         <div>
-          <div class="rate-history-product">${esc(model)}</div>
-          <div class="rate-history-meta">${esc(spec||'Standard specification')}</div>
+          <div class="rate-history-product">${esc([model,latest.subcategory].filter(Boolean).join(' — '))}</div>
+          <div class="rate-history-meta">${esc([latest.subcategory,spec].filter(Boolean).join(' · ')||'Standard specification')}</div>
         </div>
         <div class="rate-history-latest"><small>LATEST RATE</small>${money(latest.rate)}</div>
         <div class="rate-history-count">${list.length} saved rate${list.length===1?'':'s'} · ${esc(latest.dateISO||'—')}</div>
@@ -7156,9 +7174,13 @@ window.crmEditQuote=async function(id){
   crmEditingQuoteId=id;
   seerviCart=(q.items||[]).map(x=>({
     type:x.type||'',
-    model:x.model||'',
-    thickness:x.spec||'',
-    name:x.model||'',
+    name:x.name||x.model||'',
+    model:x.model||x.name||'',
+    categoryId:x.categoryId||'',
+    category:x.category||'',
+    subcategoryId:x.subcategoryId||'',
+    subcategory:x.subcategory||'',
+    thickness:x.spec||x.thickness||'',
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
     image:'',
@@ -7618,7 +7640,7 @@ window.crmDownloadQuote=async function(id){
       doc.setFontSize(8);
       doc.setTextColor(30,35,40);
       doc.text('SR',18,y);
-      doc.text('PRODUCT / MODEL',30,y);
+      doc.text('PRODUCT / MODEL + SUBCATEGORY',30,y);
       doc.text('SPEC',102,y);
       doc.text('QTY',135,y);
       doc.text('RATE',151,y);
@@ -7647,7 +7669,7 @@ window.crmDownloadQuote=async function(id){
       doc.setFontSize(8);
       doc.setTextColor(45,50,56);
       doc.text(String(i+1),18,y);
-      doc.text(safeText(item.model||item.name||'').slice(0,34),30,y);
+      doc.text(safeText(seerviQuotationItemLabel(item)).slice(0,34),30,y);
       doc.text(safeText(item.spec||'—').slice(0,18),102,y);
       doc.text(String(qty),137,y);
       doc.text(inr(rate),151,y);
@@ -7836,7 +7858,7 @@ window.customerDownloadQuote=async function(id){
       doc.setFontSize(8);
       doc.setTextColor(30,35,40);
       doc.text('SR',18,y);
-      doc.text('PRODUCT / MODEL',30,y);
+      doc.text('PRODUCT / MODEL + SUBCATEGORY',30,y);
       doc.text('SPEC',102,y);
       doc.text('QTY',135,y);
       doc.text('RATE',151,y);
@@ -7865,7 +7887,7 @@ window.customerDownloadQuote=async function(id){
       doc.setFontSize(8);
       doc.setTextColor(45,50,56);
       doc.text(String(i+1),18,y);
-      doc.text(safeText(item.model||item.name||'').slice(0,34),30,y);
+      doc.text(safeText(seerviQuotationItemLabel(item)).slice(0,34),30,y);
       doc.text(safeText(item.spec||'—').slice(0,18),102,y);
       doc.text(String(qty),137,y);
       doc.text(inr(rate),151,y);
@@ -8064,7 +8086,12 @@ window.crmSaveCurrentQuote = async function(){
   };
   const items=seerviCart.map(x=>({
     type:x.type||'',
+    name:x.name||x.model||'',
     model:x.model||x.name||'',
+    categoryId:x.categoryId||'',
+    category:x.category||'',
+    subcategoryId:x.subcategoryId||'',
+    subcategory:x.subcategory||'',
     spec:x.thickness||'',
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
@@ -8082,7 +8109,11 @@ window.crmSaveCurrentQuote = async function(){
       const editStockDeltas=inventoryQuoteDeltas(oldQ.items||[],items);
       stockApplied=await adjustInventoryForQuoteDeltas(editStockDeltas,{strict:true});
 
-      await updateDoc(doc(db,'quotations',crmEditingQuoteId),{
+      // Persist the edited quotation, its rate-history snapshot, the single
+      // quotation debit and party timestamp as one Firestore batch. This prevents
+      // a partial quotation save if any one of these writes is rejected.
+      const editBatch=writeBatch(db);
+      editBatch.update(doc(db,'quotations',crmEditingQuoteId),{
         partyId:crmPartyId,
         customer,
         customerUid:selectedParty.customerUid||'',
@@ -8101,12 +8132,18 @@ window.crmSaveCurrentQuote = async function(){
       // the old rate as well as the latest rate for the same item.
       for(const item of items){
         if(Number(item.rate)>0){
-          await addDoc(collection(db,'rateHistory'),{
+          const rateRef=doc(collection(db,'rateHistory'));
+          editBatch.set(rateRef,{
             partyId:crmPartyId,
             quoteId:crmEditingQuoteId,
             quoteNo:oldQ.quoteNo,
             productType:item.type,
+            productName:item.name||item.model||'',
             productModel:item.model,
+            categoryId:item.categoryId||'',
+            category:item.category||'',
+            subcategoryId:item.subcategoryId||'',
+            subcategory:item.subcategory||'',
             spec:item.spec||'',
             rate:item.rate,
             dateISO:now.toISOString().slice(0,10),
@@ -8120,7 +8157,7 @@ window.crmSaveCurrentQuote = async function(){
       const led=await getDocs(query(collection(db,'ledger'),where('quoteId','==',crmEditingQuoteId),limit(100)));
       const debitDocs=led.docs.filter(d=>d.data().source==='quotation' || d.data().type==='debit');
       if(debitDocs.length){
-        await updateDoc(debitDocs[0].ref,{
+        editBatch.update(debitDocs[0].ref,{
           partyId:crmPartyId,
           type:'debit',
           amount:Number(pricing.grandTotal),
@@ -8131,9 +8168,10 @@ window.crmSaveCurrentQuote = async function(){
           dateISO:now.toISOString().slice(0,10),
           updatedAt:serverTimestamp()
         });
-        for(const d of debitDocs.slice(1)) await deleteDoc(d.ref);
+        for(const d of debitDocs.slice(1)) editBatch.delete(d.ref);
       }else if(Number(pricing.grandTotal)>0){
-        await addDoc(collection(db,'ledger'),{
+        const ledgerRef=doc(collection(db,'ledger'));
+        editBatch.set(ledgerRef,{
           partyId:crmPartyId,
           type:'debit',
           amount:Number(pricing.grandTotal),
@@ -8147,7 +8185,8 @@ window.crmSaveCurrentQuote = async function(){
         });
       }
 
-      await setDoc(doc(db,'parties',crmPartyId),{updatedAt:serverTimestamp()},{merge:true});
+      editBatch.set(doc(db,'parties',crmPartyId),{updatedAt:serverTimestamp()},{merge:true});
+      await editBatch.commit();
       crmEditingQuoteId='';
       await crmRefreshParties();
       await crmLoadPartyData(crmPartyId);
@@ -8176,7 +8215,12 @@ window.crmSaveCurrentQuote = async function(){
     const qNo=quotationNumber();
     const newStockDeltas=inventoryQuoteDeltas([],items);
     stockApplied=await adjustInventoryForQuoteDeltas(newStockDeltas,{strict:true});
-    const qRef=await addDoc(collection(db,'quotations'),{
+    // Persist the new quotation, its quotation debit, all rate-history snapshots
+    // and the party timestamp as one atomic Firestore batch. Inventory was already
+    // adjusted above and is rolled back by the catch block if this batch fails.
+    const qRef=doc(collection(db,'quotations'));
+    const createBatch=writeBatch(db);
+    createBatch.set(qRef,{
       partyId:crmPartyId,
       quoteNo:qNo,
       dateISO:now.toISOString(),
@@ -8195,7 +8239,8 @@ window.crmSaveCurrentQuote = async function(){
     });
 
     if(Number(pricing.grandTotal)>0){
-      await addDoc(collection(db,'ledger'),{
+      const ledgerRef=doc(collection(db,'ledger'));
+      createBatch.set(ledgerRef,{
         partyId:crmPartyId,
         type:'debit',
         amount:Number(pricing.grandTotal),
@@ -8211,12 +8256,18 @@ window.crmSaveCurrentQuote = async function(){
 
     for(const item of items){
       if(Number(item.rate)>0){
-        await addDoc(collection(db,'rateHistory'),{
+        const rateRef=doc(collection(db,'rateHistory'));
+        createBatch.set(rateRef,{
           partyId:crmPartyId,
           quoteId:qRef.id,
           quoteNo:qNo,
           productType:item.type,
+          productName:item.name||item.model||'',
           productModel:item.model,
+          categoryId:item.categoryId||'',
+          category:item.category||'',
+          subcategoryId:item.subcategoryId||'',
+          subcategory:item.subcategory||'',
           spec:item.spec||'',
           rate:item.rate,
           dateISO:now.toISOString().slice(0,10),
@@ -8226,7 +8277,8 @@ window.crmSaveCurrentQuote = async function(){
       }
     }
 
-    await setDoc(doc(db,'parties',crmPartyId),{updatedAt:serverTimestamp()},{merge:true});
+    createBatch.set(doc(db,'parties',crmPartyId),{updatedAt:serverTimestamp()},{merge:true});
+    await createBatch.commit();
     await crmLoadPartyData(crmPartyId);
     await crmLoadGlobalAdmin();
     /* New quotation is fully persisted in Firebase. Clear the cart only after
@@ -10611,6 +10663,7 @@ window.SEERVI_SINGLE_ADMIN_EMAIL='seervitrading@gmail.com';
 window.seerviPublicSelectCategory=seerviPublicSelectCategory;
 window.seerviPublicBackToCategories=seerviPublicBackToCategories;
 window.seerviPublicSelectSubcategory=seerviPublicSelectSubcategory;
+window.seerviPublicCategoryName=seerviPublicCategoryName;
 /* Public item action handlers are exposed by the final item system below. */
 /* ===== END SEERVI PUBLIC CATALOGUE GLOBAL EVENT BRIDGE ===== */
 
