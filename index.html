@@ -6985,28 +6985,113 @@ function seerviBackupDownloadJson(filename,payload){
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
+function seerviBackupDownloadXlsx(filename,workbook){
+  if(typeof XLSX==='undefined')throw new Error('Excel export library is not loaded. Refresh the page and try again.');
+  XLSX.writeFile(workbook,filename);
+}
+
 async function seerviBackupReadCollection(collectionName){
   seerviRequireAdmin();
   const snap=await getDocs(collection(db,collectionName));
   return snap.docs.map(d=>({id:d.id,...crmBackupSafeValue(d.data())}));
 }
 
+function seerviBackupBool(value){
+  return value===true || String(value??'').trim().toLowerCase()==='true' ? 'TRUE' : 'FALSE';
+}
+
+function seerviBackupCategoryRows(documents){
+  const byId=new Map(documents.map(x=>[x.id,x]));
+  return documents
+    .filter(x=>x.type==='category' || x.type==='subcategory')
+    .sort((a,b)=>{
+      if(a.type!==b.type)return a.type==='category'?-1:1;
+      const ao=Number(a.sortOrder||0),bo=Number(b.sortOrder||0);
+      if(ao!==bo)return ao-bo;
+      return String(a.name||'').localeCompare(String(b.name||''));
+    })
+    .map(x=>({
+      'Type':x.type==='subcategory'?'Subcategory':'Category',
+      'Parent Category':x.type==='subcategory'?(byId.get(x.parentId)?.name||''):'',
+      'Name':x.name||'',
+      'Slug':x.slug||'',
+      'WEBP Image URL / Path':x.imageWebpUrl||'',
+      'Active':seerviBackupBool(x.active),
+      'Sort Order':Number.isFinite(Number(x.sortOrder))?Number(x.sortOrder):0
+    }));
+}
+
+function seerviBackupItemRows(items,categories){
+  const categoryMap=new Map(categories.map(x=>[x.id,x]));
+  const baseRows=items.map(item=>{
+    const specs=(item.specifications && typeof item.specifications==='object')?item.specifications:{};
+    return {
+      item,
+      categoryName:categoryMap.get(item.categoryId)?.name||'',
+      subcategoryName:categoryMap.get(item.subcategoryId)?.name||'',
+      specs
+    };
+  });
+
+  let maxSpecs=0;
+  baseRows.forEach(x=>{maxSpecs=Math.max(maxSpecs,Object.keys(x.specs).length);});
+
+  return baseRows.map(x=>{
+    const row={
+      'Category':x.categoryName,
+      'Subcategory':x.subcategoryName,
+      'Item Name':x.item.name||'',
+      'Model':x.item.model||'',
+      'WEBP Image URL / Path':x.item.imageWebpUrl||'',
+      'Gallery Images':Array.isArray(x.item.galleryImages)?x.item.galleryImages.join('|'):String(x.item.galleryImages||''),
+      'Description':x.item.description||'',
+      'Active':seerviBackupBool(x.item.active)
+    };
+    const entries=Object.entries(x.specs);
+    for(let i=0;i<maxSpecs;i++){
+      row[`Spec ${i+1} Name`]=entries[i]?.[0]||'';
+      row[`Spec ${i+1} Value`]=entries[i]?.[1]??'';
+    }
+    return row;
+  });
+}
+
 window.seerviBackupItems=async function(){
   try{
     seerviRequireAdmin();
-    seerviBackupSetStatus('Reading Firebase items…');
-    const documents=await seerviBackupReadCollection('items');
-    const payload={
-      backupVersion:'Seervi-Items-1.0',
-      exportedAt:new Date().toISOString(),
-      exportedBy:crmUser?.email||crmUser?.uid||'admin',
-      collection:'items',documentCount:documents.length,documents
-    };
+    seerviBackupSetStatus('Reading Firebase items & categories…');
+    const [items,categories]=await Promise.all([
+      seerviBackupReadCollection('items'),
+      seerviBackupReadCollection('itemCategories')
+    ]);
+    const rows=seerviBackupItemRows(items,categories);
+    const ws=XLSX.utils.json_to_sheet(rows);
+    ws['!cols']=[
+      {wch:24},{wch:24},{wch:30},{wch:18},{wch:48},{wch:72},{wch:45},{wch:12}
+    ];
+    const headerCount=Object.keys(rows[0]||{}).length;
+    for(let i=8;i<headerCount;i++)ws['!cols'].push({wch:i%2===0?20:24});
+
+    const notes=[
+      ['SEERVI ITEM BACKUP — IMPORT-READY FORMAT'],
+      ['This workbook uses the same column format as SEERVI ITEM BULK ADD.'],
+      ['Category and Subcategory are exported by name so the file can be used again with Item Bulk Add.'],
+      ['Gallery Images are separated with the | character, exactly like the Item Bulk Add template.'],
+      ['Specifications are exported as Spec 1 Name / Spec 1 Value, Spec 2 Name / Spec 2 Value, etc.'],
+      ['No Firebase document IDs are required for re-import; the import flow creates new document IDs.']
+    ];
+    const notesWs=XLSX.utils.aoa_to_sheet(notes);
+    notesWs['!cols']=[{wch:105}];
+
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Items');
+    XLSX.utils.book_append_sheet(wb,notesWs,'Instructions');
+
     const stamp=new Date().toISOString().slice(0,10);
-    seerviBackupDownloadJson(`Seervi_Items_Backup_${stamp}.json`,payload);
-    seerviBackupSetStatus(`Items backup downloaded: ${documents.length} item(s).`);
+    seerviBackupDownloadXlsx(`Seervi_Items_Backup_${stamp}.xlsx`,wb);
+    seerviBackupSetStatus(`Items Excel backup downloaded: ${items.length} item(s), import-ready format.`);
   }catch(e){
-    console.error('Seervi items backup:',e);
+    console.error('Seervi items Excel backup:',e);
     seerviBackupSetStatus(e?.message||'Items backup failed. Check Firestore rules.',true);
   }
 };
@@ -7016,20 +7101,34 @@ window.seerviBackupCategories=async function(){
     seerviRequireAdmin();
     seerviBackupSetStatus('Reading Firebase categories & subcategories…');
     const documents=await seerviBackupReadCollection('itemCategories');
-    const categories=documents.filter(x=>x.type==='category');
-    const subcategories=documents.filter(x=>x.type==='subcategory');
-    const payload={
-      backupVersion:'Seervi-Categories-1.0',
-      exportedAt:new Date().toISOString(),
-      exportedBy:crmUser?.email||crmUser?.uid||'admin',
-      collection:'itemCategories',documentCount:documents.length,
-      categoryCount:categories.length,subcategoryCount:subcategories.length,documents
-    };
+    const rows=seerviBackupCategoryRows(documents);
+    const ws=XLSX.utils.json_to_sheet(rows);
+    ws['!cols']=[
+      {wch:18},{wch:28},{wch:32},{wch:32},{wch:52},{wch:12},{wch:14}
+    ];
+
+    const notes=[
+      ['SEERVI CATEGORY / SUBCATEGORY BACKUP — IMPORT-READY FORMAT'],
+      ['This workbook uses the same column format as SEERVI CATEGORY / SUBCATEGORY BULK IMPORT.'],
+      ['Parent Category is exported by Category name, exactly as required by the bulk import flow.'],
+      ['Type values are Category and Subcategory.'],
+      ['No Firebase document IDs are required for re-import; the import flow creates new document IDs.']
+    ];
+    const notesWs=XLSX.utils.aoa_to_sheet(notes);
+    notesWs['!cols']=[{wch:105}];
+
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Categories');
+    XLSX.utils.book_append_sheet(wb,notesWs,'Instructions');
+
     const stamp=new Date().toISOString().slice(0,10);
-    seerviBackupDownloadJson(`Seervi_Categories_Backup_${stamp}.json`,payload);
-    seerviBackupSetStatus(`Categories backup downloaded: ${categories.length} categor${categories.length===1?'y':'ies'} + ${subcategories.length} subcategor${subcategories.length===1?'y':'ies'}.`);
+    seerviBackupDownloadXlsx(`Seervi_Categories_Backup_${stamp}.xlsx`,wb);
+
+    const categories=documents.filter(x=>x.type==='category').length;
+    const subcategories=documents.filter(x=>x.type==='subcategory').length;
+    seerviBackupSetStatus(`Categories Excel backup downloaded: ${categories} categor${categories===1?'y':'ies'} + ${subcategories} subcategor${subcategories===1?'y':'ies'}, import-ready format.`);
   }catch(e){
-    console.error('Seervi categories backup:',e);
+    console.error('Seervi categories Excel backup:',e);
     seerviBackupSetStatus(e?.message||'Categories backup failed. Check Firestore rules.',true);
   }
 };
