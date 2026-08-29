@@ -5921,19 +5921,18 @@ function aiFindExactModel(q,items){
 }
 
 function aiFindProduct(q){
-  const data=aiGetCatalogue(),items=data.items,categories=data.categories;
+  const data=aiGetCatalogue(),items=data.items;
   const clean=aiNormaliseText(q);
   if(!clean||!items.length)return null;
 
-  // Exact model/code match has absolute priority, even when surrounded by
-  // natural-language words such as "show model 2310".
-  const modelCandidates=clean.split(/\s+/).map(t=>t.replace(/[^a-z0-9]/gi,'')).filter(t=>t.length>=2);
+  const compactQuery=clean.replace(/[^a-z0-9]/gi,'');
+  // Exact model/code anywhere in the message.
   for(const item of items){
     const model=aiNormaliseText(item.model);
     if(!model)continue;
-    const compact=model.replace(/[^a-z0-9]/gi,'');
-    if(clean===model || clean.replace(/[^a-z0-9]/gi,'')===compact ||
-       modelCandidates.includes(compact)) return item;
+    const compactModel=model.replace(/[^a-z0-9]/gi,'');
+    if(clean===model||compactQuery===compactModel)return item;
+    if(clean.split(/\s+/).some(t=>t.replace(/[^a-z0-9]/gi,'')===compactModel&&compactModel.length>=2))return item;
   }
 
   const stop=new Set([
@@ -5941,7 +5940,8 @@ function aiFindProduct(q){
     'item','items','product','products','find','search','need','want','for','of',
     'mujhe','kya','hai','batao','chahiye','dikhao','ka','ki','ke','ek','bhai',
     'wala','wali','milega','mil','do','de','mere','mera','meri','ko','par','mein',
-    'me','se','tha','thi','ho','he','or','aur','with'
+    'me','se','tha','thi','ho','he','or','aur','with','this','that','give','tell',
+    'can','you','available','price','rate'
   ]);
   const tokens=clean.split(/\s+/).filter(t=>t.length>1&&!stop.has(t));
   if(!tokens.length)return null;
@@ -5956,54 +5956,54 @@ function aiFindProduct(q){
     const specVals=Object.values(specs).map(aiNormaliseText).filter(Boolean);
     const specPairs=Object.entries(specs).map(([k,v])=>aiNormaliseText(`${k} ${v}`)).filter(Boolean);
     const fields=[name,model,description,...specKeys,...specVals,...specPairs].filter(Boolean);
+
     let score=0,matched=0;
+    if(name===clean)score+=420;
+    else if(name&&clean.includes(name))score+=320;
+    else if(name&&name.includes(clean)&&clean.length>=3)score+=270;
+    if(model&&clean.includes(model))score+=360;
+    if(specPairs.some(v=>v===clean))score+=260;
+    if(specVals.some(v=>v===clean))score+=230;
+    if(description&&description.includes(clean))score+=150;
 
-    if(name && clean===name)score+=300;
-    else if(name && clean.includes(name))score+=220;
-    else if(name && name.includes(clean) && clean.length>=4)score+=175;
-
-    if(model && clean.includes(model))score+=260;
-    if(specPairs.some(v=>v===clean))score+=210;
-    if(specVals.some(v=>v===clean))score+=190;
-    if(description && description.includes(clean))score+=125;
-
-    tokens.forEach(t=>{
-      if(name.split(/\s+/).includes(t)){score+=50;matched++;}
-      else if(model.split(/\s+/).includes(t)){score+=65;matched++;}
-      else if(specKeys.some(v=>v.split(/\s+/).includes(t))){score+=38;matched++;}
-      else if(specVals.some(v=>v.split(/\s+/).includes(t))){score+=42;matched++;}
-      else if(fields.some(v=>v.includes(t))){score+=10;matched++;}
-    });
-
-    if(matched>=2)score+=45;
-    if(model && tokens.some(t=>model.includes(t)))score+=55;
+    for(const t of tokens){
+      if(name.split(/\s+/).includes(t)){score+=90;matched++;}
+      else if(model.split(/\s+/).includes(t)){score+=100;matched++;}
+      else if(specKeys.some(v=>v.split(/\s+/).includes(t))){score+=45;matched++;}
+      else if(specVals.some(v=>v.split(/\s+/).includes(t))){score+=50;matched++;}
+      else if(fields.some(v=>v.includes(t))){score+=18;matched++;}
+    }
+    if(matched>=2)score+=70;
+    if(model&&tokens.some(t=>model.includes(t)))score+=80;
 
     if(score>bestScore){bestScore=score;best=item;}
   }
-  return bestScore>=75?best:null;
+  return bestScore>=85?best:null;
 }
 function aiFindCategory(q){
   const data=aiGetCatalogue(),categories=data.categories;
   const clean=aiNormaliseText(q);
   if(!clean)return null;
   const candidates=categories.filter(x=>x.type==='category');
-  let exact=candidates.find(x=>{
+
+  const exact=candidates.find(x=>{
     const n=aiNormaliseText(x.name),slug=aiNormaliseText(x.slug);
     return n===clean||slug===clean;
   });
   if(exact)return exact;
-  const tokens=clean.split(/\s+/).filter(t=>t.length>1);
-  let best=null,score=0;
-  candidates.forEach(c=>{
-    const hay=[c.name,c.slug,c.description].filter(Boolean).map(aiNormaliseText).join(' ');
-    let sc=0;
-    if(hay.includes(clean))sc+=100;
-    tokens.forEach(t=>{if(hay.includes(t))sc+=18;});
-    if(sc>score){score=sc;best=c;}
-  });
-  return score>=18?best:null;
-}
 
+  // Phrase match is allowed only when the category name is substantial.
+  let best=null,bestScore=0;
+  for(const c of candidates){
+    const n=aiNormaliseText(c.name),slug=aiNormaliseText(c.slug);
+    if(!n||n.length<4)continue;
+    if(clean.includes(n)||n.includes(clean)){
+      const score=n===clean?300:(clean.includes(n)?250:180);
+      if(score>bestScore){bestScore=score;best=c;}
+    }
+  }
+  return bestScore>=180?best:null;
+}
 function aiFindSubcategory(q){
   const data=aiGetCatalogue(),categories=data.categories;
   const clean=aiNormaliseText(q);
@@ -6120,6 +6120,10 @@ function aiAddProductResult(item,lang){
   if(specs.length){const x=document.createElement('span');x.textContent=specs.map(([k,v])=>k+': '+v).join(' • ');box.appendChild(x);}
   const btn=document.createElement('button');
   btn.type='button';btn.className='ai-product-open';
+  btn.style.pointerEvents='auto';
+  btn.style.touchAction='manipulation';
+  btn.style.position='relative';
+  btn.style.zIndex='10';
   btn.textContent=
     lang==='hinglish'||lang==='hi'?'PRODUCT DETAILS →':
     lang==='kn'?'PRODUCT DETAILS →':
@@ -6149,6 +6153,7 @@ function aiReply(q){
   if(!x)return lang==='hinglish'||lang==='hi'?'Bilkul bhai. Product, model ya requirement type karo.':'Sure. Ask me about a product, model or requirement.';
 
   const data=aiGetCatalogue();
+  const asksProduct=/(product|products|item|items|model|profile|blade|cutting|mount|stand|auger|stock|available|size|material|spec|specification|aluminium|aluminum|screw|ladder|steel|iron|curtain|rod|tv|chair|table|kya|kaunsa|chahiye|dikhao|show|find|search|need|want)/i.test(x);
   const exactModel=aiFindExactModel(x,data.items);
   const product=exactModel||aiFindProduct(x);
   const category=aiFindCategory(x);
@@ -6169,7 +6174,7 @@ function aiReply(q){
   }
 
   // If the user names a category, show its actual subcategories as actions.
-  if(product && !exactModel && asksProduct){
+  if(product && !exactModel){
     const name=String(product.name||product.model||'this product');
     const intro=
       lang==='hinglish'||lang==='hi'?`Haan bhai, “${name}” live catalogue mein mil gaya. Neeche PRODUCT DETAILS dabao — seedha isi item par chale jaoge.`:
@@ -6201,8 +6206,6 @@ function aiReply(q){
       `I found the “${subcategory.name}” subcategory. Use the button below to open it in the catalogue.`;
     addAIMessage('bot',msg);aiAddSubcategoryOption(subcategory,parent,lang);return null;
   }
-
-  const asksProduct=/(product|products|item|items|model|profile|blade|cutting|mount|stand|auger|stock|available|size|material|spec|specification|aluminium|aluminum|screw|ladder|steel|iron|curtain|rod|tv|chair|table|kya|kaunsa|chahiye|dikhao)/i.test(x);
 
   if(asksProduct){
     return lang==='hinglish'||lang==='hi'
