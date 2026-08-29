@@ -944,9 +944,17 @@ body.admin-quote-mode .quote-actions{display:grid!important}
 .support-quick button{flex:0 0 auto;border:1px solid #ffffff18;background:#10161c;color:#aeb7c0;border-radius:999px;padding:7px 10px;font-size:9px;cursor:pointer}.support-quick button:hover{border-color:#f0c66a;color:#f0c66a}
 .support-chat-form{display:flex;gap:8px;padding:12px;border-top:1px solid #ffffff12;background:#0b0f14}
 .support-chat-input{flex:1;min-width:0;background:#11171d;border:1px solid #ffffff18;color:#fff;border-radius:10px;padding:11px 12px;font:inherit;font-size:11px;outline:none;resize:none;height:42px}
-.support-chat-input:focus{border-color:#ffffff55}
+.support-chat-input:focus{border-color:#ffffff55}.support-chat-input{-webkit-user-select:text!important;user-select:text!important;pointer-events:auto!important;touch-action:manipulation;-webkit-appearance:none;appearance:none}
 .support-chat-send{width:44px;border:0;border-radius:10px;background:#f0c66a;color:#0b0d10;font-size:16px;font-weight:900;cursor:pointer}.support-chat-send:hover{filter:brightness(1.06)}
-@media(max-width:600px){.float-support{right:15px;bottom:78px}.support-modal{padding:10px;align-items:flex-end}.support-card{width:100%;height:min(680px,calc(100vh - 20px));border-radius:16px}}
+@media(max-width:600px){.float-support{right:15px;bottom:78px}.support-modal{padding:0;align-items:flex-end;height:100dvh}.support-card{width:100%;height:100dvh;max-height:100dvh;border-radius:0}.support-chat-form{padding-bottom:max(12px,env(safe-area-inset-bottom))}.support-chat-input{font-size:16px!important;min-height:44px;height:44px}.support-chat-send{min-height:44px}.support-head{padding-top:max(14px,env(safe-area-inset-top))}}
+<style id="seervi-ai-mobile-fix">
+.support-chat-input{-webkit-user-select:text!important;user-select:text!important;pointer-events:auto!important;touch-action:manipulation;-webkit-appearance:none;appearance:none;opacity:1!important}
+.support-chat-form{position:relative;z-index:5}
+.ai-product-result{align-self:flex-start;max-width:92%;display:flex;flex-direction:column;gap:5px;padding:11px 12px;background:#111820;border:1px solid #f0c66a38;border-radius:12px;border-top-left-radius:4px;color:#dfe4e8;font-size:10px;line-height:1.45}
+.ai-product-result strong{font-size:11px;color:#fff}.ai-product-result span{color:#8f9aa5}.ai-product-open{margin-top:4px;align-self:flex-start;border:1px solid #f0c66a66;background:#f0c66a;color:#0b0d10;border-radius:7px;padding:8px 10px;font-size:8px;font-weight:900;letter-spacing:.5px;cursor:pointer}
+.ai-product-open:active{transform:translateY(1px)}
+@media(max-width:600px){.support-modal{height:100dvh;max-height:100dvh;padding:0;align-items:flex-end}.support-card{width:100%;height:100dvh;max-height:100dvh;border-radius:0;border-left:0;border-right:0}.support-chat{padding-bottom:12px}.support-chat-form{padding-bottom:max(12px,env(safe-area-inset-bottom));}.support-chat-input{min-height:44px;height:44px;font-size:16px!important;line-height:1.25;padding:10px 12px}.support-chat-send{min-width:46px;min-height:44px}.support-head{padding-top:max(14px,env(safe-area-inset-top));}}
+</style>
 
 @media(max-width:600px){
   #profiles{scroll-margin-top:18px}
@@ -4554,10 +4562,6 @@ main,#about,#why-seervi,#contact,footer{
 .admin-backup-options-list .account-dashboard-option{width:100%;text-align:left}
 .admin-backup-options-list .account-dashboard-option small{line-height:1.45}
 </style>
-<style id="seervi-ai-mobile-input-fix">
-#supportModal .support-card,#supportModal .support-chat-form,#supportModal .support-chat-input{pointer-events:auto!important;-webkit-user-select:text!important;user-select:text!important;-webkit-touch-callout:default!important}
-#supportModal .support-chat-input{touch-action:manipulation!important;caret-color:#fff!important}
-</style>
 </head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -5670,7 +5674,7 @@ document.addEventListener('keydown',function(e){
     }
   });
 })();
-</script><div id="supportModal" class="support-modal" aria-hidden="true"><div class="support-backdrop" onclick="closeSupportModal()"></div><div class="support-card" role="dialog" aria-modal="true" aria-labelledby="supportTitle"><div class="support-head"><div class="support-head-icon">✦</div><div class="support-head-copy"><b id="supportTitle">Seervi AI Assistance</b><span>Ask about products, cart, login, orders or Seervi Trading</span></div><button class="support-close" type="button" onclick="closeSupportModal()" aria-label="Close AI assistance">×</button></div><div id="supportChat" class="support-chat" aria-live="polite"></div><div id="aiTyping" class="ai-typing">Seervi AI is typing…</div><div class="support-quick" aria-label="Quick questions"><button type="button" onclick="aiQuick('What products do you have?')">Products</button><button type="button" onclick="aiQuick('How can I use the cart?')">Cart</button><button type="button" onclick="aiQuick('How do I login or sign up?')">Login / Sign up</button><button type="button" onclick="aiQuick('How can I contact Seervi?')">Contact</button></div><form id="supportChatForm" class="support-chat-form" onsubmit="sendAIMessage(event)"><textarea id="supportMessage" class="support-chat-input" rows="1" placeholder="Ask Seervi AI anything…" aria-label="Ask Seervi AI"></textarea><button class="support-chat-send" type="submit" aria-label="Send message">➤</button></form></div></div><script>
+</script><div id="supportModal" class="support-modal" aria-hidden="true"><div class="support-backdrop" onclick="closeSupportModal()"></div><div class="support-card" role="dialog" aria-modal="true" aria-labelledby="supportTitle"><div class="support-head"><div class="support-head-icon">✦</div><div class="support-head-copy"><b id="supportTitle">Seervi AI Assistance</b><span>Ask about products, cart, login, orders or Seervi Trading</span></div><button class="support-close" type="button" onclick="closeSupportModal()" aria-label="Close AI assistance">×</button></div><div id="supportChat" class="support-chat" aria-live="polite"></div><div id="aiTyping" class="ai-typing">Seervi AI is typing…</div><div class="support-quick" aria-label="Quick questions"><button type="button" onclick="aiQuick('What products do you have?')">Products</button><button type="button" onclick="aiQuick('How can I use the cart?')">Cart</button><button type="button" onclick="aiQuick('How do I login or sign up?')">Login / Sign up</button><button type="button" onclick="aiQuick('How can I contact Seervi?')">Contact</button></div><form id="supportChatForm" class="support-chat-form" onsubmit="sendAIMessage(event)"><textarea id="supportMessage" class="support-chat-input" rows="1" inputmode="text" enterkeyhint="send" autocapitalize="sentences" autocomplete="off" autocorrect="on" spellcheck="true" placeholder="Ask Seervi AI anything…" aria-label="Ask Seervi AI"></textarea><button class="support-chat-send" type="submit" aria-label="Send message">➤</button></form></div></div><script>
 /* ===== V68 — FIREBASE AUTH QUOTATION MODE ===== */
 (function(){
   let adminMode=false;
@@ -5792,44 +5796,6 @@ document.addEventListener('keydown',function(e){
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeWhatsAppPanel();});
 })();
 </script>
-<script id="seervi-ai-professional-ux">
-(function(){
-  function bind(){
-    const input=document.getElementById('supportMessage');
-    if(!input||input.dataset.seerviProfessionalBound==='1')return;
-    input.dataset.seerviProfessionalBound='1';
-
-    const resize=()=>{
-      input.style.height='auto';
-      input.style.height=Math.min(input.scrollHeight,120)+'px';
-    };
-    input.addEventListener('input',resize);
-    input.addEventListener('focus',resize);
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});
-  else bind();
-})();
-</script>
-<script id="seervi-ai-input-bridge">
-(function(){
-  function bind(){
-    const input=document.getElementById('supportMessage');
-    if(!input||input.dataset.seerviAiBound==='1')return;
-    input.dataset.seerviAiBound='1';
-    input.addEventListener('click',e=>e.stopPropagation());
-    input.addEventListener('pointerdown',e=>e.stopPropagation());
-    input.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
-    input.addEventListener('keydown',e=>{
-      if(e.key==='Enter'&&!e.shiftKey){
-        e.preventDefault();
-        document.getElementById('supportChatForm')?.requestSubmit();
-      }
-    });
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});
-  else bind();
-})();
-</script>
 <script>
 /* ===== V140 AI ASSISTANCE ===== */
 function openSupportModal(){
@@ -5839,7 +5805,7 @@ function openSupportModal(){
   document.body.classList.add('modal-open');
   const chat=document.getElementById('supportChat');
   if(chat && !chat.children.length){
-    addAIMessage('bot','Hello! I’m Seervi AI.\nHow can I help you today? You can ask about products, models, specifications, availability, cart, login or orders.');
+    addAIMessage('bot','Hi! 👋 I’m Seervi AI Assistance.\nAsk me about our products, models, cart, login/sign-up, orders, stock availability or how to contact Seervi.');
   }
   setTimeout(()=>document.getElementById('supportMessage')?.focus(),80);
 }
@@ -5855,297 +5821,101 @@ function addAIMessage(role,text){
   el.textContent=String(text||'');
   chat.appendChild(el);chat.scrollTop=chat.scrollHeight;
 }
-function aiProductContext(){
-  if(Array.isArray(seerviPublicItems) && seerviPublicItems.length){
-    return seerviPublicItems.map(item=>{
-      const category=seerviPublicCategoryName(item.categoryId);
-      const subcategory=seerviPublicCategoryName(item.subcategoryId);
-      const specs=Object.entries(item.specifications||{}).slice(0,8)
-        .map(([k,v])=>`${k}: ${v}`).join(', ');
-      return [
-        item.name||'Unnamed Item',
-        item.model?`Model: ${item.model}`:'',
-        category?`Category: ${category}`:'',
-        subcategory?`Subcategory: ${subcategory}`:'',
-        specs?`Specs: ${specs}`:'',
-        item.description?String(item.description).slice(0,180):''
-      ].filter(Boolean).join(' — ');
-    });
-  }
-
-  // Public Firebase catalogue is the authoritative product context.
-  // Keep a DOM fallback only for legacy cards that may still exist elsewhere
-  // on the page, without using any product-specific taxonomy.
-  const cards=[...document.querySelectorAll('.home-product-card')];
-  const out=[]; const seen=new Set();
-  cards.forEach(c=>{
-    const model=String(c.dataset.model||c.querySelector('h3')?.textContent||'').trim();
-    if(!model || seen.has(model.toLowerCase()))return;
-    seen.add(model.toLowerCase());
-    const type=String(c.dataset.type||'').trim();
-    const cardText=String(c.textContent||'').replace(/\s+/g,' ').trim();
-    out.push((type?type+': ':'')+model+(cardText?' — '+cardText.slice(0,180):''));
+function aiAddProductResult(item,lang){
+  const chat=document.getElementById('supportChat'); if(!chat||!item)return;
+  const box=document.createElement('div'); box.className='ai-product-result';
+  const name=document.createElement('strong'); name.textContent=String(item.name||item.model||'Product'); box.appendChild(name);
+  if(item.model){const x=document.createElement('span');x.textContent='Model: '+item.model;box.appendChild(x);}
+  const cat=window.seerviGetPublicCatalogue?.()||{categories:[]};
+  const category=cat.categories.find(x=>x.id===item.categoryId)?.name||'';
+  const sub=cat.categories.find(x=>x.id===item.subcategoryId)?.name||'';
+  if(category||sub){const x=document.createElement('span');x.textContent=[category,sub].filter(Boolean).join(' / ');box.appendChild(x);}
+  const specs=Object.entries(item.specifications||{}).slice(0,5);
+  if(specs.length){const x=document.createElement('span');x.textContent=specs.map(([k,v])=>k+': '+v).join(' • ');box.appendChild(x);}
+  const btn=document.createElement('button');btn.type='button';btn.className='ai-product-open';btn.textContent=lang==='hinglish'||lang==='hi'?'PRODUCT DETAILS →':'VIEW PRODUCT →';
+  btn.addEventListener('click',function(){
+    if(window.innerWidth<=600 && typeof window.showMobileProducts==='function')window.showMobileProducts();
+    setTimeout(function(){window.seerviPublicOpenItem?.(item.id);},50);
   });
-  return out;
+  box.appendChild(btn);chat.appendChild(box);chat.scrollTop=chat.scrollHeight;
+}
+function aiGetCatalogue(){try{return window.seerviGetPublicCatalogue?.()||{items:[],categories:[]};}catch(_){return{items:[],categories:[]};}}
+function aiLanguage(q){
+  const x=String(q||'');
+  if(/[\u0900-\u097F]/.test(x))return'hi';
+  if(/[\u0C80-\u0CFF]/.test(x))return'kn';
+  if(/[\u0B80-\u0BFF]/.test(x))return'ta';
+  if(/[\u0C00-\u0C7F]/.test(x))return'te';
+  if(/[\u0980-\u09FF]/.test(x))return'bn';
+  const l=x.toLowerCase();
+  if(/\b(kya|kaise|kaisa|chahiye|batao|bataiye|mujhe|muje|mera|meri|kitna|kitne|hai|hain|karo|karna|mil|milega|dikhao|bhejo|wala|wali|ke|ki|ka|mein|me|par|aur|nahi|nahin|acha|accha|bhai)\b/.test(l))return'hinglish';
+  return'en';
 }
 function aiFindProduct(q){
-  const query=String(q||'').trim().toLowerCase();
-  if(!query || !Array.isArray(seerviPublicItems) || !seerviPublicItems.length)return null;
-
-  const tokens=query.split(/\s+/).filter(x=>x.length>1);
-  let best=null;
-  let bestScore=0;
-
-  seerviPublicItems.forEach(item=>{
-    const fields=[
-      item.name,item.model,item.description,
-      seerviPublicCategoryName(item.categoryId),
-      seerviPublicCategoryName(item.subcategoryId),
-      ...Object.entries(item.specifications||{}).flat()
-    ].map(x=>String(x||'').toLowerCase());
-
-    const hay=fields.join(' ');
-    let score=0;
-
-    if(hay.includes(query))score+=10;
-    tokens.forEach(token=>{
-      if(hay.includes(token))score+=2;
-    });
-    if(String(item.model||'').toLowerCase()===query)score+=20;
-    if(String(item.name||'').toLowerCase()===query)score+=15;
-
-    if(score>bestScore){
-      bestScore=score;
-      best=item;
-    }
+  const data=aiGetCatalogue(),items=data.items||[],categories=data.categories||[];
+  const query=String(q||'').trim().toLowerCase();if(!query||!items.length)return null;
+  const clean=query.replace(/[^a-z0-9\u0900-\u097f\s._-]/gi,' ').replace(/\s+/g,' ').trim();
+  const stop=new Set(['the','a','an','is','are','do','you','have','show','me','please','what','which','item','items','product','products','mujhe','kya','hai','batao','chahiye','dikhao','ka','ki','ke','ek']);
+  const tokens=clean.split(/\s+/).filter(t=>t.length>1&&!stop.has(t));
+  let best=null,bestScore=0;
+  items.forEach(item=>{
+    const cat=categories.find(c=>c.id===item.categoryId)?.name||'',sub=categories.find(c=>c.id===item.subcategoryId)?.name||'';
+    const fields=[item.name,item.model,item.description,cat,sub,...Object.keys(item.specifications||{}),...Object.values(item.specifications||{})].filter(Boolean).map(v=>String(v).toLowerCase());
+    const hay=fields.join(' ');let score=0;
+    if(String(item.model||'').toLowerCase()===clean)score+=250;
+    if(String(item.name||'').toLowerCase()===clean)score+=220;
+    if(hay.includes(clean))score+=100;
+    tokens.forEach(t=>{if(hay.includes(t))score+=14;});
+    if(score>bestScore){bestScore=score;best=item;}
   });
-
-  return bestScore>0 ? best : null;
+  return bestScore>=14?best:null;
 }
-function seerviDetectLanguage(text){
-  const x=String(text||'').trim().toLowerCase();
-  if(!x)return 'en';
-
-  const devanagari=/[\u0900-\u097f]/.test(x);
-  if(devanagari)return 'hi';
-
-  const kannada=/[\u0c80-\u0cff]/.test(x);
-  if(kannada)return 'kn';
-
-  const tamil=/[\u0b80-\u0bff]/.test(x);
-  if(tamil)return 'ta';
-
-  const telugu=/[\u0c00-\u0c7f]/.test(x);
-  if(telugu)return 'te';
-
-  const bengali=/[\u0980-\u09ff]/.test(x);
-  if(bengali)return 'bn';
-
-  // Common Indian-English/Hinglish vocabulary.
-  const hinglish=/\b(bhai|bro|batao|bata|chahiye|chaiye|kya|kaise|kitna|kitne|hai|hain|nahi|nahin|muje|mujhe|aap|apko|apke|mera|meri|ye|iska|uska|wala|wali|mil|milega|milega|denge|dunga|karna|karo|koi|thik|theek|acha|achha|haan|nahi|yaar|yar|price|rate|maal|item|product)\b/.test(x);
-  if(hinglish)return 'hinglish';
-
-  return 'en';
-}
-
-function seerviNaturalIntro(lang){
-  return ({
-    hi:'Bilkul, ',
-    hinglish:'Haan bhai, ',
-    kn:'ಖಂಡಿತ, ',
-    ta:'நிச்சயமாக, ',
-    te:'తప్పకుండా, ',
-    bn:'অবশ্যই, ',
-    en:'Sure, '
-  })[lang]||'Sure, ';
-}
-
-function seerviFormatProduct(match,lang){
-  if(!match)return '';
-  const model=String(match.model||match.name||match.id||'this product').trim();
-  const name=String(match.name||'').trim();
-  const category=seerviPublicCategoryName(match.categoryId);
-  const subcategory=seerviPublicCategoryName(match.subcategoryId);
-  const specs=Object.entries(match.specifications||{})
-    .slice(0,10)
-    .map(([k,v])=>`${k}: ${v}`)
-    .join(' | ');
-  const description=String(match.description||'').trim();
-
-  const labels={
-    hi:['Naam','Model','Category','Subcategory','Specifications','Details'],
-    hinglish:['Name','Model','Category','Subcategory','Specifications','Details'],
-    kn:['ಹೆಸರು','ಮಾಡೆಲ್','ವರ್ಗ','ಉಪವರ್ಗ','ವಿಶೇಷತೆಗಳು','ವಿವರಗಳು'],
-    ta:['பெயர்','மாடல்','வகை','துணைவகை','விவரக்குறிப்புகள்','விவரங்கள்'],
-    te:['పేరు','మోడల్','కేటగిరీ','సబ్‌కేటగిరీ','స్పెసిఫికేషన్స్','వివరాలు'],
-    bn:['নাম','মডেল','ক্যাটাগরি','সাবক্যাটাগরি','স্পেসিফিকেশন','বিবরণ'],
-    en:['Name','Model','Category','Subcategory','Specifications','Details']
-  }[lang]||['Name','Model','Category','Subcategory','Specifications','Details'];
-
-  const rows=[
-    name?`${labels[0]}: ${name}`:'',
-    match.model?`${labels[1]}: ${match.model}`:'',
-    category?`${labels[2]}: ${category}`:'',
-    subcategory?`${labels[3]}: ${subcategory}`:'',
-    specs?`${labels[4]}: ${specs}`:'',
-    description?`${labels[5]}: ${description.slice(0,320)}`:''
-  ].filter(Boolean);
-
-  return {model,details:rows.join('\n')};
-}
-
-function seerviGenericReply(lang){
-  const replies={
-    hi:'Main Seervi Trading ke products, models, specifications, catalogue, cart, login aur enquiry mein help kar sakta hoon. Aap seedha apna sawaal pooch sakte hain.',
-    hinglish:'Main Seervi Trading ke products, models, specs, catalogue, cart, login aur enquiry mein help kar sakta hoon. Jo chahiye seedha poochho bhai.',
-    kn:'ನಾನು Seervi Trading ಉತ್ಪನ್ನಗಳು, ಮಾದರಿಗಳು, specifications, catalogue, cart ಮತ್ತು enquiries ಬಗ್ಗೆ ಸಹಾಯ ಮಾಡಬಹುದು.',
-    ta:'Seervi Trading products, models, specifications, catalogue, cart மற்றும் enquiries பற்றி நான் உதவ முடியும். உங்கள் கேள்வியை நேராக கேளுங்கள்.',
-    te:'Seervi Trading products, models, specifications, catalogue, cart మరియు enquiries గురించి నేను సహాయం చేయగలను. మీ ప్రశ్నను నేరుగా అడగండి.',
-    bn:'আমি Seervi Trading-এর products, models, specifications, catalogue, cart এবং enquiries বিষয়ে সাহায্য করতে পারি। আপনার প্রশ্নটি সরাসরি লিখুন।',
-    en:'I can help with Seervi Trading products, models, specifications, catalogue, cart, login and enquiries. Just ask your question directly.'
-  };
-  return replies[lang]||replies.en;
-}
+function aiFindProductLegacy(q){return aiFindProduct(q);}
 
 function aiReply(q){
-  const x=String(q||'').trim();
-  const l=x.toLowerCase();
-  const lang=seerviDetectLanguage(x);
-
-  if(!x)return ({
-    hi:'Apna sawaal bhejiye. Main product, model, price, stock, catalogue, cart ya order ke baare mein help kar sakta hoon.',
-    hinglish:'Apna sawaal bhejo bhai. Product, model, price, stock, catalogue, cart ya order — jo chahiye poochho.',
-    kn:'ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಕಳುಹಿಸಿ. Product, model, catalogue, cart ಅಥವಾ order ಬಗ್ಗೆ ನಾನು ಸಹಾಯ ಮಾಡಬಹುದು.',
-    ta:'உங்கள் கேள்வியை அனுப்புங்கள். Product, model, catalogue, cart அல்லது order பற்றி உதவ முடியும்.',
-    te:'మీ ప్రశ్నను పంపండి. Product, model, catalogue, cart లేదా order గురించి నేను సహాయం చేయగలను.',
-    bn:'আপনার প্রশ্নটি লিখুন। Product, model, catalogue, cart বা order সম্পর্কে আমি সাহায্য করতে পারি।',
-    en:'Ask me anything about products, models, specifications, catalogue, cart or orders.'
-  }[lang]||'Ask me anything about products, models, specifications, catalogue, cart or orders.');
-
-  // Natural greeting detection.
-  if(/^(hi|hii|hello|hey|namaste|नमस्ते|ಹಾಯ್|வணக்கம்|హాయ్|হ্যালো|bhai|bro)\b/.test(l)){
-    return ({
-      hi:'Namaste! Main Seervi AI hoon. Aapko kis product ya information ki zarurat hai?',
-      hinglish:'Haan bhai, bolo. Seervi Trading mein kya dekhna hai — product, model, price ya availability?',
-      kn:'ನಮಸ್ಕಾರ! ನಾನು Seervi AI. ನಿಮಗೆ ಯಾವ product ಅಥವಾ information ಬೇಕು?',
-      ta:'வணக்கம்! நான் Seervi AI. எந்த product அல்லது information வேண்டும்?',
-      te:'నమస్తే! నేను Seervi AI. మీకు ఏ product లేదా information కావాలి?',
-      bn:'নমস্কার! আমি Seervi AI। কোন product বা information দরকার?',
-      en:'Hello! I’m Seervi AI. What product or information can I help you with?'
-    }[lang]||'Hello! I’m Seervi AI. What can I help you with?');
+  const x=String(q||'').trim(),l=x.toLowerCase(),lang=aiLanguage(x);
+  if(!x)return lang==='hinglish'||lang==='hi'?'Bilkul bhai. Product, model ya requirement type karo.':'Sure. Ask me about a product, model or requirement.';
+  const product=aiFindProduct(x);
+  const asksProduct=/(product|products|item|items|model|profile|blade|cutting|mount|stand|auger|stock|available|size|material|spec|specification|aluminium|aluminum|screw|ladder|steel|iron|kya hai|kaunsa|kaun sa|chahiye|dikhao|milega)/i.test(x);
+  if(product && asksProduct){
+    const name=String(product.name||product.model||'this product');
+    const intro=lang==='hinglish'||lang==='hi'?`Haan bhai, “${name}” live catalogue mein mil gaya. Neeche PRODUCT DETAILS par tap karo — seedha isi item par chale jaoge.`:lang==='kn'?`“${name}” live catalogue nalli siguttade. ಕೆಳಗಿನ VIEW PRODUCT ಒತ್ತಿ, ee product details open maadi.`:lang==='ta'?`“${name}” live catalogue-ல் கிடைக்கிறது. கீழே VIEW PRODUCT-ஐ அழுத்தி இந்த product details-ஐ திறக்கலாம்.`:lang==='te'?`“${name}” live catalogue lo dorikindi. Kindha VIEW PRODUCT ni tap chesi direct details open cheyyandi.`:lang==='bn'?`“${name}” live catalogue-এ পাওয়া গেছে। নিচের VIEW PRODUCT চাপলে সরাসরি product details খুলবে।`:`I found “${name}” in the live Seervi catalogue. Tap below to open this exact product.`;
+    addAIMessage('bot',intro);aiAddProductResult(product,lang);return null;
   }
-
-  const asksProduct=/(product|products|item|items|catalog|catalogue|model|profile|blade|cutting|mount|wall\s*mount|tv\s*(stand|mount)|auger|earth\s*auger|arrival|stock|available|mil(e|ega|enge)|hai\s*kiya|hoga|मॉडल|प्रोडक्ट|सामान|उपलब्ध|कीमत|दाम|ಮಾದರಿ|ಉತ್ಪನ್ನ|விலை|பொருள்|మోడల్|ఉత్పత్తి|দাম|পণ্য)/.test(l);
-
   if(asksProduct){
-    const match=aiFindProduct(x);
-    if(match){
-      const p=seerviFormatProduct(match,lang);
-      const endings={
-        hi:`\n\nIs product ki aur koi specific detail chahiye ho to pooch sakte hain.`,
-        hinglish:`\n\nIske size, specification ya availability ke baare mein bhi pooch sakte ho.`,
-        kn:'\n\nಈ product‌ನ size, specification ಅಥವಾ availability ಬಗ್ಗೆ ಕೂಡ ಕೇಳಬಹುದು.',
-        ta:'\n\nஇந்த product-ன் size, specification அல்லது availability பற்றியும் கேட்கலாம்.',
-        te:'\n\nఈ product size, specification లేదా availability గురించి కూడా అడగవచ్చు.',
-        bn:'\n\nএই product-এর size, specification বা availability সম্পর্কেও জানতে পারেন।',
-        en:'\n\nYou can also ask me for a specific size, specification or availability.'
-      };
-      return seerviNaturalIntro(lang)+(
-        {
-          hi:`catalogue mein ${p.model} mila hai.\n\n${p.details}`,
-          hinglish:`catalogue mein ${p.model} mil gaya.\n\n${p.details}`,
-          kn:`catalogue ನಲ್ಲಿ ${p.model} ಸಿಕ್ಕಿದೆ.\n\n${p.details}`,
-          ta:`catalogue-ல் ${p.model} கிடைத்துள்ளது.\n\n${p.details}`,
-          te:`catalogue లో ${p.model} దొరికింది.\n\n${p.details}`,
-          bn:`catalogue-এ ${p.model} পাওয়া গেছে।\n\n${p.details}`,
-          en:`I found ${p.model} in the catalogue.\n\n${p.details}`
-        }[lang]||`I found ${p.model} in the catalogue.\n\n${p.details}`
-      )+(endings[lang]||endings.en);
-    }
-
-    const notFound={
-      hi:'Mujhe catalogue mein exact match nahi mila. Aap model number, product name, size ya product photo bhej dijiye — main available catalogue data ke basis par check karunga.',
-      hinglish:'Bhai exact item catalogue mein match nahi hua. Model number, product name, size ya photo bhej do, main catalogue mein dobara check kar leta hoon.',
-      kn:'Catalogue ನಲ್ಲಿ exact match ಸಿಗಲಿಲ್ಲ. Model number, product name, size ಅಥವಾ photo ಕಳುಹಿಸಿ; ಲಭ್ಯವಿರುವ catalogue data ಆಧರಿಸಿ check ಮಾಡುತ್ತೇನೆ.',
-      ta:'Catalogue-ல் exact match கிடைக்கவில்லை. Model number, product name, size அல்லது photo அனுப்புங்கள்; catalogue data அடிப்படையில் check செய்கிறேன்.',
-      te:'Catalogue లో exact match దొరకలేదు. Model number, product name, size లేదా photo పంపండి; catalogue data ఆధారంగా చెక్ చేస్తాను.',
-      bn:'Catalogue-এ exact match পাওয়া যায়নি। Model number, product name, size বা photo পাঠান; catalogue data অনুযায়ী আমি check করব।',
-      en:'I couldn’t find an exact match in the catalogue. Send me the model number, product name, size or a product photo and I’ll check the available catalogue data.'
-    };
-    return notFound[lang]||notFound.en;
+    if(lang==='hinglish'||lang==='hi')return`Bhai exact item nahi mila. Model number, size ya product ka thoda aur naam bhejo — main live catalogue mein dobara search karunga.`;
+    return`I couldn’t find that item in the live catalogue. Send the model number, size or a little more of the product name and I’ll search again.`;
   }
-
-  if(/cart|basket|add\s*(an?\s*)?(item|product)|remove.*cart|quantity/.test(l)){
-    return ({
-      hi:'Cart mein product add karne ke liye product card par + button use kijiye. Quantity CART section mein check aur update kar sakte hain.',
-      hinglish:'Cart mein item add karne ke liye product card ka + button use karo. Quantity CART mein check ya update kar sakte ho.',
-      en:'Use the + button on a product card to add an item to the cart. You can review and update quantities from the CART section.'
-    }[lang]||'Use the + button on a product card to add an item to the cart.');
-  }
-
-  if(/login|sign[ -]?up|signup|account|password|register/.test(l)){
-    return ({
-      hi:'Existing customer ke liye LOGIN use kijiye. Naya account banane ke liye SIGN UP use kijiye. Agar koi error aaye to uska screenshot bhej sakte hain.',
-      hinglish:'Existing customer ho to LOGIN use karo, aur new account ke liye SIGN UP. Error aaye to screenshot bhej do.',
-      en:'Use LOGIN for an existing customer account and SIGN UP to create a new account. If you see an error, send me a screenshot.'
-    }[lang]||'Use LOGIN for an existing account and SIGN UP to create a new account.');
-  }
-
-  if(/order|quotation|quote|pdf/.test(l)){
-    return ({
-      hi:'Order ya quotation ke liye apni requirement, product/model aur quantity bata dijiye. Main aapko next step guide kar sakta hoon.',
-      hinglish:'Order ya quotation chahiye to product/model aur quantity batao bhai. Main next step guide kar dunga.',
-      en:'For an order or quotation, tell me the product/model and required quantity. I can guide you through the next step.'
-    }[lang]||'Tell me the product/model and quantity for the order or quotation.');
-  }
-
-  if(/contact|whatsapp|phone|call|email|address|location|where.*(shop|office)/.test(l)){
-    return ({
-      hi:'Seervi Trading se contact karne ke liye website ka WhatsApp option use kar sakte hain. WhatsApp: +91 70737 41650 | Email: info@seervitrading.com | Address: Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.',
-      hinglish:'Contact ke liye website ka WhatsApp option use karo. WhatsApp: +91 70737 41650 | Email: info@seervitrading.com | Address: Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.',
-      en:'You can contact Seervi Trading through the website WhatsApp option. WhatsApp: +91 70737 41650 | Email: info@seervitrading.com | Address: Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.'
-    }[lang]||'You can contact Seervi Trading through the website WhatsApp option.');
-  }
-
-  if(/thank|thanks|shukriya|dhanyavad|धन्यवाद/.test(l)){
-    return ({
-      hi:'Aapka swagat hai. Jab bhi product ya catalogue mein help chahiye, pooch sakte hain.',
-      hinglish:'Anytime bhai. Product ya catalogue mein kuch bhi dekhna ho to pooch lena.',
-      en:'You’re welcome. If you need help with a product or the catalogue, just ask.'
-    }[lang]||'You’re welcome. Just ask if you need anything else.');
-  }
-
-  return seerviGenericReply(lang);
+  if(/^(hi|hello|hey|hii|namaste|bhai)\b/i.test(l))return lang==='hinglish'||lang==='hi'?'Haan bhai, bolo. Product/model, specification, cart, quotation ya account mein kya help chahiye?':'Hello. How can I help? Ask me about products, models, specifications, cart, quotations or your account.';
+  if(/cart|basket|add.*item|quantity/i.test(l))return lang==='hinglish'||lang==='hi'?'Bilkul. Product card se item cart mein add karo, phir CART open karke quantity update kar sakte ho.':'Add a product from its card, then open CART to review or change the quantity.';
+  if(/login|sign[ -]?up|signup|account|password|register/i.test(l))return lang==='hinglish'||lang==='hi'?'LOGIN existing account ke liye hai aur SIGN UP naya customer account banane ke liye. Koi error aaye to exact message bhejo.':'LOGIN is for an existing account and SIGN UP creates a new customer account. Send me the exact error if you need help.';
+  if(/quotation|quote|pdf|order/i.test(l))return lang==='hinglish'||lang==='hi'?'Quotation/order ke liye selected products aur quantity ready rakho. Admin quotation ya customer order mein se jo chahiye batao, main exact flow bata dunga.':'For a quotation or order, keep the required products and quantities ready. Tell me which flow you need and I’ll guide you.';
+  if(/contact|whatsapp|phone|call|email|address|location/i.test(l))return lang==='hinglish'||lang==='hi'?'Seervi Trading WhatsApp: +91 70737 41650 | Email: info@seervitrading.com | Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.':'Seervi Trading: WhatsApp +91 70737 41650 | Email info@seervitrading.com | Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.';
+  if(/price|rate|cost|moq|minimum|wholesale/i.test(l))return lang==='hinglish'||lang==='hi'?'Exact rate ke liye product/model batao. Main live catalogue mein item identify karke available details dikhaunga.':'For pricing, tell me the exact product or model and I’ll identify it from the live catalogue.';
+  if(lang==='hi')return'Samajh gaya. Product ka naam/model, size ya requirement likh do; main Seervi catalogue ke available data ke basis par help karunga.';
+  if(lang==='hinglish')return'Samajh gaya bhai. Product/model, size ya requirement thodi specific bhejo; main Seervi ke live catalogue se exact information dhoondhunga.';
+  if(lang==='kn')return`Arthaayitu. Product hesaru/model athava size heli; live Seervi catalogue data adharadalli nanu help maaduttini.`;
+  if(lang==='ta')return`Purindhadhu. Product peyar, model allathu size anuppunga; live Seervi catalogue data adharithu help pannuren.`;
+  if(lang==='te')return`Artham ayyindi. Product peru, model leda size pampandi; live Seervi catalogue data adharanga help chestanu.`;
+  if(lang==='bn')return`বুঝেছি। Product-এর নাম, model বা size পাঠান; live Seervi catalogue-এর data অনুযায়ী সাহায্য করব।`;
+  return'I understand. Tell me the product name, model, size or requirement and I’ll use the live Seervi catalogue to guide you.';
 }
-
-function sendAIMessage(e){
+async function sendAIMessage(e){
   if(e)e.preventDefault();
   const input=document.getElementById('supportMessage');
   const q=String(input?.value||'').trim();
   if(!q)return;
-
-  addAIMessage('user',q);
-  if(input){
-    input.value='';
-    input.style.height='auto';
-  }
-
-  const typing=document.getElementById('aiTyping');
-  const send=document.querySelector('#supportChatForm .support-chat-send');
-  if(typing)typing.classList.add('show');
-  if(send)send.disabled=true;
-
-  // Small delay gives the UI a natural assistant-response feel without pretending
-  // that a remote AI request is being made.
-  setTimeout(()=>{
-    if(typing)typing.classList.remove('show');
-    if(send)send.disabled=false;
-    addAIMessage('bot',aiReply(q));
-  },450);
+  addAIMessage('user',q);if(input){input.value='';input.focus({preventScroll:true});}
+  const typing=document.getElementById('aiTyping');if(typing)typing.classList.add('show');
+  await new Promise(r=>setTimeout(r,220));
+  if(typing)typing.classList.remove('show');
+  const before=document.getElementById('supportChat')?.children.length||0;
+  const reply=aiReply(q);if(reply)addAIMessage('bot',reply);
+  if((document.getElementById('supportChat')?.children.length||0)===before)addAIMessage('bot','I’m here to help. Try a specific product or model name.');
 }
 function aiQuick(q){
-  const input=document.getElementById('supportMessage'); if(input)input.value=q;
-  sendAIMessage({preventDefault(){}});
+  const input=document.getElementById('supportMessage');if(!input)return;
+  input.value=q;input.focus({preventScroll:true});sendAIMessage({preventDefault(){}});
 }
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape')closeSupportModal();
@@ -11233,6 +11003,8 @@ async function seerviPublicLoadCatalogue(){
 
     seerviPublicItems=itemSnap.docs.map(d=>({id:d.id,...d.data()}))
       .sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
+
+    window.seerviGetPublicCatalogue=()=>({items:seerviPublicItems,categories:seerviPublicCategories});
 
     seerviPublicRenderCategories();
     seerviPublicRenderSubcategories();
