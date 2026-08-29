@@ -5922,39 +5922,66 @@ function aiFindExactModel(q,items){
 
 function aiFindProduct(q){
   const data=aiGetCatalogue(),items=data.items,categories=data.categories;
-  const exact=aiFindExactModel(q,items);
-  if(exact)return exact;
-
   const clean=aiNormaliseText(q);
   if(!clean||!items.length)return null;
-  const stop=new Set(['the','a','an','is','are','do','you','have','show','me','please','what','which','item','items','product','products','mujhe','kya','hai','batao','chahiye','dikhao','ka','ki','ke','ek','bhai','wala','wali','milega','mil','do','de']);
-  const tokens=clean.split(/\s+/).filter(t=>t.length>1&&!stop.has(t));
-  let best=null,bestScore=0;
-  items.forEach(item=>{
-    const cat=aiCategoryName(categories,item.categoryId);
-    const sub=aiCategoryName(categories,item.subcategoryId);
-    const fields=[
-      item.name,item.model,item.description,cat,sub,
-      ...Object.keys(item.specifications||{}),
-      ...Object.values(item.specifications||{})
-    ].filter(Boolean).map(v=>aiNormaliseText(v));
-    const hay=fields.join(' ');
-    let score=0;
-    const model=aiNormaliseText(item.model);
-    const name=aiNormaliseText(item.name);
-    if(model && clean.includes(model))score+=180;
-    if(name && clean===name)score+=220;
-    if(name && clean.includes(name))score+=120;
-    if(hay.includes(clean))score+=95;
-    tokens.forEach(t=>{
-      if(hay.split(/\s+/).includes(t))score+=20;
-      else if(hay.includes(t))score+=8;
-    });
-    if(score>bestScore){bestScore=score;best=item;}
-  });
-  return bestScore>=20?best:null;
-}
 
+  // Exact model/code match has absolute priority, even when surrounded by
+  // natural-language words such as "show model 2310".
+  const modelCandidates=clean.split(/\s+/).map(t=>t.replace(/[^a-z0-9]/gi,'')).filter(t=>t.length>=2);
+  for(const item of items){
+    const model=aiNormaliseText(item.model);
+    if(!model)continue;
+    const compact=model.replace(/[^a-z0-9]/gi,'');
+    if(clean===model || clean.replace(/[^a-z0-9]/gi,'')===compact ||
+       modelCandidates.includes(compact)) return item;
+  }
+
+  const stop=new Set([
+    'the','a','an','is','are','do','you','have','show','me','please','what','which',
+    'item','items','product','products','find','search','need','want','for','of',
+    'mujhe','kya','hai','batao','chahiye','dikhao','ka','ki','ke','ek','bhai',
+    'wala','wali','milega','mil','do','de','mere','mera','meri','ko','par','mein',
+    'me','se','tha','thi','ho','he','or','aur','with'
+  ]);
+  const tokens=clean.split(/\s+/).filter(t=>t.length>1&&!stop.has(t));
+  if(!tokens.length)return null;
+
+  let best=null,bestScore=0;
+  for(const item of items){
+    const specs=item.specifications&&typeof item.specifications==='object'?item.specifications:{};
+    const name=aiNormaliseText(item.name);
+    const model=aiNormaliseText(item.model);
+    const description=aiNormaliseText(item.description);
+    const specKeys=Object.keys(specs).map(aiNormaliseText).filter(Boolean);
+    const specVals=Object.values(specs).map(aiNormaliseText).filter(Boolean);
+    const specPairs=Object.entries(specs).map(([k,v])=>aiNormaliseText(`${k} ${v}`)).filter(Boolean);
+    const fields=[name,model,description,...specKeys,...specVals,...specPairs].filter(Boolean);
+    let score=0,matched=0;
+
+    if(name && clean===name)score+=300;
+    else if(name && clean.includes(name))score+=220;
+    else if(name && name.includes(clean) && clean.length>=4)score+=175;
+
+    if(model && clean.includes(model))score+=260;
+    if(specPairs.some(v=>v===clean))score+=210;
+    if(specVals.some(v=>v===clean))score+=190;
+    if(description && description.includes(clean))score+=125;
+
+    tokens.forEach(t=>{
+      if(name.split(/\s+/).includes(t)){score+=50;matched++;}
+      else if(model.split(/\s+/).includes(t)){score+=65;matched++;}
+      else if(specKeys.some(v=>v.split(/\s+/).includes(t))){score+=38;matched++;}
+      else if(specVals.some(v=>v.split(/\s+/).includes(t))){score+=42;matched++;}
+      else if(fields.some(v=>v.includes(t))){score+=10;matched++;}
+    });
+
+    if(matched>=2)score+=45;
+    if(model && tokens.some(t=>model.includes(t)))score+=55;
+
+    if(score>bestScore){bestScore=score;best=item;}
+  }
+  return bestScore>=75?best:null;
+}
 function aiFindCategory(q){
   const data=aiGetCatalogue(),categories=data.categories;
   const clean=aiNormaliseText(q);
@@ -6027,7 +6054,9 @@ function aiAddCategoryOptions(category,subcategories,lang){
     btn.className='ai-category-option';
     btn.textContent=String(sub.name||'Subcategory');
     btn.addEventListener('click',function(){
-      closeSupportModal();
+      const aiModal=document.getElementById('supportModal');
+      if(aiModal){aiModal.classList.remove('show');aiModal.setAttribute('aria-hidden','true');}
+      document.body.classList.remove('modal-open','seervi-ai-open');
       const go=function(){
         if(typeof window.seerviPublicSelectCategory==='function')window.seerviPublicSelectCategory(category.id);
         if(typeof window.seerviPublicSelectSubcategory==='function')window.seerviPublicSelectSubcategory(sub.id);
@@ -6061,7 +6090,9 @@ function aiAddSubcategoryOption(sub,category,lang){
   const btn=document.createElement('button');btn.type='button';btn.className='ai-category-option';
   btn.textContent=lang==='hinglish'||lang==='hi'?'OPEN SUBCATEGORY →':'OPEN SUBCATEGORY →';
   btn.addEventListener('click',function(){
-    closeSupportModal();
+    const aiModal=document.getElementById('supportModal');
+    if(aiModal){aiModal.classList.remove('show');aiModal.setAttribute('aria-hidden','true');}
+    document.body.classList.remove('modal-open','seervi-ai-open');
     const go=function(){
       if(category&&typeof window.seerviPublicSelectCategory==='function')window.seerviPublicSelectCategory(category.id);
       if(typeof window.seerviPublicSelectSubcategory==='function')window.seerviPublicSelectSubcategory(sub.id);
@@ -6096,16 +6127,16 @@ function aiAddProductResult(item,lang){
     lang==='te'?'PRODUCT DETAILS →':
     lang==='bn'?'PRODUCT DETAILS →':'VIEW PRODUCT →';
   btn.addEventListener('click',function(){
-    // Close the AI first. Otherwise the AI overlay remains above the product modal.
-    closeSupportModal();
+    const aiModal=document.getElementById('supportModal');
+    if(aiModal){aiModal.classList.remove('show');aiModal.setAttribute('aria-hidden','true');}
+    document.body.classList.remove('modal-open','seervi-ai-open');
+
     const open=function(){
-      if(typeof window.seerviPublicOpenItem==='function'){
-        window.seerviPublicOpenItem(item.id);
-      }
+      if(typeof window.seerviPublicOpenItem==='function')window.seerviPublicOpenItem(item.id);
     };
     if(window.innerWidth<=600 && typeof window.showMobileProducts==='function'){
       window.showMobileProducts();
-      setTimeout(open,180);
+      setTimeout(open,220);
     }else{
       open();
     }
@@ -6138,6 +6169,18 @@ function aiReply(q){
   }
 
   // If the user names a category, show its actual subcategories as actions.
+  if(product && !exactModel && asksProduct){
+    const name=String(product.name||product.model||'this product');
+    const intro=
+      lang==='hinglish'||lang==='hi'?`Haan bhai, “${name}” live catalogue mein mil gaya. Neeche PRODUCT DETAILS dabao — seedha isi item par chale jaoge.`:
+      lang==='kn'?`“${name}” live catalogue nalli sigide. Kelagina button tap maadi direct product details open maadi.`:
+      lang==='ta'?`“${name}” live catalogue-ல் கிடைக்கிறது. கீழே button-ஐ tap செய்து direct product details திறக்கலாம்.`:
+      lang==='te'?`“${name}” live catalogue lo dorikindi. Kindha button ni tap chesi direct product details open cheyyandi.`:
+      lang==='bn'?`“${name}” live catalogue-এ পাওয়া গেছে। নিচের button চাপলে সরাসরি product details খুলবে।`:
+      `I found “${name}” in the live Seervi catalogue. Tap below to open this exact product.`;
+    addAIMessage('bot',intro);aiAddProductResult(product,lang);return null;
+  }
+
   if(category){
     const subs=aiCategorySubcategories(category,data.categories);
     const msg=
@@ -6160,18 +6203,6 @@ function aiReply(q){
   }
 
   const asksProduct=/(product|products|item|items|model|profile|blade|cutting|mount|stand|auger|stock|available|size|material|spec|specification|aluminium|aluminum|screw|ladder|steel|iron|curtain|rod|tv|chair|table|kya|kaunsa|chahiye|dikhao)/i.test(x);
-
-  if(product && asksProduct){
-    const name=String(product.name||product.model||'this product');
-    const intro=
-      lang==='hinglish'||lang==='hi'?`Haan bhai, “${name}” live catalogue mein mil gaya. Neeche PRODUCT DETAILS dabao — seedha isi item par chale jaoge.`:
-      lang==='kn'?`“${name}” live catalogue nalli sigide. Kelagina button tap maadi direct product details open maadi.`:
-      lang==='ta'?`“${name}” live catalogue-ல் கிடைக்கிறது. கீழே button-ஐ tap செய்து direct product details திறக்கலாம்.`:
-      lang==='te'?`“${name}” live catalogue lo dorikindi. Kindha button ni tap chesi direct product details open cheyyandi.`:
-      lang==='bn'?`“${name}” live catalogue-এ পাওয়া গেছে। নিচের button চাপলে সরাসরি product details খুলবে।`:
-      `I found “${name}” in the live Seervi catalogue. Tap below to open this exact product.`;
-    addAIMessage('bot',intro);aiAddProductResult(product,lang);return null;
-  }
 
   if(asksProduct){
     return lang==='hinglish'||lang==='hi'
@@ -6226,7 +6257,12 @@ async function sendAIMessage(e){
   addAIMessage('user',q);
   if(input){input.value='';input.focus({preventScroll:true});}
   const typing=document.getElementById('aiTyping');if(typing)typing.classList.add('show');
-  await new Promise(r=>setTimeout(r,220));
+  try{
+    if(typeof window.seerviEnsurePublicCatalogue==='function')await window.seerviEnsurePublicCatalogue();
+  }catch(e){
+    console.warn('AI catalogue readiness:',e);
+  }
+  await new Promise(r=>setTimeout(r,180));
   if(typing)typing.classList.remove('show');
   const before=document.getElementById('supportChat')?.children.length||0;
   const reply=aiReply(q);if(reply)addAIMessage('bot',reply);
@@ -11967,6 +12003,13 @@ if(document.readyState==='loading'){
 }else{
   seerviBootPublicCatalogue();
 }
+
+/* AI/catalogue bridge: wait for the same live Firebase catalogue used by the
+   public Products page before performing any AI product/category search. */
+window.seerviEnsurePublicCatalogue=async function(){
+  await seerviBootPublicCatalogue();
+  return window.seerviGetPublicCatalogue?.() || {items:[],categories:[]};
+};
 /* ===== END SEERVI PUBLIC CATALOGUE BOOTSTRAP / FINAL FIX ===== */
 
 /* ===== END SEERVI FINAL MULTI-IMAGE ITEM SYSTEM ===== */
