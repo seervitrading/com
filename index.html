@@ -953,6 +953,12 @@ body.admin-quote-mode .quote-actions{display:grid!important}
 .ai-product-result{align-self:flex-start;max-width:92%;display:flex;flex-direction:column;gap:5px;padding:11px 12px;background:#111820;border:1px solid #f0c66a38;border-radius:12px;border-top-left-radius:4px;color:#dfe4e8;font-size:10px;line-height:1.45}
 .ai-product-result strong{font-size:11px;color:#fff}.ai-product-result span{color:#8f9aa5}.ai-product-open{margin-top:4px;align-self:flex-start;border:1px solid #f0c66a66;background:#f0c66a;color:#0b0d10;border-radius:7px;padding:8px 10px;font-size:8px;font-weight:900;letter-spacing:.5px;cursor:pointer}
 .ai-product-open:active{transform:translateY(1px)}
+.ai-category-result{align-self:flex-start;max-width:92%;display:flex;flex-direction:column;gap:7px;padding:11px 12px;background:#111820;border:1px solid #f0c66a38;border-radius:12px;border-top-left-radius:4px;color:#dfe4e8;font-size:10px;line-height:1.45}
+.ai-category-result strong{font-size:11px;color:#fff}
+.ai-category-result span{color:#8f9aa5}
+.ai-category-option{align-self:flex-start;border:1px solid #f0c66a55;background:#151c23;color:#f0c66a;border-radius:8px;padding:8px 10px;font-size:9px;font-weight:800;cursor:pointer;text-align:left}
+.ai-category-option:active{transform:translateY(1px);background:#f0c66a;color:#0b0d10}
+
 @media(max-width:600px){.support-modal{height:100dvh;max-height:100dvh;padding:0;align-items:flex-end}.support-card{width:100%;height:100dvh;max-height:100dvh;border-radius:0;border-left:0;border-right:0}.support-chat{padding-bottom:12px}.support-chat-form{padding-bottom:max(12px,env(safe-area-inset-bottom));}.support-chat-input{min-height:44px;height:44px;font-size:16px!important;line-height:1.25;padding:10px 12px}.support-chat-send{min-width:46px;min-height:44px}.support-head{padding-top:max(14px,env(safe-area-inset-top));}}
 
 @media(max-width:600px){
@@ -5871,25 +5877,23 @@ function addAIMessage(role,text){
   el.textContent=String(text||'');
   chat.appendChild(el);chat.scrollTop=chat.scrollHeight;
 }
-function aiAddProductResult(item,lang){
-  const chat=document.getElementById('supportChat'); if(!chat||!item)return;
-  const box=document.createElement('div'); box.className='ai-product-result';
-  const name=document.createElement('strong'); name.textContent=String(item.name||item.model||'Product'); box.appendChild(name);
-  if(item.model){const x=document.createElement('span');x.textContent='Model: '+item.model;box.appendChild(x);}
-  const cat=window.seerviGetPublicCatalogue?.()||{categories:[]};
-  const category=cat.categories.find(x=>x.id===item.categoryId)?.name||'';
-  const sub=cat.categories.find(x=>x.id===item.subcategoryId)?.name||'';
-  if(category||sub){const x=document.createElement('span');x.textContent=[category,sub].filter(Boolean).join(' / ');box.appendChild(x);}
-  const specs=Object.entries(item.specifications||{}).slice(0,5);
-  if(specs.length){const x=document.createElement('span');x.textContent=specs.map(([k,v])=>k+': '+v).join(' • ');box.appendChild(x);}
-  const btn=document.createElement('button');btn.type='button';btn.className='ai-product-open';btn.textContent=lang==='hinglish'||lang==='hi'?'PRODUCT DETAILS →':'VIEW PRODUCT →';
-  btn.addEventListener('click',function(){
-    if(window.innerWidth<=600 && typeof window.showMobileProducts==='function')window.showMobileProducts();
-    setTimeout(function(){window.seerviPublicOpenItem?.(item.id);},50);
-  });
-  box.appendChild(btn);chat.appendChild(box);chat.scrollTop=chat.scrollHeight;
+function aiGetCatalogue(){
+  try{
+    const data=window.seerviGetPublicCatalogue?.();
+    return {
+      items:Array.isArray(data?.items)?data.items:[],
+      categories:Array.isArray(data?.categories)?data.categories:[]
+    };
+  }catch(_){return{items:[],categories:[]};}
 }
-function aiGetCatalogue(){try{return window.seerviGetPublicCatalogue?.()||{items:[],categories:[]};}catch(_){return{items:[],categories:[]};}}
+
+function aiNormaliseText(value){
+  return String(value??'').toLowerCase()
+    .replace(/&/g,' and ')
+    .replace(/[^a-z0-9\u0900-\u097f\u0c80-\u0cff\u0b80-\u0bff\u0c00-\u0c7f\u0980-\u09ff]+/gi,' ')
+    .replace(/\s+/g,' ').trim();
+}
+
 function aiLanguage(q){
   const x=String(q||'');
   if(/[\u0900-\u097F]/.test(x))return'hi';
@@ -5898,78 +5902,345 @@ function aiLanguage(q){
   if(/[\u0C00-\u0C7F]/.test(x))return'te';
   if(/[\u0980-\u09FF]/.test(x))return'bn';
   const l=x.toLowerCase();
-  if(/\b(kya|kaise|kaisa|chahiye|batao|bataiye|mujhe|muje|mera|meri|kitna|kitne|hai|hain|karo|karna|mil|milega|dikhao|bhejo|wala|wali|ke|ki|ka|mein|me|par|aur|nahi|nahin|acha|accha|bhai)\b/.test(l))return'hinglish';
+  if(/\b(kya|kaise|kaisa|chahiye|batao|bataiye|mujhe|muje|mera|meri|kitna|kitne|hai|hain|karo|karna|mil|milega|dikhao|bhejo|wala|wali|ke|ki|ka|mein|me|par|aur|nahi|nahin|acha|accha|bhai|ye|woh|wo|kahan|kaha|kaunsa|kaun)\b/.test(l))return'hinglish';
   return'en';
 }
+
+function aiCategoryName(categories,id){
+  return categories.find(x=>String(x.id)===String(id))?.name||'';
+}
+
+function aiFindExactModel(q,items){
+  const clean=aiNormaliseText(q);
+  if(!clean)return null;
+  const compact=clean.replace(/\s+/g,'');
+  return items.find(item=>{
+    const model=aiNormaliseText(item.model);
+    return model && (model===clean || model.replace(/\s+/g,'')===compact);
+  })||null;
+}
+
 function aiFindProduct(q){
-  const data=aiGetCatalogue(),items=data.items||[],categories=data.categories||[];
-  const query=String(q||'').trim().toLowerCase();if(!query||!items.length)return null;
-  const clean=query.replace(/[^a-z0-9\u0900-\u097f\s._-]/gi,' ').replace(/\s+/g,' ').trim();
-  const stop=new Set(['the','a','an','is','are','do','you','have','show','me','please','what','which','item','items','product','products','mujhe','kya','hai','batao','chahiye','dikhao','ka','ki','ke','ek']);
+  const data=aiGetCatalogue(),items=data.items,categories=data.categories;
+  const exact=aiFindExactModel(q,items);
+  if(exact)return exact;
+
+  const clean=aiNormaliseText(q);
+  if(!clean||!items.length)return null;
+  const stop=new Set(['the','a','an','is','are','do','you','have','show','me','please','what','which','item','items','product','products','mujhe','kya','hai','batao','chahiye','dikhao','ka','ki','ke','ek','bhai','wala','wali','milega','mil','do','de']);
   const tokens=clean.split(/\s+/).filter(t=>t.length>1&&!stop.has(t));
   let best=null,bestScore=0;
   items.forEach(item=>{
-    const cat=categories.find(c=>c.id===item.categoryId)?.name||'',sub=categories.find(c=>c.id===item.subcategoryId)?.name||'';
-    const fields=[item.name,item.model,item.description,cat,sub,...Object.keys(item.specifications||{}),...Object.values(item.specifications||{})].filter(Boolean).map(v=>String(v).toLowerCase());
-    const hay=fields.join(' ');let score=0;
-    if(String(item.model||'').toLowerCase()===clean)score+=250;
-    if(String(item.name||'').toLowerCase()===clean)score+=220;
-    if(hay.includes(clean))score+=100;
-    tokens.forEach(t=>{if(hay.includes(t))score+=14;});
+    const cat=aiCategoryName(categories,item.categoryId);
+    const sub=aiCategoryName(categories,item.subcategoryId);
+    const fields=[
+      item.name,item.model,item.description,cat,sub,
+      ...Object.keys(item.specifications||{}),
+      ...Object.values(item.specifications||{})
+    ].filter(Boolean).map(v=>aiNormaliseText(v));
+    const hay=fields.join(' ');
+    let score=0;
+    const model=aiNormaliseText(item.model);
+    const name=aiNormaliseText(item.name);
+    if(model && clean.includes(model))score+=180;
+    if(name && clean===name)score+=220;
+    if(name && clean.includes(name))score+=120;
+    if(hay.includes(clean))score+=95;
+    tokens.forEach(t=>{
+      if(hay.split(/\s+/).includes(t))score+=20;
+      else if(hay.includes(t))score+=8;
+    });
     if(score>bestScore){bestScore=score;best=item;}
   });
-  return bestScore>=14?best:null;
+  return bestScore>=20?best:null;
 }
-function aiFindProductLegacy(q){return aiFindProduct(q);}
+
+function aiFindCategory(q){
+  const data=aiGetCatalogue(),categories=data.categories;
+  const clean=aiNormaliseText(q);
+  if(!clean)return null;
+  const candidates=categories.filter(x=>x.type==='category');
+  let exact=candidates.find(x=>{
+    const n=aiNormaliseText(x.name),slug=aiNormaliseText(x.slug);
+    return n===clean||slug===clean;
+  });
+  if(exact)return exact;
+  const tokens=clean.split(/\s+/).filter(t=>t.length>1);
+  let best=null,score=0;
+  candidates.forEach(c=>{
+    const hay=[c.name,c.slug,c.description].filter(Boolean).map(aiNormaliseText).join(' ');
+    let sc=0;
+    if(hay.includes(clean))sc+=100;
+    tokens.forEach(t=>{if(hay.includes(t))sc+=18;});
+    if(sc>score){score=sc;best=c;}
+  });
+  return score>=18?best:null;
+}
+
+function aiFindSubcategory(q){
+  const data=aiGetCatalogue(),categories=data.categories;
+  const clean=aiNormaliseText(q);
+  if(!clean)return null;
+  const candidates=categories.filter(x=>x.type==='subcategory');
+  const exact=candidates.find(x=>aiNormaliseText(x.name)===clean||aiNormaliseText(x.slug)===clean);
+  if(exact)return exact;
+  return candidates.find(x=>{
+    const n=aiNormaliseText(x.name);
+    return n && (clean.includes(n)||n.includes(clean));
+  })||null;
+}
+
+function aiCategorySubcategories(category,categories){
+  return categories
+    .filter(x=>x.type==='subcategory' && String(x.parentId)===String(category.id))
+    .sort((a,b)=>Number(a.sortOrder||0)-Number(b.sortOrder||0)||String(a.name||'').localeCompare(String(b.name||'')));
+}
+
+function aiAddCategoryOptions(category,subcategories,lang){
+  const chat=document.getElementById('supportChat');if(!chat||!category)return;
+  const box=document.createElement('div');
+  box.className='ai-category-result';
+  const title=document.createElement('strong');
+  title.textContent=String(category.name||'Category');
+  box.appendChild(title);
+  const note=document.createElement('span');
+  note.textContent=
+    lang==='hinglish'||lang==='hi'?'Is category ki subcategories neeche hain. Kisi par tap karo:':
+    lang==='kn'?'Ee categoryya subcategories illive. Ondannu tap maadi:':
+    lang==='ta'?'Indha category-oda subcategories keezhe ullana. Ondrai tap pannunga:':
+    lang==='te'?'Ee category subcategories kindha unnayi. Oka option ni tap cheyyandi:':
+    lang==='bn'?'এই category-র subcategory নিচে আছে। একটি বেছে নিন:':
+    'Here are the subcategories. Select one to open it:';
+  box.appendChild(note);
+
+  if(!subcategories.length){
+    const empty=document.createElement('span');
+    empty.textContent=
+      lang==='hinglish'||lang==='hi'?'Is category mein abhi koi subcategory available nahi hai.':
+      'No subcategories are currently available in this category.';
+    box.appendChild(empty);
+  }
+
+  subcategories.forEach(sub=>{
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='ai-category-option';
+    btn.textContent=String(sub.name||'Subcategory');
+    btn.addEventListener('click',function(){
+      closeSupportModal();
+      const go=function(){
+        if(typeof window.seerviPublicSelectCategory==='function')window.seerviPublicSelectCategory(category.id);
+        if(typeof window.seerviPublicSelectSubcategory==='function')window.seerviPublicSelectSubcategory(sub.id);
+        const target=document.getElementById('products')||document.getElementById('seerviPublicProductGrid');
+        if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+      };
+      if(window.innerWidth<=600 && typeof window.showMobileProducts==='function'){
+        window.showMobileProducts();
+        setTimeout(go,180);
+      }else go();
+    });
+    box.appendChild(btn);
+  });
+  chat.appendChild(box);
+  chat.scrollTop=chat.scrollHeight;
+}
+
+function aiAddSubcategoryOption(sub,category,lang){
+  const chat=document.getElementById('supportChat');if(!chat||!sub)return;
+  const box=document.createElement('div');box.className='ai-category-result';
+  const title=document.createElement('strong');title.textContent=String(sub.name||'Subcategory');box.appendChild(title);
+  const note=document.createElement('span');
+  note.textContent=
+    lang==='hinglish'||lang==='hi'?'Neeche button dabao aur isi subcategory ke products dekho.':
+    lang==='kn'?'Kelagina button tap maadi ee subcategoryya products nodi.':
+    lang==='ta'?'Keela irukkum button-ai tap panni indha subcategory products-ai paarkkalam.':
+    lang==='te'?'Kindha button ni tap chesi ee subcategory products choodandi.':
+    lang==='bn'?'নিচের button চাপলে এই subcategory-র products দেখাবে।':
+    'Use the button below to open this subcategory in the catalogue.';
+  box.appendChild(note);
+  const btn=document.createElement('button');btn.type='button';btn.className='ai-category-option';
+  btn.textContent=lang==='hinglish'||lang==='hi'?'OPEN SUBCATEGORY →':'OPEN SUBCATEGORY →';
+  btn.addEventListener('click',function(){
+    closeSupportModal();
+    const go=function(){
+      if(category&&typeof window.seerviPublicSelectCategory==='function')window.seerviPublicSelectCategory(category.id);
+      if(typeof window.seerviPublicSelectSubcategory==='function')window.seerviPublicSelectSubcategory(sub.id);
+      const target=document.getElementById('products')||document.getElementById('seerviPublicProductGrid');
+      if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    };
+    if(window.innerWidth<=600 && typeof window.showMobileProducts==='function'){
+      window.showMobileProducts();
+      setTimeout(go,180);
+    }else go();
+  });
+  box.appendChild(btn);chat.appendChild(box);chat.scrollTop=chat.scrollHeight;
+}
+
+function aiAddProductResult(item,lang){
+  const chat=document.getElementById('supportChat');if(!chat||!item)return;
+  const data=aiGetCatalogue();
+  const box=document.createElement('div');box.className='ai-product-result';
+  const name=document.createElement('strong');name.textContent=String(item.name||item.model||'Product');box.appendChild(name);
+  if(item.model){const x=document.createElement('span');x.textContent='Model: '+item.model;box.appendChild(x);}
+  const category=aiCategoryName(data.categories,item.categoryId);
+  const sub=aiCategoryName(data.categories,item.subcategoryId);
+  if(category||sub){const x=document.createElement('span');x.textContent=[category,sub].filter(Boolean).join(' / ');box.appendChild(x);}
+  const specs=Object.entries(item.specifications||{}).slice(0,5);
+  if(specs.length){const x=document.createElement('span');x.textContent=specs.map(([k,v])=>k+': '+v).join(' • ');box.appendChild(x);}
+  const btn=document.createElement('button');
+  btn.type='button';btn.className='ai-product-open';
+  btn.textContent=
+    lang==='hinglish'||lang==='hi'?'PRODUCT DETAILS →':
+    lang==='kn'?'PRODUCT DETAILS →':
+    lang==='ta'?'PRODUCT DETAILS →':
+    lang==='te'?'PRODUCT DETAILS →':
+    lang==='bn'?'PRODUCT DETAILS →':'VIEW PRODUCT →';
+  btn.addEventListener('click',function(){
+    // Close the AI first. Otherwise the AI overlay remains above the product modal.
+    closeSupportModal();
+    const open=function(){
+      if(typeof window.seerviPublicOpenItem==='function'){
+        window.seerviPublicOpenItem(item.id);
+      }
+    };
+    if(window.innerWidth<=600 && typeof window.showMobileProducts==='function'){
+      window.showMobileProducts();
+      setTimeout(open,180);
+    }else{
+      open();
+    }
+  });
+  box.appendChild(btn);chat.appendChild(box);chat.scrollTop=chat.scrollHeight;
+}
 
 function aiReply(q){
   const x=String(q||'').trim(),l=x.toLowerCase(),lang=aiLanguage(x);
   if(!x)return lang==='hinglish'||lang==='hi'?'Bilkul bhai. Product, model ya requirement type karo.':'Sure. Ask me about a product, model or requirement.';
-  const product=aiFindProduct(x);
-  const asksProduct=/(product|products|item|items|model|profile|blade|cutting|mount|stand|auger|stock|available|size|material|spec|specification|aluminium|aluminum|screw|ladder|steel|iron|kya hai|kaunsa|kaun sa|chahiye|dikhao|milega)/i.test(x);
+
+  const data=aiGetCatalogue();
+  const exactModel=aiFindExactModel(x,data.items);
+  const product=exactModel||aiFindProduct(x);
+  const category=aiFindCategory(x);
+  const subcategory=aiFindSubcategory(x);
+
+  // Model code has highest priority. A code such as 2310 must work even if
+  // the query contains nothing except the code.
+  if(exactModel){
+    const name=String(exactModel.name||exactModel.model||'this product');
+    const msg=
+      lang==='hinglish'||lang==='hi'?`Haan bhai, model “${exactModel.model||name}” mil gaya. Ye ${name} hai. Neeche PRODUCT DETAILS dabao, main tumhe seedha isi item par le jaunga.`:
+      lang==='kn'?`Model “${exactModel.model||name}” sigide. Ee product details-ge direct hogalu kelagina button tap maadi.`:
+      lang==='ta'?`Model “${exactModel.model||name}” kidaithuvittadhu. Keela irukkum button-ai tap pannina direct product details open aagum.`:
+      lang==='te'?`Model “${exactModel.model||name}” dorikindi. Kindha button ni tap chesthe direct product details open avutayi.`:
+      lang==='bn'?`Model “${exactModel.model||name}” পাওয়া গেছে। নিচের button চাপলে সরাসরি product details খুলবে।`:
+      `I found model “${exactModel.model||name}” in the live Seervi catalogue. Use the button below to open this exact product.`;
+    addAIMessage('bot',msg);aiAddProductResult(exactModel,lang);return null;
+  }
+
+  // If the user names a category, show its actual subcategories as actions.
+  if(category){
+    const subs=aiCategorySubcategories(category,data.categories);
+    const msg=
+      lang==='hinglish'||lang==='hi'?`Haan bhai. “${category.name}” category mil gayi. Iske andar ye subcategories hain:`:
+      lang==='kn'?`“${category.name}” category sigide. Idu olage ee subcategories ive:`:
+      lang==='ta'?`“${category.name}” category kidaithuvittadhu. Idhula indha subcategories irukku:`:
+      lang==='te'?`“${category.name}” category dorikindi. Indulo ee subcategories unnayi:`:
+      lang==='bn'?`“${category.name}” category পাওয়া গেছে। এর subcategories নিচে আছে:`:
+      `I found the “${category.name}” category. Here are its available subcategories:`;
+    addAIMessage('bot',msg);aiAddCategoryOptions(category,subs,lang);return null;
+  }
+
+  // A named subcategory should get a direct navigation option.
+  if(subcategory){
+    const parent=data.categories.find(c=>c.type==='category'&&String(c.id)===String(subcategory.parentId));
+    const msg=
+      lang==='hinglish'||lang==='hi'?`Haan bhai, “${subcategory.name}” subcategory mil gayi. Neeche tap karo aur isi section ke products dekho.`:
+      `I found the “${subcategory.name}” subcategory. Use the button below to open it in the catalogue.`;
+    addAIMessage('bot',msg);aiAddSubcategoryOption(subcategory,parent,lang);return null;
+  }
+
+  const asksProduct=/(product|products|item|items|model|profile|blade|cutting|mount|stand|auger|stock|available|size|material|spec|specification|aluminium|aluminum|screw|ladder|steel|iron|curtain|rod|tv|chair|table|kya|kaunsa|chahiye|dikhao)/i.test(x);
+
   if(product && asksProduct){
     const name=String(product.name||product.model||'this product');
-    const intro=lang==='hinglish'||lang==='hi'?`Haan bhai, “${name}” live catalogue mein mil gaya. Neeche PRODUCT DETAILS par tap karo — seedha isi item par chale jaoge.`:lang==='kn'?`“${name}” live catalogue nalli siguttade. ಕೆಳಗಿನ VIEW PRODUCT ಒತ್ತಿ, ee product details open maadi.`:lang==='ta'?`“${name}” live catalogue-ல் கிடைக்கிறது. கீழே VIEW PRODUCT-ஐ அழுத்தி இந்த product details-ஐ திறக்கலாம்.`:lang==='te'?`“${name}” live catalogue lo dorikindi. Kindha VIEW PRODUCT ni tap chesi direct details open cheyyandi.`:lang==='bn'?`“${name}” live catalogue-এ পাওয়া গেছে। নিচের VIEW PRODUCT চাপলে সরাসরি product details খুলবে।`:`I found “${name}” in the live Seervi catalogue. Tap below to open this exact product.`;
+    const intro=
+      lang==='hinglish'||lang==='hi'?`Haan bhai, “${name}” live catalogue mein mil gaya. Neeche PRODUCT DETAILS dabao — seedha isi item par chale jaoge.`:
+      lang==='kn'?`“${name}” live catalogue nalli sigide. Kelagina button tap maadi direct product details open maadi.`:
+      lang==='ta'?`“${name}” live catalogue-ல் கிடைக்கிறது. கீழே button-ஐ tap செய்து direct product details திறக்கலாம்.`:
+      lang==='te'?`“${name}” live catalogue lo dorikindi. Kindha button ni tap chesi direct product details open cheyyandi.`:
+      lang==='bn'?`“${name}” live catalogue-এ পাওয়া গেছে। নিচের button চাপলে সরাসরি product details খুলবে।`:
+      `I found “${name}” in the live Seervi catalogue. Tap below to open this exact product.`;
     addAIMessage('bot',intro);aiAddProductResult(product,lang);return null;
   }
+
   if(asksProduct){
-    if(lang==='hinglish'||lang==='hi')return`Bhai exact item nahi mila. Model number, size ya product ka thoda aur naam bhejo — main live catalogue mein dobara search karunga.`;
-    return`I couldn’t find that item in the live catalogue. Send the model number, size or a little more of the product name and I’ll search again.`;
+    return lang==='hinglish'||lang==='hi'
+      ?`Bhai exact item nahi mila. Agar model code hai to sirf model code bhejo, jaise “2310” ya “1707A”. Category ka naam bhejoge to main uski subcategories bhi dikha dunga.`
+      :`I couldn’t find that item. Send the exact model code (for example, “2310” or “1707A”), or send a category name and I’ll show its subcategories.`;
   }
-  if(/^(hi|hello|hey|hii|namaste|bhai)\b/i.test(l))return lang==='hinglish'||lang==='hi'?'Haan bhai, bolo. Product/model, specification, cart, quotation ya account mein kya help chahiye?':'Hello. How can I help? Ask me about products, models, specifications, cart, quotations or your account.';
-  if(/cart|basket|add.*item|quantity/i.test(l))return lang==='hinglish'||lang==='hi'?'Bilkul. Product card se item cart mein add karo, phir CART open karke quantity update kar sakte ho.':'Add a product from its card, then open CART to review or change the quantity.';
-  if(/login|sign[ -]?up|signup|account|password|register/i.test(l))return lang==='hinglish'||lang==='hi'?'LOGIN existing account ke liye hai aur SIGN UP naya customer account banane ke liye. Koi error aaye to exact message bhejo.':'LOGIN is for an existing account and SIGN UP creates a new customer account. Send me the exact error if you need help.';
-  if(/quotation|quote|pdf|order/i.test(l))return lang==='hinglish'||lang==='hi'?'Quotation/order ke liye selected products aur quantity ready rakho. Admin quotation ya customer order mein se jo chahiye batao, main exact flow bata dunga.':'For a quotation or order, keep the required products and quantities ready. Tell me which flow you need and I’ll guide you.';
-  if(/contact|whatsapp|phone|call|email|address|location/i.test(l))return lang==='hinglish'||lang==='hi'?'Seervi Trading WhatsApp: +91 70737 41650 | Email: info@seervitrading.com | Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.':'Seervi Trading: WhatsApp +91 70737 41650 | Email info@seervitrading.com | Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.';
-  if(/price|rate|cost|moq|minimum|wholesale/i.test(l))return lang==='hinglish'||lang==='hi'?'Exact rate ke liye product/model batao. Main live catalogue mein item identify karke available details dikhaunga.':'For pricing, tell me the exact product or model and I’ll identify it from the live catalogue.';
-  if(lang==='hi')return'Samajh gaya. Product ka naam/model, size ya requirement likh do; main Seervi catalogue ke available data ke basis par help karunga.';
-  if(lang==='hinglish')return'Samajh gaya bhai. Product/model, size ya requirement thodi specific bhejo; main Seervi ke live catalogue se exact information dhoondhunga.';
-  if(lang==='kn')return`Arthaayitu. Product hesaru/model athava size heli; live Seervi catalogue data adharadalli nanu help maaduttini.`;
-  if(lang==='ta')return`Purindhadhu. Product peyar, model allathu size anuppunga; live Seervi catalogue data adharithu help pannuren.`;
-  if(lang==='te')return`Artham ayyindi. Product peru, model leda size pampandi; live Seervi catalogue data adharanga help chestanu.`;
-  if(lang==='bn')return`বুঝেছি। Product-এর নাম, model বা size পাঠান; live Seervi catalogue-এর data অনুযায়ী সাহায্য করব।`;
-  return'I understand. Tell me the product name, model, size or requirement and I’ll use the live Seervi catalogue to guide you.';
+
+  if(/^(hi|hello|hey|hii|namaste|bhai)\b/i.test(l))
+    return lang==='hinglish'||lang==='hi'
+      ?'Haan bhai, bolo. Product/model, category, specification, cart, quotation ya account mein kya help chahiye?'
+      :'Hello. How can I help? Ask me about products, categories, models, specifications, cart, quotations or your account.';
+
+  if(/cart|basket|add.*item|quantity/i.test(l))
+    return lang==='hinglish'||lang==='hi'
+      ?'Bilkul. Product card se item CART mein add karo, phir CART open karke quantity review ya update kar sakte ho.'
+      :'Add a product from its card, then open CART to review or change the quantity.';
+
+  if(/login|sign[ -]?up|signup|account|password|register/i.test(l))
+    return lang==='hinglish'||lang==='hi'
+      ?'LOGIN existing account ke liye hai aur SIGN UP naya customer account banane ke liye. Koi error aaye to exact message bhej do.'
+      :'LOGIN is for an existing account and SIGN UP creates a new customer account. Send me the exact error if you need help.';
+
+  if(/quotation|quote|pdf|order/i.test(l))
+    return lang==='hinglish'||lang==='hi'
+      ?'Quotation ke liye required products aur quantities ready rakho. Cart se quotation flow continue kiya ja sakta hai.'
+      :'For a quotation, keep the required products and quantities ready, then continue from the cart quotation flow.';
+
+  if(/contact|whatsapp|phone|call|email|address|location/i.test(l))
+    return lang==='hinglish'||lang==='hi'
+      ?'Seervi Trading WhatsApp: +91 70737 41650 | Email: info@seervitrading.com | Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.'
+      :'Seervi Trading: WhatsApp +91 70737 41650 | Email info@seervitrading.com | Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.';
+
+  if(/price|rate|cost|moq|minimum|wholesale/i.test(l))
+    return lang==='hinglish'||lang==='hi'
+      ?'Exact rate ke liye product ya model code bhejo. Main live catalogue mein exact item identify karunga.'
+      :'For an exact rate, send the product or model code and I’ll identify the exact item from the live catalogue.';
+
+  if(lang==='hi')return'Samajh gaya. Product ka naam/model, category ya size likh do; main live Seervi catalogue ke available data ke basis par help karunga.';
+  if(lang==='hinglish')return'Samajh gaya bhai. Product/model, category ya size specific bhejo; main live Seervi catalogue se exact information dhoondhunga.';
+  if(lang==='kn')return'Arthaayitu. Product hesaru, model athava category heli; live Seervi catalogue data adharadalli nanu help maaduttini.';
+  if(lang==='ta')return'Purindhadhu. Product peyar, model allathu category anuppunga; live Seervi catalogue data adharithu help pannuren.';
+  if(lang==='te')return'Artham ayyindi. Product peru, model leda category pampandi; live Seervi catalogue data adharanga help chestanu.';
+  if(lang==='bn')return'বুঝেছি। Product-এর নাম, model বা category পাঠান; live Seervi catalogue-এর data অনুযায়ী সাহায্য করব.';
+  return'I understand. Tell me the product name, model, category, size or requirement and I’ll use the live Seervi catalogue to guide you.';
 }
+
 async function sendAIMessage(e){
   if(e)e.preventDefault();
   const input=document.getElementById('supportMessage');
   const q=String(input?.value||'').trim();
   if(!q)return;
-  addAIMessage('user',q);if(input){input.value='';input.focus({preventScroll:true});}
+  addAIMessage('user',q);
+  if(input){input.value='';input.focus({preventScroll:true});}
   const typing=document.getElementById('aiTyping');if(typing)typing.classList.add('show');
   await new Promise(r=>setTimeout(r,220));
   if(typing)typing.classList.remove('show');
   const before=document.getElementById('supportChat')?.children.length||0;
   const reply=aiReply(q);if(reply)addAIMessage('bot',reply);
-  if((document.getElementById('supportChat')?.children.length||0)===before)addAIMessage('bot','I’m here to help. Try a specific product or model name.');
+  if((document.getElementById('supportChat')?.children.length||0)===before)
+    addAIMessage('bot','I’m here to help. Try a specific category, product name or model code.');
 }
+
 function aiQuick(q){
   const input=document.getElementById('supportMessage');if(!input)return;
-  input.value=q;input.focus({preventScroll:true});sendAIMessage({preventDefault(){}});
+  input.value=q;input.focus({preventScroll:true});
+  sendAIMessage({preventDefault(){}});
 }
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape')closeSupportModal();
-});
+
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSupportModal();});
 </script><script>
 /* ===== MOBILE HOME / PRODUCTS VIEWS ===== */
 (function(){
