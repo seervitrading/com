@@ -6150,108 +6150,136 @@ function aiAddProductResult(item,lang){
 
 function aiReply(q){
   const x=String(q||'').trim(),l=x.toLowerCase(),lang=aiLanguage(x);
-  if(!x)return lang==='hinglish'||lang==='hi'?'Bilkul bhai. Product, model ya requirement type karo.':'Sure. Ask me about a product, model or requirement.';
+  if(!x)return lang==='hinglish'||lang==='hi'
+    ?'Bilkul bhai. Product, model ya requirement type karo.'
+    :'Sure. Ask me about a product, model or requirement.';
 
   const data=aiGetCatalogue();
-  const asksProduct=/(product|products|item|items|model|profile|blade|cutting|mount|stand|auger|stock|available|size|material|spec|specification|aluminium|aluminum|screw|ladder|steel|iron|curtain|rod|tv|chair|table|kya|kaunsa|chahiye|dikhao|show|find|search|need|want)/i.test(x);
+
+  /* ---------------------------------------------------------------
+     INTENT ROUTER
+     Important: action/support questions must be handled BEFORE any
+     catalogue matching. Otherwise words such as "contact", "login",
+     "signup", etc. can accidentally match product names/models.
+  ---------------------------------------------------------------- */
+  const isContact=/\b(contact|reach|call|phone|whatsapp|email|address|location|located|where.*seervi|how.*contact|contact.*seervi)\b/i.test(l);
+  const isAccount=/\b(login|log in|sign[ -]?up|signup|register|account|password|forgot password|create account|my account)\b/i.test(l);
+  const isCart=/\b(cart|basket|shopping cart|add to cart|remove from cart|quantity in cart)\b/i.test(l);
+  const isQuotation=/\b(quotation|quote|pdf|order|place order|create quotation)\b/i.test(l);
+  const isGreeting=/^(hi|hello|hey|hii|namaste|namaskar|bhai|bro)\b/i.test(l);
+
+  if(isContact){
+    return lang==='hinglish'||lang==='hi'
+      ?'Bilkul bhai. Seervi Trading se contact karne ke liye WhatsApp: +91 70737 41650, Email: info@seervitrading.com. Address: Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.'
+      :lang==='kn'
+      ?'Seervi Trading contact: WhatsApp +91 70737 41650, Email info@seervitrading.com. Address: Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.'
+      :lang==='ta'
+      ?'Seervi Trading contact: WhatsApp +91 70737 41650, Email info@seervitrading.com. Address: Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.'
+      :`Seervi Trading: WhatsApp +91 70737 41650 | Email info@seervitrading.com | Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.`;
+  }
+
+  if(isAccount){
+    return lang==='hinglish'||lang==='hi'
+      ?'Bilkul bhai. Existing customer ke liye LOGIN use karo. Naya account banana ho to SIGN UP choose karo. Agar login/signup mein koi error aa raha hai to exact error message bhej do.'
+      :'LOGIN is for an existing account and SIGN UP creates a new customer account. If you are seeing an error, send me the exact error message.';
+  }
+
+  if(isCart){
+    return lang==='hinglish'||lang==='hi'
+      ?'Bhai product card se item CART mein add karo. Cart mein quantity review/update kar sakte ho aur quotation flow bhi wahi se continue hota hai.'
+      :'Add a product from its card to CART. You can review or change quantity there and continue to the quotation flow.';
+  }
+
+  if(isQuotation){
+    return lang==='hinglish'||lang==='hi'
+      ?'Bhai quotation banane ke liye required products CART mein add karo, quantity set karo aur quotation flow continue karo.'
+      :'Add the required products to CART, set the quantities, and continue with the quotation flow.';
+  }
+
+  if(isGreeting){
+    return lang==='hinglish'||lang==='hi'
+      ?'Haan bhai, bolo. Product ka name, exact model, size, material ya specification bhejo — main live Seervi catalogue mein search karke direct item dikha dunga.'
+      :'Hello. Tell me the product name, exact model, size, material or specification and I will search the live Seervi catalogue.';
+  }
+
+  /* Catalogue search starts only after non-product website intents have
+     been ruled out. Product identity has priority over category. */
   const exactModel=aiFindExactModel(x,data.items);
   const product=exactModel||aiFindProduct(x);
   const category=aiFindCategory(x);
   const subcategory=aiFindSubcategory(x);
 
-  // Model code has highest priority. A code such as 2310 must work even if
-  // the query contains nothing except the code.
-  if(exactModel){
-    const name=String(exactModel.name||exactModel.model||'this product');
-    const msg=
-      lang==='hinglish'||lang==='hi'?`Haan bhai, model “${exactModel.model||name}” mil gaya. Ye ${name} hai. Neeche PRODUCT DETAILS dabao, main tumhe seedha isi item par le jaunga.`:
-      lang==='kn'?`Model “${exactModel.model||name}” sigide. Ee product details-ge direct hogalu kelagina button tap maadi.`:
-      lang==='ta'?`Model “${exactModel.model||name}” kidaithuvittadhu. Keela irukkum button-ai tap pannina direct product details open aagum.`:
-      lang==='te'?`Model “${exactModel.model||name}” dorikindi. Kindha button ni tap chesthe direct product details open avutayi.`:
-      lang==='bn'?`Model “${exactModel.model||name}” পাওয়া গেছে। নিচের button চাপলে সরাসরি product details খুলবে।`:
-      `I found model “${exactModel.model||name}” in the live Seervi catalogue. Use the button below to open this exact product.`;
-    addAIMessage('bot',msg);aiAddProductResult(exactModel,lang);return null;
-  }
-
-  // If the user names a category, show its actual subcategories as actions.
-  if(product && !exactModel){
+  if(product){
     const name=String(product.name||product.model||'this product');
-    const intro=
-      lang==='hinglish'||lang==='hi'?`Haan bhai, “${name}” live catalogue mein mil gaya. Neeche PRODUCT DETAILS dabao — seedha isi item par chale jaoge.`:
-      lang==='kn'?`“${name}” live catalogue nalli sigide. Kelagina button tap maadi direct product details open maadi.`:
-      lang==='ta'?`“${name}” live catalogue-ல் கிடைக்கிறது. கீழே button-ஐ tap செய்து direct product details திறக்கலாம்.`:
-      lang==='te'?`“${name}” live catalogue lo dorikindi. Kindha button ni tap chesi direct product details open cheyyandi.`:
-      lang==='bn'?`“${name}” live catalogue-এ পাওয়া গেছে। নিচের button চাপলে সরাসরি product details খুলবে।`:
-      `I found “${name}” in the live Seervi catalogue. Tap below to open this exact product.`;
-    addAIMessage('bot',intro);aiAddProductResult(product,lang);return null;
+    const msg=
+      lang==='hinglish'||lang==='hi'
+        ?`Haan bhai, “${name}” live catalogue mein mil gaya. Neeche PRODUCT DETAILS dabao — seedha isi item par chale jaoge.`
+        :lang==='kn'
+        ?`“${name}” live catalogue nalli sigide. Kelagina button tap maadi direct product details open maadi.`
+        :lang==='ta'
+        ?`“${name}” live catalogue-ல் கிடைக்கிறது. கீழே உள்ள button-ஐ tap செய்தால் நேராக product details திறக்கும்.`
+        :lang==='te'
+        ?`“${name}” live catalogue lo dorikindi. Kindha button ni tap chesi direct product details open cheyyandi.`
+        :lang==='bn'
+        ?`“${name}” live catalogue-এ পাওয়া গেছে। নিচের button চাপলে সরাসরি product details খুলবে।`
+        :`I found “${name}” in the live Seervi catalogue. Tap below to open this exact product.`;
+    addAIMessage('bot',msg);
+    aiAddProductResult(product,lang);
+    return null;
   }
 
   if(category){
     const subs=aiCategorySubcategories(category,data.categories);
     const msg=
-      lang==='hinglish'||lang==='hi'?`Haan bhai. “${category.name}” category mil gayi. Iske andar ye subcategories hain:`:
-      lang==='kn'?`“${category.name}” category sigide. Idu olage ee subcategories ive:`:
-      lang==='ta'?`“${category.name}” category kidaithuvittadhu. Idhula indha subcategories irukku:`:
-      lang==='te'?`“${category.name}” category dorikindi. Indulo ee subcategories unnayi:`:
-      lang==='bn'?`“${category.name}” category পাওয়া গেছে। এর subcategories নিচে আছে:`:
-      `I found the “${category.name}” category. Here are its available subcategories:`;
-    addAIMessage('bot',msg);aiAddCategoryOptions(category,subs,lang);return null;
+      lang==='hinglish'||lang==='hi'
+        ?`Haan bhai. “${category.name}” category mil gayi. Iske andar ye subcategories hain:`
+        :lang==='kn'
+        ?`“${category.name}” category sigide. Idu olage ee subcategories ive:`
+        :lang==='ta'
+        ?`“${category.name}” category kidaithuvittadhu. Idhula indha subcategories irukku:`
+        :lang==='te'
+        ?`“${category.name}” category dorikindi. Indulo ee subcategories unnayi:`
+        :lang==='bn'
+        ?`“${category.name}” category পাওয়া গেছে। এর subcategories নিচে আছে:`
+        :`I found the “${category.name}” category. Here are its available subcategories:`;
+    addAIMessage('bot',msg);
+    aiAddCategoryOptions(category,subs,lang);
+    return null;
   }
 
-  // A named subcategory should get a direct navigation option.
   if(subcategory){
     const parent=data.categories.find(c=>c.type==='category'&&String(c.id)===String(subcategory.parentId));
     const msg=
-      lang==='hinglish'||lang==='hi'?`Haan bhai, “${subcategory.name}” subcategory mil gayi. Neeche tap karo aur isi section ke products dekho.`:
-      `I found the “${subcategory.name}” subcategory. Use the button below to open it in the catalogue.`;
-    addAIMessage('bot',msg);aiAddSubcategoryOption(subcategory,parent,lang);return null;
+      lang==='hinglish'||lang==='hi'
+        ?`Haan bhai, “${subcategory.name}” subcategory mil gayi. Neeche tap karo aur isi section ke products dekho.`
+        :`I found the “${subcategory.name}” subcategory. Use the button below to open it in the catalogue.`;
+    addAIMessage('bot',msg);
+    aiAddSubcategoryOption(subcategory,parent,lang);
+    return null;
   }
+
+  const asksProduct=/(product|products|item|items|model|profile|blade|cutting|mount|stand|auger|stock|available|size|material|spec|specification|aluminium|aluminum|screw|ladder|steel|iron|curtain|rod|tv|chair|table|kya|kaunsa|chahiye|dikhao|show|find|search|need|want)/i.test(x);
 
   if(asksProduct){
     return lang==='hinglish'||lang==='hi'
-      ?`Bhai exact item nahi mila. Agar model code hai to sirf model code bhejo, jaise “2310” ya “1707A”. Category ka naam bhejoge to main uski subcategories bhi dikha dunga.`
-      :`I couldn’t find that item. Send the exact model code (for example, “2310” or “1707A”), or send a category name and I’ll show its subcategories.`;
+      ?'Bhai exact item nahi mila. Product ka naam, model code, size, material ya specification thoda aur specific bhejo — main live catalogue mein search karunga.'
+      :'I could not find an exact item. Send a more specific product name, model code, size, material or specification and I will search the live catalogue.';
   }
 
-  if(/^(hi|hello|hey|hii|namaste|bhai)\b/i.test(l))
-    return lang==='hinglish'||lang==='hi'
-      ?'Haan bhai, bolo. Product/model, category, specification, cart, quotation ya account mein kya help chahiye?'
-      :'Hello. How can I help? Ask me about products, categories, models, specifications, cart, quotations or your account.';
-
-  if(/cart|basket|add.*item|quantity/i.test(l))
-    return lang==='hinglish'||lang==='hi'
-      ?'Bilkul. Product card se item CART mein add karo, phir CART open karke quantity review ya update kar sakte ho.'
-      :'Add a product from its card, then open CART to review or change the quantity.';
-
-  if(/login|sign[ -]?up|signup|account|password|register/i.test(l))
-    return lang==='hinglish'||lang==='hi'
-      ?'LOGIN existing account ke liye hai aur SIGN UP naya customer account banane ke liye. Koi error aaye to exact message bhej do.'
-      :'LOGIN is for an existing account and SIGN UP creates a new customer account. Send me the exact error if you need help.';
-
-  if(/quotation|quote|pdf|order/i.test(l))
-    return lang==='hinglish'||lang==='hi'
-      ?'Quotation ke liye required products aur quantities ready rakho. Cart se quotation flow continue kiya ja sakta hai.'
-      :'For a quotation, keep the required products and quantities ready, then continue from the cart quotation flow.';
-
-  if(/contact|whatsapp|phone|call|email|address|location/i.test(l))
-    return lang==='hinglish'||lang==='hi'
-      ?'Seervi Trading WhatsApp: +91 70737 41650 | Email: info@seervitrading.com | Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.'
-      :'Seervi Trading: WhatsApp +91 70737 41650 | Email info@seervitrading.com | Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.';
-
-  if(/price|rate|cost|moq|minimum|wholesale/i.test(l))
+  if(/price|rate|cost|moq|minimum|wholesale/i.test(l)){
     return lang==='hinglish'||lang==='hi'
       ?'Exact rate ke liye product ya model code bhejo. Main live catalogue mein exact item identify karunga.'
-      :'For an exact rate, send the product or model code and I’ll identify the exact item from the live catalogue.';
+      :'For an exact rate, send the product or model code and I will identify the exact item from the live catalogue.';
+  }
 
-  if(lang==='hi')return'Samajh gaya. Product ka naam/model, category ya size likh do; main live Seervi catalogue ke available data ke basis par help karunga.';
-  if(lang==='hinglish')return'Samajh gaya bhai. Product/model, category ya size specific bhejo; main live Seervi catalogue se exact information dhoondhunga.';
-  if(lang==='kn')return'Arthaayitu. Product hesaru, model athava category heli; live Seervi catalogue data adharadalli nanu help maaduttini.';
-  if(lang==='ta')return'Purindhadhu. Product peyar, model allathu category anuppunga; live Seervi catalogue data adharithu help pannuren.';
-  if(lang==='te')return'Artham ayyindi. Product peru, model leda category pampandi; live Seervi catalogue data adharanga help chestanu.';
-  if(lang==='bn')return'বুঝেছি। Product-এর নাম, model বা category পাঠান; live Seervi catalogue-এর data অনুযায়ী সাহায্য করব.';
-  return'I understand. Tell me the product name, model, category, size or requirement and I’ll use the live Seervi catalogue to guide you.';
+  if(lang==='hinglish')return'Samajh gaya bhai. Product/model, category, size ya specification specific bhejo; main live Seervi catalogue se exact information dhoondhunga.';
+  if(lang==='hi')return'Samajh gaya। Product ka naam/model, category, size ya specification likh do; main live Seervi catalogue se exact information dhoondhunga.';
+  if(lang==='kn')return'Arthaayitu. Product hesaru, model, category athava specification heli; live Seervi catalogue inda exact information hudukuttini.';
+  if(lang==='ta')return'Purindhadhu. Product peyar, model, category allathu specification anuppunga; live Seervi catalogue-il thedugiren.';
+  if(lang==='te')return'Artham ayyindi. Product peru, model, category leda specification pampandi; live Seervi catalogue nundi exact information search chestanu.';
+  if(lang==='bn')return'বুঝেছি। Product-এর নাম, model, category বা specification পাঠান; live Seervi catalogue থেকে exact information খুঁজে দেব।';
+  return'I understand. Tell me the product name, model, category, size or specification and I’ll search the live Seervi catalogue.';
 }
-
 async function sendAIMessage(e){
   if(e)e.preventDefault();
   const input=document.getElementById('supportMessage');
