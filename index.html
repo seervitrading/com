@@ -6572,23 +6572,26 @@ function vibrate(kind){
 }
 window.Seervi=window.Seervi||{};
 window.Seervi.notify={
-  unlock:function(){getContext();},
+  unlock:function(){
+    const ctx=getContext();
+    if(ctx && ctx.state==='suspended'){try{ctx.resume().catch(()=>{});}catch(_){} }
+  },
   play:function(kind){
     const ctx=getContext(),list=patterns[kind]||patterns.login;
     if(ctx){
-      const schedule=()=>{
-        if(!audioCtx || audioCtx.state!=='running')return;
-        const now=audioCtx.currentTime+.015;
-        list.forEach(x=>tone(audioCtx,x[0],now+x[1],x[2],x[3]));
-      };
-      if(ctx.state==='running')schedule();
-      else{
-        try{
+      // Keep the original scheduling behaviour: tones may be scheduled while
+      // the AudioContext is finishing its mobile unlock/resume. Once resumed,
+      // the browser will play the already-scheduled tones.
+      try{
+        const now=ctx.currentTime+.015;
+        list.forEach(x=>tone(ctx,x[0],now+x[1],x[2],x[3]));
+      }catch(_){}
+      try{
+        if(ctx.state==='suspended'){
           const r=ctx.resume();
-          if(r && typeof r.then==='function')r.then(schedule).catch(()=>{});
-          else schedule();
-        }catch(_){}
-      }
+          if(r && typeof r.catch==='function')r.catch(()=>{});
+        }
+      }catch(_){}
     }
     if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent))vibrate(kind);
   }
