@@ -11597,7 +11597,7 @@ function seerviFirebaseCartItem(item){
     image:item.imageWebpUrl||item.image||'',
     imageWebpUrl:item.imageWebpUrl||item.image||'',
     description:item.description||'',
-    specifications:{)},
+    specifications:{...(item.specifications||{})},
     specification:item.specification||Object.entries(item.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(', '),
     rate:Number(item.rate||0)
   };
@@ -11846,7 +11846,7 @@ window.seerviPublicAddToCart=function(itemId){
     imageWebpUrl:item.imageWebpUrl||'',
     galleryImages:allImages.slice(1),
     description:item.description||'',
-    specifications:{)},
+    specifications:{...(item.specifications||{})},
     specification:Object.entries(item.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(', '),
     rate:0
   });
