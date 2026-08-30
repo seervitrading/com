@@ -6538,14 +6538,9 @@ function getContext(){
   if(!audioCtx){
     const C=window.AudioContext||window.webkitAudioContext;
     if(!C)return null;
-    try{audioCtx=new C();}catch(_){return null;}
+    audioCtx=new C();
   }
-  if(audioCtx.state==='suspended'){
-    try{
-      const resumeResult=audioCtx.resume();
-      if(resumeResult && typeof resumeResult.catch==='function')resumeResult.catch(()=>{});
-    }catch(_){}
-  }
+  if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});
   return audioCtx;
 }
 function tone(ctx,f,start,duration,volume){
@@ -6572,34 +6567,18 @@ function vibrate(kind){
 }
 window.Seervi=window.Seervi||{};
 window.Seervi.notify={
-  unlock:function(){
-    const ctx=getContext();
-    if(ctx && ctx.state==='suspended'){try{ctx.resume().catch(()=>{});}catch(_){} }
-  },
+  unlock:function(){getContext();},
   play:function(kind){
     const ctx=getContext(),list=patterns[kind]||patterns.login;
     if(ctx){
-      // Keep the original scheduling behaviour: tones may be scheduled while
-      // the AudioContext is finishing its mobile unlock/resume. Once resumed,
-      // the browser will play the already-scheduled tones.
-      try{
-        const now=ctx.currentTime+.015;
-        list.forEach(x=>tone(ctx,x[0],now+x[1],x[2],x[3]));
-      }catch(_){}
-      try{
-        if(ctx.state==='suspended'){
-          const r=ctx.resume();
-          if(r && typeof r.catch==='function')r.catch(()=>{});
-        }
-      }catch(_){}
+      const now=ctx.currentTime+.015;
+      list.forEach(x=>tone(ctx,x[0],now+x[1],x[2],x[3]));
     }
     if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent))vibrate(kind);
   }
 };
-const unlockSeerviAudio=()=>window.Seervi.notify.unlock();
-document.addEventListener('pointerdown',unlockSeerviAudio,{capture:true,passive:true});
-document.addEventListener('touchstart',unlockSeerviAudio,{capture:true,passive:true});
-document.addEventListener('keydown',unlockSeerviAudio,{capture:true,passive:true});
+document.addEventListener('pointerdown',()=>window.Seervi.notify.unlock(),{once:true,passive:true});
+document.addEventListener('keydown',()=>window.Seervi.notify.unlock(),{once:true,passive:true});
 })();
 </script>
 <script type="module">
