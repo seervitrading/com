@@ -447,7 +447,7 @@ nav{border-bottom:1px solid #ffffff40;box-shadow:0 8px 30px #0007}
 .bw-bottom-bar{position:absolute;z-index:4;bottom:0;left:50%;transform:translateX(-50%);width:min(1120px,calc(100% - 72px));display:grid;grid-template-columns:1fr 1fr 1fr auto;border-top:1px solid #ffffff35;padding:15px 0 18px;color:#ddd;font-size:8px;letter-spacing:1.3px}
 .bw-bottom-bar span:nth-child(2),.bw-bottom-bar span:nth-child(3){border-left:1px solid #ffffff24;padding-left:18px}.bw-scroll{justify-self:end;color:#aaa}
 @media(max-width:900px){.bw-nav-overlay{width:calc(100% - 30px);grid-template-columns:1fr auto;height:56px;padding-left:16px}.bw-navlinks{display:none}.bw-hero-copy{width:90%;padding-left:0}.bw-hero-copy h1{font-size:clamp(54px,12vw,86px)}.bw-hero-mark{display:none}.bw-bottom-bar{width:calc(100% - 30px);grid-template-columns:1fr 1fr;gap:10px}.bw-bottom-bar span:nth-child(3),.bw-scroll{display:none}}
-@media(max-width:560px){.bw-hero{min-height:720px}.bw-nav-overlay{top:14px}.bw-nav-quote{padding:10px 12px}.bw-hero-wash{background:linear-gradient(90deg,rgba(0,0,0,.9),rgba(0,0,0,.46))}.bw-hero-copy p{width:100%}.bw-bottom-bar{font-size:7px}}
+@media(max-width:560px){.bw-hero{min-height:720px}.bw-nav-overlay{top:14px}.bw-brand{font-size:16px}.bw-nav-quote{padding:10px 12px}.bw-hero-wash{background:linear-gradient(90deg,rgba(0,0,0,.9),rgba(0,0,0,.46))}.bw-hero-copy p{width:100%}.bw-bottom-bar{font-size:7px}}
 
 
 /* Nexmora-inspired professional editorial typography */
@@ -1155,6 +1155,7 @@ body.admin-quote-mode .quote-actions{display:grid!important}
 .manual-item-cancel-btn{border:1px solid #ffffff18;background:#ffffff06;color:#9ca6b2}
 @media(max-width:600px){
   .manual-item-grid{grid-template-columns:1fr 1fr}
+  .manual-item-grid .full{grid-column:1/-1}
   .manual-item-head{align-items:flex-start}
   .manual-item-help{max-width:210px}
 }
@@ -1244,7 +1245,7 @@ body.admin-quote-mode .quote-actions{display:grid!important}
 }
 
 
-@media(max-width:600px){.crm-save-btn{width:100%}}
+@media(max-width:600px){.quote-actions{grid-template-columns:1fr}.crm-save-btn{width:100%}}
 
 
 .cart-party-selector{margin:0 0 14px;padding:13px;border:1px solid #ffffff16;border-radius:10px;background:#ffffff03}
@@ -2173,6 +2174,9 @@ body.admin-quote-mode .quote-actions{display:grid!important}
   .cart-drawer .cart-table-head .head-image{
     text-align:center!important;
   }
+  .cart-drawer .cart-table-head span:nth-child(6){
+    text-align:center!important;
+  }
   .cart-drawer .cart-item-info strong{
     font-size:10px!important;
   }
@@ -2391,6 +2395,7 @@ button,a,input,select,textarea{touch-action:manipulation}
 /* V108 — final smoothness polish. */
 html{scroll-behavior:auto!important}
 button,a,input,select,textarea{touch-action:manipulation}
+.cart-drawer .cart-panel{overscroll-behavior:contain}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 
 /* V109 — Party/customer carts are rate-free; GST is admin-only. */
@@ -3538,11 +3543,11 @@ body.nav-is-scrolled{padding-top:76px;}
 
 .admin-items-toolbar{grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(145px,.55fr))}
 @media(max-width:900px){.admin-items-toolbar{grid-template-columns:1fr 1fr}}
-@media(max-width:620px){}
+@media(max-width:620px){.admin-items-toolbar{grid-template-columns:1fr}}
 
 .seervi-category-row{grid-template-columns:90px minmax(0,1fr) 80px 100px auto}
 .seervi-category-row .seervi-item-actions{justify-content:flex-end}
-@media(max-width:700px){.seervi-category-row .seervi-item-actions{grid-column:1/-1;justify-content:flex-start}}
+@media(max-width:700px){.seervi-category-row{grid-template-columns:1fr 1fr}.seervi-category-row .seervi-item-actions{grid-column:1/-1;justify-content:flex-start}}
 
 .firebase-public-catalog{padding:54px 0 36px;scroll-margin-top:70px}
 .firebase-public-catalog .catalog-title{margin-bottom:18px}
@@ -5271,36 +5276,6 @@ function validateQuoteCustomer(){
 }
 
 
-/* V4 — Resilient PDF engine loader. Keeps the existing jsPDF CDN dependency,
-   but retries/loading on demand if the initial script was unavailable. */
-let seerviJsPdfLoaderPromise=null;
-function seerviEnsureJsPDF(){
-  if(window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
-  if(seerviJsPdfLoaderPromise) return seerviJsPdfLoaderPromise;
-  seerviJsPdfLoaderPromise=new Promise((resolve,reject)=>{
-    const src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-    const existing=document.querySelector('script[src="'+src+'"]');
-    const script=existing || document.createElement('script');
-    let settled=false;
-    const finish=()=>{
-      if(settled)return;
-      if(window.jspdf && window.jspdf.jsPDF){settled=true;resolve(window.jspdf.jsPDF);}
-      else{settled=true;reject(new Error('PDF engine loaded but jsPDF was not exposed.'));}
-    };
-    script.addEventListener('load',finish,{once:true});
-    script.addEventListener('error',()=>{if(!settled){settled=true;reject(new Error('Unable to load the PDF engine.'));}},{once:true});
-    if(!existing){
-      script.src=src;
-      script.async=true;
-      script.crossOrigin='anonymous';
-      document.head.appendChild(script);
-    }else if(window.jspdf && window.jspdf.jsPDF){
-      finish();
-    }
-  }).catch(err=>{seerviJsPdfLoaderPromise=null;throw err;});
-  return seerviJsPdfLoaderPromise;
-}
-
 function pdfINR(value){
   const n=Number(value||0);
   return 'INR ' + n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -5313,21 +5288,18 @@ function quotationNumber(){
   return 'SVQ-'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'-'+pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds());
 }
 
-async function seerviBaseDownloadCartPDF(){
+function downloadCartPDF(){
   if(!seerviCart.length){openCart();return;}
   if(!validateQuoteCustomer() || !validateQuoteRates()) return;
 
-  let jsPDF;
-  try{
-    jsPDF=await seerviEnsureJsPDF();
-  }catch(e){
-    console.error('PDF engine load error:',e);
+  if(!window.jspdf || !window.jspdf.jsPDF){
     alert('PDF engine is not available. Please check your internet connection and try again.');
     return;
   }
 
   const c=getQuoteCustomer();
   const p=getCartPricing();
+  const {jsPDF}=window.jspdf;
   const doc=new jsPDF({unit:'mm',format:'a4'});
   const W=210, H=297, left=15, right=195;
   let y=18;
@@ -5542,7 +5514,7 @@ function renderCart(){
   ` + seerviCart.map((item,i)=>`
     <div class="cart-item">
       <div class="cart-item-image">
-        ${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.model)}">` : ''}
+        ${item.image ? `<img src="${item.image}" alt="${escapeHtml(item.model)}">` : ''}
       </div>
 
       <div class="cart-item-info">
@@ -5583,7 +5555,7 @@ function escapeHtml(s){
   return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 }
 
-async function seerviBaseOpenCart(){
+async function openCart(){
   const connected=!!(window.crmUserIsConnected && window.crmUserIsConnected());
   const loaderStart=window.seerviLoadingStart;
   const loaderStop=window.seerviLoadingStop;
@@ -5605,7 +5577,7 @@ async function seerviBaseOpenCart(){
   }
 }
 
-function seerviBaseCloseCart(){
+function closeCart(){
   document.getElementById('cartDrawer').classList.remove('show');
   document.getElementById('cartDrawer').setAttribute('aria-hidden','true');
   document.body.classList.remove('cart-open');
@@ -5678,7 +5650,7 @@ async function sendCartToWhatsApp(){
     msg=`Hello Seervi Trading,%0A%0AI would like to enquire about the following products:%0A%0A`;
     if(requestNo) msg+=`Request No: ${encodeURIComponent(requestNo)}%0A%0A`;
     seerviCart.forEach((item,i)=>{
-      msg+=`${i+1} - ${encodeURIComponent(seerviQuotationItemLabel(item))}`;
+      msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent(seerviQuotationItemLabel(item))}`;
       if(item.thickness) msg+=` | Thickness: ${encodeURIComponent(item.thickness)}`;
       msg+=` | Qty: ${item.qty}%0A`;
     });
@@ -5812,7 +5784,7 @@ document.addEventListener('keydown',function(e){
 })();
 </script><script>
 (function(){
-  const originalDownload = window.seerviBaseDownloadCartPDF;
+  const originalDownload = window.downloadCartPDF;
   if(typeof originalDownload === 'function'){
     window.downloadCartPDF = function(){
       if(typeof isQuotationMode==='function' && !isQuotationMode()){
@@ -6339,14 +6311,14 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSupport
 </script><script>
 /* ===== MOBILE HOME / PRODUCTS VIEWS ===== */
 (function(){
-  window.seerviBaseShowMobileProducts=function(e){
+  window.showMobileProducts=function(e){
     if(window.innerWidth>600) return;
     if(e) e.preventDefault();
     document.body.classList.add('mobile-products-view');
     setTimeout(function(){ window.scrollTo({top:0,behavior:'smooth'}); },30);
   };
 
-  window.seerviBaseShowMobileHome=function(e){
+  window.showMobileHome=function(e){
     if(window.innerWidth>600) return;
     if(e) e.preventDefault();
     document.body.classList.remove('mobile-products-view');
@@ -6540,15 +6512,6 @@ document.addEventListener('keydown',()=>window.Seervi.notify.unlock(),{once:true
 })();
 </script>
 <script type="module">
-/* Canonical mutable bindings for final implementations. These replace obsolete duplicate
-   function declarations while preserving the existing module/global exposure flow. */
-let seerviItemsFilter;
-let seerviItemsTab;
-let seerviItemsResetForm;
-let seerviPublicRenderCategories;
-let seerviPublicRenderSubcategories;
-let seerviPublicSelectCategory;
-let seerviPublicSelectSubcategory;
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously, createUserWithEmailAndPassword, sendPasswordResetEmail
@@ -8491,16 +8454,13 @@ window.crmDownloadPartyLedger=async function(){
   const credit=tx.filter(x=>x.type==='credit').reduce((s,x)=>s+Number(x.amount||0),0);
   const outstanding=debit-credit;
 
-  let jsPDF;
-  try{
-    jsPDF=await seerviEnsureJsPDF();
-  }catch(e){
-    console.error('PDF engine load error:',e);
+  if(!window.jspdf || !window.jspdf.jsPDF){
     alert('PDF engine is not available. Please check your internet connection and try again.');
     return;
   }
 
   try{
+    const {jsPDF}=window.jspdf;
     const doc=new jsPDF({unit:'mm',format:'a4'});
     const left=15,right=195;
     let y=18;
@@ -8684,16 +8644,13 @@ window.crmDownloadQuote=async function(id){
               crmParties.find(p=>p.id===q.partyId) ||
               q.customer || {};
 
-  let jsPDF;
-  try{
-    jsPDF=await seerviEnsureJsPDF();
-  }catch(e){
-    console.error('PDF engine load error:',e);
+  if(!window.jspdf || !window.jspdf.jsPDF){
     alert('PDF engine is not available. Please check your internet connection and try again.');
     return;
   }
 
   try{
+    const {jsPDF}=window.jspdf;
     const doc=new jsPDF({unit:'mm',format:'a4'});
     const W=210,H=297,left=15,right=195;
     let y=17;
@@ -8905,16 +8862,13 @@ window.customerDownloadQuote=async function(id){
 
   const party=customerParty || q.customer || {};
 
-  let jsPDF;
-  try{
-    jsPDF=await seerviEnsureJsPDF();
-  }catch(e){
-    console.error('PDF engine load error:',e);
+  if(!window.jspdf || !window.jspdf.jsPDF){
     alert('PDF engine is not available. Please check your internet connection and try again.');
     return;
   }
 
   try{
+    const {jsPDF}=window.jspdf;
     const doc=new jsPDF({unit:'mm',format:'a4'});
     const W=210,H=297,left=15,right=195;
     let y=17;
@@ -9915,7 +9869,7 @@ function seerviRenderNotificationList(){
     const title=seerviNotificationSafeText(n.title);
     const msg=seerviNotificationSafeText(n.message);
     const date=seerviNotificationFormatDate(n.createdAt);
-    const image=n.imageDataUrl?`<img src="${escapeHtml(n.imageDataUrl)}" alt="Notification image">`: '';
+    const image=n.imageDataUrl?`<img src="${String(n.imageDataUrl).replace(/"/g,'&quot;')}" alt="Notification image">`:'';
     return `<article class="notification-card ${read?'':'unread'}" data-notification-id="${seerviNotificationSafeText(n.id)}">
       <div class="notification-card-head"><div class="notification-card-title">${title}</div><div class="notification-card-date">${date}</div></div>
       <div class="notification-card-message">${msg}</div>${image}
@@ -10136,6 +10090,68 @@ function seerviItemCategoryChanged(){
   sub.innerHTML='<option value="">Select Subcategory</option>'+rows.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
 }
 
+function seerviItemsFilter(search=''){
+  const q=String(search||'').trim().toLowerCase();
+  const statusFilter=$('seerviItemsStatusFilter')?.value||'all';
+  let rows=seerviItemsCache.filter(item=>{
+    if(statusFilter==='active' && item.active===false)return false;
+    if(statusFilter==='inactive' && item.active!==false)return false;
+    if(!q)return true;
+    const hay=[
+      item.name,item.model,item.description,
+      seerviItemCategoryLabel(item),
+      item.imageWebpUrl,
+      ...Object.entries(item.specifications||{}).flat()
+    ].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+  const list=$('seerviItemsList');
+  if(!list)return;
+  if(!rows.length){
+    list.innerHTML='<div class="crm-muted" style="padding:16px 4px">No items found.</div>';
+    seerviItemsSetStatus('0 matching items.');
+    return;
+  }
+  seerviItemsSetStatus(`${rows.length} item${rows.length===1?'':'s'} shown.`);
+  list.innerHTML=rows.map(item=>{
+    const active=item.active!==false;
+    const img=item.imageWebpUrl ? `<img class="seervi-item-thumb" src="${seerviItemsEsc(item.imageWebpUrl)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : '<div class="seervi-item-thumb"></div>';
+    return `<div class="seervi-item-row">
+      ${img}
+      <div>
+        <div class="seervi-item-name">${seerviItemsEsc(item.name||'Unnamed Item')}</div>
+        <div class="seervi-item-meta">${item.model?`Model: ${seerviItemsEsc(item.model)}`:'No model/code'} · ID: ${seerviItemsEsc(item.id)}</div>
+      </div>
+      <div class="seervi-item-category">${seerviItemsEsc(seerviItemCategoryLabel(item))}</div>
+      <div class="seervi-item-status ${active?'active':'inactive'}">${active?'ACTIVE':'INACTIVE'}</div>
+      <div class="seervi-item-meta">${Object.keys(item.specifications||{}).length} specs</div>
+      <div class="seervi-item-actions">
+        <button class="crm-secondary small" type="button" onclick="seerviEditItem('${seerviItemsEsc(item.id)}')">EDIT</button>
+        <button class="crm-secondary small" type="button" onclick="seerviDuplicateItem('${seerviItemsEsc(item.id)}')">DUPLICATE</button>
+        <button class="crm-secondary small" type="button" onclick="seerviToggleItemActive('${seerviItemsEsc(item.id)}')">${active?'DEACTIVATE':'ACTIVATE'}</button>
+        <button class="crm-secondary small" type="button" onclick="seerviDeleteItemConfirm('${seerviItemsEsc(item.id)}')">DELETE</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function seerviItemsTab(tab){
+  document.querySelectorAll('.admin-items-tab').forEach(btn=>btn.classList.toggle('active',btn.dataset.itemsTab===tab));
+  $('seerviItemsAllView')?.toggleAttribute('hidden',tab!=='all');
+  $('seerviItemsAddView')?.toggleAttribute('hidden',tab!=='add');
+  $('seerviItemsCategoriesView')?.toggleAttribute('hidden',tab!=='categories');
+  if(tab==='all'){
+    seerviItemsLoadAll().catch(e=>seerviItemsSetStatus(e?.message||'Unable to load items.',true));
+  }else if(tab==='add'){
+    seerviItemsLoadCategories().catch(()=>{});
+    if(!seerviItemsEditingId) seerviAddSpecificationRowIfEmpty();
+  }else if(tab==='categories'){
+    seerviItemsLoadCategories().catch(e=>{
+      const el=$('seerviCategoriesStatus');if(el)el.textContent=e?.message||'Unable to load categories.';
+    });
+  }
+}
+
 function seerviItemsBackToDashboard(){
   seerviAdminBackToPrevious();
 }
@@ -10201,6 +10217,23 @@ function seerviReadSpecificationRows(){
     if(key) result[key]=value;
   });
   return result;
+}
+
+function seerviItemsResetForm(){
+  seerviItemsEditingId='';
+  $('seerviItemId').value='';
+  $('seerviItemName').value='';
+  $('seerviItemModel').value='';
+  $('seerviItemImage').value='';
+  $('seerviItemDescription').value='';
+  $('seerviItemActive').checked=true;
+  $('seerviSpecificationsRows').innerHTML='';
+  seerviAddSpecificationRow();
+  $('seerviItemFormMode').textContent='Create a new Firebase item.';
+  $('seerviItemSaveButton').textContent='SAVE ITEM';
+  $('seerviItemCancelEdit').hidden=true;
+  $('seerviItemFormStatus').textContent='';
+  seerviItemsPopulateCategorySelects();
 }
 
 function seerviItemsRenderSelectValue(selectId,value){
@@ -11010,8 +11043,8 @@ window.seerviBulkDownloadTemplate=function(){
   XLSX.writeFile(wb,'seervi_items_bulk_template.xlsx');
 };
 
-/* Dependency-safe enhancement: the final tab controller below is the single runtime implementation. */
 if(!window.seerviItemsTabStep4Wrapped){
+  const previousTab=window.seerviItemsTab;
   window.seerviItemsTab=function(tab){
   const validTabs=['all','add','categories','bulk'];
   if(!validTabs.includes(tab))tab='all';
@@ -11089,13 +11122,13 @@ function seerviPopulateItemFilters(){
   subcategory.value=subs.some(x=>x.id===currentSubcategory)?currentSubcategory:'all';
 }
 
-/* Dependency-safe enhancement: preserve the original category loader, then add filter population. */
 const seerviItemsLoadCategoriesStep5=seerviItemsLoadCategories;
 seerviItemsLoadCategories=async function(){
   await seerviItemsLoadCategoriesStep5();
   seerviPopulateItemFilters();
 };
 
+const seerviItemsFilterStep5=seerviItemsFilter;
 seerviItemsFilter=function(search=''){
   const q=String(search||'').trim().toLowerCase();
   const statusFilter=$('seerviItemsStatusFilter')?.value||'all';
@@ -11377,6 +11410,59 @@ async function seerviPublicLoadCatalogue(){
 
 function seerviPublicCategoryName(id){
   return seerviPublicCategories.find(x=>x.id===id)?.name||'';
+}
+
+function seerviPublicRenderCategories(){
+  const bar=$('seerviPublicCategoryBar');
+  if(!bar)return;
+
+  const categories=seerviPublicCategories.filter(x=>x.type==='category');
+  bar.innerHTML=`<button type="button" class="seervi-public-category-btn ${seerviPublicSelectedCategory==='all'?'active':''}" data-category-id="all" onclick="seerviPublicSelectCategory('all')">ALL</button>`+
+    categories.map(x=>`<button type="button" class="seervi-public-category-btn ${seerviPublicSelectedCategory===x.id?'active':''}" data-category-id="${seerviItemsEsc(x.id)}" onclick="seerviPublicSelectCategory('${seerviItemsEsc(x.id)}')">${seerviItemsEsc(x.name)}</button>`).join('');
+}
+
+function seerviPublicRenderSubcategories(){
+  const bar=$('seerviPublicSubcategoryBar');
+  if(!bar)return;
+
+  if(seerviPublicSelectedCategory==='all'){
+    bar.hidden=true;
+    bar.innerHTML='';
+    seerviPublicSelectedSubcategory='all';
+    return;
+  }
+
+  const subs=seerviPublicCategories
+    .filter(x=>x.type==='subcategory' && x.parentId===seerviPublicSelectedCategory);
+
+  if(!subs.length){
+    bar.hidden=true;
+    bar.innerHTML='';
+    seerviPublicSelectedSubcategory='all';
+    return;
+  }
+
+  if(seerviPublicSelectedSubcategory!=='all' && !subs.some(x=>x.id===seerviPublicSelectedSubcategory)){
+    seerviPublicSelectedSubcategory='all';
+  }
+
+  bar.hidden=false;
+  bar.innerHTML=`<button type="button" class="seervi-public-subcategory-btn ${seerviPublicSelectedSubcategory==='all'?'active':''}" onclick="seerviPublicSelectSubcategory('all')">ALL IN CATEGORY</button>`+
+    subs.map(x=>`<button type="button" class="seervi-public-subcategory-btn ${seerviPublicSelectedSubcategory===x.id?'active':''}" onclick="seerviPublicSelectSubcategory('${seerviItemsEsc(x.id)}')">${seerviItemsEsc(x.name)}</button>`).join('');
+}
+
+function seerviPublicSelectCategory(categoryId){
+  seerviPublicSelectedCategory=categoryId||'all';
+  seerviPublicSelectedSubcategory='all';
+  seerviPublicRenderCategories();
+  seerviPublicRenderSubcategories();
+  seerviPublicRenderItems();
+}
+
+function seerviPublicSelectSubcategory(subcategoryId){
+  seerviPublicSelectedSubcategory=subcategoryId||'all';
+  seerviPublicRenderSubcategories();
+  seerviPublicRenderItems();
 }
 
 /* Renderer is assigned once by the final catalogue implementation below.
@@ -11708,7 +11794,7 @@ function seerviReadGalleryImages(){
   return seerviNormaliseItemGalleryImages(output);
 }
 
-seerviItemsResetForm=function(){
+window.seerviItemsResetForm=function(){
   seerviItemsEditingId='';
   $('seerviItemId').value='';
   $('seerviItemName').value='';
@@ -12308,8 +12394,8 @@ function seerviShowSaveSuccess(message){
   const legacyFinials=document.getElementById('curtainFinials');
   if(legacyFinials)legacyFinials.style.display='none';
 
-  const baseShowMobileProducts=window.seerviBaseShowMobileProducts;
-  const baseShowMobileHome=window.seerviBaseShowMobileHome;
+  const baseShowMobileProducts=window.showMobileProducts;
+  const baseShowMobileHome=window.showMobileHome;
 
   window.showProductCategory=setCategory;
   window.showMobileProducts=function(e){
@@ -12569,10 +12655,10 @@ function seerviShowSaveSuccess(message){
   let handlingPop=false;
   let initialized=false;
 
-  const baseOpenCart=window.seerviBaseOpenCart;
-  const baseCloseCart=window.seerviBaseCloseCart;
-  const baseShowHome=window.seerviBaseShowMobileHome;
-  const baseShowProducts=window.seerviBaseShowMobileProducts;
+  const baseOpenCart=window.openCart;
+  const baseCloseCart=window.closeCart;
+  const baseShowHome=window.showMobileHome;
+  const baseShowProducts=window.showMobileProducts;
   const baseOpenWhatsApp=window.openWhatsAppPanel;
   const baseCloseWhatsApp=window.closeWhatsAppPanel;
   const baseOpenSupport=window.openSupportModal;
@@ -12731,30 +12817,10 @@ function seerviShowSaveSuccess(message){
     }finally{handlingPop=false;}
   });
 
-  let wasMobile=isMobile();
   window.addEventListener('resize',function(){
-    const nowMobile=isMobile();
     installBottomBar();
-
-    /* Keep the existing mobile view state consistent when crossing the
-       600px breakpoint. Do not alter the desktop continuous-page layout. */
-    if(nowMobile){
-      const state=history.state;
-      const view=(state&&state[STATE_KEY]&&['home','products','cart'].includes(state.view))
-        ? state.view
-        : 'home';
-      setBar(view);
-      if(!wasMobile){
-        showView(view);
-      }
-    }else{
-      setBar('');
-      if(wasMobile){
-        closeLayers();
-        document.body.classList.remove('mobile-products-view');
-      }
-    }
-    wasMobile=nowMobile;
+    if(isMobile())setBar((history.state&&history.state[STATE_KEY]&&history.state.view)||'home');
+    else setBar('');
   });
 
   function init(){
