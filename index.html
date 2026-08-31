@@ -4960,6 +4960,10 @@ body.seervi-ai-open .float-wa{display:none!important}
             <input id="seerviItemModel" type="text" maxlength="200" placeholder="Model or item code">
           </div>
           <div>
+            <label for="seerviItemHSN">HSN CODE</label>
+            <input id="seerviItemHSN" type="text" maxlength="20" inputmode="numeric" placeholder="Enter HSN code">
+          </div>
+          <div>
             <label for="seerviItemImage">MAIN WEBP IMAGE URL / PATH *</label>
             <input id="seerviItemImage" type="text" maxlength="2000" required placeholder="images/items/example-main.webp">
           </div>
@@ -5081,7 +5085,7 @@ body.seervi-ai-open .float-wa{display:none!important}
         <div class="admin-items-category-card">
           <div class="crm-section-title">1. PREPARE ITEM EXCEL</div>
           <div class="crm-muted" style="margin:8px 0 12px;line-height:1.6">
-            Required: <b>Category</b>, <b>Subcategory</b>, <b>Item Name</b>, <b>WEBP Image URL / Path</b>.<br>
+            Required: <b>Category</b>, <b>Subcategory</b>, <b>Item Name</b>, <b>WEBP Image URL / Path</b>. <b>HSN Code</b> is optional.<br>
             Specifications use paired columns:
             <b>Spec 1 Name / Spec 1 Value</b>, <b>Spec 2 Name / Spec 2 Value</b>…
           </div>
@@ -5431,8 +5435,9 @@ function downloadCartPDF(){
   doc.setTextColor(30,35,40);
   doc.text('SR',18,tableTop);
   doc.text('PRODUCT / MODEL',30,tableTop);
-  doc.text('SPEC',102,tableTop);
-  doc.text('QTY',135,tableTop);
+  doc.text('SPEC',78,tableTop);
+  doc.text('HSN',106,tableTop);
+  doc.text('QTY',128,tableTop);
   doc.text('RATE',151,tableTop);
   doc.text('AMOUNT',173,tableTop);
 
@@ -5454,8 +5459,9 @@ function downloadCartPDF(){
 
     doc.text(String(i+1),18,y);
     doc.text(seerviQuotationItemLabel(item).slice(0,34),30,y);
-    doc.text(String(item.thickness||'—').slice(0,18),102,y);
-    doc.text(String(item.qty||0),137,y);
+    doc.text(String(item.thickness||'—').slice(0,10),78,y);
+    doc.text(String(item.hsnCode||item.hsn||'—').slice(0,12),106,y);
+    doc.text(String(item.qty||0),130,y);
 
     // IMPORTANT: use ASCII "INR" instead of ₹ to avoid jsPDF Helvetica glyph glitches.
     doc.text(pdfINR(item.rate),151,y);
@@ -7173,7 +7179,7 @@ window.saveCustomerCartRequest=async function(){
     type:item.type||'', name:item.name||item.model||'', model:item.model||'',
     categoryId:item.categoryId||'', category:item.category||'',
     subcategoryId:item.subcategoryId||'', subcategory:item.subcategory||'',
-    spec:item.spec||'', thickness:item.thickness||'',
+    spec:item.spec||'', thickness:item.thickness||'', hsnCode:item.hsnCode||item.hsn||'',
     qty:Number(item.qty)||1, rate:0, source:'customer-request'
   }));
   const qRef=await addDoc(collection(publicSignupDb,'quotations'),{
@@ -8426,6 +8432,7 @@ window.crmEditQuote=async function(id){
     subcategoryId:x.subcategoryId||'',
     subcategory:x.subcategory||'',
     thickness:x.spec||x.thickness||'',
+    hsnCode:x.hsnCode||x.hsn||'',
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
     image:'',
@@ -8884,8 +8891,9 @@ window.crmDownloadQuote=async function(id){
       doc.setTextColor(30,35,40);
       doc.text('SR',18,y);
       doc.text('PRODUCT / MODEL + SUBCATEGORY',30,y);
-      doc.text('SPEC',102,y);
-      doc.text('QTY',135,y);
+      doc.text('SPEC',76,y);
+      doc.text('HSN',104,y);
+      doc.text('QTY',128,y);
       doc.text('RATE',151,y);
       doc.text('AMOUNT',173,y);
       y+=8;
@@ -8913,8 +8921,9 @@ window.crmDownloadQuote=async function(id){
       doc.setTextColor(45,50,56);
       doc.text(String(i+1),18,y);
       doc.text(safeText(seerviQuotationItemLabel(item)).slice(0,34),30,y);
-      doc.text(safeText(item.spec||'—').slice(0,18),102,y);
-      doc.text(String(qty),137,y);
+      doc.text(safeText(item.spec||'—').slice(0,10),76,y);
+      doc.text(safeText(item.hsnCode||item.hsn||'—').slice(0,12),104,y);
+      doc.text(String(qty),130,y);
       doc.text(inr(rate),151,y);
       doc.text(inr(amount),173,y);
 
@@ -9102,8 +9111,9 @@ window.customerDownloadQuote=async function(id){
       doc.setTextColor(30,35,40);
       doc.text('SR',18,y);
       doc.text('PRODUCT / MODEL + SUBCATEGORY',30,y);
-      doc.text('SPEC',102,y);
-      doc.text('QTY',135,y);
+      doc.text('SPEC',76,y);
+      doc.text('HSN',104,y);
+      doc.text('QTY',128,y);
       doc.text('RATE',151,y);
       doc.text('AMOUNT',173,y);
       y+=8;
@@ -9131,8 +9141,9 @@ window.customerDownloadQuote=async function(id){
       doc.setTextColor(45,50,56);
       doc.text(String(i+1),18,y);
       doc.text(safeText(seerviQuotationItemLabel(item)).slice(0,34),30,y);
-      doc.text(safeText(item.spec||'—').slice(0,18),102,y);
-      doc.text(String(qty),137,y);
+      doc.text(safeText(item.spec||'—').slice(0,10),76,y);
+      doc.text(safeText(item.hsnCode||item.hsn||'—').slice(0,12),104,y);
+      doc.text(String(qty),130,y);
       doc.text(inr(rate),151,y);
       doc.text(inr(amount),173,y);
 
@@ -10348,6 +10359,7 @@ function seerviItemsResetForm(){
   $('seerviItemId').value='';
   $('seerviItemName').value='';
   $('seerviItemModel').value='';
+  $('seerviItemHSN').value='';
   $('seerviItemImage').value='';
   $('seerviItemDescription').value='';
   $('seerviItemActive').checked=true;
@@ -10404,6 +10416,7 @@ async function seerviEditItem(itemId){
     $('seerviItemId').value=item.id;
     $('seerviItemName').value=item.name||'';
     $('seerviItemModel').value=item.model||'';
+    $('seerviItemHSN').value=item.hsnCode||item.hsn||'';
     $('seerviItemImage').value=item.imageWebpUrl||'';
     $('seerviItemDescription').value=item.description||'';
     $('seerviItemActive').checked=item.active!==false;
@@ -10452,6 +10465,7 @@ window.seerviSaveItemForm=async function(){
       subcategoryId:subcategory,
       name:$('seerviItemName').value.trim(),
       model:$('seerviItemModel').value.trim(),
+       hsnCode:$('seerviItemHSN').value.trim(),
       imageWebpUrl:image,
       description:$('seerviItemDescription').value.trim(),
       specifications:seerviReadSpecificationRows(),
@@ -10664,6 +10678,7 @@ async function seerviBulkPrepare(){
     const subcategoryName=seerviBulkCell(row,'Subcategory');
     const name=seerviBulkCell(row,'Item Name','Name');
     const model=seerviBulkCell(row,'Model','Model / Code','Code');
+     const hsnCode=seerviBulkCell(row,'HSN Code','HSN','HSNCode');
     const image=seerviBulkCell(row,'WEBP Image URL / Path','Main WEBP Image URL / Path','WEBP URL','Image WebP URL','Image URL');
     const galleryRaw=seerviBulkCell(row,'Gallery Images','Gallery Image URLs / Paths','Additional WEBP Images','Additional Images');
     const description=seerviBulkCell(row,'Description');
@@ -10694,7 +10709,7 @@ async function seerviBulkPrepare(){
       rowNumber:index+2, raw:row,
       data:{
         categoryId:category?.id||'', subcategoryId:subcategory?.id||'',
-        name, model, description, imageWebpUrl:image, galleryImages,
+        name, model, hsnCode, description, imageWebpUrl:image, galleryImages,
         specifications:seerviBulkSpecColumns(row),
         active:!['false','0','no','inactive'].includes(seerviBulkCell(row,'Active','Status').toLowerCase())
       },
@@ -10723,7 +10738,7 @@ function seerviBulkRenderPreview(){
     ? `${valid.length} valid row(s). ${errorRows.length} row(s) require correction.`
     : `${valid.length} row(s) ready to import.`;
   table.innerHTML=`<table class="seervi-bulk-table">
-    <thead><tr><th>ROW</th><th>STATUS</th><th>CATEGORY</th><th>SUBCATEGORY</th><th>ITEM</th><th>MODEL</th><th>MAIN IMAGE</th><th>GALLERY</th><th>SPECS</th><th>ERRORS</th></tr></thead>
+    <thead><tr><th>ROW</th><th>STATUS</th><th>CATEGORY</th><th>SUBCATEGORY</th><th>ITEM</th><th>MODEL</th><th>HSN</th><th>MAIN IMAGE</th><th>GALLERY</th><th>SPECS</th><th>ERRORS</th></tr></thead>
     <tbody>${seerviBulkValidation.map(x=>{
       const status=x.errors.length?'ERROR':x.duplicate?'DUPLICATE':'READY';
       const cls=x.errors.length?'bulk-row-error':x.duplicate?'bulk-row-duplicate':'';
@@ -11133,6 +11148,7 @@ window.seerviBulkDownloadTemplate=function(){
     'Subcategory':'Example Subcategory',
     'Item Name':'Example Item',
     'Model':'MODEL-001',
+    'HSN Code':'9403',
     'WEBP Image URL / Path':'images/items/example-main.webp',
     'Gallery Images':'images/items/example-02.webp|images/items/example-03.webp|images/items/example-04.webp',
     'Description':'Example item description',
@@ -11923,6 +11939,7 @@ window.seerviItemsResetForm=function(){
   $('seerviItemId').value='';
   $('seerviItemName').value='';
   $('seerviItemModel').value='';
+  $('seerviItemHSN').value='';
   $('seerviItemImage').value='';
   $('seerviItemDescription').value='';
   $('seerviItemActive').checked=true;
@@ -11951,6 +11968,7 @@ window.seerviEditItem=async function(itemId){
     $('seerviItemId').value=item.id;
     $('seerviItemName').value=item.name||'';
     $('seerviItemModel').value=item.model||'';
+    $('seerviItemHSN').value=item.hsnCode||item.hsn||'';
     $('seerviItemImage').value=item.imageWebpUrl||'';
     $('seerviItemDescription').value=item.description||'';
     $('seerviItemActive').checked=item.active!==false;
@@ -11991,6 +12009,7 @@ window.seerviSaveItemForm=async function(){
       categoryId:category, subcategoryId:subcategory,
       name:$('seerviItemName').value.trim(),
       model:$('seerviItemModel').value.trim(),
+       hsnCode:$('seerviItemHSN').value.trim(),
       imageWebpUrl:image, galleryImages,
       description:$('seerviItemDescription').value.trim(),
       specifications:seerviReadSpecificationRows(),
@@ -12089,6 +12108,7 @@ window.seerviPublicOpenItem=function(itemId){
       <div class="crm-kicker">${seerviItemsEsc(seerviPublicCategoryName(item.categoryId))}${item.subcategoryId?' / '+seerviItemsEsc(seerviPublicCategoryName(item.subcategoryId)):''}</div>
       <h3>${seerviItemsEsc(item.name||'Unnamed Item')}</h3>
       ${item.model?`<p><b>Model:</b> ${seerviItemsEsc(item.model)}</p>`:''}
+       ${item.hsnCode||item.hsn?`<p><b>HSN:</b> ${seerviItemsEsc(item.hsnCode||item.hsn)}</p>`:''}
       ${item.description?`<p style="margin-top:8px">${seerviItemsEsc(item.description)}</p>`:''}
       ${specTable}
       <button class="crm-primary" type="button" style="margin-top:16px" onclick="seerviPublicAddToCart('${seerviItemsEsc(item.id)}');seerviPublicCloseItem()">ADD TO CART</button>
