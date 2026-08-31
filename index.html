@@ -7045,6 +7045,10 @@ function customerShowLogin(){if($('customerLoginView'))$('customerLoginView').hi
 function customerShowDashboard(){
   if($('customerLoginView'))$('customerLoginView').hidden=true;
   if($('customerDashboardView'))$('customerDashboardView').hidden=false;
+  // Apply the requested dashboard view immediately, before the async Firebase
+  // profile load completes. This prevents MY ORDER from flashing when the
+  // customer opens EDIT PROFILE.
+  if(typeof customerDashboardView==='function') customerDashboardView(customerDashboardRequestedView==='profile'?'profile':'orders');
   customerLoadDashboard().catch(e=>{console.error(e);customerErr((e?.message||'Could not load your customer data.').replace('Firebase: ',''));});
 }
 window.sendSeerviPasswordReset=async function(source){
