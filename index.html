@@ -12071,6 +12071,7 @@ window.seerviPublicAddToCart=function(itemId){
     subcategory:seerviPublicCategoryName(item.subcategoryId),
     model:item.model||item.id,
     name:item.name||item.model||'Item',
+    hsnCode:item.hsnCode||item.hsn||'',
     image:item.imageWebpUrl||'',
     imageWebpUrl:item.imageWebpUrl||'',
     galleryImages:allImages.slice(1),
