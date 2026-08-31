@@ -4908,7 +4908,7 @@ body.seervi-ai-open .float-wa{display:none!important}
 
 <div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-secondary admin-universal-back" type="button" onclick="seerviAdminBackToPrevious()">← BACK</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div>
 <div id="adminGlobalArea" class="admin-global-area">
-<div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, all quotations and complete party ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span>QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div>
+<div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, all quotations and complete party ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span>QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="invoices" onclick="adminGlobalTab('invoices')">ALL INVOICES</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalInvoices" class="admin-global-panel" hidden><div id="adminInvoicesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div>
 </div><div id="inventoryStockPanel" class="inventory-stock-panel" hidden>
   <div class="inventory-stock-head">
     <div class="inventory-stock-head-copy">
@@ -8282,11 +8282,12 @@ window.crmTab=function(tab){
 
 let adminGlobalParties=[];
 let adminGlobalQuotes=[];
+let adminGlobalInvoices=[];
 let adminGlobalLedger=[];
 
 window.adminGlobalTab=function(tab){
   document.querySelectorAll('.admin-global-tab').forEach(b=>b.classList.toggle('active',b.dataset.adminTab===tab));
-  const map={parties:'adminGlobalParties',quotes:'adminGlobalQuotes',ledger:'adminGlobalLedger'};
+  const map={parties:'adminGlobalParties',quotes:'adminGlobalQuotes',invoices:'adminGlobalInvoices',ledger:'adminGlobalLedger'};
   Object.entries(map).forEach(([k,id])=>{const el=$(id); if(el) el.hidden=k!==tab;});
 };
 
@@ -8332,6 +8333,7 @@ window.crmDownloadBusinessBackup=function(){
     exportedBy:crmUser.email||crmUser.uid||'admin',
     parties:crmBackupSafeValue(adminGlobalParties||[]),
     quotations:crmBackupSafeValue(adminGlobalQuotes||[]),
+    invoices:crmBackupSafeValue(adminGlobalInvoices||[]),
     ledger:crmBackupSafeValue(adminGlobalLedger||[]),
     rateHistory:crmBackupSafeValue(crmRates||[])
   };
@@ -8354,14 +8356,17 @@ window.crmDownloadBusinessBackup=function(){
 window.crmLoadGlobalAdmin=async function(){
   if(!crmUser){openAdminPanel();return;}
   try{
-    const [ps,qs,ls]=await Promise.all([
+    const [ps,qs,is,ls]=await Promise.all([
       seerviCachedRead('admin:parties:1000',()=>getDocs(query(collection(db,'parties'),limit(1000))),10000),
       seerviCachedRead('admin:quotations:1000',()=>getDocs(query(collection(db,'quotations'),limit(1000))),10000),
+      seerviCachedRead('admin:invoices:1000',()=>getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),limit(1000))),10000),
       seerviCachedRead('admin:ledger:1000',()=>getDocs(query(collection(db,'ledger'),limit(1000))),10000)
     ]);
     adminGlobalParties=ps.docs.map(d=>({id:d.id,...d.data()}))
       .sort((a,b)=>String(b.updatedAt?.seconds||b.createdAt?.seconds||0).localeCompare(String(a.updatedAt?.seconds||a.createdAt?.seconds||0)));
     adminGlobalQuotes=qs.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>String(b.createdAt?.seconds||0).localeCompare(String(a.createdAt?.seconds||0)));
+    adminGlobalInvoices=is.docs.map(d=>({id:d.id,...d.data()}))
       .sort((a,b)=>String(b.createdAt?.seconds||0).localeCompare(String(a.createdAt?.seconds||0)));
     adminGlobalLedger=ls.docs.map(d=>({id:d.id,...d.data()}))
       .sort((a,b)=>String(b.createdAt?.seconds||0).localeCompare(String(a.createdAt?.seconds||0)));
@@ -8419,8 +8424,17 @@ function crmRenderGlobalAdmin(){
       q.customer?.name,q.customer?.company
     ].join(' '));
   });
+  const invoiceRows=adminGlobalInvoices.filter(inv=>{
+    const p=pm.get(inv.partyId);
+    return crmAdminMatches([
+      inv.invoiceNo,inv.quoteNo,inv.dateISO,inv.ewayBillNo,inv.notes,
+      p?.name,p?.company,p?.phone,p?.email,
+      inv.customer?.name,inv.customer?.company,
+      inv.shipTo?.name,inv.shipTo?.company,inv.shipTo?.address
+    ].join(' '));
+  });
   const ledgerPartyIds=new Set(partyRows.map(p=>p.id));
-  const lEl=$('adminLedgerList'), pEl=$('adminPartiesList'), qEl=$('adminQuotesList');
+  const lEl=$('adminLedgerList'), pEl=$('adminPartiesList'), qEl=$('adminQuotesList'), iEl=$('adminInvoicesList');
 
   if(pEl){
     pEl.innerHTML=partyRows.length ? partyRows.map(p=>`
@@ -8452,6 +8466,21 @@ function crmRenderGlobalAdmin(){
         </span>
       </div>`;
     }).join('') : '<div class="admin-global-empty">No quotations saved yet.</div>';
+  }
+
+  if(iEl){
+    iEl.innerHTML=invoiceRows.length ? invoiceRows.map(inv=>{
+      const party=pm.get(inv.partyId);
+      return `<div class="admin-global-row">
+        <strong>${safeEsc(inv.invoiceNo||'Invoice')}</strong>
+        <span>${safeEsc(adminPartyLabel(party)||inv.customer?.company||inv.customer?.name||'Unknown Party')}</span>
+        <span>${safeEsc(inv.dateISO ? new Date(inv.dateISO).toLocaleDateString('en-IN') : '')} · ${money(inv.grandTotal)}</span>
+        <span class="crm-row-actions">
+          <button class="crm-mini-btn" type="button" onclick="crmViewInvoice('${safeEsc(inv.id)}')">VIEW</button>
+          <button class="gst-invoice-btn primary" type="button" onclick="crmDownloadInvoiceById('${safeEsc(inv.id)}')">DOWNLOAD</button>
+        </span>
+      </div>`;
+    }).join('') : '<div class="admin-global-empty">No invoices saved yet.</div>';
   }
 
   if(lEl){
@@ -8757,6 +8786,8 @@ window.crmDownloadPartyLedger=async function(){
 
 window.crmCloseQuoteView=function(){
   if($('crmQuoteViewStatusBar')) $('crmQuoteViewStatusBar').hidden=false;
+  const dl=$('crmQuoteViewDownload');
+  if(dl){dl.textContent='DOWNLOAD PDF';dl.onclick=null;}
   const m=$('crmQuoteViewModal');
   if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');}
 };
@@ -9548,21 +9579,36 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   doc.setDrawColor(95,100,105);doc.line(left,headerLineY,right,headerLineY);
   y=headerLineY+4;
 
-  /* ===== BILL TO / CUSTOMER — COMPACT ===== */
+  /* ===== BILL TO LEFT / SHIP TO RIGHT ===== */
   doc.setTextColor(18,22,27);doc.setFont('helvetica','bold');doc.setFontSize(8);
-  doc.text('BILL TO / CUSTOMER',left+4,y+3.5);y+=7;
-  doc.setFont('helvetica','normal');doc.setFontSize(6.9);doc.setTextColor(80,88,97);
+  const billTop=y;
   const c=invoice.customer||{};
-  doc.text('Customer: '+seerviInvoiceSafe(c.name||'—').slice(0,48),left+4,y);
-  doc.text('Company / Shop: '+seerviInvoiceSafe(c.company||'—').slice(0,42),105,y);y+=3.8;
-  doc.text('Phone / WhatsApp: '+seerviInvoiceSafe(c.phone||c.whatsapp||'—').slice(0,34),left+4,y);
-  doc.text('Email: '+seerviInvoiceSafe(c.email||'—').slice(0,42),105,y);y+=3.8;
-  doc.text('City: '+seerviInvoiceSafe(c.city||'—').slice(0,48),left+4,y);
-  const customerAddress=seerviInvoiceSafe(c.address||c.fullAddress||'—');
-  const cLines=doc.splitTextToSize('Address: '+customerAddress,78);
-  doc.text(cLines.slice(0,2),105,y);
-  y+=Math.max(5,cLines.slice(0,2).length*3.5);
-  doc.setDrawColor(190,195,200);doc.line(left,y,right,y);
+  const st=invoice.shipTo||c;
+  const shipX=105;
+  doc.setDrawColor(150,155,160);doc.rect(left,billTop-4,180,33,'S');
+  doc.line(shipX,billTop-4,shipX,billTop+29);
+  doc.text('BILL TO / CUSTOMER',left+4,billTop+3);
+  doc.text('SHIP TO',shipX+4,billTop+3);
+  doc.setFont('helvetica','normal');doc.setFontSize(6.7);doc.setTextColor(70,78,86);
+  const detailLines=(obj,x)=>{
+    let yy=billTop+8;
+    const lines=[
+      ['Name: ',obj.name||'—'],['Company / Shop: ',obj.company||'—'],
+      ['Phone / WhatsApp: ',obj.phone||obj.whatsapp||'—'],['Email: ',obj.email||'—'],
+      ['City: ',obj.city||'—']
+    ];
+    for(const [label,val] of lines){
+      doc.text(label,x,yy);
+      doc.text(seerviInvoiceSafe(val).slice(0,39),x+24,yy);
+      yy+=3.5;
+    }
+    const address=seerviInvoiceSafe(obj.address||obj.fullAddress||'—');
+    const al=doc.splitTextToSize('Address: '+address,80);
+    doc.text(al.slice(0,2),x,yy);
+  };
+  detailLines(c,left+4);
+  detailLines(st,shipX+4);
+  y=billTop+33;
 
   const items=invoice.items||[];
 
@@ -9603,26 +9649,43 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     y+=rowHeight;
   }
 
-  /* ===== TOTALS + AMOUNT IN WORDS ===== */
+  /* ===== NOTES LEFT / TOTALS RIGHT ===== */
   y+=2;
   const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
-  doc.setFont('helvetica','normal');doc.setFontSize(7.8);doc.setTextColor(105,113,122);
-  doc.text('Subtotal',145,y);
-  doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(subtotal),right-3,y,{align:'right'});y+=5;
+  const notesText=seerviInvoiceSafe(invoice.notes||invoice.customer?.notes||'').trim();
+  const noteLines=notesText ? doc.splitTextToSize(notesText,102).slice(0,5) : [];
+  const notesH=Math.max(16,noteLines.length*3.2+9);
+  const totalH=invoice.gstEnabled?24:19;
+  const summaryH=Math.max(notesH,totalH);
+  const summaryTop=y-3;
+
+  doc.setDrawColor(205,209,213);doc.rect(left,summaryTop,112,summaryH,'S');
+  doc.setFont('helvetica','bold');doc.setFontSize(7.4);doc.setTextColor(35,40,45);
+  doc.text('NOTES',left+4,summaryTop+6);
+  doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(85,92,99);
+  if(noteLines.length)doc.text(noteLines,left+4,summaryTop+11);
+  else doc.text('—',left+4,summaryTop+11);
+
+  const totalX=145;
+  let ty=summaryTop+6;
+  doc.setFontSize(7.8);doc.setTextColor(105,113,122);
+  doc.text('Subtotal',totalX,ty);
+  doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(subtotal),right-3,ty,{align:'right'});ty+=5;
   if(invoice.gstEnabled){
-    doc.setTextColor(105,113,122);doc.text('GST ('+Number(invoice.gstRate||0)+'%)',145,y);
-    doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(gst),right-3,y,{align:'right'});y+=5;
+    doc.setTextColor(105,113,122);doc.text('GST ('+Number(invoice.gstRate||0)+'%)',totalX,ty);
+    doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(gst),right-3,ty,{align:'right'});ty+=5;
   }
-  doc.setDrawColor(40,45,50);doc.line(135,y-1.5,right-3,y-1.5);
+  doc.setDrawColor(40,45,50);doc.line(135,ty-1.5,right-3,ty-1.5);
   doc.setFont('helvetica','bold');doc.setFontSize(10.5);doc.setTextColor(18,22,27);
-  doc.text('GRAND TOTAL',128,y+4);
-  doc.text(seerviInvoiceInr(grand),right-3,y+4,{align:'right'});y+=9;
+  doc.text('GRAND TOTAL',128,ty+4);
+  doc.text(seerviInvoiceInr(grand),right-3,ty+4,{align:'right'});
+  y=summaryTop+summaryH+3;
 
   doc.setFont('helvetica','italic');doc.setFontSize(7.4);doc.setTextColor(80,88,97);
   const amountWords='Amount in Words: '+seerviInvoiceAmountInWords(grand);
-  const amountWordLines=doc.splitTextToSize(amountWords,67);
-  doc.text(amountWordLines.slice(0,2),128,y);
-  y+=Math.max(5,amountWordLines.slice(0,2).length*3.2)+3;
+  const amountWordLines=doc.splitTextToSize(amountWords,180).slice(0,2);
+  doc.text(amountWordLines,left,y);
+  y+=Math.max(5,amountWordLines.length*3.2)+3;
 
   /* ===== HSN / SAC TAX SUMMARY ===== */
   if(invoice.gstEnabled && items.length){
@@ -9790,6 +9853,27 @@ window.crmConvertQuoteToInvoice=async function(id){
 
   const ewayBillNo=String(window.prompt('Enter E-Way Bill Number (optional):','')||'').trim();
 
+  const sourceParty=adminGlobalParties.find(p=>p.id===q.partyId) || q.customer || {};
+  const customer={
+    name:sourceParty.name||q.customer?.name||'',
+    company:sourceParty.company||q.customer?.company||'',
+    phone:sourceParty.phone||sourceParty.whatsapp||q.customer?.phone||'',
+    email:sourceParty.email||q.customer?.email||'',
+    city:sourceParty.city||q.customer?.city||'',
+    address:sourceParty.address||q.customer?.address||'',
+    gstin:sourceParty.gstin||sourceParty.gst||q.customer?.gstin||'',
+    pan:sourceParty.pan||q.customer?.pan||'',
+    notes:q.customer?.notes||''
+  };
+
+  const notes=String(window.prompt('Enter Invoice Notes (optional):',customer.notes||'')||'').trim();
+
+  // Ship To defaults to the complete Bill To party. Optional override is
+  // stored only on the invoice, so the quotation/customer master is untouched.
+  const shipTo={...customer};
+  const shipToOverride=String(window.prompt('Ship To address (optional). Leave blank to use Bill To address:',customer.address||'')||'').trim();
+  if(shipToOverride)shipTo.address=shipToOverride;
+
   const invoice={
     invoiceNo,
     ewayBillNo,
@@ -9797,7 +9881,9 @@ window.crmConvertQuoteToInvoice=async function(id){
     quoteNo:q.quoteNo||'',
     dateISO:new Date().toISOString(),
     partyId:q.partyId||'',
-    customer:q.customer||{},
+    customer,
+    shipTo,
+    notes,
     items:q.items||[],
     subtotal:Number(q.subtotal||0),
     gstEnabled:!!q.gstEnabled,
@@ -9820,6 +9906,8 @@ window.crmConvertQuoteToInvoice=async function(id){
       updatedAt:serverTimestamp()
     });
     q.invoiceId=invRef.id;q.invoiceNo=invoiceNo;q.invoicedAt=new Date();
+    const savedInvoiceForAdmin={id:invRef.id,...invoice,createdAt:new Date()};
+    adminGlobalInvoices=[savedInvoiceForAdmin,...adminGlobalInvoices.filter(x=>x.id!==invRef.id)];
     crmRenderGlobalAdmin();
     seerviShowSaveSuccess('Converted to Sale Invoice '+invoiceNo+'.');
     if(typeof seerviLogActivity==='function')await seerviLogActivity('quotation_converted_to_invoice','invoices','Converted quotation '+(q.quoteNo||q.id)+' to Sale Invoice '+invoiceNo,crmUser);
@@ -9838,6 +9926,46 @@ window.crmDownloadInvoiceByQuotation=async function(id){
   if(!q.invoiceId){alert('Invoice record link is missing for '+q.invoiceNo+'.');return;}
   try{
     const snap=await getDoc(doc(db,SEERVI_INVOICE_COLLECTION,q.invoiceId));
+    if(!snap.exists()){alert('Invoice record is missing from Firebase.');return;}
+    const invoice={id:snap.id,...snap.data()};
+    const profile=invoice.gstProfile || await seerviLoadInvoiceProfile();
+    seerviGenerateSaleInvoicePDF(invoice,profile);
+  }catch(e){
+    console.error('Invoice PDF failed:',e);
+    alert('Invoice PDF failed: '+(e?.message||'Check Firebase connection.'));
+  }
+};
+
+window.crmViewInvoice=function(id){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+  const inv=adminGlobalInvoices.find(x=>x.id===id);
+  if(!inv){alert('Invoice not found. Refresh the Admin Panel.');return;}
+  const party=adminGlobalParties.find(p=>p.id===inv.partyId);
+  const title=$('crmQuoteViewTitle'),meta=$('crmQuoteViewMeta'),body=$('crmQuoteViewBody'),dl=$('crmQuoteViewDownload');
+  if(!title||!meta||!body||!dl)return;
+  if($('crmQuoteViewStatusBar'))$('crmQuoteViewStatusBar').hidden=true;
+  title.textContent='SALE INVOICE '+(inv.invoiceNo||'');
+  meta.textContent=[inv.dateISO?new Date(inv.dateISO).toLocaleDateString('en-IN'):'',party?.company||party?.name||inv.customer?.company||inv.customer?.name||'',inv.ewayBillNo?'E-WAY BILL '+inv.ewayBillNo:''].filter(Boolean).join(' · ');
+  const items=inv.items||[];
+  body.innerHTML=`
+    <div class="crm-quote-view-summary">
+      <div><small>BILL TO</small><strong>${crmSafeEsc(inv.customer?.name||party?.name||'—')}</strong></div>
+      <div><small>SHIP TO</small><strong>${crmSafeEsc(inv.shipTo?.name||inv.customer?.name||party?.name||'—')}</strong></div>
+      <div><small>GRAND TOTAL</small><strong>${money(inv.grandTotal)}</strong></div>
+    </div>
+    <div class="crm-quote-view-note">${inv.notes?'<strong>NOTES:</strong> '+crmSafeEsc(inv.notes):'No notes saved.'}</div>
+    <table class="crm-quote-view-table"><thead><tr><th>#</th><th>PRODUCT / MODEL</th><th>HSN</th><th>QTY</th><th>RATE</th><th>AMOUNT</th></tr></thead><tbody>${
+      items.map((item,i)=>`<tr><td>${i+1}</td><td>${crmSafeEsc(seerviQuotationItemLabel(item)||item.model||item.name||'Item')}</td><td>${crmSafeEsc(item.hsnCode||item.hsn||'—')}</td><td>${Number(item.qty||0)}</td><td>${money(item.rate)}</td><td>${money(item.amount??Number(item.qty||0)*Number(item.rate||0))}</td></tr>`).join('')
+    }</tbody></table>`;
+  dl.textContent='DOWNLOAD INVOICE PDF';
+  dl.onclick=()=>crmDownloadInvoiceById(id);
+  const m=$('crmQuoteViewModal');if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}
+};
+
+window.crmDownloadInvoiceById=async function(id){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+  try{
+    const snap=await getDoc(doc(db,SEERVI_INVOICE_COLLECTION,id));
     if(!snap.exists()){alert('Invoice record is missing from Firebase.');return;}
     const invoice={id:snap.id,...snap.data()};
     const profile=invoice.gstProfile || await seerviLoadInvoiceProfile();
