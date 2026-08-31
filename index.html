@@ -9348,7 +9348,6 @@ window.crmSaveCurrentQuote = async function(){
     subcategoryId:x.subcategoryId||'',
     subcategory:x.subcategory||'',
     spec:x.thickness||'',
-    hsnCode:x.hsnCode||x.hsn||'',
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
     amount:getLineTotal(x),
@@ -10752,6 +10751,7 @@ function seerviBulkRenderPreview(){
         <td>${seerviItemsEsc(seerviItemCategoryName(x.data.subcategoryId)||seerviBulkCell(x.raw,'Subcategory'))}</td>
         <td>${seerviItemsEsc(x.data.name)}</td>
         <td>${seerviItemsEsc(x.data.model)}</td>
+        <td>${seerviItemsEsc(x.data.hsnCode||'—')}</td>
         <td>${seerviItemsEsc(x.data.imageWebpUrl)}</td>
         <td>${(x.data.galleryImages||[]).length} image(s)</td>
         <td>${Object.keys(x.data.specifications||{}).length}</td>
