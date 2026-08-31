@@ -9591,11 +9591,12 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   doc.text('GRAND TOTAL',128,y+6);
   doc.text(seerviInvoiceInr(grand),right,y+6,{align:'right'});y+=12;
 
-  // Amount in Words — directly below Grand Total, matching the invoice typography.
-  doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(80,88,97);
+  // Amount in Words — directly below Grand Total, starting under the "G".
+  // Keep the existing invoice font size/scale, but use italic styling.
+  doc.setFont('helvetica','italic');doc.setFontSize(9);doc.setTextColor(80,88,97);
   const amountWords='Amount in Words: '+seerviInvoiceAmountInWords(grand);
-  const amountWordLines=doc.splitTextToSize(amountWords,180);
-  doc.text(amountWordLines,left,y);
+  const amountWordLines=doc.splitTextToSize(amountWords,67);
+  doc.text(amountWordLines,128,y);
   y+=Math.max(7,amountWordLines.length*4.3)+6;
 
   /*
@@ -9632,7 +9633,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
     // Seven columns matching a conventional GST HSN summary:
     // HSN/SAC | Taxable Value | CGST Rate | CGST Amount | SGST Rate | SGST Amount | Total Tax Amount
-    const x=[15,44,92,114,136,158,178,195];
+    const x=[15,44,91,112,133,154,175,195];
 
     const drawHsnHeader=()=>{
       if(y>246){
