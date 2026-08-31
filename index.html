@@ -4637,6 +4637,22 @@ body.seervi-ai-open .float-wa{display:none!important}
 /* Keep the admin Settings modal above the page-level mobile quick navigation so its action bar is always reachable. */
 @media(max-width:600px){.admin-settings-modal{z-index:2147483000!important}.admin-settings-modal .admin-settings-footer{position:sticky;bottom:0}.admin-settings-modal .admin-settings-actions button{min-height:44px}.admin-settings-modal .admin-settings-actions button:last-child{grid-column:1/-1}}
 </style>
+<style id="seervi-gst-invoice-style">
+.gst-profile-panel{max-width:980px;width:min(980px,calc(100vw - 24px));max-height:min(92dvh,920px)}
+.gst-profile-scroll{overflow:auto;padding:4px 0 10px;max-height:70dvh}
+.gst-profile-footer{position:sticky;bottom:0;display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;padding:12px 0 2px;border-top:1px solid rgba(255,255,255,.09);background:rgba(10,14,20,.96)}
+.gst-profile-panel .admin-settings-grid label.full{grid-column:1/-1}
+.gst-profile-panel textarea{min-height:86px}
+.gst-invoice-btn{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:inherit;border-radius:8px;padding:7px 9px;font-size:10px;font-weight:900;letter-spacing:.04em;cursor:pointer;white-space:nowrap}
+.gst-invoice-btn.primary{background:rgba(255,63,129,.13);border-color:rgba(255,63,129,.32)}
+.gst-invoice-btn:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:600px){
+  .gst-profile-panel{width:calc(100vw - 12px);max-height:96dvh}
+  .gst-profile-scroll{max-height:74dvh}
+  .gst-profile-footer{justify-content:stretch}
+  .gst-profile-footer button{flex:1;min-height:44px}
+}
+</style>
 <style id="seervi-activity-log-style">.seervi-activity-panel{max-width:980px;width:min(980px,calc(100vw - 24px));max-height:min(90dvh,900px)}.seervi-activity-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.09)}.seervi-activity-filters{display:flex;gap:7px;flex-wrap:wrap}.seervi-activity-filter{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:inherit;border-radius:9px;padding:8px 12px;font-size:11px;font-weight:800;letter-spacing:.08em;cursor:pointer}.seervi-activity-filter.active{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28)}.seervi-activity-list{display:grid;gap:9px;margin-top:12px;overflow:auto;max-height:62dvh;padding-right:2px}.seervi-activity-item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:13px 14px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.035)}.seervi-activity-badge{min-width:68px;text-align:center;padding:6px 7px;border-radius:8px;font-size:9px;font-weight:900;letter-spacing:.08em}.seervi-activity-badge.admin{background:rgba(255,63,129,.12);color:#ff9bbb}.seervi-activity-badge.customer{background:rgba(90,170,255,.12);color:#9bceff}.seervi-activity-main strong{display:block;font-size:12px;margin-bottom:3px}.seervi-activity-main span{display:block;font-size:11px;line-height:1.45;opacity:.72}.seervi-activity-time{font-size:10px;opacity:.55;white-space:nowrap;text-align:right}.seervi-activity-empty{padding:30px 12px;text-align:center;opacity:.62;font-size:12px}@media(max-width:600px){.seervi-activity-panel{width:calc(100vw - 12px);max-height:94dvh}.seervi-activity-list{max-height:67dvh}.seervi-activity-item{grid-template-columns:1fr;gap:7px}.seervi-activity-time{text-align:left}.seervi-activity-toolbar{align-items:flex-start;flex-direction:column}.seervi-activity-toolbar>.crm-secondary{width:100%}}</style>
 </head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
@@ -4708,12 +4724,50 @@ body.seervi-ai-open .float-wa{display:none!important}
       <button class="account-dashboard-option" type="button" onclick="accountDashboardNotificationPost()"><span>🔔</span><strong>NOTIFICATION POST</strong><small>Send an important notice to everyone</small></button>
       <button class="account-dashboard-option" type="button" onclick="openAdminSettings()"><span>⚙</span><strong>SETTINGS</strong><small>Control global website, Vanta & business settings</small></button>
       <button class="account-dashboard-option" type="button" onclick="openAdminActivity()"><span>◷</span><strong>ACTIVITY</strong><small>View meaningful admin & customer activity</small></button>
+      <button class="account-dashboard-option" type="button" onclick="openGstProfile()"><span>₹</span><strong>GST PROFILE</strong><small>Business details used on sale invoices</small></button>
       <button class="account-dashboard-option danger" type="button" onclick="accountDashboardSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your admin session</small></button>
     </div>
     <div id="customerDashboardOptions" class="account-dashboard-options" hidden aria-label="Customer dashboard options">
       <button class="account-dashboard-option" type="button" onclick="accountDashboardEditProfile()"><span>✎</span><strong>EDIT PROFILE</strong><small>Update your business & contact details</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardMyOrder()"><span>▣</span><strong>MY ORDER</strong><small>View your quotations & order requests</small></button>
       <button class="account-dashboard-option danger" type="button" onclick="accountDashboardCustomerSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your customer session</small></button>
+    </div>
+  </div>
+</div>
+<div id="gstProfileModal" class="crm-modal gst-profile-modal" aria-hidden="true">
+  <div class="crm-backdrop" onclick="closeGstProfile()"></div>
+  <div class="crm-panel gst-profile-panel" role="dialog" aria-modal="true" aria-labelledby="gstProfileTitle">
+    <div class="crm-head">
+      <div>
+        <div class="crm-kicker">SEERVI ADMIN / GST PROFILE</div>
+        <h3 id="gstProfileTitle">GST Profile</h3>
+        <div class="crm-auth-status">These business details are saved in Firebase and appear on Sale Invoices.</div>
+      </div>
+      <button class="crm-close" type="button" onclick="closeGstProfile()">×</button>
+    </div>
+    <div class="gst-profile-scroll">
+      <section class="admin-settings-section">
+        <div class="crm-section-title">BUSINESS DETAILS</div>
+        <div class="admin-settings-grid">
+          <label>Business / Legal Name *<input id="gstBusinessName" type="text" maxlength="160" placeholder="Business / Legal Name"></label>
+          <label>GSTIN *<input id="gstNumber" type="text" maxlength="20" placeholder="GSTIN"></label>
+          <label>Contact Person Name<input id="gstPersonName" type="text" maxlength="120" placeholder="Person Name"></label>
+          <label>Phone / WhatsApp<input id="gstPhone" type="text" inputmode="numeric" maxlength="20" placeholder="Phone / WhatsApp"></label>
+          <label>Email<input id="gstEmail" type="email" maxlength="160" placeholder="Email"></label>
+          <label>PAN<input id="gstPan" type="text" maxlength="20" placeholder="PAN"></label>
+          <label class="full">Address *<textarea id="gstAddress" maxlength="400" placeholder="Full business address"></textarea></label>
+          <label>City<input id="gstCity" type="text" maxlength="100" placeholder="City"></label>
+          <label>State<input id="gstState" type="text" maxlength="100" placeholder="State"></label>
+          <label>State Code<input id="gstStateCode" type="text" inputmode="numeric" maxlength="5" placeholder="State Code"></label>
+          <label>Pincode<input id="gstPincode" type="text" inputmode="numeric" maxlength="10" placeholder="Pincode"></label>
+        </div>
+      </section>
+      <div id="gstProfileStatus" class="crm-auth-status">GST Profile</div>
+    </div>
+    <div class="gst-profile-footer">
+      <button class="crm-secondary" type="button" onclick="loadGstProfile()">↻ LOAD</button>
+      <button class="crm-secondary" type="button" onclick="resetGstProfile()">RESET</button>
+      <button class="crm-primary" type="button" onclick="saveGstProfile()">SAVE GST PROFILE</button>
     </div>
   </div>
 </div>
@@ -8372,6 +8426,9 @@ function crmRenderGlobalAdmin(){
         <span class="crm-row-actions">
           <button class="crm-mini-btn" type="button" onclick="crmEditQuote('${safeEsc(q.id)}')">EDIT</button>
           <button class="crm-mini-btn" type="button" onclick="crmViewQuote('${safeEsc(q.id)}')">VIEW</button>
+          ${q.invoiceNo
+            ? `<button class="gst-invoice-btn primary" type="button" onclick="crmDownloadInvoiceByQuotation('${safeEsc(q.id)}')">INVOICE ${safeEsc(q.invoiceNo)}</button>`
+            : `<button class="gst-invoice-btn primary" type="button" onclick="crmConvertQuoteToInvoice('${safeEsc(q.id)}')">CONVERT TO INVOICE</button>`}
           <button class="admin-global-delete" type="button" onclick="crmDeleteQuote('${safeEsc(q.id)}')">DELETE</button>
         </span>
       </div>`;
@@ -8735,7 +8792,8 @@ window.crmViewQuote=function(id){
   if(statusSelect) statusSelect.value=q.status||'saved';
   title.textContent=q.quoteNo||'Quotation';
   meta.textContent=(q.dateISO ? new Date(q.dateISO).toLocaleDateString('en-IN') : '')+
-    (party ? ' · '+(party.company||party.name||'') : '');
+    (party ? ' · '+(party.company||party.name||'') : '')+
+    (q.invoiceNo ? ' · INVOICE '+q.invoiceNo : '');
 
   const items=q.items||[];
   const customer=party || q.customer || {};
@@ -9229,6 +9287,300 @@ window.customerDownloadQuote=async function(id){
   }catch(e){
     console.error('Saved quotation PDF error:',e);
     alert('Could not generate the quotation PDF. Please try again.');
+  }
+};
+
+
+/* ===== GST PROFILE + SALE INVOICE ===== */
+const SEERVI_GST_PROFILE_COLLECTION='gstProfiles';
+const SEERVI_INVOICE_COLLECTION='invoices';
+const SEERVI_GST_PROFILE_DEFAULTS={
+  businessName:'',
+  gstNumber:'',
+  personName:'',
+  phone:'',
+  email:'',
+  pan:'',
+  address:'',
+  city:'',
+  state:'',
+  stateCode:'',
+  pincode:''
+};
+let seerviGstProfile={...SEERVI_GST_PROFILE_DEFAULTS};
+
+function seerviGstProfileClean(raw={}){
+  const s={...SEERVI_GST_PROFILE_DEFAULTS,...raw};
+  Object.keys(s).forEach(k=>{s[k]=String(s[k]??'').trim().slice(0,k==='address'?400:160);});
+  s.gstNumber=s.gstNumber.toUpperCase();
+  s.pan=s.pan.toUpperCase();
+  return s;
+}
+function seerviGstField(id){return document.getElementById(id);}
+function seerviGstFillForm(){
+  const s=seerviGstProfile;
+  const map={
+    gstBusinessName:s.businessName,gstNumber:s.gstNumber,gstPersonName:s.personName,
+    gstPhone:s.phone,gstEmail:s.email,gstPan:s.pan,gstAddress:s.address,
+    gstCity:s.city,gstState:s.state,gstStateCode:s.stateCode,gstPincode:s.pincode
+  };
+  Object.entries(map).forEach(([id,v])=>{const el=seerviGstField(id);if(el)el.value=v||'';});
+}
+window.openGstProfile=function(){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+  const m=document.getElementById('gstProfileModal');if(!m)return;
+  seerviGstFillForm();
+  m.classList.add('show');m.setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+  loadGstProfile();
+};
+window.closeGstProfile=function(){
+  const m=document.getElementById('gstProfileModal');if(!m)return;
+  m.classList.remove('show');m.setAttribute('aria-hidden','true');
+  document.body.classList.remove('modal-open');
+};
+window.loadGstProfile=async function(){
+  if(!crmUser || !isAuthorisedAdmin(crmUser))return;
+  const status=seerviGstField('gstProfileStatus');
+  if(status)status.textContent='Loading GST profile…';
+  try{
+    const snap=await getDoc(doc(db,SEERVI_GST_PROFILE_COLLECTION,'global'));
+    seerviGstProfile=seerviGstProfileClean(snap.exists()?snap.data():SEERVI_GST_PROFILE_DEFAULTS);
+    seerviGstFillForm();
+    if(status)status.textContent=snap.exists()?'GST Profile loaded from Firebase.':'No GST Profile saved yet.';
+  }catch(e){
+    if(status)status.textContent='Load failed: '+(e?.message||'Check Firebase rules.');
+  }
+};
+window.saveGstProfile=async function(){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+  const businessName=seerviGstField('gstBusinessName')?.value.trim()||'';
+  const gstNumber=seerviGstField('gstNumber')?.value.trim().toUpperCase()||'';
+  const address=seerviGstField('gstAddress')?.value.trim()||'';
+  if(!businessName||!gstNumber||!address){
+    alert('Business / Legal Name, GSTIN and Address are required.');
+    return;
+  }
+  const s=seerviGstProfileClean({
+    businessName,gstNumber,
+    personName:seerviGstField('gstPersonName')?.value,
+    phone:seerviGstField('gstPhone')?.value,
+    email:seerviGstField('gstEmail')?.value,
+    pan:seerviGstField('gstPan')?.value,
+    address,
+    city:seerviGstField('gstCity')?.value,
+    state:seerviGstField('gstState')?.value,
+    stateCode:seerviGstField('gstStateCode')?.value,
+    pincode:seerviGstField('gstPincode')?.value
+  });
+  const status=seerviGstField('gstProfileStatus');
+  if(status)status.textContent='Saving GST profile…';
+  try{
+    await setDoc(doc(db,SEERVI_GST_PROFILE_COLLECTION,'global'),{
+      ...s,updatedAt:serverTimestamp(),updatedBy:crmUser.uid
+    },{merge:true});
+    seerviGstProfile=s;
+    if(status)status.textContent='GST Profile saved successfully in Firebase.';
+    window.Seervi?.notify?.play('quotation');
+    if(typeof seerviLogActivity==='function')await seerviLogActivity('gst_profile_updated','gst_profile','Updated GST business profile',crmUser);
+  }catch(e){
+    if(status)status.textContent='Save failed: '+(e?.message||'Check Firebase Security Rules.');
+  }
+};
+window.resetGstProfile=function(){
+  seerviGstProfile=seerviGstProfileClean(seerviGstProfile);
+  seerviGstFillForm();
+  const status=seerviGstField('gstProfileStatus');if(status)status.textContent='Unsaved changes reset.';
+};
+
+async function seerviLoadInvoiceProfile(){
+  const snap=await getDoc(doc(db,SEERVI_GST_PROFILE_COLLECTION,'global'));
+  if(!snap.exists())throw new Error('GST Profile is not saved. Please open GST PROFILE and save your business details first.');
+  return seerviGstProfileClean(snap.data());
+}
+function seerviInvoiceNumericSuffix(value){
+  const m=String(value||'').trim().match(/^(.*?)(\d+)$/);
+  return m?{prefix:m[1],number:Number(m[2]),digits:m[2].length}:null;
+}
+async function seerviGetNextInvoiceNumber(){
+  const snap=await getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),limit(1000)));
+  let best=null;
+  snap.docs.forEach(d=>{
+    const n=seerviInvoiceNumericSuffix(d.data()?.invoiceNo);
+    if(n && Number.isFinite(n.number) && (!best || n.number>best.number))best=n;
+  });
+  if(!best)return '';
+  return best.prefix+String(best.number+1).padStart(best.digits,'0');
+}
+async function seerviInvoiceNumberExists(invoiceNo){
+  const snap=await getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),where('invoiceNo','==',invoiceNo),limit(1)));
+  return !snap.empty;
+}
+
+function seerviInvoiceSafe(v){return String(v??'').replace(/[^\x20-\x7E₹–—]/g,' ');}
+function seerviInvoiceInr(n){return 'INR '+Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+
+function seerviGenerateSaleInvoicePDF(invoice,profile){
+  if(!window.jspdf || !window.jspdf.jsPDF)throw new Error('PDF engine is not available.');
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  const W=210,H=297,left=15,right=195;
+  let y=16;
+  const footer=()=>{
+    doc.setDrawColor(215,219,223);doc.line(left,274,right,274);
+    doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(120,128,136);
+    doc.text('Sale Invoice generated from Seervi Trading saved GST Profile.',left,281);
+    doc.text('Page '+doc.internal.getNumberOfPages(),right,286,{align:'right'});
+  };
+  doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
+
+  doc.setTextColor(18,22,27);doc.setFont('helvetica','bold');doc.setFontSize(21);
+  doc.text(seerviInvoiceSafe(profile.businessName||'SEERVI TRADING').slice(0,52),left,y);
+  doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('SALE INVOICE',right,y,{align:'right'});
+  doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(105,113,122);
+  doc.text('Invoice No: '+seerviInvoiceSafe(invoice.invoiceNo),right,y+7,{align:'right'});
+  doc.text('Date: '+(invoice.dateISO?new Date(invoice.dateISO).toLocaleDateString('en-IN'):new Date().toLocaleDateString('en-IN')),right,y+13,{align:'right'});
+
+  y=35;doc.setDrawColor(215,219,223);doc.line(left,y,right,y);y+=8;
+  doc.setTextColor(18,22,27);doc.setFont('helvetica','bold');doc.setFontSize(9);
+  doc.text('SELLER / GST PROFILE',left,y);y+=6;
+  doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(80,88,97);
+  doc.text('Business: '+seerviInvoiceSafe(profile.businessName),left,y);
+  doc.text('GSTIN: '+seerviInvoiceSafe(profile.gstNumber||'—'),105,y);y+=5;
+  if(profile.personName)doc.text('Contact Person: '+seerviInvoiceSafe(profile.personName),left,y);
+  if(profile.pan)doc.text('PAN: '+seerviInvoiceSafe(profile.pan),105,y);
+  y+=5;
+  if(profile.phone)doc.text('Phone / WhatsApp: '+seerviInvoiceSafe(profile.phone),left,y);
+  if(profile.email)doc.text('Email: '+seerviInvoiceSafe(profile.email),105,y);
+  y+=5;
+  const sellerAddress=[profile.address,profile.city,profile.state,profile.pincode].filter(Boolean).join(', ');
+  const sellerLines=doc.splitTextToSize('Address: '+seerviInvoiceSafe(sellerAddress||'—'),82);
+  doc.text(sellerLines,left,y);
+  if(profile.stateCode)doc.text('State Code: '+seerviInvoiceSafe(profile.stateCode),105,y);
+  y+=Math.max(9,sellerLines.length*4.3);
+
+  doc.setTextColor(18,22,27);doc.setFont('helvetica','bold');doc.setFontSize(9);
+  doc.text('BILL TO / CUSTOMER',left,y);y+=6;
+  doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(80,88,97);
+  const c=invoice.customer||{};
+  doc.text('Customer: '+seerviInvoiceSafe(c.name||'—'),left,y);
+  doc.text('Company / Shop: '+seerviInvoiceSafe(c.company||'—').slice(0,45),105,y);y+=5;
+  doc.text('Phone / WhatsApp: '+seerviInvoiceSafe(c.phone||c.whatsapp||'—'),left,y);
+  doc.text('Email: '+seerviInvoiceSafe(c.email||'—').slice(0,45),105,y);y+=5;
+  doc.text('City: '+seerviInvoiceSafe(c.city||'—'),left,y);y+=5;
+  const customerAddress=seerviInvoiceSafe(c.address||c.fullAddress||'—');
+  const cLines=doc.splitTextToSize('Address: '+customerAddress,180);doc.text(cLines,left,y);y+=Math.max(7,cLines.length*4.3);
+
+  const items=invoice.items||[];
+  const drawHeader=()=>{
+    if(y>247){footer();doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=18;}
+    doc.setFillColor(242,244,246);doc.roundedRect(left,y-5,180,9,1,1,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(30,35,40);
+    doc.text('SR',18,y);doc.text('PRODUCT / MODEL',30,y);doc.text('SPEC',85,y);
+    doc.text('HSN',109,y);doc.text('QTY',132,y);doc.text('RATE',151,y);doc.text('AMOUNT',174,y);
+    y+=8;doc.setFont('helvetica','normal');
+  };
+  drawHeader();
+  for(let i=0;i<items.length;i++){
+    const item=items[i],qty=Number(item.qty||0),rate=Number(item.rate||0),amount=Number(item.amount??qty*rate);
+    const productLines=doc.splitTextToSize(seerviInvoiceSafe(item.model||item.name||'Item'),52);
+    const rowLines=Math.min(productLines.length,3),rowHeight=Math.max(8,rowLines*4.3+3);
+    if(y+rowHeight>258){footer();doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=20;drawHeader();}
+    doc.setFontSize(8);doc.setTextColor(45,50,56);
+    doc.text(String(i+1),18,y);doc.text(productLines.slice(0,3),30,y);
+    doc.text(seerviInvoiceSafe(item.spec||item.thickness||'—').slice(0,10),85,y);
+    doc.text(seerviInvoiceSafe(item.hsnCode||item.hsn||'—').slice(0,12),109,y);
+    doc.text(String(qty),132,y);doc.text(seerviInvoiceInr(rate),151,y);doc.text(seerviInvoiceInr(amount),174,y);
+    doc.setDrawColor(225,228,231);doc.line(left,y+rowHeight-3,right,y+rowHeight-3);y+=rowHeight;
+  }
+
+  y+=7;const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
+  doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(105,113,122);
+  doc.text('Subtotal',145,y);doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(subtotal),right,y,{align:'right'});y+=7;
+  if(invoice.gstEnabled){doc.setTextColor(105,113,122);doc.text('GST ('+Number(invoice.gstRate||0)+'%)',145,y);doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(gst),right,y,{align:'right'});y+=7;}
+  doc.setDrawColor(40,45,50);doc.line(135,y-2,right,y-2);doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(18,22,27);
+  doc.text('GRAND TOTAL',128,y+6);doc.text(seerviInvoiceInr(grand),right,y+6,{align:'right'});y+=18;
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(105,113,122);
+  doc.text('Quotation Ref: '+seerviInvoiceSafe(invoice.quoteNo||'—'),left,y);
+  footer();
+  const filename='Seervi_Sale_Invoice_'+seerviInvoiceSafe(invoice.invoiceNo).replace(/[^a-zA-Z0-9_-]/g,'_')+'.pdf';
+  doc.save(filename);
+}
+
+window.crmConvertQuoteToInvoice=async function(id){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+  const q=adminGlobalQuotes.find(x=>x.id===id);
+  if(!q){alert('Quotation not found. Refresh the Admin Panel.');return;}
+  if(q.invoiceNo){alert('This quotation is already converted to invoice '+q.invoiceNo+'.');return;}
+  if(!q.items?.length){alert('This quotation has no items.');return;}
+
+  let profile;
+  try{profile=await seerviLoadInvoiceProfile();}
+  catch(e){alert(e.message||'Please save GST Profile first.');return;}
+
+  let suggested='';
+  try{suggested=await seerviGetNextInvoiceNumber();}catch(e){console.warn('Could not calculate next invoice number:',e);}
+  const promptText=suggested
+    ? 'Enter Invoice Number\\nNext suggested number: '+suggested
+    : 'Enter Invoice Number (e.g. INV-001)';
+  const entered=window.prompt(promptText,suggested||'');
+  if(entered===null)return;
+  const invoiceNo=String(entered).trim();
+  if(!invoiceNo){alert('Invoice number is required.');return;}
+  if(await seerviInvoiceNumberExists(invoiceNo)){alert('Invoice number '+invoiceNo+' already exists. Please use another number.');return;}
+
+  const invoice={
+    invoiceNo,
+    quotationId:q.id,
+    quoteNo:q.quoteNo||'',
+    dateISO:new Date().toISOString(),
+    partyId:q.partyId||'',
+    customer:q.customer||{},
+    items:q.items||[],
+    subtotal:Number(q.subtotal||0),
+    gstEnabled:!!q.gstEnabled,
+    gstRate:Number(q.gstRate||0),
+    gst:Number(q.gst||0),
+    grandTotal:Number(q.grandTotal||0),
+    gstProfile:profile,
+    source:'quotation',
+    createdBy:crmUser.uid,
+    createdByEmail:crmUser.email||''
+  };
+
+  try{
+    const invRef=doc(collection(db,SEERVI_INVOICE_COLLECTION));
+    await setDoc(invRef,{...invoice,createdAt:serverTimestamp()});
+    await updateDoc(doc(db,'quotations',q.id),{
+      invoiceId:invRef.id,
+      invoiceNo,
+      invoicedAt:serverTimestamp(),
+      updatedAt:serverTimestamp()
+    });
+    q.invoiceId=invRef.id;q.invoiceNo=invoiceNo;q.invoicedAt=new Date();
+    crmRenderGlobalAdmin();
+    seerviShowSaveSuccess('Converted to Sale Invoice '+invoiceNo+'.');
+    if(typeof seerviLogActivity==='function')await seerviLogActivity('quotation_converted_to_invoice','invoices','Converted quotation '+(q.quoteNo||q.id)+' to Sale Invoice '+invoiceNo,crmUser);
+    seerviGenerateSaleInvoicePDF(invoice,profile);
+  }catch(e){
+    console.error('Invoice conversion failed:',e);
+    alert('Could not convert quotation to invoice: '+(e?.message||'Check Firebase rules.'));
+  }
+};
+
+window.crmDownloadInvoiceByQuotation=async function(id){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+  const q=adminGlobalQuotes.find(x=>x.id===id);
+  if(!q){alert('Quotation not found. Refresh the Admin Panel.');return;}
+  if(!q.invoiceId){alert('Invoice record not found.');return;}
+  try{
+    const snap=await getDoc(doc(db,SEERVI_INVOICE_COLLECTION,q.invoiceId));
+    if(!snap.exists()){alert('Invoice record is missing from Firebase.');return;}
+    const invoice={id:snap.id,...snap.data()};
+    const profile=invoice.gstProfile || await seerviLoadInvoiceProfile();
+    seerviGenerateSaleInvoicePDF(invoice,profile);
+  }catch(e){
+    alert('Invoice PDF failed: '+(e?.message||'Check Firebase connection.'));
   }
 };
 
