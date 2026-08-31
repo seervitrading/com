@@ -9556,7 +9556,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const cLines=doc.splitTextToSize('Address: '+customerAddress,78);
   doc.text(cLines.slice(0,2),105,y);
   y+=Math.max(5,cLines.slice(0,2).length*3.5);
-  doc.setDrawColor(190,195,200);doc.line(left,y,right,y);y+=3;
+  doc.setDrawColor(190,195,200);doc.line(left,y,right,y);
 
   const items=invoice.items||[];
 
@@ -9568,7 +9568,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     doc.setDrawColor(120,125,130);doc.rect(left,top,180,7,'S');
     doc.setFont('helvetica','bold');doc.setFontSize(7.1);doc.setTextColor(30,35,40);
     doc.text('SR',18,top+4.6);
-    doc.text('PRODUCT / MODEL',30,top+4.6);
+    doc.text('PRODUCT / MODEL + SUBCATEGORY',30,top+4.6);
     doc.text('SPEC',85,top+4.6);
     doc.text('HSN',109,top+4.6);
     doc.text('QTY',132,top+4.6);
@@ -9580,7 +9580,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
   for(let i=0;i<items.length;i++){
     const item=items[i],qty=Number(item.qty||0),rate=Number(item.rate||0),amount=Number(item.amount??qty*rate);
-    const productLines=doc.splitTextToSize(seerviInvoiceSafe(item.model||item.name||'Item'),51);
+    const productLabel=seerviQuotationItemLabel(item);
+    const productLines=doc.splitTextToSize(seerviInvoiceSafe(productLabel||item.model||item.name||'Item'),51);
     const rowLines=Math.min(productLines.length,2);
     const rowHeight=Math.max(6,rowLines*3.1+1.5);
     if(y+rowHeight>272){newInvoicePage();drawHeader();}
@@ -9684,7 +9685,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     doc.text(seerviInvoiceInr(totalTaxable),x[2]-2,y,{align:'right'});
     doc.text(seerviInvoiceInr(totalCgst),x[4]-2,y,{align:'right'});
     doc.text(seerviInvoiceInr(totalSgst),x[6]-2,y,{align:'right'});
-    doc.text(seerviInvoiceInr(totalHsnTax),x[7]-2,y,{align:'right'});y+=7;
+    doc.text(seerviInvoiceInr(totalHsnTax),x[7]-2,y,{align:'right'});y+=2;
   }
 
   /* ===== BANK / QR / SIGNATORY — COMPACT ===== */
@@ -9692,7 +9693,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const hasPayment=profile.upiId;
   const hasSignatory=profile.signatoryName||profile.businessName;
   if(hasBank||hasPayment||hasSignatory){
-    const boxH=30;
+    const boxH=28;
     if(y+boxH>279)newInvoicePage();
     const boxTop=y;
     const bankW=67,qrW=67,sigW=46;
@@ -9738,13 +9739,11 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
       doc.setFont('helvetica','normal');doc.setFontSize(6.3);
       doc.text(seerviInvoiceSafe(profile.signatoryName).slice(0,28),sigCenter,boxTop+27,{align:'center'});
     }
-    y=boxTop+boxH+2;
+    y=boxTop+boxH;
   }
 
-  doc.setFont('helvetica','normal');doc.setFontSize(6.3);doc.setTextColor(120,128,136);
-  const refY=Math.min(y,280);
-  doc.text('Quotation Ref: '+seerviInvoiceSafe(invoice.quoteNo||'—'),left+3,refY);
-  drawContentBorder(refY+1);
+  // End the outer border immediately after the last invoice section.
+  drawContentBorder(y);
 
   const filename='Seervi_Sale_Invoice_'+seerviInvoiceSafe(invoice.invoiceNo).replace(/[^a-zA-Z0-9_-]/g,'_')+'.pdf';
   doc.save(filename);
