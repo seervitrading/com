@@ -9563,6 +9563,107 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   doc.text('GRAND TOTAL',128,y+6);
   doc.text(seerviInvoiceInr(grand),right,y+6,{align:'right'});y+=18;
 
+  /*
+   * HSN / SAC TAX SUMMARY
+   * One row per HSN/SAC, exactly like a standard GST invoice summary.
+   * Taxable value is the sum of item line values for that HSN.
+   * CGST and SGST are split equally from the invoice GST rate.
+   */
+  if(invoice.gstEnabled && items.length){
+    const hsnMap=new Map();
+    for(const item of items){
+      const hsn=seerviInvoiceSafe(item.hsnCode||item.hsn||'—').trim()||'—';
+      const qty=Number(item.qty||0);
+      const rate=Number(item.rate||0);
+      const taxable=Number(item.amount ?? qty*rate);
+      const entry=hsnMap.get(hsn)||{taxable:0};
+      entry.taxable+=Number.isFinite(taxable)?taxable:0;
+      hsnMap.set(hsn,entry);
+    }
+
+    const hsnRows=[...hsnMap.entries()].map(([hsn,v])=>{
+      const taxable=Math.round(v.taxable*100)/100;
+      const totalTax=Math.round(taxable*(Number(invoice.gstRate||0)/100)*100)/100;
+      const halfRate=Number(invoice.gstRate||0)/2;
+      const cgst=Math.round((totalTax/2)*100)/100;
+      const sgst=Math.round((totalTax-cgst)*100)/100;
+      return {hsn,taxable,cgstRate:halfRate,cgst,sgstRate:halfRate,sgst,totalTax};
+    });
+
+    const totalTaxable=hsnRows.reduce((s,r)=>s+r.taxable,0);
+    const totalCgst=hsnRows.reduce((s,r)=>s+r.cgst,0);
+    const totalSgst=hsnRows.reduce((s,r)=>s+r.sgst,0);
+    const totalHsnTax=hsnRows.reduce((s,r)=>s+r.totalTax,0);
+
+    // Seven columns matching a conventional GST HSN summary:
+    // HSN/SAC | Taxable Value | CGST Rate | CGST Amount | SGST Rate | SGST Amount | Total Tax Amount
+    const x=[15,43,91,112,133,154,175,195];
+
+    const drawHsnHeader=()=>{
+      if(y>246){
+        footer();
+        doc.addPage();
+        doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
+        y=20;
+      }
+      const top=y-5;
+      doc.setFillColor(232,234,236);
+      doc.rect(left,top,180,13,'F');
+      doc.setDrawColor(95,100,105);
+      doc.rect(left,top,180,13,'S');
+      for(let i=1;i<x.length-1;i++)doc.line(x[i],top,x[i],top+13);
+
+      doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(30,35,40);
+      doc.text('HSN/SAC',(x[0]+x[1])/2,top+8,{align:'center'});
+      doc.text('Taxable Value',(x[1]+x[2])/2,top+8,{align:'center'});
+      doc.text('CGST',((x[2]+x[4])/2),top+5,{align:'center'});
+      doc.text('Rate',(x[2]+x[3])/2,top+10.5,{align:'center'});
+      doc.text('Amount',(x[3]+x[4])/2,top+10.5,{align:'center'});
+      doc.text('SGST',((x[4]+x[6])/2),top+5,{align:'center'});
+      doc.text('Rate',(x[4]+x[5])/2,top+10.5,{align:'center'});
+      doc.text('Amount',(x[5]+x[6])/2,top+10.5,{align:'center'});
+      doc.text('Total Tax Amount',(x[6]+x[7])/2,top+8,{align:'center'});
+      y=top+18;
+    };
+
+    const drawHsnRows=()=>{
+      for(const r of hsnRows){
+        if(y>263)drawHsnHeader();
+        doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(45,50,56);
+        doc.setDrawColor(125,130,135);
+        doc.rect(left,y-5,180,9,'S');
+        for(let i=1;i<x.length-1;i++)doc.line(x[i],y-5,x[i],y+4);
+
+        doc.text(r.hsn,(x[0]+x[1])/2,y,{align:'center'});
+        doc.text(seerviInvoiceInr(r.taxable),x[2]-2,y,{align:'right'});
+        doc.text(Number(r.cgstRate).toFixed(2).replace(/\.00$/,'')+'%',(x[2]+x[3])/2,y,{align:'center'});
+        doc.text(seerviInvoiceInr(r.cgst),x[4]-2,y,{align:'right'});
+        doc.text(Number(r.sgstRate).toFixed(2).replace(/\.00$/,'')+'%',(x[4]+x[5])/2,y,{align:'center'});
+        doc.text(seerviInvoiceInr(r.sgst),x[6]-2,y,{align:'right'});
+        doc.text(seerviInvoiceInr(r.totalTax),x[7]-2,y,{align:'right'});
+        y+=9;
+      }
+
+      if(y>263)drawHsnHeader();
+      doc.setFillColor(232,234,236);doc.rect(left,y-5,180,9,'F');
+      doc.setDrawColor(95,100,105);doc.rect(left,y-5,180,9,'S');
+      for(let i=1;i<x.length-1;i++)doc.line(x[i],y-5,x[i],y+4);
+      doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(25,30,35);
+      doc.text('Total',(x[0]+x[1])/2,y,{align:'center'});
+      doc.text(seerviInvoiceInr(totalTaxable),x[2]-2,y,{align:'right'});
+      doc.text(seerviInvoiceInr(totalCgst),x[4]-2,y,{align:'right'});
+      doc.text(seerviInvoiceInr(totalSgst),x[6]-2,y,{align:'right'});
+      doc.text(seerviInvoiceInr(totalHsnTax),x[7]-2,y,{align:'right'});
+      y+=14;
+    };
+
+    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(18,22,27);
+    doc.text('HSN / SAC TAX SUMMARY',left,y);
+    y+=6;
+    drawHsnHeader();
+    drawHsnRows();
+  }
+
   doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(105,113,122);
   doc.text('Quotation Ref: '+seerviInvoiceSafe(invoice.quoteNo||'—'),left,y);
   footer();
