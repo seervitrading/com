@@ -9496,10 +9496,16 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   let y=12;
 
   // Border surrounds only the actual invoice content, never the unused page area.
-  const drawContentBorder=(endY)=>{
+  const drawContentBorder=(endY,skipBottom=false)=>{
     const bottom=Math.min(Math.max(endY+3,18),H-8);
     doc.setDrawColor(85,90,95);
-    doc.rect(left,8,180,bottom-8,'S');
+    if(skipBottom){
+      doc.line(left,8,left,bottom);
+      doc.line(right,8,right,bottom);
+      doc.line(left,8,right,8);
+    }else{
+      doc.rect(left,8,180,bottom-8,'S');
+    }
   };
   const newInvoicePage=()=>{
     drawContentBorder(y);
@@ -9666,7 +9672,10 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     for(const r of hsnRows){
       if(y+5.5>278)drawHsnHeader();
       doc.setFont('helvetica','normal');doc.setFontSize(6.4);doc.setTextColor(45,50,56);
-      doc.setDrawColor(125,130,135);doc.rect(left,y-3.5,180,5.5,'S');
+      // Header already provides the top boundary; draw only the row bottom.
+      // This prevents a duplicate horizontal stroke at the header/first-row join.
+      doc.setDrawColor(225,228,231);doc.line(left,y+2,right,y+2);
+      doc.setDrawColor(125,130,135);
       for(let i=1;i<x.length-1;i++)doc.line(x[i],y-3.5,x[i],y+2);
       doc.text(r.hsn,(x[0]+x[1])/2,y,{align:'center'});
       doc.text(seerviInvoiceInr(r.taxable),x[2]-2,y,{align:'right'});
@@ -9678,7 +9687,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     }
     if(y+5.5>278)drawHsnHeader();
     doc.setFillColor(232,234,236);doc.rect(left,y-3.5,180,5.5,'F');
-    doc.setDrawColor(95,100,105);doc.rect(left,y-3.5,180,5.5,'S');
+    doc.setDrawColor(95,100,105);doc.line(left,y+2,right,y+2);
     for(let i=1;i<x.length-1;i++)doc.line(x[i],y-3.5,x[i],y+2);
     doc.setFont('helvetica','bold');doc.setFontSize(6.4);doc.setTextColor(25,30,35);
     doc.text('Total',(x[0]+x[1])/2,y,{align:'center'});
@@ -9692,7 +9701,9 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const hasBank=profile.bankAccountName||profile.bankName||profile.bankAccountNumber||profile.bankIfsc||profile.bankBranch;
   const hasPayment=profile.upiId;
   const hasSignatory=profile.signatoryName||profile.businessName;
+  let hasFooterBox=false;
   if(hasBank||hasPayment||hasSignatory){
+    hasFooterBox=true;
     const boxH=28;
     if(y+boxH>279)newInvoicePage();
     const boxTop=y;
@@ -9742,8 +9753,9 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     y=boxTop+boxH;
   }
 
-  // End the outer border immediately after the last invoice section.
-  drawContentBorder(y);
+  // The footer box already supplies the final bottom edge. Do not draw a
+  // second horizontal line over the same edge.
+  drawContentBorder(y,hasFooterBox);
 
   const filename='Seervi_Sale_Invoice_'+seerviInvoiceSafe(invoice.invoiceNo).replace(/[^a-zA-Z0-9_-]/g,'_')+'.pdf';
   doc.save(filename);
