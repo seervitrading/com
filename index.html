@@ -9633,7 +9633,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
     // Seven columns matching a conventional GST HSN summary:
     // HSN/SAC | Taxable Value | CGST Rate | CGST Amount | SGST Rate | SGST Amount | Total Tax Amount
-    const x=[15,44,91,112,133,154,175,195];
+    const x=[15,43,88,109,130,151,172,195];
 
     const drawHsnHeader=()=>{
       if(y>246){
@@ -9644,22 +9644,32 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
       }
       const top=y-5;
       doc.setFillColor(232,234,236);
-      doc.rect(left,top,180,13,'F');
+      doc.rect(left,top,180,18,'F');
       doc.setDrawColor(95,100,105);
-      doc.rect(left,top,180,13,'S');
-      for(let i=1;i<x.length-1;i++)doc.line(x[i],top,x[i],top+13);
+      doc.rect(left,top,180,18,'S');
 
-      doc.setFont('helvetica','bold');doc.setFontSize(7.2);doc.setTextColor(30,35,40);
-      doc.text('HSN/SAC',(x[0]+x[1])/2,top+8,{align:'center'});
-      doc.text('Taxable Value',(x[1]+x[2])/2,top+8,{align:'center'});
-      doc.text('CGST',((x[2]+x[4])/2),top+5,{align:'center'});
-      doc.text('Rate',(x[2]+x[3])/2,top+10.5,{align:'center'});
-      doc.text('Amount',(x[3]+x[4])/2,top+10.5,{align:'center'});
-      doc.text('SGST',((x[4]+x[6])/2),top+5,{align:'center'});
-      doc.text('Rate',(x[4]+x[5])/2,top+10.5,{align:'center'});
-      doc.text('Amount',(x[5]+x[6])/2,top+10.5,{align:'center'});
-      doc.text('Total Tax Amount',(x[6]+x[7])/2,top+8,{align:'center'});
-      y=top+18;
+      // Separate CGST and SGST groups, each with its own Rate and Amount columns.
+      for(let i=1;i<x.length-1;i++)doc.line(x[i],top,x[i],top+18);
+      doc.line(x[3],top+8,x[3],top+18);
+      doc.line(x[5],top+8,x[5],top+18);
+
+      doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(30,35,40);
+      doc.text('HSN/SAC',(x[0]+x[1])/2,top+11,{align:'center'});
+      doc.text('Taxable Value',(x[1]+x[2])/2,top+11,{align:'center'});
+
+      doc.text('CGST',(x[2]+x[4])/2,top+5,{align:'center'});
+      doc.text('Rate',(x[2]+x[3])/2,top+14,{align:'center'});
+      doc.text('Amount',(x[3]+x[4])/2,top+14,{align:'center'});
+
+      doc.text('SGST',(x[4]+x[6])/2,top+5,{align:'center'});
+      doc.text('Rate',(x[4]+x[5])/2,top+14,{align:'center'});
+      doc.text('Amount',(x[5]+x[6])/2,top+14,{align:'center'});
+
+      // Wrapped two-line header for the final column.
+      doc.text('Total Tax',(x[6]+x[7])/2,top+8,{align:'center'});
+      doc.text('Amount',(x[6]+x[7])/2,top+14,{align:'center'});
+
+      y=top+23;
     };
 
     const drawHsnRows=()=>{
