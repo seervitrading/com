@@ -6706,6 +6706,7 @@ function seerviBuildItemPayload(input={}){
     subcategoryId:seerviCleanItemValue(input.subcategoryId,200),
     name:seerviCleanItemValue(input.name,300),
     model:seerviCleanItemValue(input.model,200),
+    hsnCode:seerviCleanItemValue(input.hsnCode || input.hsn,20),
     description:seerviCleanItemValue(input.description,5000),
     imageWebpUrl:seerviValidateWebpPath(input.imageWebpUrl),
     galleryImages:seerviNormaliseItemGalleryImages(input.galleryImages),
