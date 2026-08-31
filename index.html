@@ -8737,6 +8737,7 @@ window.crmViewQuote=function(id){
       <td>${i+1}</td>
       <td>${esc(item.model||item.name||'Item')}</td>
       <td>${esc(item.spec||'—')}</td>
+      <td>${esc(item.hsnCode||item.hsn||'—')}</td>
       <td class="num">${Number(item.qty||0)}</td>
       <td class="num">${money(item.rate)}</td>
       <td class="num">${money(item.amount ?? (Number(item.qty||0)*Number(item.rate||0)))}</td>
@@ -8750,9 +8751,9 @@ window.crmViewQuote=function(id){
     </div>
     <table class="crm-qv-table">
       <thead><tr>
-        <th>#</th><th>Product / Model</th><th>Spec</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th>
+        <th>#</th><th>Product / Model</th><th>Spec</th><th>HSN</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th>
       </tr></thead>
-      <tbody>${rows||'<tr><td colspan="6">No items in this quotation.</td></tr>'}</tbody>
+      <tbody>${rows||'<tr><td colspan="7">No items in this quotation.</td></tr>'}</tbody>
     </table>
     <div class="crm-qv-totals">
       <div class="crm-qv-total"><span>Subtotal</span><strong>${money(q.subtotal)}</strong></div>
@@ -9348,6 +9349,7 @@ window.crmSaveCurrentQuote = async function(){
     subcategoryId:x.subcategoryId||'',
     subcategory:x.subcategory||'',
     spec:x.thickness||'',
+    hsnCode:x.hsnCode||x.hsn||'',
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
     amount:getLineTotal(x),
