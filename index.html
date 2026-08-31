@@ -9493,7 +9493,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({unit:'mm',format:'a4'});
   const W=210,H=297,left=15,right=195;
-  let y=16;
+  // Balanced A4 invoice grid: aligned top header and tighter vertical rhythm.
+  let y=18;
 
   const footer=()=>{
     doc.setDrawColor(215,219,223);doc.line(left,274,right,274);
@@ -9503,10 +9504,11 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   };
 
   const drawInvoiceTop=()=>{
-    doc.setFillColor(255,255,255);doc.rect(0,0,W,58,'F');
+    doc.setFillColor(255,255,255);doc.rect(0,0,W,52,'F');
 
     // LEFT: complete GST/business profile.
     doc.setTextColor(18,22,27);
+    // Keep firm name and invoice title on the exact same top baseline.
     doc.setFont('helvetica','bold');doc.setFontSize(16);
     doc.text(seerviInvoiceSafe(profile.businessName||'SEERVI TRADING').slice(0,55),left,y);
 
@@ -9530,47 +9532,47 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
     // RIGHT: invoice identity.
     const rx=right;
-    doc.setFont('helvetica','bold');doc.setFontSize(14);doc.setTextColor(18,22,27);
-    doc.text('SALE INVOICE',rx,20,{align:'right'});
+    doc.setFont('helvetica','bold');doc.setFontSize(16);doc.setTextColor(18,22,27);
+    doc.text('SALE INVOICE',rx,y,{align:'right'});
 
     doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(55,62,70);
-    doc.text('Invoice No:',rx-49,29);
+    doc.text('Invoice No:',rx-49,27);
     doc.setFont('helvetica','normal');
-    doc.text(seerviInvoiceSafe(invoice.invoiceNo||'—'),rx,29,{align:'right'});
+    doc.text(seerviInvoiceSafe(invoice.invoiceNo||'—'),rx,27,{align:'right'});
 
     doc.setFont('helvetica','bold');
-    doc.text('Date:',rx-49,36);
+    doc.text('Date:',rx-49,34);
     doc.setFont('helvetica','normal');
-    doc.text(invoice.dateISO?new Date(invoice.dateISO).toLocaleDateString('en-IN'):new Date().toLocaleDateString('en-IN'),rx,36,{align:'right'});
+    doc.text(invoice.dateISO?new Date(invoice.dateISO).toLocaleDateString('en-IN'):new Date().toLocaleDateString('en-IN'),rx,34,{align:'right'});
 
     if(invoice.ewayBillNo){
       doc.setFont('helvetica','bold');
-      doc.text('E-Way Bill No:',rx-49,43);
+      doc.text('E-Way Bill No:',rx-49,41);
       doc.setFont('helvetica','normal');
-      doc.text(seerviInvoiceSafe(invoice.ewayBillNo),rx,43,{align:'right'});
+      doc.text(seerviInvoiceSafe(invoice.ewayBillNo),rx,41,{align:'right'});
     }
 
     // The single separator line requested by the user.
-    const lineY=Math.max(54,ly+Math.max(0,sellerLines.length-1)*4.3+5);
+    const lineY=Math.max(48,ly+Math.max(0,sellerLines.length-1)*4.3+3);
     doc.setDrawColor(215,219,223);doc.line(left,lineY,right,lineY);
-    y=lineY+8;
+    y=lineY+6;
   };
 
   drawInvoiceTop();
 
   // BILL TO / CUSTOMER section remains below the new GST/invoice header.
   doc.setTextColor(18,22,27);doc.setFont('helvetica','bold');doc.setFontSize(9);
-  doc.text('BILL TO / CUSTOMER',left,y);y+=6;
+  doc.text('BILL TO / CUSTOMER',left,y);y+=5;
   doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(80,88,97);
   const c=invoice.customer||{};
   doc.text('Customer: '+seerviInvoiceSafe(c.name||'—'),left,y);
-  doc.text('Company / Shop: '+seerviInvoiceSafe(c.company||'—').slice(0,45),105,y);y+=5;
+  doc.text('Company / Shop: '+seerviInvoiceSafe(c.company||'—').slice(0,45),105,y);y+=4.5;
   doc.text('Phone / WhatsApp: '+seerviInvoiceSafe(c.phone||c.whatsapp||'—'),left,y);
-  doc.text('Email: '+seerviInvoiceSafe(c.email||'—').slice(0,45),105,y);y+=5;
-  doc.text('City: '+seerviInvoiceSafe(c.city||'—'),left,y);y+=5;
+  doc.text('Email: '+seerviInvoiceSafe(c.email||'—').slice(0,45),105,y);y+=4.5;
+  doc.text('City: '+seerviInvoiceSafe(c.city||'—'),left,y);y+=4.5;
   const customerAddress=seerviInvoiceSafe(c.address||c.fullAddress||'—');
   const cLines=doc.splitTextToSize('Address: '+customerAddress,180);
-  doc.text(cLines,left,y);y+=Math.max(7,cLines.length*4.3);
+  doc.text(cLines,left,y);y+=Math.max(6,cLines.length*4.0)+1;
 
   const items=invoice.items||[];
   const drawHeader=()=>{
@@ -9613,7 +9615,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     y+=rowHeight;
   }
 
-  y+=7;
+  y+=4;
   const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
   doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(105,113,122);
   doc.text('Subtotal',145,y);
@@ -9623,13 +9625,13 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     doc.setTextColor(105,113,122);
     doc.text('GST ('+Number(invoice.gstRate||0)+'%)',145,y);
     doc.setTextColor(25,30,35);
-    doc.text(seerviInvoiceInr(gst),right,y,{align:'right'});y+=7;
+    doc.text(seerviInvoiceInr(gst),right,y,{align:'right'});y+=6;
   }
 
   doc.setDrawColor(40,45,50);doc.line(135,y-2,right,y-2);
   doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(18,22,27);
   doc.text('GRAND TOTAL',128,y+6);
-  doc.text(seerviInvoiceInr(grand),right,y+6,{align:'right'});y+=12;
+  doc.text(seerviInvoiceInr(grand),right,y+6,{align:'right'});y+=10;
 
   // Amount in Words — directly below Grand Total, starting under the "G".
   // Keep the existing invoice font size/scale, but use italic styling.
@@ -9637,7 +9639,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const amountWords='Amount in Words: '+seerviInvoiceAmountInWords(grand);
   const amountWordLines=doc.splitTextToSize(amountWords,67);
   doc.text(amountWordLines,128,y);
-  y+=Math.max(7,amountWordLines.length*4.3)+6;
+  y+=Math.max(6,amountWordLines.length*4.0)+4;
 
   /*
    * HSN / SAC TAX SUMMARY
@@ -9718,7 +9720,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
         doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(45,50,56);
         doc.setDrawColor(125,130,135);
         doc.rect(left,y-5,180,9,'S');
-        for(let i=1;i<x.length-1;i++)doc.line(x[i],y-5,x[i],y+4);
+        for(let i=1;i<x.length-1;i++)doc.line(x[i],y-5,x[i],y+3);
 
         doc.text(r.hsn,(x[0]+x[1])/2,y,{align:'center'});
         doc.text(seerviInvoiceInr(r.taxable),x[2]-2,y,{align:'right'});
@@ -9767,7 +9769,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     }
 
     const boxTop=y;
-    const boxH=48;
+    const boxH=44;
     const bankW=68;
     const qrW=67;
     const sigW=45;
@@ -9822,19 +9824,19 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     }
 
     doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(90,96,102);
-    doc.text('Scan to pay via UPI',qrCenterX,boxTop+45,{align:'center'});
+    doc.text('Scan to pay via UPI',qrCenterX,boxTop+41,{align:'center'});
 
     const sigCenter=left+bankW+qrW+sigW/2;
     doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(90,96,102);
-    doc.text('For '+seerviInvoiceSafe(profile.businessName||'').slice(0,28),sigCenter,boxTop+36,{align:'center'});
+    doc.text('For '+seerviInvoiceSafe(profile.businessName||'').slice(0,28),sigCenter,boxTop+33,{align:'center'});
     doc.setFont('helvetica','bold');doc.setFontSize(8);
-    doc.text('Authorised Signatory',sigCenter,boxTop+42,{align:'center'});
+    doc.text('Authorised Signatory',sigCenter,boxTop+39,{align:'center'});
     if(profile.signatoryName){
       doc.setFont('helvetica','normal');doc.setFontSize(7);
-      doc.text(seerviInvoiceSafe(profile.signatoryName).slice(0,28),sigCenter,boxTop+46,{align:'center'});
+      doc.text(seerviInvoiceSafe(profile.signatoryName).slice(0,28),sigCenter,boxTop+43,{align:'center'});
     }
 
-    y=boxTop+boxH+8;
+    y=boxTop+boxH+6;
   }
 
   doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(105,113,122);
