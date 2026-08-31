@@ -9545,13 +9545,21 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     y=12;
   };
 
-  /* ===== COMPACT PROFESSIONAL HEADER ===== */
+  /* ===== HEADER: FIRM DETAILS LEFT / INVOICE DETAILS RIGHT ===== */
+  const headerTop=y;
+  const headerH=31;
+  const headerSplit=105;
+
+  doc.setDrawColor(150,155,160);
+  doc.rect(left,headerTop-4,180,headerH,'S');
+  doc.line(headerSplit,headerTop-4,headerSplit,headerTop+headerH-4);
+
   doc.setTextColor(18,22,27);
   doc.setFont('helvetica','bold');doc.setFontSize(15);
-  doc.text(seerviInvoiceSafe(profile.businessName||'SEERVI TRADING').slice(0,55),left+4,y+5);
+  doc.text(seerviInvoiceSafe(profile.businessName||'SEERVI TRADING').slice(0,48),left+4,headerTop+4);
 
   doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(75,83,92);
-  let ly=y+10;
+  let ly=headerTop+9;
   doc.text('GSTIN: '+seerviInvoiceSafe(profile.gstNumber||'—'),left+4,ly);
   if(profile.pan)doc.text('PAN: '+seerviInvoiceSafe(profile.pan),left+67,ly);ly+=3.7;
   if(profile.personName)doc.text('Contact Person: '+seerviInvoiceSafe(profile.personName).slice(0,38),left+4,ly);
@@ -9564,20 +9572,22 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
   const rx=right-4;
   doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(18,22,27);
-  doc.text('SALE INVOICE',rx,18,{align:'right'});
-  doc.setFont('helvetica','bold');doc.setFontSize(7.8);doc.setTextColor(55,62,70);
-  doc.text('Invoice No:',rx-49,26);
-  doc.setFont('helvetica','normal');doc.text(seerviInvoiceSafe(invoice.invoiceNo||'—'),rx,26,{align:'right'});
-  doc.setFont('helvetica','bold');doc.text('Date:',rx-49,32);
-  doc.setFont('helvetica','normal');doc.text(invoice.dateISO?new Date(invoice.dateISO).toLocaleDateString('en-IN'):new Date().toLocaleDateString('en-IN'),rx,32,{align:'right'});
-  if(invoice.ewayBillNo){
-    doc.setFont('helvetica','bold');doc.text('E-Way Bill No:',rx-49,38);
-    doc.setFont('helvetica','normal');doc.text(seerviInvoiceSafe(invoice.ewayBillNo).slice(0,20),rx,38,{align:'right'});
-  }
+  doc.text('SALE INVOICE',headerSplit+4,headerTop+4);
 
-  const headerLineY=Math.max(41,ly+Math.max(0,Math.min(sellerLines.length,2)-1)*3.7+3);
-  doc.setDrawColor(95,100,105);doc.line(left,headerLineY,right,headerLineY);
-  y=headerLineY+4;
+  doc.setFont('helvetica','bold');doc.setFontSize(7.8);doc.setTextColor(55,62,70);
+  doc.text('Invoice No:',headerSplit+4,headerTop+12);
+  doc.setFont('helvetica','normal');
+  doc.text(seerviInvoiceSafe(invoice.invoiceNo||'—'),rx,headerTop+12,{align:'right'});
+
+  doc.setFont('helvetica','bold');doc.text('Date:',headerSplit+4,headerTop+18);
+  doc.setFont('helvetica','normal');
+  doc.text(invoice.dateISO?new Date(invoice.dateISO).toLocaleDateString('en-IN'):new Date().toLocaleDateString('en-IN'),rx,headerTop+18,{align:'right'});
+
+  doc.setFont('helvetica','bold');doc.text('E-Way Bill No:',headerSplit+4,headerTop+24);
+  doc.setFont('helvetica','normal');
+  doc.text(seerviInvoiceSafe(invoice.ewayBillNo||'—').slice(0,20),rx,headerTop+24,{align:'right'});
+
+  y=headerTop+headerH+1;
 
   /* ===== BILL TO LEFT / SHIP TO RIGHT ===== */
   doc.setTextColor(18,22,27);doc.setFont('helvetica','bold');doc.setFontSize(8);
