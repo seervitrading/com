@@ -5435,11 +5435,11 @@ function downloadCartPDF(){
   doc.setTextColor(30,35,40);
   doc.text('SR',18,tableTop);
   doc.text('PRODUCT / MODEL',30,tableTop);
-  doc.text('SPEC',78,tableTop);
-  doc.text('HSN',106,tableTop);
-  doc.text('QTY',128,tableTop);
+  doc.text('SPEC',85,tableTop);
+  doc.text('HSN',109,tableTop);
+  doc.text('QTY',132,tableTop);
   doc.text('RATE',151,tableTop);
-  doc.text('AMOUNT',173,tableTop);
+  doc.text('AMOUNT',174,tableTop);
 
   y=tableTop+8;
   doc.setFont('helvetica','normal');
@@ -5447,7 +5447,14 @@ function downloadCartPDF(){
   for(let i=0;i<seerviCart.length;i++){
     const item=seerviCart[i];
 
-    if(y>258){
+    const productLines=doc.splitTextToSize(
+      String(seerviQuotationItemLabel(item)||'').replace(/[^\x20-\x7E₹–—]/g,' '),
+      52
+    );
+    const rowLines=Math.min(productLines.length,3);
+    const rowHeight=Math.max(8,rowLines*4.3+3);
+
+    if(y+rowHeight>258){
       doc.addPage();
       doc.setFillColor(255,255,255);
       doc.rect(0,0,W,H,'F');
@@ -5458,18 +5465,18 @@ function downloadCartPDF(){
     doc.setTextColor(45,50,56);
 
     doc.text(String(i+1),18,y);
-    doc.text(seerviQuotationItemLabel(item).slice(0,34),30,y);
-    doc.text(String(item.thickness||'—').slice(0,10),78,y);
-    doc.text(String(item.hsnCode||item.hsn||'—').slice(0,12),106,y);
-    doc.text(String(item.qty||0),130,y);
+    doc.text(productLines.slice(0,3),30,y);
+    doc.text(String(item.thickness||'—').slice(0,10),85,y);
+    doc.text(String(item.hsnCode||item.hsn||'—').slice(0,12),109,y);
+    doc.text(String(item.qty||0),132,y);
 
     // IMPORTANT: use ASCII "INR" instead of ₹ to avoid jsPDF Helvetica glyph glitches.
     doc.text(pdfINR(item.rate),151,y);
-    doc.text(pdfINR(getLineTotal(item)),173,y);
+    doc.text(pdfINR(getLineTotal(item)),174,y);
 
     doc.setDrawColor(225,228,231);
-    doc.line(left,y+4,right,y+4);
-    y+=8;
+    doc.line(left,y+rowHeight-3,right,y+rowHeight-3);
+    y+=rowHeight;
   }
 
   y+=8;
@@ -8892,12 +8899,12 @@ window.crmDownloadQuote=async function(id){
       doc.setFontSize(8);
       doc.setTextColor(30,35,40);
       doc.text('SR',18,y);
-      doc.text('PRODUCT / MODEL',30,y);
-      doc.text('SPEC',76,y);
-      doc.text('HSN',104,y);
-      doc.text('QTY',128,y);
+      doc.text('PRODUCT / MODEL + SUBCATEGORY',30,y);
+      doc.text('SPEC',85,y);
+      doc.text('HSN',109,y);
+      doc.text('QTY',132,y);
       doc.text('RATE',151,y);
-      doc.text('AMOUNT',173,y);
+      doc.text('AMOUNT',174,y);
       y+=8;
       doc.setFont('helvetica','normal');
     };
@@ -8906,7 +8913,19 @@ window.crmDownloadQuote=async function(id){
 
     for(let i=0;i<items.length;i++){
       const item=items[i];
-      if(y>258){
+      const qty=Number(item.qty||0);
+      const rate=Number(item.rate||0);
+      const amount=Number(item.amount ?? qty*rate);
+
+      doc.setFontSize(8);
+      const productLines=doc.splitTextToSize(
+        safeText(seerviQuotationItemLabel(item)),
+        52
+      );
+      const rowLines=Math.min(productLines.length,3);
+      const rowHeight=Math.max(8,rowLines*4.3+3);
+
+      if(y+rowHeight>258){
         footer();
         doc.addPage();
         doc.setFillColor(255,255,255);
@@ -8915,37 +8934,18 @@ window.crmDownloadQuote=async function(id){
         drawHeader();
       }
 
-      const qty=Number(item.qty||0);
-      const rate=Number(item.rate||0);
-      const amount=Number(item.amount ?? qty*rate);
-
-      doc.setFontSize(8);
       doc.setTextColor(45,50,56);
-
-      // Keep each PDF cell inside its own column so long product labels
-      // cannot overlap SPEC or HSN.
-      const productText=safeText(seerviQuotationItemLabel(item));
-      const specText=safeText(item.spec||'—');
-      const hsnText=safeText(item.hsnCode||item.hsn||'—');
-
-      const fitPdfCell=(value,maxWidth)=>{
-        let s=String(value||'');
-        if(doc.getTextWidth(s)<=maxWidth) return s;
-        while(s.length>1 && doc.getTextWidth(s+'…')>maxWidth) s=s.slice(0,-1);
-        return s+'…';
-      };
-
       doc.text(String(i+1),18,y);
-      doc.text(fitPdfCell(productText,42),30,y);
-      doc.text(fitPdfCell(specText,24),76,y);
-      doc.text(fitPdfCell(hsnText,20),104,y);
-      doc.text(String(qty),130,y);
+      doc.text(productLines.slice(0,3),30,y);
+      doc.text(safeText(item.spec||'—').slice(0,10),85,y);
+      doc.text(safeText(item.hsnCode||item.hsn||'—').slice(0,12),109,y);
+      doc.text(String(qty),132,y);
       doc.text(inr(rate),151,y);
-      doc.text(inr(amount),173,y);
+      doc.text(inr(amount),174,y);
 
       doc.setDrawColor(225,228,231);
-      doc.line(left,y+4,right,y+4);
-      y+=8;
+      doc.line(left,y+rowHeight-3,right,y+rowHeight-3);
+      y+=rowHeight;
     }
 
     y+=7;
@@ -9126,12 +9126,12 @@ window.customerDownloadQuote=async function(id){
       doc.setFontSize(8);
       doc.setTextColor(30,35,40);
       doc.text('SR',18,y);
-      doc.text('PRODUCT / MODEL',30,y);
-      doc.text('SPEC',76,y);
-      doc.text('HSN',104,y);
-      doc.text('QTY',128,y);
+      doc.text('PRODUCT / MODEL + SUBCATEGORY',30,y);
+      doc.text('SPEC',85,y);
+      doc.text('HSN',109,y);
+      doc.text('QTY',132,y);
       doc.text('RATE',151,y);
-      doc.text('AMOUNT',173,y);
+      doc.text('AMOUNT',174,y);
       y+=8;
       doc.setFont('helvetica','normal');
     };
@@ -9140,7 +9140,19 @@ window.customerDownloadQuote=async function(id){
 
     for(let i=0;i<items.length;i++){
       const item=items[i];
-      if(y>258){
+      const qty=Number(item.qty||0);
+      const rate=Number(item.rate||0);
+      const amount=Number(item.amount ?? qty*rate);
+
+      doc.setFontSize(8);
+      const productLines=doc.splitTextToSize(
+        safeText(seerviQuotationItemLabel(item)),
+        52
+      );
+      const rowLines=Math.min(productLines.length,3);
+      const rowHeight=Math.max(8,rowLines*4.3+3);
+
+      if(y+rowHeight>258){
         footer();
         doc.addPage();
         doc.setFillColor(255,255,255);
@@ -9149,37 +9161,18 @@ window.customerDownloadQuote=async function(id){
         drawHeader();
       }
 
-      const qty=Number(item.qty||0);
-      const rate=Number(item.rate||0);
-      const amount=Number(item.amount ?? qty*rate);
-
-      doc.setFontSize(8);
       doc.setTextColor(45,50,56);
-
-      // Keep each PDF cell inside its own column so long product labels
-      // cannot overlap SPEC or HSN.
-      const productText=safeText(seerviQuotationItemLabel(item));
-      const specText=safeText(item.spec||'—');
-      const hsnText=safeText(item.hsnCode||item.hsn||'—');
-
-      const fitPdfCell=(value,maxWidth)=>{
-        let s=String(value||'');
-        if(doc.getTextWidth(s)<=maxWidth) return s;
-        while(s.length>1 && doc.getTextWidth(s+'…')>maxWidth) s=s.slice(0,-1);
-        return s+'…';
-      };
-
       doc.text(String(i+1),18,y);
-      doc.text(fitPdfCell(productText,42),30,y);
-      doc.text(fitPdfCell(specText,24),76,y);
-      doc.text(fitPdfCell(hsnText,20),104,y);
-      doc.text(String(qty),130,y);
+      doc.text(productLines.slice(0,3),30,y);
+      doc.text(safeText(item.spec||'—').slice(0,10),85,y);
+      doc.text(safeText(item.hsnCode||item.hsn||'—').slice(0,12),109,y);
+      doc.text(String(qty),132,y);
       doc.text(inr(rate),151,y);
-      doc.text(inr(amount),173,y);
+      doc.text(inr(amount),174,y);
 
       doc.setDrawColor(225,228,231);
-      doc.line(left,y+4,right,y+4);
-      y+=8;
+      doc.line(left,y+rowHeight-3,right,y+rowHeight-3);
+      y+=rowHeight;
     }
 
     y+=7;
