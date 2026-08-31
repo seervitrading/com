@@ -8845,7 +8845,11 @@ window.crmViewQuote=function(id){
       <div class="crm-qv-total crm-qv-grand"><span>Grand Total</span><strong>${money(q.grandTotal)}</strong></div>
     </div>`;
 
-  dl.onclick=()=>crmDownloadQuote(id);
+  dl.onclick=()=>q.invoiceNo
+    ? crmDownloadInvoiceByQuotation(id)
+    : crmDownloadQuote(id);
+  if(q.invoiceNo && dl) dl.textContent='DOWNLOAD INVOICE PDF';
+  else if(dl) dl.textContent='DOWNLOAD PDF';
   const m=$('crmQuoteViewModal');
   m.classList.add('show');
   m.setAttribute('aria-hidden','false');
@@ -9907,9 +9911,10 @@ window.crmConvertQuoteToInvoice=async function(id){
 
 window.crmDownloadInvoiceByQuotation=async function(id){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
-  const q=adminGlobalQuotes.find(x=>x.id===id);
+  const q=adminGlobalQuotes.find(x=>x.id===id) || crmQuotes.find(x=>x.id===id);
   if(!q){alert('Quotation not found. Refresh the Admin Panel.');return;}
-  if(!q.invoiceId){alert('Invoice record not found.');return;}
+  if(!q.invoiceNo){alert('This quotation has not been converted to an invoice yet.');return;}
+  if(!q.invoiceId){alert('Invoice record link is missing for '+q.invoiceNo+'.');return;}
   try{
     const snap=await getDoc(doc(db,SEERVI_INVOICE_COLLECTION,q.invoiceId));
     if(!snap.exists()){alert('Invoice record is missing from Firebase.');return;}
@@ -9917,6 +9922,7 @@ window.crmDownloadInvoiceByQuotation=async function(id){
     const profile=invoice.gstProfile || await seerviLoadInvoiceProfile();
     seerviGenerateSaleInvoicePDF(invoice,profile);
   }catch(e){
+    console.error('Invoice PDF failed:',e);
     alert('Invoice PDF failed: '+(e?.message||'Check Firebase connection.'));
   }
 };
@@ -10093,6 +10099,27 @@ window.crmSaveCurrentQuote = async function(){
         status:oldQ.status||'saved',
         updatedAt:serverTimestamp()
       });
+
+      // If this quotation was already converted to an invoice, keep the linked
+      // invoice snapshot synchronized with the edited quotation. Invoice number,
+      // E-Way Bill number, GST profile and original invoice date remain unchanged.
+      if(oldQ.invoiceId || oldQ.invoiceNo){
+        if(oldQ.invoiceId){
+          editBatch.update(doc(db,SEERVI_INVOICE_COLLECTION,oldQ.invoiceId),{
+            quotationId:crmEditingQuoteId,
+            quoteNo:oldQ.quoteNo||'',
+            partyId:crmPartyId,
+            customer,
+            items,
+            subtotal:pricing.subtotal,
+            gstEnabled:pricing.gstEnabled,
+            gstRate:pricing.gstRate,
+            gst:pricing.gst,
+            grandTotal:pricing.grandTotal,
+            updatedAt:serverTimestamp()
+          });
+        }
+      }
 
       // IMPORTANT: Never delete previous rate-history records when a quotation is edited.
       // Each save creates a new historical snapshot, so admin and customer can see
