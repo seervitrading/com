@@ -4635,6 +4635,7 @@ body.seervi-ai-open .float-wa{display:none!important}
 /* Keep the admin Settings modal above the page-level mobile quick navigation so its action bar is always reachable. */
 @media(max-width:600px){.admin-settings-modal{z-index:2147483000!important}.admin-settings-modal .admin-settings-footer{position:sticky;bottom:0}.admin-settings-modal .admin-settings-actions button{min-height:44px}.admin-settings-modal .admin-settings-actions button:last-child{grid-column:1/-1}}
 </style>
+<style id="seervi-activity-log-style">.seervi-activity-panel{max-width:980px;width:min(980px,calc(100vw - 24px));max-height:min(90dvh,900px)}.seervi-activity-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.09)}.seervi-activity-filters{display:flex;gap:7px;flex-wrap:wrap}.seervi-activity-filter{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:inherit;border-radius:9px;padding:8px 12px;font-size:11px;font-weight:800;letter-spacing:.08em;cursor:pointer}.seervi-activity-filter.active{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28)}.seervi-activity-list{display:grid;gap:9px;margin-top:12px;overflow:auto;max-height:62dvh;padding-right:2px}.seervi-activity-item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:13px 14px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.035)}.seervi-activity-badge{min-width:68px;text-align:center;padding:6px 7px;border-radius:8px;font-size:9px;font-weight:900;letter-spacing:.08em}.seervi-activity-badge.admin{background:rgba(255,63,129,.12);color:#ff9bbb}.seervi-activity-badge.customer{background:rgba(90,170,255,.12);color:#9bceff}.seervi-activity-main strong{display:block;font-size:12px;margin-bottom:3px}.seervi-activity-main span{display:block;font-size:11px;line-height:1.45;opacity:.72}.seervi-activity-time{font-size:10px;opacity:.55;white-space:nowrap;text-align:right}.seervi-activity-empty{padding:30px 12px;text-align:center;opacity:.62;font-size:12px}@media(max-width:600px){.seervi-activity-panel{width:calc(100vw - 12px);max-height:94dvh}.seervi-activity-list{max-height:67dvh}.seervi-activity-item{grid-template-columns:1fr;gap:7px}.seervi-activity-time{text-align:left}.seervi-activity-toolbar{align-items:flex-start;flex-direction:column}.seervi-activity-toolbar>.crm-secondary{width:100%}}</style>
 </head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -4704,6 +4705,7 @@ body.seervi-ai-open .float-wa{display:none!important}
       
       <button class="account-dashboard-option" type="button" onclick="accountDashboardNotificationPost()"><span>🔔</span><strong>NOTIFICATION POST</strong><small>Send an important notice to everyone</small></button>
       <button class="account-dashboard-option" type="button" onclick="openAdminSettings()"><span>⚙</span><strong>SETTINGS</strong><small>Control global website, Vanta & business settings</small></button>
+      <button class="account-dashboard-option" type="button" onclick="openAdminActivity()"><span>◷</span><strong>ACTIVITY</strong><small>View meaningful admin & customer activity</small></button>
       <button class="account-dashboard-option danger" type="button" onclick="accountDashboardSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your admin session</small></button>
     </div>
     <div id="customerDashboardOptions" class="account-dashboard-options" hidden aria-label="Customer dashboard options">
@@ -6534,91 +6536,69 @@ observer.observe(document.body,{subtree:true,attributes:true,attributeFilter:['c
 (function(){
 'use strict';
 let audioCtx=null;
-let unlockPromise=null;
-
 function getContext(){
   if(!audioCtx){
     const C=window.AudioContext||window.webkitAudioContext;
     if(!C)return null;
     try{audioCtx=new C();}catch(_){return null;}
   }
+  if(audioCtx.state==='suspended'){
+    try{
+      const resumeResult=audioCtx.resume();
+      if(resumeResult && typeof resumeResult.catch==='function')resumeResult.catch(()=>{});
+    }catch(_){}
+  }
   return audioCtx;
 }
-
-function warmUp(ctx){
-  if(!ctx)return Promise.resolve(false);
-  try{
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    g.gain.setValueAtTime(0.00001,ctx.currentTime);
-    o.connect(g);g.connect(ctx.destination);
-    o.start();o.stop(ctx.currentTime+0.02);
-  }catch(_){ }
-  return Promise.resolve(true);
-}
-
-function ensureRunning(){
-  const ctx=getContext();
-  if(!ctx)return Promise.resolve(null);
-  if(ctx.state==='running')return Promise.resolve(ctx);
-  if(ctx.state==='closed')return Promise.resolve(null);
-  if(!unlockPromise){
-    try{
-      unlockPromise=Promise.resolve(ctx.resume()).then(()=>warmUp(ctx)).then(()=>ctx).catch(()=>null).finally(()=>{unlockPromise=null;});
-    }catch(_){unlockPromise=Promise.resolve(null);}
-  }
-  return unlockPromise;
-}
-
 function tone(ctx,f,start,duration,volume){
-  try{
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.type='sine';o.frequency.setValueAtTime(f,start);
-    g.gain.setValueAtTime(.0001,start);
-    g.gain.exponentialRampToValueAtTime(volume,start+.012);
-    g.gain.exponentialRampToValueAtTime(.0001,start+duration);
-    o.connect(g);g.connect(ctx.destination);
-    o.start(start);o.stop(start+duration+.03);
-  }catch(_){ }
+  const o=ctx.createOscillator(),g=ctx.createGain();
+  o.type='sine';o.frequency.setValueAtTime(f,start);
+  g.gain.setValueAtTime(.0001,start);
+  g.gain.exponentialRampToValueAtTime(volume,start+.012);
+  g.gain.exponentialRampToValueAtTime(.0001,start+duration);
+  o.connect(g);g.connect(ctx.destination);
+  o.start(start);o.stop(start+duration+.03);
 }
-
 const patterns={
   login:[[523,0,.10,.045],[659,.10,.14,.05]],
   signup:[[659,0,.10,.045],[784,.09,.10,.045],[1046,.18,.16,.05]],
   quotation:[[587,0,.10,.045],[740,.09,.10,.045],[880,.18,.17,.05]],
   signout:[[880,0,.10,.04],[659,.10,.10,.04],[523,.20,.15,.045]]
 };
-
 function vibrate(kind){
   if(!navigator.vibrate)return;
   const p=kind==='quotation'?[22,35,22,35,28]:
            kind==='signup'?[18,28,18,28,24]:
            kind==='signout'?[18,30,18]:[20];
-  try{navigator.vibrate(p);}catch(_){ }
+  try{navigator.vibrate(p);}catch(_){}
 }
-
 window.Seervi=window.Seervi||{};
 window.Seervi.notify={
-  unlock:function(){return ensureRunning();},
+  unlock:function(){getContext();},
   play:function(kind){
-    const list=patterns[kind]||patterns.login;
+    const ctx=getContext(),list=patterns[kind]||patterns.login;
+    if(ctx){
+      const schedule=()=>{
+        if(!audioCtx || audioCtx.state!=='running')return;
+        const now=audioCtx.currentTime+.015;
+        list.forEach(x=>tone(audioCtx,x[0],now+x[1],x[2],x[3]));
+      };
+      if(ctx.state==='running')schedule();
+      else{
+        try{
+          const r=ctx.resume();
+          if(r && typeof r.then==='function')r.then(schedule).catch(()=>{});
+          else schedule();
+        }catch(_){}
+      }
+    }
     if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent))vibrate(kind);
-    ensureRunning().then(ctx=>{
-      if(!ctx || ctx.state!=='running')return;
-      const now=ctx.currentTime+.015;
-      list.forEach(x=>tone(ctx,x[0],now+x[1],x[2],x[3]));
-    });
   }
 };
-
-function unlockFromGesture(){
-  window.Seervi.notify.unlock();
-  document.removeEventListener('pointerdown',unlockFromGesture);
-  document.removeEventListener('touchstart',unlockFromGesture);
-  document.removeEventListener('keydown',unlockFromGesture);
-}
-document.addEventListener('pointerdown',unlockFromGesture,{passive:true});
-document.addEventListener('touchstart',unlockFromGesture,{passive:true});
-document.addEventListener('keydown',unlockFromGesture,{passive:true});
+const unlockSeerviAudio=()=>window.Seervi.notify.unlock();
+document.addEventListener('pointerdown',unlockSeerviAudio,{capture:true,passive:true});
+document.addEventListener('touchstart',unlockSeerviAudio,{capture:true,passive:true});
+document.addEventListener('keydown',unlockSeerviAudio,{capture:true,passive:true});
 })();
 </script>
 <script type="module">
@@ -7018,6 +6998,7 @@ window.submitPartySignup=async function(e){
       goHomeAfterAuth();
       // After successful signup, always land on the normal home page.
       // The dashboard remains available from MY DASHBOARD in the header.
+      await window.seerviLogActivity('customer_signed_up','auth','Customer completed sign up',publicSignupAuth.currentUser);
       closeCustomerLogin();
       goHomeAfterAuth();
       window.Seervi?.notify?.play('signup');
@@ -12458,7 +12439,31 @@ window.seerviSettingsLoadFresh=async function(){
     seerviSettingsFillForm();
   }catch(error){if(status)status.textContent='Load failed: '+(error?.message||'Check connection.');}
 };
-</script><div id="crmPartyLedgerViewModal" class="crm-quote-view-modal" aria-hidden="true"><div class="crm-quote-view-backdrop" onclick="crmClosePartyLedgerView()"></div><div class="crm-quote-view-card crm-party-ledger-view-card" role="dialog" aria-modal="true" aria-labelledby="crmPartyLedgerViewTitle"><div class="crm-quote-view-head"><div><div class="crm-kicker">PARTY LEDGER</div><h3 id="crmPartyLedgerViewTitle">Party Ledger</h3><div id="crmPartyLedgerViewMeta" class="crm-quote-view-meta"></div></div><button class="crm-close" type="button" onclick="crmClosePartyLedgerView()">×</button></div><div class="crm-ledger-view-toolbar"><div class="crm-ledger-filter-group"><button class="crm-ledger-filter active" data-range="all" type="button" onclick="crmSetPartyLedgerFilter('all')">ALL</button><button class="crm-ledger-filter" data-range="weekly" type="button" onclick="crmSetPartyLedgerFilter('weekly')">WEEKLY</button><button class="crm-ledger-filter" data-range="monthly" type="button" onclick="crmSetPartyLedgerFilter('monthly')">MONTHLY</button><button class="crm-ledger-filter" data-range="quarterly" type="button" onclick="crmSetPartyLedgerFilter('quarterly')">QUARTERLY</button><button class="crm-ledger-filter" data-range="yearly" type="button" onclick="crmSetPartyLedgerFilter('yearly')">YEARLY</button></div><button id="crmPartyLedgerDownload" class="crm-primary small" type="button" onclick="crmDownloadPartyLedger()">DOWNLOAD LEDGER</button></div><div id="crmPartyLedgerViewBody" class="crm-quote-view-body"></div></div></div><div id="crmQuoteViewModal" class="crm-quote-view-modal" aria-hidden="true"><div class="crm-quote-view-backdrop" onclick="crmCloseQuoteView()"></div><div class="crm-quote-view-card" role="dialog" aria-modal="true" aria-labelledby="crmQuoteViewTitle"><div class="crm-quote-view-head"><div><div class="crm-kicker">QUOTATION VIEW</div><h3 id="crmQuoteViewTitle">Quotation</h3><div id="crmQuoteViewMeta" class="crm-quote-view-meta"></div></div><button class="crm-close" type="button" onclick="crmCloseQuoteView()">×</button></div><div id="crmQuoteViewStatusBar" class="crm-quote-status-bar"><span>STATUS</span><select id="crmQuoteViewStatus"><option value="saved">SAVED</option><option value="sent">SENT</option><option value="confirmed">CONFIRMED</option><option value="cancelled">CANCELLED</option></select><button type="button" class="crm-secondary small" onclick="crmSaveQuoteStatus()">SAVE STATUS</button></div><div id="crmQuoteViewBody" class="crm-quote-view-body"></div><div class="crm-quote-view-actions"><button class="crm-secondary" type="button" onclick="crmCloseQuoteView()">CLOSE</button><button id="crmQuoteViewDownload" class="crm-primary" type="button">DOWNLOAD PDF</button></div></div></div><div id="seerviGlobalLoader" aria-live="polite" aria-busy="false"><div class="seervi-loader-card"><div class="seervi-loader-spinner"></div><div class="seervi-loader-title" id="seerviLoaderTitle">PLEASE WAIT</div><div class="seervi-loader-sub" id="seerviLoaderSub">Processing securely…</div></div></div><script id="seervi-professional-loading-script">
+
+/* ===== GLOBAL ACTIVITY LOG ===== */
+const SEERVI_ACTIVITY_COLLECTION='activityLogs';
+let seerviActivityFilterValue='all';
+let seerviActivityCache=[];
+function seerviActivityText(value,max=500){return String(value??'').replace(/\s+/g,' ').trim().slice(0,max);}
+window.seerviLogActivity=async function(action,module,description,actor){
+  const user=actor||crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser;if(!user)return false;
+  const admin=isAuthorisedAdmin(user), activityDb=admin?db:publicSignupDb, actorType=admin?'admin':'customer';
+  const cleanAction=seerviActivityText(action,100),cleanModule=seerviActivityText(module,80),cleanDescription=seerviActivityText(description,500);
+  if(!cleanAction||!cleanModule||!cleanDescription)return false;
+  try{await addDoc(collection(activityDb,SEERVI_ACTIVITY_COLLECTION),{actorType,actorUid:user.uid,actorEmail:user.email||'',action:cleanAction,module:cleanModule,description:cleanDescription,createdAt:serverTimestamp()});return true;}catch(error){console.warn('[Seervi] Activity log failed:',error);return false;}
+};
+function seerviActivityTimestamp(value){if(!value)return 'Just now';const d=value.toDate?value.toDate():(value instanceof Date?value:new Date(value));if(Number.isNaN(d.getTime()))return 'Just now';return d.toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}
+function seerviActivityRender(){const list=$('seerviActivityList');if(!list)return;const rows=seerviActivityCache.filter(x=>seerviActivityFilterValue==='all'||x.actorType===seerviActivityFilterValue);if(!rows.length){list.innerHTML='<div class="seervi-activity-empty">No activity found.</div>';return;}list.innerHTML=rows.map(x=>{const actor=x.actorType==='admin'?'ADMIN':'CUSTOMER',who=seerviEscHtml(x.actorEmail||actor),desc=seerviEscHtml(x.description||x.action||'Activity'),module=seerviEscHtml(x.module||''),time=seerviEscHtml(seerviActivityTimestamp(x.createdAt));return `<article class="seervi-activity-item"><div class="seervi-activity-badge ${actor.toLowerCase()}">${actor}</div><div class="seervi-activity-main"><strong>${desc}</strong><span>${who}${module?' · '+module:''}</span></div><div class="seervi-activity-time">${time}</div></article>`;}).join('');}
+window.seerviActivityFilter=function(filter){seerviActivityFilterValue=['all','admin','customer'].includes(filter)?filter:'all';document.querySelectorAll('[data-activity-filter]').forEach(btn=>btn.classList.toggle('active',btn.dataset.activityFilter===seerviActivityFilterValue));seerviActivityRender();};
+window.loadAdminActivity=async function(){if(!crmUser||!isAuthorisedAdmin(crmUser)){closeAdminActivity();openAdminPanel();return;}const status=$('seerviActivityStatus'),list=$('seerviActivityList');if(status)status.textContent='Loading activity…';if(list)list.innerHTML='';try{const snap=await getDocs(query(collection(db,SEERVI_ACTIVITY_COLLECTION),limit(250)));seerviActivityCache=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.toMillis?b.createdAt.toMillis():0)-(a.createdAt?.toMillis?a.createdAt.toMillis():0));if(status)status.textContent=`Showing ${seerviActivityCache.length} recent activities.`;seerviActivityRender();}catch(error){console.error('Activity load failed:',error);if(status)status.textContent='Activity load failed: '+(error?.message||'Check Firebase rules.');if(list)list.innerHTML='<div class="seervi-activity-empty">Could not load activity log.</div>';}};
+window.openAdminActivity=function(){if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const m=$('seerviActivityModal');if(!m)return;m.classList.add('show');m.setAttribute('aria-hidden','false');seerviActivityFilter('all');loadAdminActivity();};
+window.closeAdminActivity=function(){const m=$('seerviActivityModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');};
+function seerviWrapActivity(name,module,action,description){const original=window[name];if(typeof original!=='function'||original.__seerviActivityWrapped)return;const wrapped=async function(...args){const actor=crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser;const result=await original.apply(this,args);if(actor){const desc=typeof description==='function'?description(result,args):description;await window.seerviLogActivity(action,module,desc,actor);}return result;};wrapped.__seerviActivityWrapped=true;wrapped.__seerviActivityOriginal=original;window[name]=wrapped;}
+seerviWrapActivity('seerviCreateItem','items','item_created',r=>`Added product: ${r?.name||'New item'}`);seerviWrapActivity('seerviUpdateItem','items','item_updated',r=>`Updated product: ${r?.name||r?.id||'Item'}`);seerviWrapActivity('seerviDeleteItem','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviCreateItemCategory','categories','category_created',r=>`Added ${r?.type||'category'}: ${r?.name||'Category'}`);seerviWrapActivity('seerviUpdateItemCategory','categories','category_updated',r=>`Updated ${r?.type||'category'}: ${r?.name||r?.id||'Category'}`);seerviWrapActivity('seerviDeleteItemCategory','categories','category_deleted',(_,a)=>`Deleted category/subcategory: ${a?.[0]||'Category'}`);seerviWrapActivity('crmSaveParty','parties','party_saved',()=>`Saved party/customer: ${document.getElementById('crmPartyName')?.value||'Party'}`);seerviWrapActivity('crmSaveCurrentQuote','quotations','quotation_saved',()=>`Saved quotation`);seerviWrapActivity('crmSaveQuoteStatus','quotations','quotation_status_updated',()=>`Updated quotation status`);seerviWrapActivity('crmDeleteParty','parties','party_deleted',(_,a)=>`Deleted party/customer: ${a?.[0]||'Party'}`);seerviWrapActivity('crmDeleteQuote','quotations','quotation_deleted',(_,a)=>`Deleted quotation: ${a?.[0]||'Quotation'}`);seerviWrapActivity('crmDeleteLedgerEntry','ledger','ledger_entry_deleted',(_,a)=>`Deleted ledger entry: ${a?.[0]||'Entry'}`);seerviWrapActivity('crmAddLedgerEntry','ledger','ledger_entry_added',()=>`Added payment/ledger entry`);seerviWrapActivity('submitNotificationPost','notifications','notification_posted',()=>`Posted notification`);seerviWrapActivity('seerviToggleItemActive','items','item_status_changed',(_,a)=>`Changed item active status: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviDuplicateItem','items','item_duplicated',(_,a)=>`Duplicated product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveItemForm','items','item_saved',()=>`Saved product from Items panel`);seerviWrapActivity('seerviDeleteItemConfirm','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveAdminSettings','settings','settings_updated',()=>`Updated global website settings`);seerviWrapActivity('seerviBackupItems','backup','items_backup',()=>`Created items backup`);seerviWrapActivity('seerviBackupCategories','backup','categories_backup',()=>`Created categories backup`);seerviWrapActivity('seerviBackupQuotationsWithParty','backup','quotations_backup',()=>`Created quotations backup`);seerviWrapActivity('setInventorySubcategoryStock','inventory','subcategory_stock_updated',(_,a)=>`Updated subcategory stock: ${a?.[1]||a?.[0]||'Subcategory'}`);seerviWrapActivity('setInventoryCategoryStock','inventory','category_stock_updated',(_,a)=>`Updated category stock: ${a?.[0]||'Category'}`);seerviWrapActivity('setInventoryQuantity','inventory','inventory_quantity_updated',(_,a)=>`Updated inventory quantity: ${a?.[0]||'Item'}`);seerviWrapActivity('setInventoryStock','inventory','inventory_stock_updated',(_,a)=>`Updated stock status: ${a?.[0]||'Item'}`);seerviWrapActivity('toggleInventoryStock','inventory','inventory_stock_toggled',()=>`Toggled inventory stock status`);seerviWrapActivity('seerviBulkImport','items','bulk_items_imported',()=>`Imported products in bulk`);seerviWrapActivity('seerviCategoryBulkImport','categories','bulk_categories_imported',()=>`Imported categories/subcategories in bulk`);
+seerviWrapActivity('saveCustomerCartRequest','quotations','quotation_requested',()=>`Requested a quotation`);seerviWrapActivity('customerSaveProfile','profile','profile_updated',()=>`Updated customer profile`);seerviWrapActivity('crmSignIn','auth','admin_signed_in',()=>`Admin signed in`);seerviWrapActivity('customerSignIn','auth','customer_signed_in',()=>`Customer signed in`);
+
+</script><div id="crmPartyLedgerViewModal" class="crm-quote-view-modal" aria-hidden="true"><div class="crm-quote-view-backdrop" onclick="crmClosePartyLedgerView()"></div><div class="crm-quote-view-card crm-party-ledger-view-card" role="dialog" aria-modal="true" aria-labelledby="crmPartyLedgerViewTitle"><div class="crm-quote-view-head"><div><div class="crm-kicker">PARTY LEDGER</div><h3 id="crmPartyLedgerViewTitle">Party Ledger</h3><div id="crmPartyLedgerViewMeta" class="crm-quote-view-meta"></div></div><button class="crm-close" type="button" onclick="crmClosePartyLedgerView()">×</button></div><div class="crm-ledger-view-toolbar"><div class="crm-ledger-filter-group"><button class="crm-ledger-filter active" data-range="all" type="button" onclick="crmSetPartyLedgerFilter('all')">ALL</button><button class="crm-ledger-filter" data-range="weekly" type="button" onclick="crmSetPartyLedgerFilter('weekly')">WEEKLY</button><button class="crm-ledger-filter" data-range="monthly" type="button" onclick="crmSetPartyLedgerFilter('monthly')">MONTHLY</button><button class="crm-ledger-filter" data-range="quarterly" type="button" onclick="crmSetPartyLedgerFilter('quarterly')">QUARTERLY</button><button class="crm-ledger-filter" data-range="yearly" type="button" onclick="crmSetPartyLedgerFilter('yearly')">YEARLY</button></div><button id="crmPartyLedgerDownload" class="crm-primary small" type="button" onclick="crmDownloadPartyLedger()">DOWNLOAD LEDGER</button></div><div id="crmPartyLedgerViewBody" class="crm-quote-view-body"></div></div></div><div id="crmQuoteViewModal" class="crm-quote-view-modal" aria-hidden="true"><div class="crm-quote-view-backdrop" onclick="crmCloseQuoteView()"></div><div class="crm-quote-view-card" role="dialog" aria-modal="true" aria-labelledby="crmQuoteViewTitle"><div class="crm-quote-view-head"><div><div class="crm-kicker">QUOTATION VIEW</div><h3 id="crmQuoteViewTitle">Quotation</h3><div id="crmQuoteViewMeta" class="crm-quote-view-meta"></div></div><button class="crm-close" type="button" onclick="crmCloseQuoteView()">×</button></div><div id="crmQuoteViewStatusBar" class="crm-quote-status-bar"><span>STATUS</span><select id="crmQuoteViewStatus"><option value="saved">SAVED</option><option value="sent">SENT</option><option value="confirmed">CONFIRMED</option><option value="cancelled">CANCELLED</option></select><button type="button" class="crm-secondary small" onclick="crmSaveQuoteStatus()">SAVE STATUS</button></div><div id="crmQuoteViewBody" class="crm-quote-view-body"></div><div class="crm-quote-view-actions"><button class="crm-secondary" type="button" onclick="crmCloseQuoteView()">CLOSE</button><button id="crmQuoteViewDownload" class="crm-primary" type="button">DOWNLOAD PDF</button></div></div></div><div id="seerviActivityModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeAdminActivity()"></div><div class="crm-panel seervi-activity-panel" role="dialog" aria-modal="true" aria-labelledby="seerviActivityTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / ACTIVITY</div><h3 id="seerviActivityTitle">Activity Log</h3><div class="crm-auth-status">Meaningful updates from admin and customers.</div></div><button class="crm-close" type="button" onclick="closeAdminActivity()">×</button></div><div class="seervi-activity-toolbar"><div class="seervi-activity-filters"><button type="button" class="seervi-activity-filter active" data-activity-filter="all" onclick="seerviActivityFilter('all')">ALL</button><button type="button" class="seervi-activity-filter" data-activity-filter="admin" onclick="seerviActivityFilter('admin')">ADMIN</button><button type="button" class="seervi-activity-filter" data-activity-filter="customer" onclick="seerviActivityFilter('customer')">CUSTOMER</button></div><button type="button" class="crm-secondary small" onclick="loadAdminActivity()">↻ REFRESH</button></div><div id="seerviActivityStatus" class="crm-muted"></div><div id="seerviActivityList" class="seervi-activity-list"></div></div></div>
+<div id="seerviGlobalLoader" aria-live="polite" aria-busy="false"><div class="seervi-loader-card"><div class="seervi-loader-spinner"></div><div class="seervi-loader-title" id="seerviLoaderTitle">PLEASE WAIT</div><div class="seervi-loader-sub" id="seerviLoaderSub">Processing securely…</div></div></div><script id="seervi-professional-loading-script">
 (function(){
   const loader=document.getElementById('seerviGlobalLoader');
   const title=document.getElementById('seerviLoaderTitle');
