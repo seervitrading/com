@@ -9495,26 +9495,20 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const W=210,H=297,left=15,right=195,boxRight=195;
   let y=12;
 
-  const drawPageBorder=()=>{
+  // The outer border must wrap only the actual invoice content.
+  // It must NOT continue down through the unused lower page area.
+  const drawContentBorder=(endY)=>{
+    const bottom=Math.min(Math.max(endY+3,18),H-8);
     doc.setDrawColor(85,90,95);
-    doc.rect(left,8,180,279,'S');
-  };
-
-  const footer=()=>{
-    doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(120,128,136);
-    doc.text('Sale Invoice generated from saved GST Profile.',left+3,282);
-    doc.text('Page '+doc.internal.getNumberOfPages(),right-3,282,{align:'right'});
+    doc.rect(left,8,180,bottom-8,'S');
   };
 
   const newInvoicePage=()=>{
-    footer();
+    drawContentBorder(y);
     doc.addPage();
     doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
-    drawPageBorder();
     y=15;
   };
-
-  drawPageBorder();
 
   /* ===== COMPACT INVOICE HEADER ===== */
   doc.setTextColor(18,22,27);
@@ -9752,8 +9746,9 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
   // One final reference line only; all content remains inside the outer page border.
   doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(120,128,136);
-  doc.text('Quotation Ref: '+seerviInvoiceSafe(invoice.quoteNo||'—'),left+3,Math.min(y,280));
-  footer();
+  const refY=Math.min(y,280);
+  doc.text('Quotation Ref: '+seerviInvoiceSafe(invoice.quoteNo||'—'),left+3,refY);
+  drawContentBorder(refY+1);
 
   const filename='Seervi_Sale_Invoice_'+seerviInvoiceSafe(invoice.invoiceNo).replace(/[^a-zA-Z0-9_-]/g,'_')+'.pdf';
   doc.save(filename);
