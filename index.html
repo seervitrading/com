@@ -9652,7 +9652,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
       if(y+12>278)newInvoicePage();
       const top=y;
       doc.setFillColor(232,234,236);doc.rect(left,top,180,11,'F');
-      doc.setDrawColor(95,100,105);doc.rect(left,top,180,11,'S');
+      doc.setDrawColor(95,100,105);doc.line(left,top,right,top);
       for(let i=1;i<x.length-1;i++)doc.line(x[i],top,x[i],top+11);
       doc.line(x[3],top+5,x[3],top+11);doc.line(x[5],top+5,x[5],top+11);
       doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(30,35,40);
@@ -9666,15 +9666,17 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
       doc.text('Amount',(x[5]+x[6])/2,top+8.5,{align:'center'});
       doc.text('Total Tax',(x[6]+x[7])/2,top+4.8,{align:'center'});
       doc.text('Amount',(x[6]+x[7])/2,top+8.5,{align:'center'});
-      y=top+13;
+      y=top+14.5;
     };
     drawHsnHeader();
     for(const r of hsnRows){
       if(y+5.5>278)drawHsnHeader();
       doc.setFont('helvetica','normal');doc.setFontSize(6.4);doc.setTextColor(45,50,56);
-      // Header already provides the top boundary; draw only the row bottom.
-      // This prevents a duplicate horizontal stroke at the header/first-row join.
-      doc.setDrawColor(225,228,231);doc.line(left,y+2,right,y+2);
+      // Draw one shared boundary at each row junction.
+      doc.setDrawColor(125,130,135);
+      doc.line(left,y-3.5,right,y-3.5);
+      doc.setDrawColor(225,228,231);
+      doc.line(left,y+2,right,y+2);
       doc.setDrawColor(125,130,135);
       for(let i=1;i<x.length-1;i++)doc.line(x[i],y-3.5,x[i],y+2);
       doc.text(r.hsn,(x[0]+x[1])/2,y,{align:'center'});
@@ -9687,7 +9689,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     }
     if(y+5.5>278)drawHsnHeader();
     doc.setFillColor(232,234,236);doc.rect(left,y-3.5,180,5.5,'F');
-    doc.setDrawColor(95,100,105);doc.line(left,y+2,right,y+2);
+    doc.setDrawColor(95,100,105);
+    doc.line(left,y-3.5,right,y-3.5);
     for(let i=1;i<x.length-1;i++)doc.line(x[i],y-3.5,x[i],y+2);
     doc.setFont('helvetica','bold');doc.setFontSize(6.4);doc.setTextColor(25,30,35);
     doc.text('Total',(x[0]+x[1])/2,y,{align:'center'});
@@ -9708,7 +9711,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     if(y+boxH>279)newInvoicePage();
     const boxTop=y;
     const bankW=67,qrW=67,sigW=46;
-    doc.setDrawColor(90,96,102);doc.rect(left,boxTop,180,boxH,'S');
+    doc.setDrawColor(90,96,102);
+    doc.line(left,boxTop,right,boxTop);
     doc.line(left+bankW,boxTop,left+bankW,boxTop+boxH);
     doc.line(left+bankW+qrW,boxTop,left+bankW+qrW,boxTop+boxH);
 
@@ -9753,9 +9757,11 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     y=boxTop+boxH;
   }
 
-  // The footer box already supplies the final bottom edge. Do not draw a
-  // second horizontal line over the same edge.
-  drawContentBorder(y,hasFooterBox);
+  // Use one final bottom edge. When the bank section exists, the outer
+  // border is aligned exactly with its bottom edge.
+  const borderBottom=hasFooterBox ? y : y+3;
+  doc.setDrawColor(85,90,95);
+  doc.rect(left,8,180,borderBottom-8,'S');
 
   const filename='Seervi_Sale_Invoice_'+seerviInvoiceSafe(invoice.invoiceNo).replace(/[^a-zA-Z0-9_-]/g,'_')+'.pdf';
   doc.save(filename);
