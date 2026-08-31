@@ -9426,39 +9426,71 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const doc=new jsPDF({unit:'mm',format:'a4'});
   const W=210,H=297,left=15,right=195;
   let y=16;
+
   const footer=()=>{
     doc.setDrawColor(215,219,223);doc.line(left,274,right,274);
     doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(120,128,136);
-    doc.text('Sale Invoice generated from Seervi Trading saved GST Profile.',left,281);
+    doc.text('Sale Invoice generated from saved GST Profile.',left,281);
     doc.text('Page '+doc.internal.getNumberOfPages(),right,286,{align:'right'});
   };
-  doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
 
-  doc.setTextColor(18,22,27);doc.setFont('helvetica','bold');doc.setFontSize(21);
-  doc.text(seerviInvoiceSafe(profile.businessName||'SEERVI TRADING').slice(0,52),left,y);
-  doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('SALE INVOICE',right,y,{align:'right'});
-  doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(105,113,122);
-  doc.text('Invoice No: '+seerviInvoiceSafe(invoice.invoiceNo),right,y+7,{align:'right'});
-  doc.text('Date: '+(invoice.dateISO?new Date(invoice.dateISO).toLocaleDateString('en-IN'):new Date().toLocaleDateString('en-IN')),right,y+13,{align:'right'});
+  const drawInvoiceTop=()=>{
+    doc.setFillColor(255,255,255);doc.rect(0,0,W,58,'F');
 
-  y=35;doc.setDrawColor(215,219,223);doc.line(left,y,right,y);y+=8;
-  doc.setTextColor(18,22,27);doc.setFont('helvetica','bold');doc.setFontSize(9);
-  doc.text('SELLER / GST PROFILE',left,y);y+=6;
-  doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(80,88,97);
-  doc.text('Business: '+seerviInvoiceSafe(profile.businessName),left,y);
-  doc.text('GSTIN: '+seerviInvoiceSafe(profile.gstNumber||'—'),105,y);y+=5;
-  if(profile.personName)doc.text('Contact Person: '+seerviInvoiceSafe(profile.personName),left,y);
-  if(profile.pan)doc.text('PAN: '+seerviInvoiceSafe(profile.pan),105,y);
-  y+=5;
-  if(profile.phone)doc.text('Phone / WhatsApp: '+seerviInvoiceSafe(profile.phone),left,y);
-  if(profile.email)doc.text('Email: '+seerviInvoiceSafe(profile.email),105,y);
-  y+=5;
-  const sellerAddress=[profile.address,profile.city,profile.state,profile.pincode].filter(Boolean).join(', ');
-  const sellerLines=doc.splitTextToSize('Address: '+seerviInvoiceSafe(sellerAddress||'—'),82);
-  doc.text(sellerLines,left,y);
-  if(profile.stateCode)doc.text('State Code: '+seerviInvoiceSafe(profile.stateCode),105,y);
-  y+=Math.max(9,sellerLines.length*4.3);
+    // LEFT: complete GST/business profile.
+    doc.setTextColor(18,22,27);
+    doc.setFont('helvetica','bold');doc.setFontSize(16);
+    doc.text(seerviInvoiceSafe(profile.businessName||'SEERVI TRADING').slice(0,55),left,y);
 
+    doc.setFont('helvetica','normal');doc.setFontSize(8.3);doc.setTextColor(75,83,92);
+    let ly=y+7;
+    doc.text('GSTIN: '+seerviInvoiceSafe(profile.gstNumber||'—'),left,ly);
+    if(profile.pan)doc.text('PAN: '+seerviInvoiceSafe(profile.pan),left+65,ly);
+    ly+=5;
+
+    if(profile.personName)doc.text('Contact Person: '+seerviInvoiceSafe(profile.personName),left,ly);
+    if(profile.phone)doc.text('Phone / WhatsApp: '+seerviInvoiceSafe(profile.phone),left+65,ly);
+    ly+=5;
+
+    if(profile.email)doc.text('Email: '+seerviInvoiceSafe(profile.email).slice(0,48),left,ly);
+    if(profile.stateCode)doc.text('State Code: '+seerviInvoiceSafe(profile.stateCode),left+65,ly);
+    ly+=5;
+
+    const sellerAddress=[profile.address,profile.city,profile.state,profile.pincode].filter(Boolean).join(', ');
+    const sellerLines=doc.splitTextToSize('Address: '+seerviInvoiceSafe(sellerAddress||'—'),78);
+    doc.text(sellerLines,left,ly);
+
+    // RIGHT: invoice identity.
+    const rx=right;
+    doc.setFont('helvetica','bold');doc.setFontSize(14);doc.setTextColor(18,22,27);
+    doc.text('SALE INVOICE',rx,20,{align:'right'});
+
+    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(55,62,70);
+    doc.text('Invoice No:',rx-49,29);
+    doc.setFont('helvetica','normal');
+    doc.text(seerviInvoiceSafe(invoice.invoiceNo||'—'),rx,29,{align:'right'});
+
+    doc.setFont('helvetica','bold');
+    doc.text('Date:',rx-49,36);
+    doc.setFont('helvetica','normal');
+    doc.text(invoice.dateISO?new Date(invoice.dateISO).toLocaleDateString('en-IN'):new Date().toLocaleDateString('en-IN'),rx,36,{align:'right'});
+
+    if(invoice.ewayBillNo){
+      doc.setFont('helvetica','bold');
+      doc.text('E-Way Bill No:',rx-49,43);
+      doc.setFont('helvetica','normal');
+      doc.text(seerviInvoiceSafe(invoice.ewayBillNo),rx,43,{align:'right'});
+    }
+
+    // The single separator line requested by the user.
+    const lineY=Math.max(54,ly+Math.max(0,sellerLines.length-1)*4.3+5);
+    doc.setDrawColor(215,219,223);doc.line(left,lineY,right,lineY);
+    y=lineY+8;
+  };
+
+  drawInvoiceTop();
+
+  // BILL TO / CUSTOMER section remains below the new GST/invoice header.
   doc.setTextColor(18,22,27);doc.setFont('helvetica','bold');doc.setFontSize(9);
   doc.text('BILL TO / CUSTOMER',left,y);y+=6;
   doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(80,88,97);
@@ -9469,40 +9501,72 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   doc.text('Email: '+seerviInvoiceSafe(c.email||'—').slice(0,45),105,y);y+=5;
   doc.text('City: '+seerviInvoiceSafe(c.city||'—'),left,y);y+=5;
   const customerAddress=seerviInvoiceSafe(c.address||c.fullAddress||'—');
-  const cLines=doc.splitTextToSize('Address: '+customerAddress,180);doc.text(cLines,left,y);y+=Math.max(7,cLines.length*4.3);
+  const cLines=doc.splitTextToSize('Address: '+customerAddress,180);
+  doc.text(cLines,left,y);y+=Math.max(7,cLines.length*4.3);
 
   const items=invoice.items||[];
   const drawHeader=()=>{
-    if(y>247){footer();doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=18;}
+    if(y>247){
+      footer();doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=18;
+    }
     doc.setFillColor(242,244,246);doc.roundedRect(left,y-5,180,9,1,1,'F');
     doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(30,35,40);
-    doc.text('SR',18,y);doc.text('PRODUCT / MODEL',30,y);doc.text('SPEC',85,y);
-    doc.text('HSN',109,y);doc.text('QTY',132,y);doc.text('RATE',151,y);doc.text('AMOUNT',174,y);
+    doc.text('SR',18,y);
+    doc.text('PRODUCT / MODEL',30,y);
+    doc.text('SPEC',85,y);
+    doc.text('HSN',109,y);
+    doc.text('QTY',132,y);
+    doc.text('RATE',151,y);
+    doc.text('AMOUNT',174,y);
     y+=8;doc.setFont('helvetica','normal');
   };
   drawHeader();
+
   for(let i=0;i<items.length;i++){
     const item=items[i],qty=Number(item.qty||0),rate=Number(item.rate||0),amount=Number(item.amount??qty*rate);
     const productLines=doc.splitTextToSize(seerviInvoiceSafe(item.model||item.name||'Item'),52);
     const rowLines=Math.min(productLines.length,3),rowHeight=Math.max(8,rowLines*4.3+3);
-    if(y+rowHeight>258){footer();doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=20;drawHeader();}
+
+    if(y+rowHeight>258){
+      footer();doc.addPage();doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');y=20;drawHeader();
+    }
+
     doc.setFontSize(8);doc.setTextColor(45,50,56);
-    doc.text(String(i+1),18,y);doc.text(productLines.slice(0,3),30,y);
+    doc.text(String(i+1),18,y);
+    doc.text(productLines.slice(0,3),30,y);
     doc.text(seerviInvoiceSafe(item.spec||item.thickness||'—').slice(0,10),85,y);
     doc.text(seerviInvoiceSafe(item.hsnCode||item.hsn||'—').slice(0,12),109,y);
-    doc.text(String(qty),132,y);doc.text(seerviInvoiceInr(rate),151,y);doc.text(seerviInvoiceInr(amount),174,y);
-    doc.setDrawColor(225,228,231);doc.line(left,y+rowHeight-3,right,y+rowHeight-3);y+=rowHeight;
+    doc.text(String(qty),132,y);
+    doc.text(seerviInvoiceInr(rate),151,y);
+    doc.text(seerviInvoiceInr(amount),174,y);
+
+    doc.setDrawColor(225,228,231);
+    doc.line(left,y+rowHeight-3,right,y+rowHeight-3);
+    y+=rowHeight;
   }
 
-  y+=7;const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
+  y+=7;
+  const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
   doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(105,113,122);
-  doc.text('Subtotal',145,y);doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(subtotal),right,y,{align:'right'});y+=7;
-  if(invoice.gstEnabled){doc.setTextColor(105,113,122);doc.text('GST ('+Number(invoice.gstRate||0)+'%)',145,y);doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(gst),right,y,{align:'right'});y+=7;}
-  doc.setDrawColor(40,45,50);doc.line(135,y-2,right,y-2);doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(18,22,27);
-  doc.text('GRAND TOTAL',128,y+6);doc.text(seerviInvoiceInr(grand),right,y+6,{align:'right'});y+=18;
+  doc.text('Subtotal',145,y);
+  doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(subtotal),right,y,{align:'right'});y+=7;
+
+  if(invoice.gstEnabled){
+    doc.setTextColor(105,113,122);
+    doc.text('GST ('+Number(invoice.gstRate||0)+'%)',145,y);
+    doc.setTextColor(25,30,35);
+    doc.text(seerviInvoiceInr(gst),right,y,{align:'right'});y+=7;
+  }
+
+  doc.setDrawColor(40,45,50);doc.line(135,y-2,right,y-2);
+  doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(18,22,27);
+  doc.text('GRAND TOTAL',128,y+6);
+  doc.text(seerviInvoiceInr(grand),right,y+6,{align:'right'});y+=18;
+
   doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(105,113,122);
   doc.text('Quotation Ref: '+seerviInvoiceSafe(invoice.quoteNo||'—'),left,y);
   footer();
+
   const filename='Seervi_Sale_Invoice_'+seerviInvoiceSafe(invoice.invoiceNo).replace(/[^a-zA-Z0-9_-]/g,'_')+'.pdf';
   doc.save(filename);
 }
@@ -9529,8 +9593,11 @@ window.crmConvertQuoteToInvoice=async function(id){
   if(!invoiceNo){alert('Invoice number is required.');return;}
   if(await seerviInvoiceNumberExists(invoiceNo)){alert('Invoice number '+invoiceNo+' already exists. Please use another number.');return;}
 
+  const ewayBillNo=String(window.prompt('Enter E-Way Bill Number (optional):','')||'').trim();
+
   const invoice={
     invoiceNo,
+    ewayBillNo,
     quotationId:q.id,
     quoteNo:q.quoteNo||'',
     dateISO:new Date().toISOString(),
