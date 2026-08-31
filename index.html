@@ -4653,6 +4653,9 @@ body.seervi-ai-open .float-wa{display:none!important}
   .gst-profile-footer button{flex:1;min-height:44px}
 }
 </style>
+<style id="seervi-gst-bank-qr-style">
+.gst-profile-panel .admin-settings-help{margin:0 0 12px;color:#89929e;font-size:12px;line-height:1.55}
+</style>
 <style id="seervi-activity-log-style">.seervi-activity-panel{max-width:980px;width:min(980px,calc(100vw - 24px));max-height:min(90dvh,900px)}.seervi-activity-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.09)}.seervi-activity-filters{display:flex;gap:7px;flex-wrap:wrap}.seervi-activity-filter{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:inherit;border-radius:9px;padding:8px 12px;font-size:11px;font-weight:800;letter-spacing:.08em;cursor:pointer}.seervi-activity-filter.active{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28)}.seervi-activity-list{display:grid;gap:9px;margin-top:12px;overflow:auto;max-height:62dvh;padding-right:2px}.seervi-activity-item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:13px 14px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.035)}.seervi-activity-badge{min-width:68px;text-align:center;padding:6px 7px;border-radius:8px;font-size:9px;font-weight:900;letter-spacing:.08em}.seervi-activity-badge.admin{background:rgba(255,63,129,.12);color:#ff9bbb}.seervi-activity-badge.customer{background:rgba(90,170,255,.12);color:#9bceff}.seervi-activity-main strong{display:block;font-size:12px;margin-bottom:3px}.seervi-activity-main span{display:block;font-size:11px;line-height:1.45;opacity:.72}.seervi-activity-time{font-size:10px;opacity:.55;white-space:nowrap;text-align:right}.seervi-activity-empty{padding:30px 12px;text-align:center;opacity:.62;font-size:12px}@media(max-width:600px){.seervi-activity-panel{width:calc(100vw - 12px);max-height:94dvh}.seervi-activity-list{max-height:67dvh}.seervi-activity-item{grid-template-columns:1fr;gap:7px}.seervi-activity-time{text-align:left}.seervi-activity-toolbar{align-items:flex-start;flex-direction:column}.seervi-activity-toolbar>.crm-secondary{width:100%}}</style>
 </head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
@@ -4762,6 +4765,21 @@ body.seervi-ai-open .float-wa{display:none!important}
           <label>Pincode<input id="gstPincode" type="text" inputmode="numeric" maxlength="10" placeholder="Pincode"></label>
         </div>
       </section>
+
+      <section class="admin-settings-section">
+        <div class="crm-section-title">BANK DETAILS / PAYMENT</div>
+        <p class="admin-settings-help">Saved in Firebase and printed at the bottom of Sale Invoices. UPI ID is used to generate the payment QR code.</p>
+        <div class="admin-settings-grid">
+          <label>Account Holder Name<input id="gstBankAccountName" type="text" maxlength="160" placeholder="Account Holder Name"></label>
+          <label>Bank Name<input id="gstBankName" type="text" maxlength="160" placeholder="Bank Name"></label>
+          <label>Account Number<input id="gstBankAccountNumber" type="text" inputmode="numeric" maxlength="40" placeholder="Account Number"></label>
+          <label>IFSC Code<input id="gstBankIfsc" type="text" maxlength="20" placeholder="IFSC Code"></label>
+          <label>Branch<input id="gstBankBranch" type="text" maxlength="120" placeholder="Branch"></label>
+          <label>UPI ID<input id="gstUpiId" type="text" maxlength="160" placeholder="example@bank"></label>
+          <label>Authorised Signatory Name<input id="gstSignatoryName" type="text" maxlength="120" placeholder="Signatory Name"></label>
+        </div>
+      </section>
+
       <div id="gstProfileStatus" class="crm-auth-status">GST Profile</div>
     </div>
     <div class="gst-profile-footer">
@@ -6670,6 +6688,7 @@ document.addEventListener('touchstart',unlockSeerviAudio,{capture:true,passive:t
 document.addEventListener('keydown',unlockSeerviAudio,{capture:true,passive:true});
 })();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import {
@@ -9305,7 +9324,14 @@ const SEERVI_GST_PROFILE_DEFAULTS={
   city:'',
   state:'',
   stateCode:'',
-  pincode:''
+  pincode:'',
+  bankAccountName:'',
+  bankName:'',
+  bankAccountNumber:'',
+  bankIfsc:'',
+  bankBranch:'',
+  upiId:'',
+  signatoryName:''
 };
 let seerviGstProfile={...SEERVI_GST_PROFILE_DEFAULTS};
 
@@ -9322,7 +9348,10 @@ function seerviGstFillForm(){
   const map={
     gstBusinessName:s.businessName,gstNumber:s.gstNumber,gstPersonName:s.personName,
     gstPhone:s.phone,gstEmail:s.email,gstPan:s.pan,gstAddress:s.address,
-    gstCity:s.city,gstState:s.state,gstStateCode:s.stateCode,gstPincode:s.pincode
+    gstCity:s.city,gstState:s.state,gstStateCode:s.stateCode,gstPincode:s.pincode,
+    gstBankAccountName:s.bankAccountName,gstBankName:s.bankName,
+    gstBankAccountNumber:s.bankAccountNumber,gstBankIfsc:s.bankIfsc,
+    gstBankBranch:s.bankBranch,gstUpiId:s.upiId,gstSignatoryName:s.signatoryName
   };
   Object.entries(map).forEach(([id,v])=>{const el=seerviGstField(id);if(el)el.value=v||'';});
 }
@@ -9371,7 +9400,14 @@ window.saveGstProfile=async function(){
     city:seerviGstField('gstCity')?.value,
     state:seerviGstField('gstState')?.value,
     stateCode:seerviGstField('gstStateCode')?.value,
-    pincode:seerviGstField('gstPincode')?.value
+    pincode:seerviGstField('gstPincode')?.value,
+    bankAccountName:seerviGstField('gstBankAccountName')?.value,
+    bankName:seerviGstField('gstBankName')?.value,
+    bankAccountNumber:seerviGstField('gstBankAccountNumber')?.value,
+    bankIfsc:seerviGstField('gstBankIfsc')?.value.toUpperCase(),
+    bankBranch:seerviGstField('gstBankBranch')?.value,
+    upiId:seerviGstField('gstUpiId')?.value,
+    signatoryName:seerviGstField('gstSignatoryName')?.value
   });
   const status=seerviGstField('gstProfileStatus');
   if(status)status.textContent='Saving GST profile…';
@@ -9708,6 +9744,93 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     y+=6;
     drawHsnHeader();
     drawHsnRows();
+  }
+
+  /*
+   * BANK / PAYMENT / AUTHORISED SIGNATORY
+   * Printed below the HSN/SAC summary, matching a standard invoice footer.
+   */
+  const hasBank=profile.bankAccountName||profile.bankName||profile.bankAccountNumber||profile.bankIfsc||profile.bankBranch;
+  const hasPayment=profile.upiId;
+  const hasSignatory=profile.signatoryName||profile.businessName;
+
+  if(hasBank||hasPayment||hasSignatory){
+    if(y>238){
+      footer();
+      doc.addPage();
+      doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
+      y=20;
+    }
+
+    const boxTop=y;
+    const boxH=48;
+    const bankW=68;
+    const qrW=67;
+    const sigW=45;
+
+    doc.setDrawColor(90,96,102);
+    doc.rect(left,boxTop,180,boxH,'S');
+    doc.line(left+bankW,boxTop,left+bankW,boxTop+boxH);
+    doc.line(left+bankW+qrW,boxTop,left+bankW+qrW,boxTop+boxH);
+
+    doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(30,35,40);
+    doc.text('Bank Details',left+3,boxTop+6);
+
+    doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(55,62,70);
+    let by=boxTop+12;
+    const bankLine=(label,value)=>{
+      if(value){
+        doc.setFont('helvetica','normal');doc.text(label,left+3,by);
+        doc.text(seerviInvoiceSafe(value).slice(0,28),left+24,by);
+        by+=5;
+      }
+    };
+    bankLine('Name:',profile.bankAccountName);
+    bankLine('IFSC Code:',profile.bankIfsc);
+    bankLine('Account No:',profile.bankAccountNumber);
+    bankLine('Bank:',profile.bankName);
+    bankLine('Branch:',profile.bankBranch);
+
+    // Payment QR: generated from the saved UPI ID, no payment amount is embedded.
+    const qrCenterX=left+bankW+qrW/2;
+    doc.setFont('helvetica','bold');doc.setFontSize(8.5);
+    doc.text('Payment QR Code',left+bankW+3,boxTop+6);
+    if(profile.upiId){
+      doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+      doc.text('UPI ID:',left+bankW+3,boxTop+12);
+      doc.text(seerviInvoiceSafe(profile.upiId).slice(0,32),left+bankW+22,boxTop+12);
+
+      if(window.QRious){
+        try{
+          const qrCanvas=document.createElement('canvas');
+          new QRious({
+            element:qrCanvas,
+            value:'upi://pay?pa='+encodeURIComponent(profile.upiId)+'&pn='+encodeURIComponent(profile.businessName||'Seervi Trading'),
+            size:220,
+            level:'M'
+          });
+          const qrData=qrCanvas.toDataURL('image/png');
+          doc.addImage(qrData,'PNG',qrCenterX-14,boxTop+16,28,28);
+        }catch(qrErr){
+          console.warn('QR generation failed:',qrErr);
+        }
+      }
+    }
+
+    doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(90,96,102);
+    doc.text('Scan to pay via UPI',qrCenterX,boxTop+45,{align:'center'});
+
+    const sigCenter=left+bankW+qrW+sigW/2;
+    doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(90,96,102);
+    doc.text('For '+seerviInvoiceSafe(profile.businessName||'').slice(0,28),sigCenter,boxTop+36,{align:'center'});
+    doc.setFont('helvetica','bold');doc.setFontSize(8);
+    doc.text('Authorised Signatory',sigCenter,boxTop+42,{align:'center'});
+    if(profile.signatoryName){
+      doc.setFont('helvetica','normal');doc.setFontSize(7);
+      doc.text(seerviInvoiceSafe(profile.signatoryName).slice(0,28),sigCenter,boxTop+46,{align:'center'});
+    }
+
+    y=boxTop+boxH+8;
   }
 
   doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(105,113,122);
