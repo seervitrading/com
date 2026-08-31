@@ -8921,10 +8921,24 @@ window.crmDownloadQuote=async function(id){
 
       doc.setFontSize(8);
       doc.setTextColor(45,50,56);
+
+      // Keep each PDF cell inside its own column so long product labels
+      // cannot overlap SPEC or HSN.
+      const productText=safeText(seerviQuotationItemLabel(item));
+      const specText=safeText(item.spec||'—');
+      const hsnText=safeText(item.hsnCode||item.hsn||'—');
+
+      const fitPdfCell=(value,maxWidth)=>{
+        let s=String(value||'');
+        if(doc.getTextWidth(s)<=maxWidth) return s;
+        while(s.length>1 && doc.getTextWidth(s+'…')>maxWidth) s=s.slice(0,-1);
+        return s+'…';
+      };
+
       doc.text(String(i+1),18,y);
-      doc.text(safeText(seerviQuotationItemLabel(item)).slice(0,34),30,y);
-      doc.text(safeText(item.spec||'—').slice(0,10),76,y);
-      doc.text(safeText(item.hsnCode||item.hsn||'—').slice(0,12),104,y);
+      doc.text(fitPdfCell(productText,42),30,y);
+      doc.text(fitPdfCell(specText,24),76,y);
+      doc.text(fitPdfCell(hsnText,20),104,y);
       doc.text(String(qty),130,y);
       doc.text(inr(rate),151,y);
       doc.text(inr(amount),173,y);
@@ -9141,10 +9155,24 @@ window.customerDownloadQuote=async function(id){
 
       doc.setFontSize(8);
       doc.setTextColor(45,50,56);
+
+      // Keep each PDF cell inside its own column so long product labels
+      // cannot overlap SPEC or HSN.
+      const productText=safeText(seerviQuotationItemLabel(item));
+      const specText=safeText(item.spec||'—');
+      const hsnText=safeText(item.hsnCode||item.hsn||'—');
+
+      const fitPdfCell=(value,maxWidth)=>{
+        let s=String(value||'');
+        if(doc.getTextWidth(s)<=maxWidth) return s;
+        while(s.length>1 && doc.getTextWidth(s+'…')>maxWidth) s=s.slice(0,-1);
+        return s+'…';
+      };
+
       doc.text(String(i+1),18,y);
-      doc.text(safeText(seerviQuotationItemLabel(item)).slice(0,34),30,y);
-      doc.text(safeText(item.spec||'—').slice(0,10),76,y);
-      doc.text(safeText(item.hsnCode||item.hsn||'—').slice(0,12),104,y);
+      doc.text(fitPdfCell(productText,42),30,y);
+      doc.text(fitPdfCell(specText,24),76,y);
+      doc.text(fitPdfCell(hsnText,20),104,y);
       doc.text(String(qty),130,y);
       doc.text(inr(rate),151,y);
       doc.text(inr(amount),173,y);
