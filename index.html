@@ -4909,7 +4909,7 @@ body.seervi-ai-open .float-wa{display:none!important}
 
 <div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-secondary admin-universal-back" type="button" onclick="seerviAdminBackToPrevious()">← BACK</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div>
 <div id="adminGlobalArea" class="admin-global-area">
-<div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, quotations or invoices and complete payment ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span>QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="invoices" onclick="adminGlobalTab('invoices')">ALL INVOICES</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalInvoices" class="admin-global-panel" hidden><div id="adminInvoicesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div>
+<div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, quotations or invoices and complete payment ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span id="adminKpiBillLabel">QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="invoices" onclick="adminGlobalTab('invoices')">ALL INVOICES</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalInvoices" class="admin-global-panel" hidden><div id="adminInvoicesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div>
 </div><div id="inventoryStockPanel" class="inventory-stock-panel" hidden>
   <div class="inventory-stock-head">
     <div class="inventory-stock-head-copy">
@@ -5741,6 +5741,14 @@ function closeCart(){
   document.getElementById('cartDrawer').classList.remove('show');
   document.getElementById('cartDrawer').setAttribute('aria-hidden','true');
   document.body.classList.remove('cart-open');
+
+  // Mobile route navigation closes the base cart once before reopening it.
+  // During quotation EDIT that internal close must NOT return to the Admin
+  // Dashboard; only the user's real cart close should do that.
+  if(window.__seerviQuoteEditOpeningCart){
+    window.__seerviQuoteEditOpeningCart=false;
+    return;
+  }
 
   if(typeof seerviHasAdminQuoteReturnState==='function' && seerviHasAdminQuoteReturnState()){
     setTimeout(function(){
@@ -8542,9 +8550,8 @@ function crmRenderAdminKpis(){
     .reduce((s,x)=>s+Number(x.amount||0),0);
   const outstanding=Math.max(0,billed+manualDebit-received);
   set('adminKpiParties',adminGlobalParties.length);
+  set('adminKpiBillLabel',seerviAdminPanelMode==='invoices'?'INVOICES':'QUOTATIONS');
   set('adminKpiQuotes',billSource.length);
-  const billKpiLabel=document.querySelector('.admin-kpi-grid .admin-kpi:nth-child(2) span');
-  if(billKpiLabel) billKpiLabel.textContent=seerviAdminPanelMode==='invoices'?'INVOICES':'QUOTATIONS';
   set('adminKpiBilled',money(billed));
   set('adminKpiReceived',money(received));
   set('adminKpiOutstanding',money(outstanding));
@@ -8733,25 +8740,12 @@ window.crmEditQuote=async function(id){
   renderCart();
   closeCRM();
 
-  // Open the cart drawer directly for an admin quotation edit.
-  // The normal openCart() wrapper is history-backed on mobile; when the
-  // quotation-edit return state is active, that wrapper can cause a brief
-  // open/close bounce and leave the user on the dashboard. Directly opening
-  // the existing drawer preserves the same cart UI without changing the
-  // normal public/customer navigation flow.
-  setTimeout(()=>{
-    try{
-      const cart=document.getElementById('cartDrawer');
-      if(!cart)return;
-      cart.classList.add('show');
-      cart.setAttribute('aria-hidden','false');
-      document.body.classList.add('cart-open');
-      renderCart();
-      renderCartPartySelector();
-    }catch(e){
-      console.warn('Admin quotation edit cart open failed:',e);
-    }
-  },0);
+  // Mobile openCart() internally closes the current cart during route
+  // navigation. Suppress the quotation-edit return handler for that one
+  // internal close; the return-to-dashboard state remains active for the
+  // user's actual cart close.
+  window.__seerviQuoteEditOpeningCart=true;
+  openCart();
 };
 
 let crmPartyLedgerState={partyId:null,party:null,transactions:[],filter:'all'};
@@ -14456,15 +14450,10 @@ function seerviShowSaveSuccess(message){
     if(cart){cart.removeAttribute('onclick');cart.onclick=function(e){e.preventDefault();navigate('cart');};}
   }
   function ensureInitialState(){
-    const s=history.state;
-    if(!(s && s[STATE_KEY])){
-      const hash=(location.hash||'').toLowerCase();
-      const view=hash==='#products'||hash==='#profiles'?'products':hash==='#cart'?'cart':(isMobile()?'home':'page');
-      history.replaceState({[STATE_KEY]:true,view:view,overlay:null},'',location.href);
-      if(isMobile())showView(view);
-    }else if(isMobile()){
-      showView(s.view||'home');
-    }
+    // A fresh page load/refresh must always start at the normal Home view.
+    // In-page navigation still uses pushState after initialization.
+    history.replaceState({[STATE_KEY]:true,view:'home',overlay:null},'',location.pathname+location.search);
+    if(isMobile())showView('home');
   }
   function wrapOpen(name,base,overlay){
     if(typeof base!=='function')return;
