@@ -6915,6 +6915,7 @@ let crmQuotes = [];
 let crmRates = [];
 let crmLedger = [];
 let crmEditingQuoteId = '';
+let crmEditingInvoiceId = '';
 window.crmPdfQuoteNumberOverride = '';
 
 window.crmGetParties = () => crmParties;
@@ -9977,26 +9978,51 @@ window.crmEditInvoice=async function(id){
   const inv=adminGlobalInvoices.find(x=>x.id===id);
   if(!inv){alert('Invoice not found. Refresh the Admin Panel.');return;}
 
-  // Every invoice created by the current conversion flow is linked to its
-  // quotation. Reuse the existing quotation editor so all existing item,
-  // HSN, subcategory, pricing, inventory and PDF logic remains unchanged.
   const quoteId=inv.quotationId||inv.quoteId;
   let quoteIdToEdit=quoteId;
-
   if(!quoteIdToEdit && inv.quoteNo){
     const linkedQuote=adminGlobalQuotes.find(q=>q.quoteNo===inv.quoteNo);
     quoteIdToEdit=linkedQuote?.id||'';
   }
 
-  if(!quoteIdToEdit){
-    alert('This invoice is not linked to a quotation, so the existing quotation editor cannot safely edit it.');
+  if(quoteIdToEdit){
+    await crmEditQuote(quoteIdToEdit);
+    if(typeof seerviLogActivity==='function') await seerviLogActivity(
+      'invoice_edit_opened','invoices',
+      'Opened invoice '+(inv.invoiceNo||id)+' for editing',crmUser
+    );
     return;
   }
 
-  await crmEditQuote(quoteIdToEdit);
+  // Older invoices can remain after their quotation has been deleted.
+  // In that case edit the invoice directly through the existing Cart UI.
+  const partyId=inv.partyId||'';
+  const party=adminGlobalParties.find(p=>p.id===partyId) || crmParties.find(p=>p.id===partyId);
+  if(!party){alert('The invoice party could not be found. Refresh the Admin Panel.');return;}
+
+  crmEditingQuoteId='';
+  crmEditingInvoiceId=id;
+  seerviCart=(inv.items||[]).map(x=>({
+    type:x.type||'', name:x.name||x.model||'', model:x.model||x.name||'',
+    categoryId:x.categoryId||'', category:x.category||'',
+    subcategoryId:x.subcategoryId||'', subcategory:x.subcategory||'',
+    thickness:x.spec||x.thickness||'', hsnCode:x.hsnCode||x.hsn||'',
+    qty:Number(x.qty||0), rate:Number(x.rate||0), image:'', manual:!!x.manual
+  }));
+  localStorage.setItem('seerviCart',JSON.stringify(seerviCart));
+
+  const gstEnabled=$('gstEnabled'), gstRate=$('gstRate');
+  if(gstEnabled) gstEnabled.checked=!!inv.gstEnabled;
+  if(gstRate){gstRate.value=Number(inv.gstRate||18);gstRate.disabled=!inv.gstEnabled;}
+
+  await window.crmSelectPartyFromCart(partyId);
+  renderCart();
+  closeCRM();
+  openCart();
+
   if(typeof seerviLogActivity==='function') await seerviLogActivity(
     'invoice_edit_opened','invoices',
-    'Opened invoice '+(inv.invoiceNo||id)+' for editing',crmUser
+    'Opened invoice '+(inv.invoiceNo||id)+' for direct editing',crmUser
   );
 };
 
@@ -10241,6 +10267,51 @@ window.crmSaveCurrentQuote = async function(){
 
   let stockApplied=[];
   try{
+    // EDIT SALE INVOICE DIRECTLY when its original quotation is no longer available.
+    if(crmEditingInvoiceId){
+      const oldInv=adminGlobalInvoices.find(x=>x.id===crmEditingInvoiceId);
+      if(!oldInv){alert('Original invoice could not be found. Refresh and try again.');return;}
+
+      const editStockDeltas=inventoryQuoteDeltas(oldInv.items||[],items);
+      stockApplied=await adjustInventoryForQuoteDeltas(editStockDeltas,{strict:true});
+
+      const editInvoiceBatch=writeBatch(db);
+      editInvoiceBatch.update(doc(db,SEERVI_INVOICE_COLLECTION,crmEditingInvoiceId),{
+        partyId:crmPartyId, customer, items,
+        subtotal:pricing.subtotal, gstEnabled:pricing.gstEnabled,
+        gstRate:pricing.gstRate, gst:pricing.gst,
+        grandTotal:pricing.grandTotal, updatedAt:serverTimestamp()
+      });
+      editInvoiceBatch.set(doc(db,'parties',crmPartyId),{updatedAt:serverTimestamp()},{merge:true});
+      await editInvoiceBatch.commit();
+
+      const idx=adminGlobalInvoices.findIndex(x=>x.id===crmEditingInvoiceId);
+      if(idx>=0) adminGlobalInvoices[idx]={
+        ...adminGlobalInvoices[idx],partyId:crmPartyId,customer,items,
+        subtotal:pricing.subtotal,gstEnabled:pricing.gstEnabled,
+        gstRate:pricing.gstRate,gst:pricing.gst,grandTotal:pricing.grandTotal
+      };
+
+      const invoiceNo=oldInv.invoiceNo||'';
+      crmEditingInvoiceId='';
+      await crmRefreshParties();
+      await crmLoadPartyData(crmPartyId);
+      await crmLoadGlobalAdmin();
+      clearCart(); renderCart(); closeCart(); crmShowWorkspace();
+
+      const crmModal=document.getElementById('crmModal');
+      if(crmModal){crmModal.classList.add('show');crmModal.setAttribute('aria-hidden','false');}
+      if(typeof updateAuthNav==='function') updateAuthNav();
+      inventoryApplyToHome();
+      if(document.getElementById('inventoryStockPanel') && !document.getElementById('inventoryStockPanel').hidden) inventoryRenderAdmin();
+      seerviShowSaveSuccess('Sale Invoice '+invoiceNo+' updated successfully.');
+      window.Seervi?.notify?.play?.('quotation');
+      if(typeof seerviLogActivity==='function') await seerviLogActivity(
+        'invoice_updated','invoices','Updated Sale Invoice '+invoiceNo,crmUser
+      );
+      return;
+    }
+
     // EDIT EXISTING QUOTATION
     if(crmEditingQuoteId){
       const oldQ=crmQuotes.find(q=>q.id===crmEditingQuoteId) || adminGlobalQuotes.find(q=>q.id===crmEditingQuoteId);
@@ -10349,6 +10420,7 @@ window.crmSaveCurrentQuote = async function(){
       editBatch.set(doc(db,'parties',crmPartyId),{updatedAt:serverTimestamp()},{merge:true});
       await editBatch.commit();
       crmEditingQuoteId='';
+      crmEditingInvoiceId='';
       await crmRefreshParties();
       await crmLoadPartyData(crmPartyId);
       await crmLoadGlobalAdmin();
