@@ -1175,7 +1175,15 @@ body.admin-quote-mode .quote-actions{display:grid!important}
   .admin-invoice-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 .admin-global-area{margin:0 0 12px;padding:13px;border:1px solid #f0c66a22;border-radius:11px;background:linear-gradient(145deg,#11161c,#0b0f14)}
-.admin-global-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}.admin-global-head p{margin:0;color:#69747f;font-size:8px;line-height:1.4}.admin-global-tabs{display:flex;gap:5px;overflow:auto;border-bottom:1px solid #ffffff10;margin-bottom:10px}.admin-global-tab{border:0;background:none;color:#68737e;padding:9px 10px;font-size:8px;font-weight:900;letter-spacing:.7px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}.admin-global-tab.active{color:#fff;border-bottom-color:#f0c66a}.admin-global-list{display:flex;flex-direction:column;gap:7px;max-height:320px;overflow:auto}.admin-global-row{display:grid;grid-template-columns:1.2fr 1fr .9fr auto;gap:8px;align-items:center;padding:10px;border:1px solid #ffffff10;border-radius:8px;background:#ffffff03}.admin-global-row strong{font-size:9px}.admin-global-row span{font-size:8px;color:#7d8792}.admin-global-delete{border:1px solid #ff7f7566;background:#ff7f7510;color:#ffaaa2;border-radius:7px;padding:7px 9px;font-size:8px;font-weight:900;cursor:pointer}.admin-global-delete:hover{background:#ff7f7520}.admin-global-empty{padding:20px;text-align:center;color:#69747f;font-size:9px;border:1px dashed #ffffff12;border-radius:8px}
+.admin-global-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}.admin-global-head p{margin:0;color:#69747f;font-size:8px;line-height:1.4}/* Global Cloud Control: separate quotation and invoice ledgers */
+.admin-global-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.admin-global-tabs .admin-global-tab{white-space:nowrap}
+#adminQuoteLedgerList,#adminInvoiceLedgerList{min-width:0}
+@media(max-width:900px){
+  .admin-global-tabs{overflow-x:auto;flex-wrap:nowrap}
+  .admin-global-tabs .admin-global-tab{flex:0 0 auto}
+}
+.admin-global-tabs{display:flex;gap:5px;overflow:auto;border-bottom:1px solid #ffffff10;margin-bottom:10px}.admin-global-tab{border:0;background:none;color:#68737e;padding:9px 10px;font-size:8px;font-weight:900;letter-spacing:.7px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}.admin-global-tab.active{color:#fff;border-bottom-color:#f0c66a}.admin-global-list{display:flex;flex-direction:column;gap:7px;max-height:320px;overflow:auto}.admin-global-row{display:grid;grid-template-columns:1.2fr 1fr .9fr auto;gap:8px;align-items:center;padding:10px;border:1px solid #ffffff10;border-radius:8px;background:#ffffff03}.admin-global-row strong{font-size:9px}.admin-global-row span{font-size:8px;color:#7d8792}.admin-global-delete{border:1px solid #ff7f7566;background:#ff7f7510;color:#ffaaa2;border-radius:7px;padding:7px 9px;font-size:8px;font-weight:900;cursor:pointer}.admin-global-delete:hover{background:#ff7f7520}.admin-global-empty{padding:20px;text-align:center;color:#69747f;font-size:9px;border:1px dashed #ffffff12;border-radius:8px}
 @media(max-width:600px){.admin-nav-btn{padding:8px 9px;font-size:8px}.cart-party-admin-note{display:none}.admin-global-head{align-items:flex-start}.admin-global-row{grid-template-columns:1fr auto}.admin-global-row span:nth-child(2),.admin-global-row span:nth-child(3){grid-column:1/-1}}
 .crm-modal{position:fixed;inset:0;z-index:650;display:none;align-items:center;justify-content:center;padding:16px}
 /* Admin destructive-action confirmation */
@@ -1222,6 +1230,17 @@ body.admin-quote-mode .quote-actions{display:grid!important}
 .crm-form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
 .crm-inline-actions{display:flex;align-items:center;gap:10px;margin-top:9px}
 .crm-muted{font-size:8px;color:#65707c}
+/* Quotation / Invoice ledger and payment controls */
+.crm-payment-subtabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.crm-payment-subtab{border:1px solid rgba(255,255,255,.10);background:transparent;color:inherit;border-radius:9px;padding:9px 12px;font-weight:700;cursor:pointer}
+.crm-payment-subtab.active{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.22)}
+.crm-payment-form{display:grid;grid-template-columns:1.2fr .95fr .85fr 1.4fr auto;gap:8px;align-items:center}
+.crm-payment-form select,.crm-payment-form input{min-width:0}
+.crm-ledger-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.crm-ledger-summary>div{padding:11px 12px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.02)}
+.crm-ledger-summary small{display:block;opacity:.6;font-size:.7rem;font-weight:700;letter-spacing:.08em}
+.crm-ledger-summary strong{display:block;margin-top:4px}
+@media(max-width:900px){.crm-payment-form{grid-template-columns:1fr 1fr}.crm-payment-form button{grid-column:1/-1}.crm-ledger-summary{grid-template-columns:1fr 1fr}}
 .crm-tabs{display:flex;gap:5px;margin:13px 0 10px;border-bottom:1px solid #ffffff10;overflow:auto}
 .crm-tab{border:0;background:none;color:#66717d;padding:9px 10px;font-size:8px;font-weight:900;letter-spacing:.7px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent}
 .crm-tab.active{color:#fff;border-bottom-color:#fff}
@@ -4930,7 +4949,18 @@ body.seervi-ai-open .float-wa{display:none!important}
     <div class="admin-kpi"><span>LAST INVOICE</span><strong id="adminKpiLastInvoice">—</strong></div>
   </div>
 </div>
-<div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="invoices" onclick="adminGlobalTab('invoices')">ALL INVOICES</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalInvoices" class="admin-global-panel" hidden><div id="adminInvoicesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div>
+<div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs">
+<button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button>
+<button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button>
+<button class="admin-global-tab" data-admin-tab="invoices" onclick="adminGlobalTab('invoices')">ALL INVOICES</button>
+<button class="admin-global-tab" data-admin-tab="quoteLedger" onclick="adminGlobalTab('quoteLedger')">QUOTATION LEDGER</button>
+<button class="admin-global-tab" data-admin-tab="invoiceLedger" onclick="adminGlobalTab('invoiceLedger')">INVOICE LEDGER</button>
+</div>
+<div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div>
+<div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div>
+<div id="adminGlobalInvoices" class="admin-global-panel" hidden><div id="adminInvoicesList" class="admin-global-list"></div></div>
+<div id="adminGlobalQuoteLedger" class="admin-global-panel" hidden><div id="adminQuoteLedgerList" class="admin-global-list"></div></div>
+<div id="adminGlobalInvoiceLedger" class="admin-global-panel" hidden><div id="adminInvoiceLedgerList" class="admin-global-list"></div></div>
 </div><div id="inventoryStockPanel" class="inventory-stock-panel" hidden>
   <div class="inventory-stock-head">
     <div class="inventory-stock-head-copy">
@@ -4956,7 +4986,59 @@ body.seervi-ai-open .float-wa{display:none!important}
     </div>
   </div>
   <div id="inventoryStockGrid" class="inventory-stock-grid"></div>
-</div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs"><button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button><button class="crm-tab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button><button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button><button class="crm-tab" data-tab="ledger" onclick="crmTab('ledger')">PAYMENT ENTRY</button></div><div id="crmOverview" class="crm-tab-panel"><div class="crm-stat-grid"><div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div><div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div><div><span>LEDGER BALANCE</span><strong id="crmLedgerBalance">₹0.00</strong></div></div></div><div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div><div id="crmRates" class="crm-tab-panel" hidden><div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div><div id="crmRatesList" class="crm-list"></div></div><div id="crmLedger" class="crm-tab-panel" hidden><div class="crm-ledger-help">Quotation amounts are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.</div><div class="crm-ledger-add"><select id="crmLedgerType"><option value="debit">Debit / Sale</option><option value="credit">Credit / Payment Received</option></select><input id="crmLedgerAmount" type="number" min="0" step="0.01" placeholder="Amount ₹"><input id="crmLedgerNote" placeholder="Note / Reference"><button class="crm-primary small" type="button" onclick="crmAddLedgerEntry()">ADD ENTRY</button></div><div id="crmLedgerList" class="crm-list"></div></div></div></div>
+</div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs">
+<button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button>
+<button class="crm-tab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button>
+<button class="crm-tab" data-tab="invoices" onclick="crmTab('invoices')">INVOICES</button>
+<button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button>
+<button class="crm-tab" data-tab="quoteLedger" onclick="crmTab('quoteLedger')">QUOTATION LEDGER</button>
+<button class="crm-tab" data-tab="invoiceLedger" onclick="crmTab('invoiceLedger')">INVOICE LEDGER</button>
+<button class="crm-tab" data-tab="payment" onclick="crmTab('payment')">PAYMENT ENTRY</button>
+</div>
+<div id="crmOverview" class="crm-tab-panel">
+  <div class="crm-stat-grid">
+    <div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div>
+    <div><span>INVOICES</span><strong id="crmInvoiceCount">0</strong></div>
+    <div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div>
+    <div><span>LAST INVOICE</span><strong id="crmLastInvoice">—</strong></div>
+    <div><span>QUOTATION BALANCE</span><strong id="crmQuotationBalance">₹0.00</strong></div>
+    <div><span>INVOICE BALANCE</span><strong id="crmInvoiceBalance">₹0.00</strong></div>
+  </div>
+</div>
+<div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div>
+<div id="crmInvoices" class="crm-tab-panel" hidden><div id="crmInvoicesList" class="crm-list"></div></div>
+<div id="crmRates" class="crm-tab-panel" hidden>
+  <div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div>
+  <div id="crmRatesList" class="crm-list"></div>
+</div>
+<div id="crmQuoteLedger" class="crm-tab-panel" hidden><div id="crmQuotationLedgerList" class="crm-list"></div></div>
+<div id="crmInvoiceLedger" class="crm-tab-panel" hidden><div id="crmInvoiceLedgerList" class="crm-list"></div></div>
+<div id="crmPayment" class="crm-tab-panel" hidden>
+  <div class="crm-ledger-help">Record payments separately against quotations or sale invoices. Entries are saved in Firebase and appear in the matching ledger.</div>
+  <div class="crm-payment-subtabs">
+    <button type="button" class="crm-payment-subtab active" data-payment-source="quotation" onclick="crmPaymentSourceTab('quotation')">QUOTATION PAYMENT ENTRY</button>
+    <button type="button" class="crm-payment-subtab" data-payment-source="invoice" onclick="crmPaymentSourceTab('invoice')">INVOICE PAYMENT ENTRY</button>
+  </div>
+  <div id="crmQuotationPaymentPanel" class="crm-payment-panel">
+    <div class="crm-ledger-add crm-payment-form">
+      <select id="crmQuotationPaymentRef"><option value="">Select Quotation</option></select>
+      <select id="crmQuotationPaymentType"><option value="credit">Credit / Payment Received</option><option value="debit">Debit / Adjustment</option></select>
+      <input id="crmQuotationPaymentAmount" type="number" min="0" step="0.01" placeholder="Amount ₹">
+      <input id="crmQuotationPaymentNote" placeholder="Note / Reference">
+      <button class="crm-primary small" type="button" onclick="crmAddPaymentEntry('quotation')">ADD QUOTATION PAYMENT</button>
+    </div>
+  </div>
+  <div id="crmInvoicePaymentPanel" class="crm-payment-panel" hidden>
+    <div class="crm-ledger-add crm-payment-form">
+      <select id="crmInvoicePaymentRef"><option value="">Select Invoice</option></select>
+      <select id="crmInvoicePaymentType"><option value="credit">Credit / Payment Received</option><option value="debit">Debit / Adjustment</option></select>
+      <input id="crmInvoicePaymentAmount" type="number" min="0" step="0.01" placeholder="Amount ₹">
+      <input id="crmInvoicePaymentNote" placeholder="Note / Reference">
+      <button class="crm-primary small" type="button" onclick="crmAddPaymentEntry('invoice')">ADD INVOICE PAYMENT</button>
+    </div>
+  </div>
+</div>
+</div></div>
 <div id="seerviItemsModal" class="crm-modal seervi-items-modal" aria-hidden="true" hidden>
   <div class="crm-modal-backdrop" onclick="seerviCloseItemsPanel()"></div>
   <div class="crm-modal-card seervi-items-modal-card" role="dialog" aria-modal="true" aria-labelledby="seerviItemsModalTitle">
@@ -8099,7 +8181,7 @@ window.crmNewParty = function(){
   if(typeof renderCartPartySelector==='function') renderCartPartySelector();
   ['crmPartyName','crmPartyCompany','crmPartyPhone','crmPartyEmail','crmPartyCity','crmPartyAddress'].forEach(id=>{if($(id)) $(id).value='';});
   if($('crmPartyMeta')) $('crmPartyMeta').textContent='New party — enter details and save.';
-  crmQuotes=[];crmRates=[];crmLedger=[];
+  crmQuotes=[];crmInvoices=[];crmRates=[];crmLedger=[];
   crmRateSearchText='';
   if($('crmRateSearch')) $('crmRateSearch').value='';
   crmRenderAll();
@@ -8162,12 +8244,14 @@ window.crmSaveParty = async function(){
 
 async function crmLoadPartyData(id){
   if(!id)return;
-  const [qs,rs,ls]=await Promise.all([
+  const [qs,is,rs,ls]=await Promise.all([
     seerviCachedRead('party:'+id+':quotes:200',()=>getDocs(query(collection(db,'quotations'),where('partyId','==',id),limit(200))),8000),
+    seerviCachedRead('party:'+id+':invoices:200',()=>getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),where('partyId','==',id),limit(200))),8000),
     seerviCachedRead('party:'+id+':rates:500',()=>getDocs(query(collection(db,'rateHistory'),where('partyId','==',id),limit(500))),8000),
     seerviCachedRead('party:'+id+':ledger:500',()=>getDocs(query(collection(db,'ledger'),where('partyId','==',id),limit(500))),8000)
   ]);
   crmQuotes=qs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+  crmInvoices=is.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   crmRates=rs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   crmLedger=ls.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   crmRenderAll();
@@ -8175,19 +8259,35 @@ async function crmLoadPartyData(id){
 
 function crmRenderAll(){
   $('crmQuoteCount').textContent=crmQuotes.length;
+  $('crmInvoiceCount').textContent=crmInvoices.length;
   $('crmLastQuote').textContent=crmQuotes[0]?.quoteNo||'—';
-  // Outstanding = ALL saved quotation totals - payments received.
-  // Quotation DEBIT ledger rows are ignored here to prevent double-counting,
-  // while manual Cash/NEFT/IMPS/UPI credits reduce the balance.
-  const billed=crmQuotes.reduce((s,q)=>s+Number(q.grandTotal||0),0);
-  const manualLedger=crmLedger
-    .filter(x=>x.source!=='quotation')
-    .reduce((s,x)=>s+(x.type==='debit'?Number(x.amount||0):-Number(x.amount||0)),0);
-  const balance=billed+manualLedger;
-  $('crmLedgerBalance').textContent=money(balance);
+  $('crmLastInvoice').textContent=crmInvoices[0]?.invoiceNo||'—';
+
+  const quoteBilled=crmQuotes.reduce((s,q)=>s+Number(q.grandTotal||0),0);
+  const invoiceBilled=crmInvoices.reduce((s,q)=>s+Number(q.grandTotal||0),0);
+
+  const quotePayments=crmLedger
+    .filter(x=>x.source==='quotation' && !x.quoteId)
+    .reduce((s,x)=>s+(x.type==='credit'?-1:1)*Number(x.amount||0),0);
+  const invoicePayments=crmLedger
+    .filter(x=>x.source==='invoice' && !x.invoiceId)
+    .reduce((s,x)=>s+(x.type==='credit'?-1:1)*Number(x.amount||0),0);
+
+  // Legacy manual entries without a source remain in the quotation side so
+  // existing Firebase payment entries are not silently lost.
+  const legacyPayments=crmLedger
+    .filter(x=>!x.source && !x.quoteId && !x.invoiceId)
+    .reduce((s,x)=>s+(x.type==='credit'?-1:1)*Number(x.amount||0),0);
+
+  $('crmQuotationBalance').textContent=money(quoteBilled+quotePayments+legacyPayments);
+  $('crmInvoiceBalance').textContent=money(invoiceBilled+invoicePayments);
+
   crmRenderQuotes();
+  crmRenderInvoices();
   crmRenderRates();
-  crmRenderLedger();
+  crmRenderQuotationLedger();
+  crmRenderInvoiceLedger();
+  crmRenderPaymentEntryForms();
 }
 
 function crmRenderQuotes(){
@@ -8206,6 +8306,25 @@ function crmRenderQuotes(){
       </span>
     </div>`).join('');
 }
+
+function crmRenderInvoices(){
+  const el=$('crmInvoicesList'); if(!el)return;
+  if(!crmInvoices.length){el.innerHTML='<div class="crm-list-empty">No invoices saved for this party yet.</div>';return;}
+  el.innerHTML=crmInvoices.map(inv=>`
+    <div class="crm-row">
+      <strong>INV ${esc(inv.invoiceNo||'Invoice')}</strong>
+      <span>${esc(inv.dateISO||'')}</span>
+      <span>${esc(String((inv.items||[]).length))} items</span>
+      <span>${inv.ewayBillNo ? 'E-Way '+esc(inv.ewayBillNo) : '—'}</span>
+      <span class="amount">${money(inv.grandTotal)}</span>
+      <span class="crm-row-actions">
+        <button type="button" class="crm-mini-btn" onclick="crmViewInvoice('${esc(inv.id)}')">VIEW</button>
+        <button type="button" class="crm-mini-btn" onclick="crmDownloadInvoiceById('${esc(inv.id)}')">DOWNLOAD</button>
+      </span>
+    </div>`).join('');
+}
+
+
 
 let crmRateSearchText='';
 
@@ -8276,31 +8395,103 @@ function crmRenderRates(){
   }).join('');
 }
 
-function crmRenderLedger(){
-  const el=$('crmLedgerList'); if(!el)return;
-  // Party Ledger shows only manual debit/credit entries.
-  // Quotation amounts are already included in Outstanding from saved quotations,
-  // so the automatic quotation-DEBIT rows must not be displayed here.
-  const visible=crmLedger.filter(x=>x.source!=='quotation' && !x.quoteId && !String(x.note||'').toLowerCase().startsWith('quotation '));
-  if(!visible.length){el.innerHTML='<div class="crm-list-empty">No manual payment / ledger entries yet.</div>';return;}
-  el.innerHTML=visible.map(x=>`
-    <div class="crm-row">
-      <strong>${esc(x.type==='debit'?'DEBIT':'CREDIT')}</strong>
-      <span>${esc(x.dateISO||'')}</span>
-      <span>${esc(x.note||'')}</span>
-      <span class="${x.type==='debit'?'crm-ledger-debit':'crm-ledger-credit'}">${x.type==='debit'?'-':'+'}${money(x.amount)}</span>
-      <span class="crm-row-actions">
-        <button type="button" class="crm-mini-btn crm-danger-btn" onclick="crmDeleteLedgerEntry('${esc(x.id)}')">DELETE</button>
-      </span>
-    </div>`).join('');
+function crmLedgerRowsForSource(source){
+  const rows=[];
+  if(source==='quotation'){
+    crmQuotes.forEach(q=>rows.push({
+      id:'quote:'+q.id, locked:true, type:'debit', dateISO:q.dateISO||'',
+      label:'QUOTATION', ref:q.quoteNo||'Quotation', note:'Quotation amount',
+      amount:Number(q.grandTotal||0)
+    }));
+  }else{
+    crmInvoices.forEach(inv=>rows.push({
+      id:'invoice:'+inv.id, locked:true, type:'debit', dateISO:inv.dateISO||'',
+      label:'SALE INVOICE', ref:inv.invoiceNo||'Invoice', note:'Invoice amount',
+      amount:Number(inv.grandTotal||0)
+    }));
+  }
+
+  crmLedger
+    .filter(x=>{
+      if(x.quoteId || x.invoiceId)return false;
+      if(source==='quotation') return x.source==='quotation' || (!x.source);
+      return x.source==='invoice';
+    })
+    .forEach(x=>rows.push({
+      id:x.id, locked:false, type:x.type==='credit'?'credit':'debit',
+      dateISO:x.dateISO||'', label:x.source==='invoice'?'INVOICE PAYMENT':'QUOTATION PAYMENT',
+      ref:x.quoteNo||x.invoiceNo||'', note:x.note||'Payment / adjustment',
+      amount:Number(x.amount||0)
+    }));
+
+  return rows.sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+}
+
+function crmRenderLedgerSource(source, elId){
+  const el=$(elId); if(!el)return;
+  const rows=crmLedgerRowsForSource(source);
+  const billed=rows.filter(x=>x.locked).reduce((s,x)=>s+x.amount,0);
+  const credits=rows.filter(x=>!x.locked && x.type==='credit').reduce((s,x)=>s+x.amount,0);
+  const debits=rows.filter(x=>!x.locked && x.type==='debit').reduce((s,x)=>s+x.amount,0);
+  const balance=billed+debits-credits;
+
+  if(!rows.length){
+    el.innerHTML='<div class="crm-list-empty">No '+(source==='quotation'?'quotation':'invoice')+' ledger entries yet.</div>';
+    return;
+  }
+
+  el.innerHTML=`
+    <div class="crm-ledger-summary">
+      <div><small>${source==='quotation'?'QUOTATION':'INVOICE'} BILLED</small><strong>${money(billed)}</strong></div>
+      <div><small>PAYMENT RECEIVED</small><strong>${money(credits)}</strong></div>
+      <div><small>ADJUSTMENT / DEBIT</small><strong>${money(debits)}</strong></div>
+      <div><small>OUTSTANDING</small><strong>${money(balance)}</strong></div>
+    </div>
+    ${rows.map(x=>`
+      <div class="crm-row">
+        <strong>${esc(x.label)}</strong>
+        <span>${esc(x.dateISO||'')}</span>
+        <span>${esc(x.ref||'')}</span>
+        <span>${esc(x.note||'')}</span>
+        <span class="${x.type==='debit'?'crm-ledger-debit':'crm-ledger-credit'}">${x.type==='debit'?'-':'+'}${money(x.amount)}</span>
+        <span class="crm-row-actions">
+          ${x.locked ? '<span class="crm-muted">AUTO</span>' : `<button type="button" class="crm-mini-btn crm-danger-btn" onclick="crmDeleteLedgerEntry('${esc(x.id)}')">DELETE</button>`}
+        </span>
+      </div>`).join('')}`;
+}
+
+function crmRenderQuotationLedger(){crmRenderLedgerSource('quotation','crmQuotationLedgerList');}
+function crmRenderInvoiceLedger(){crmRenderLedgerSource('invoice','crmInvoiceLedgerList');}
+
+function crmPaymentSourceTab(source){
+  document.querySelectorAll('.crm-payment-subtab').forEach(b=>b.classList.toggle('active',b.dataset.paymentSource===source));
+  const q=$('crmQuotationPaymentPanel'), i=$('crmInvoicePaymentPanel');
+  if(q)q.hidden=source!=='quotation';
+  if(i)i.hidden=source!=='invoice';
+}
+
+function crmRenderPaymentEntryForms(){
+  const qs=$('crmQuotationPaymentRef'), is=$('crmInvoicePaymentRef');
+  if(qs){
+    const current=qs.value;
+    qs.innerHTML='<option value="">Select Quotation</option>'+crmQuotes.map(q=>`<option value="${esc(q.id)}">${esc(q.quoteNo||'Quotation')} — ${money(q.grandTotal)}</option>`).join('');
+    if(crmQuotes.some(q=>q.id===current))qs.value=current;
+  }
+  if(is){
+    const current=is.value;
+    is.innerHTML='<option value="">Select Invoice</option>'+crmInvoices.map(inv=>`<option value="${esc(inv.id)}">${esc(inv.invoiceNo||'Invoice')} — ${money(inv.grandTotal)}</option>`).join('');
+    if(crmInvoices.some(inv=>inv.id===current))is.value=current;
+  }
 }
 
 window.crmTab=function(tab){
   document.querySelectorAll('.crm-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
-  [['overview','crmOverview'],['quotes','crmQuotes'],['rates','crmRates'],['ledger','crmLedger']].forEach(([key,id])=>{
-    $(id).hidden=key!==tab;
+  [['overview','crmOverview'],['quotes','crmQuotes'],['invoices','crmInvoices'],['rates','crmRates'],['quoteLedger','crmQuoteLedger'],['invoiceLedger','crmInvoiceLedger'],['payment','crmPayment']].forEach(([key,id])=>{
+    const el=$(id); if(el)el.hidden=key!==tab;
   });
+  if(tab==='payment')crmPaymentSourceTab('quotation');
 };
+
 
 
 let adminGlobalParties=[];
@@ -8310,8 +8501,16 @@ let adminGlobalLedger=[];
 
 window.adminGlobalTab=function(tab){
   document.querySelectorAll('.admin-global-tab').forEach(b=>b.classList.toggle('active',b.dataset.adminTab===tab));
-  const map={parties:'adminGlobalParties',quotes:'adminGlobalQuotes',invoices:'adminGlobalInvoices',ledger:'adminGlobalLedger'};
+  const map={
+    parties:'adminGlobalParties',
+    quotes:'adminGlobalQuotes',
+    invoices:'adminGlobalInvoices',
+    quoteLedger:'adminGlobalQuoteLedger',
+    invoiceLedger:'adminGlobalInvoiceLedger'
+  };
   Object.entries(map).forEach(([k,id])=>{const el=$(id); if(el) el.hidden=k!==tab;});
+  if(tab==='quoteLedger') crmRenderGlobalLedgerSource('quotation','adminQuoteLedgerList');
+  if(tab==='invoiceLedger') crmRenderGlobalLedgerSource('invoice','adminInvoiceLedgerList');
 };
 
 function crmSafeEsc(s){
@@ -8440,11 +8639,97 @@ function crmRenderAdminKpis(){
   set('adminKpiLastInvoice',lastInvoice);
 }
 
+function crmRenderGlobalLedgerSource(source, elId){
+  const el=$(elId); if(!el)return;
+  const pm=new Map(adminGlobalParties.map(p=>[p.id,p]));
+  const rows=[];
+
+  if(source==='quotation'){
+    adminGlobalQuotes.forEach(q=>rows.push({
+      locked:true, type:'debit', dateISO:q.dateISO||'',
+      party:adminPartyLabel(pm.get(q.partyId))||q.customer?.company||q.customer?.name||'Unknown Party',
+      ref:q.quoteNo||'Quotation', note:'Quotation amount', amount:Number(q.grandTotal||0)
+    }));
+  }else{
+    adminGlobalInvoices.forEach(inv=>rows.push({
+      locked:true, type:'debit', dateISO:inv.dateISO||'',
+      party:adminPartyLabel(pm.get(inv.partyId))||inv.customer?.company||inv.customer?.name||'Unknown Party',
+      ref:inv.invoiceNo||'Invoice', note:'Invoice amount', amount:Number(inv.grandTotal||0)
+    }));
+  }
+
+  adminGlobalLedger.filter(x=>{
+    if(x.quoteId || x.invoiceId)return false;
+    return source==='quotation'
+      ? (x.source==='quotation' || !x.source)
+      : x.source==='invoice';
+  }).forEach(x=>{
+    const p=pm.get(x.partyId);
+    rows.push({
+      locked:false, id:x.id, type:x.type==='credit'?'credit':'debit',
+      dateISO:x.dateISO||'', party:adminPartyLabel(p)||'Unknown Party',
+      ref:x.quoteNo||x.invoiceNo||'', note:x.note||'Payment / adjustment',
+      amount:Number(x.amount||0)
+    });
+  });
+
+  rows.sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+
+  if(!rows.length){
+    el.innerHTML='<div class="admin-global-empty">No '+(source==='quotation'?'quotation':'invoice')+' ledger entries yet.</div>';
+    return;
+  }
+
+  const billed=rows.filter(x=>x.locked).reduce((s,x)=>s+x.amount,0);
+  const received=rows.filter(x=>!x.locked && x.type==='credit').reduce((s,x)=>s+x.amount,0);
+  const debit=rows.filter(x=>!x.locked && x.type==='debit').reduce((s,x)=>s+x.amount,0);
+
+  el.innerHTML=`
+    <div class="crm-ledger-summary">
+      <div><small>${source==='quotation'?'QUOTATION':'INVOICE'} BILLED</small><strong>${money(billed)}</strong></div>
+      <div><small>PAYMENT RECEIVED</small><strong>${money(received)}</strong></div>
+      <div><small>ADJUSTMENT / DEBIT</small><strong>${money(debit)}</strong></div>
+      <div><small>OUTSTANDING</small><strong>${money(billed+debit-received)}</strong></div>
+    </div>
+    ${rows.map(x=>`
+      <div class="admin-global-row">
+        <strong>${safeEsc(x.party)}</strong>
+        <span>${safeEsc(x.dateISO||'')}</span>
+        <span>${safeEsc(x.ref||'')}</span>
+        <span>${safeEsc(x.note||'')}</span>
+        <span class="${x.type==='debit'?'crm-ledger-debit':'crm-ledger-credit'}">${x.type==='debit'?'-':'+'}${money(x.amount)}</span>
+        <span class="crm-row-actions">
+          ${x.locked ? '<span class="crm-muted">AUTO</span>' : `<button class="admin-global-delete" type="button" onclick="crmDeleteGlobalLedgerEntry('${safeEsc(x.id)}','${source}')">DELETE</button>`}
+        </span>
+      </div>`).join('')}`;
+}
+
+window.crmDeleteGlobalLedgerEntry=async function(id,source){
+  if(!crmUser || !isAuthorisedAdmin(crmUser))return;
+  const entry=adminGlobalLedger.find(x=>x.id===id);
+  if(!entry){alert('Payment entry not found. Refresh the Admin Panel.');return;}
+  if(entry.quoteId || entry.invoiceId){alert('Automatic quotation/invoice entries cannot be deleted here.');return;}
+  if(!confirm('Delete this payment entry permanently from Firebase?'))return;
+  try{
+    await deleteDoc(doc(db,'ledger',id));
+    seerviInvalidateCache('admin:ledger:1000');
+    if(entry.partyId){
+      seerviInvalidateCache('party:'+entry.partyId+':ledger:500');
+    }
+    await crmLoadGlobalAdmin();
+    adminGlobalTab(source==='invoice'?'invoiceLedger':'quoteLedger');
+  }catch(e){
+    alert('Payment entry delete failed: '+(e?.message||'Check Firestore rules.'));
+  }
+};
+
 function crmRenderGlobalAdmin(){
   const safeEsc = s => String(s ?? '').replace(/[&<>"']/g,m=>({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
   }[m]));
   crmRenderAdminKpis();
+  crmRenderGlobalLedgerSource('quotation','adminQuoteLedgerList');
+  crmRenderGlobalLedgerSource('invoice','adminInvoiceLedgerList');
   const pm=new Map(adminGlobalParties.map(p=>[p.id,p]));
   const partyRows=adminGlobalParties.filter(p=>crmAdminMatches([
     p.name,p.company,p.phone,p.email,p.city,p.address
@@ -10620,44 +10905,84 @@ window.crmDeleteLedgerEntry = async function(id){
   const entry=crmLedger.find(x=>x.id===id) || adminGlobalLedger.find(x=>x.id===id);
   if(!entry){alert('Payment entry not found. Refresh the Admin Panel.');return;}
 
-  if(entry.source==='quotation' || entry.quoteId){
-    alert('Quotation entries cannot be deleted from Payment Entry.');
+  // Automatic quotation/invoice amount rows are virtual and are never
+  // stored in ledger. Only real manual payment/adjustment documents can delete.
+  if(entry.quoteId || entry.invoiceId){
+    alert('Automatic quotation/invoice entries cannot be deleted here.');
     return;
   }
 
   const ok=confirm('Delete this payment entry permanently from Firebase?');
   if(!ok)return;
-
   try{
     await deleteDoc(doc(db,'ledger',id));
+    seerviInvalidateCache('party:'+crmPartyId+':ledger:500');
+    seerviInvalidateCache('admin:ledger:1000');
     await crmLoadPartyData(crmPartyId);
     await crmLoadGlobalAdmin();
-    crmTab('ledger');
+    crmTab(entry.source==='invoice'?'invoiceLedger':'quoteLedger');
   }catch(e){
     alert('Payment entry delete failed: '+(e?.message||'Check Firestore rules.'));
   }
 };
 
-window.crmAddLedgerEntry = async function(){
+window.crmAddPaymentEntry = async function(source){
   if(!crmUser){crmShowLogin();return;}
   if(!crmPartyId){alert('Select a party first.');return;}
-  const type=$('crmLedgerType').value;
-  const amount=parseFloat($('crmLedgerAmount').value||'0');
-  const note=$('crmLedgerNote').value.trim();
+
+  const isInvoice=source==='invoice';
+  const refEl=$(isInvoice?'crmInvoicePaymentRef':'crmQuotationPaymentRef');
+  const typeEl=$(isInvoice?'crmInvoicePaymentType':'crmQuotationPaymentType');
+  const amountEl=$(isInvoice?'crmInvoicePaymentAmount':'crmQuotationPaymentAmount');
+  const noteEl=$(isInvoice?'crmInvoicePaymentNote':'crmQuotationPaymentNote');
+
+  const refId=refEl?.value||'';
+  const type=typeEl?.value||'credit';
+  const amount=parseFloat(amountEl?.value||'0');
+  const note=noteEl?.value.trim()||'';
+
+  if(!refId){alert('Select a '+(isInvoice?'sale invoice':'quotation')+' first.');return;}
   if(!Number.isFinite(amount)||amount<=0){alert('Enter a valid amount.');return;}
+
+  const refRecord=(isInvoice?crmInvoices:crmQuotes).find(x=>x.id===refId);
+  if(!refRecord){alert('Selected '+(isInvoice?'invoice':'quotation')+' was not found. Refresh the party data.');return;}
+
   try{
-    await addDoc(collection(db,'ledger'),{
-      partyId:crmPartyId,type,amount,note,
+    const data={
+      partyId:crmPartyId,
+      source,
+      type,
+      amount,
+      note,
       dateISO:new Date().toISOString().slice(0,10),
-      createdBy:crmUser.uid,createdAt:serverTimestamp()
-    });
-    $('crmLedgerAmount').value='';$('crmLedgerNote').value='';
+      createdBy:crmUser.uid,
+      createdAt:serverTimestamp()
+    };
+    if(isInvoice){
+      data.invoiceId=refId;
+      data.invoiceNo=refRecord.invoiceNo||'';
+    }else{
+      data.quoteId=refId;
+      data.quoteNo=refRecord.quoteNo||'';
+    }
+
+    await addDoc(collection(db,'ledger'),data);
+    if(amountEl)amountEl.value='';
+    if(noteEl)noteEl.value='';
     await crmLoadPartyData(crmPartyId);
-    crmTab('ledger');
+    crmTab(isInvoice?'invoiceLedger':'quoteLedger');
   }catch(e){
-    alert('Ledger entry failed: '+(e?.message||'Check Firestore rules.'));
+    alert((isInvoice?'Invoice':'Quotation')+' payment entry failed: '+(e?.message||'Check Firestore rules.'));
   }
 };
+
+// Backward-compatible entry point for any existing UI/action that calls it.
+window.crmAddLedgerEntry = async function(){
+  crmPaymentSourceTab('quotation');
+  await crmAddPaymentEntry('quotation');
+};
+
+
 /* ===== FIREBASE ITEMS / STOCK BRIDGE =====
    Stock is driven by the Firebase `items` catalogue.
    Inventory document id = Firebase item id. No legacy hard-coded catalogue taxonomy.
