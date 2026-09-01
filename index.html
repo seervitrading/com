@@ -9547,7 +9547,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
   /* ===== HEADER: FIRM DETAILS LEFT / INVOICE DETAILS RIGHT ===== */
   const headerTop=y;
-  const headerH=31;
+  const headerH=32;
   const headerSplit=105;
 
   doc.setDrawColor(150,155,160);
@@ -9555,26 +9555,33 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   doc.line(headerSplit,headerTop-4,headerSplit,headerTop+headerH-4);
 
   doc.setTextColor(18,22,27);
-  doc.setFont('helvetica','bold');doc.setFontSize(15);
-  doc.text(seerviInvoiceSafe(profile.businessName||'SEERVI TRADING').slice(0,48),left+4,headerTop+4);
+  doc.setFont('helvetica','bold');doc.setFontSize(14);
+  doc.text(seerviInvoiceSafe(profile.businessName||'SEERVI TRADING').slice(0,43),left+4,headerTop+4);
 
-  doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(75,83,92);
+  // Keep every firm-detail value inside the LEFT half so nothing crosses the divider.
+  doc.setFont('helvetica','normal');doc.setFontSize(5.9);doc.setTextColor(75,83,92);
+  const fL=left+4, fV=left+25, fR=left+48, fRV=left+70;
   let ly=headerTop+9;
-  doc.text('GSTIN: '+seerviInvoiceSafe(profile.gstNumber||'—'),left+4,ly);
-  if(profile.pan)doc.text('PAN: '+seerviInvoiceSafe(profile.pan),left+67,ly);ly+=3.7;
-  if(profile.personName)doc.text('Contact Person: '+seerviInvoiceSafe(profile.personName).slice(0,38),left+4,ly);
-  if(profile.phone)doc.text('Phone / WhatsApp: '+seerviInvoiceSafe(profile.phone).slice(0,30),left+67,ly);ly+=3.7;
-  if(profile.email)doc.text('Email: '+seerviInvoiceSafe(profile.email).slice(0,42),left+4,ly);
-  if(profile.stateCode)doc.text('State Code: '+seerviInvoiceSafe(profile.stateCode),left+67,ly);ly+=3.7;
+  const firmRows=[
+    ['GSTIN: ',profile.gstNumber||'—','PAN: ',profile.pan||'—'],
+    ['Contact Person: ',profile.personName||'—','Phone / WhatsApp: ',profile.phone||'—'],
+    ['Email: ',profile.email||'—','State Code: ',profile.stateCode||'—']
+  ];
+  for(const [l1,v1,l2,v2] of firmRows){
+    doc.text(l1,fL,ly);
+    doc.text(seerviInvoiceSafe(v1).slice(0,19),fV,ly);
+    doc.text(l2,fR,ly);
+    doc.text(seerviInvoiceSafe(v2).slice(0,13),fRV,ly);
+    ly+=3.7;
+  }
   const sellerAddress=[profile.address,profile.city,profile.state,profile.pincode].filter(Boolean).join(', ');
-  const sellerLines=doc.splitTextToSize('Address: '+seerviInvoiceSafe(sellerAddress||'—'),78);
-  doc.text(sellerLines.slice(0,2),left+4,ly);
+  doc.text('Address: '+seerviInvoiceSafe(sellerAddress||'—').slice(0,58),left+4,ly);
 
   const rx=right-4;
-  doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(18,22,27);
+  doc.setFont('helvetica','bold');doc.setFontSize(12.5);doc.setTextColor(18,22,27);
   doc.text('SALE INVOICE',headerSplit+4,headerTop+4);
 
-  doc.setFont('helvetica','bold');doc.setFontSize(7.8);doc.setTextColor(55,62,70);
+  doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(55,62,70);
   doc.text('Invoice No:',headerSplit+4,headerTop+12);
   doc.setFont('helvetica','normal');
   doc.text(seerviInvoiceSafe(invoice.invoiceNo||'—'),rx,headerTop+12,{align:'right'});
@@ -9587,7 +9594,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   doc.setFont('helvetica','normal');
   doc.text(seerviInvoiceSafe(invoice.ewayBillNo||'—').slice(0,20),rx,headerTop+24,{align:'right'});
 
-  y=headerTop+headerH+1;
+  // Single bottom edge of the header; do not draw another overlapping horizontal line.
+  y=headerTop+headerH+3;
 
   /* ===== BILL TO LEFT / SHIP TO RIGHT ===== */
   doc.setTextColor(18,22,27);doc.setFont('helvetica','bold');doc.setFontSize(8);
@@ -9667,7 +9675,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const notesH=Math.max(16,noteLines.length*3.2+9);
   const totalH=invoice.gstEnabled?24:19;
   const summaryH=Math.max(notesH,totalH);
-  const summaryTop=y-3;
+  const summaryTop=y+1;
 
   doc.setDrawColor(205,209,213);doc.rect(left,summaryTop,112,summaryH,'S');
   doc.setFont('helvetica','bold');doc.setFontSize(7.4);doc.setTextColor(35,40,45);
