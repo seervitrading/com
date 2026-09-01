@@ -10310,19 +10310,45 @@ window.crmConfirmDeleteParty=async function(){
   const submit=document.getElementById('crmDeleteConfirmSubmit');
   if(submit){submit.disabled=true;submit.textContent='DELETING…';}
   try{
-    // Remove every cloud record belonging to the party first.
+    const invoiceMode=seerviAdminPanelMode==='invoices';
+
+    // IMPORTANT: party deletion is scoped to the panel from which it was requested.
+    // Quotation Panel: quotations + quotation item/rate history + quotation payments.
+    // Invoice Panel: invoices + invoice item/rate history + invoice payments.
     const [qs,rs,ls,is]=await Promise.all([
-      getDocs(query(collection(db,'quotations'),where('partyId','==',id),limit(1000))),
+      invoiceMode
+        ? Promise.resolve({docs:[]})
+        : getDocs(query(collection(db,'quotations'),where('partyId','==',id),limit(1000))),
       getDocs(query(collection(db,'rateHistory'),where('partyId','==',id),limit(2000))),
       getDocs(query(collection(db,'ledger'),where('partyId','==',id),limit(2000))),
-      getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),where('partyId','==',id),limit(1000)))
+      invoiceMode
+        ? getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),where('partyId','==',id),limit(1000)))
+        : Promise.resolve({docs:[]})
     ]);
+
+    // Rate-history records are transactional item/rate history. Delete only
+    // the records belonging to the active panel when they carry a panel scope.
+    // Older records without a scope are retained to avoid cross-panel deletion.
+    const activeRates=rs.docs.filter(d=>{
+      const x=d.data()||{};
+      return !x.panelScope || x.panelScope===(invoiceMode?'invoices':'quotes');
+    });
+
+    // Payment entries are explicitly panel-scoped. Legacy unscoped entries
+    // are retained so deleting one panel can never delete the other panel's payments.
+    const activePayments=ls.docs.filter(d=>{
+      const x=d.data()||{};
+      return x.source!=='quotation' && !x.quoteId &&
+        (!x.panelScope || x.panelScope===(invoiceMode?'invoices':'quotes'));
+    });
+
     for(const d of qs.docs) await deleteDoc(d.ref);
-    for(const d of rs.docs) await deleteDoc(d.ref);
-    for(const d of ls.docs) await deleteDoc(d.ref);
+    for(const d of activeRates) await deleteDoc(d.ref);
+    for(const d of activePayments) await deleteDoc(d.ref);
     for(const d of is.docs) await deleteDoc(d.ref);
+
     // Keep the party profile document and Firebase Authentication account.
-    // Only transactional data (quotations, rate history and ledger/payment entries) is removed.
+    // Only the active panel's transactional data is removed.
     // This lets the customer log in again and still access/edit their profile.
     if(crmPartyId===id) crmPartyId=id;
     crmPendingDeletePartyId='';
@@ -10331,7 +10357,7 @@ window.crmConfirmDeleteParty=async function(){
     await crmRefreshParties();
     await crmLoadGlobalAdmin();
     crmNewParty();
-    seerviShowSaveSuccess('Deleted successfully.');
+    seerviShowSaveSuccess(invoiceMode?'Invoice data deleted successfully.':'Quotation data deleted successfully.');
   }catch(e){
     console.error('Party delete failed:',e);
     if(submit){submit.disabled=false;submit.textContent='DELETE';}
