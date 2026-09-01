@@ -8715,10 +8715,25 @@ window.crmEditQuote=async function(id){
     gstRate.disabled=!q.gstEnabled;
   }
 
-  await window.crmSelectPartyFromCart(q.partyId);
+  // Do not wait for the full Firebase party-history refresh before opening
+  // the cart. On mobile that async read can keep the user on the dashboard
+  // while the edit operation is already prepared. Party data is loaded in the
+  // background; the cart opens immediately.
+  try{
+    const partyLoad=window.crmSelectPartyFromCart(q.partyId);
+    if(partyLoad && typeof partyLoad.catch==='function'){
+      partyLoad.catch(e=>console.warn('Quotation edit party refresh failed:',e));
+    }
+  }catch(e){
+    console.warn('Quotation edit party selection failed:',e);
+  }
+
   renderCart();
   closeCRM();
-  openCart();
+
+  // Mobile openCart() is route-backed, so let it perform the normal #cart
+  // navigation instead of waiting on Firestore.
+  setTimeout(()=>openCart(),0);
 };
 
 let crmPartyLedgerState={partyId:null,party:null,transactions:[],filter:'all'};
