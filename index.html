@@ -8258,28 +8258,65 @@ function crmRenderRates(){
   const input=$('crmRateSearch');
   if(input && input.value!==crmRateSearchText) input.value=crmRateSearchText;
 
-  if(!crmRates.length){
+  const invoiceMode=seerviAdminPanelMode==='invoices';
+
+  /*
+   * QUOTATION PANEL:
+   *   Keep the existing Firebase rateHistory collection.
+   *
+   * INVOICE PANEL:
+   *   Do NOT reuse quotation rateHistory. Build rate history directly from
+   *   the active party's invoice item snapshots, so every rate shown here
+   *   belongs to an actual sale invoice.
+   */
+  let sourceRates=crmRates;
+
+  if(invoiceMode){
+    sourceRates=[];
+    (crmInvoices||[]).forEach(inv=>{
+      const invoiceNo=String(inv.invoiceNo||'').trim();
+      const dateISO=String(inv.dateISO||'').trim();
+      (inv.items||[]).forEach(item=>{
+        const model=String(item.productModel||item.model||item.name||item.item||'').trim();
+        if(!model)return;
+        sourceRates.push({
+          id:String(inv.id||'')+'::'+model+'::'+String(item.spec||item.thickness||''),
+          productModel:model,
+          model:model,
+          item:model,
+          spec:item.spec||item.thickness||'',
+          subcategory:item.subcategory||'',
+          rate:Number(item.rate||0),
+          qty:Number(item.qty||0),
+          dateISO,
+          invoiceNo
+        });
+      });
+    });
+  }
+
+  if(!sourceRates.length){
     el.innerHTML='<div class="crm-list-empty">No previous rates saved for this party yet.</div>';
     return;
   }
 
   const groups=new Map();
-  crmRates.forEach(r=>{
+  sourceRates.forEach(r=>{
     const model=String(r.productModel||r.model||r.item||'Item');
     const spec=String(r.spec||r.thickness||'');
     const subcategory=String(r.subcategory||'').trim();
-     const key=model+'|'+subcategory+'|'+spec;
-    if(!groups.has(key)) groups.set(key,[]);
+    const key=model+'|'+subcategory+'|'+spec;
+    if(!groups.has(key))groups.set(key,[]);
     groups.get(key).push(r);
   });
 
   const rows=[...groups.values()]
     .map(list=>list.sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||''))))
-    .filter(list=>!crmRateSearchText || list[0] && (
+    .filter(list=>!crmRateSearchText || (list[0] && (
       String(list[0].productModel||list[0].model||list[0].item||'').toLowerCase().includes(crmRateSearchText) ||
       String(list[0].spec||list[0].thickness||'').toLowerCase().includes(crmRateSearchText) ||
-       String(list[0].subcategory||'').toLowerCase().includes(crmRateSearchText)
-    ))
+      String(list[0].subcategory||'').toLowerCase().includes(crmRateSearchText)
+    )))
     .sort((a,b)=>String(b[0]?.dateISO||'').localeCompare(String(a[0]?.dateISO||'')));
 
   if(!rows.length){
@@ -8291,26 +8328,23 @@ function crmRenderRates(){
     const latest=list[0]||{};
     const model=String(latest.productModel||latest.model||latest.item||'Item');
     const spec=String(latest.spec||latest.thickness||'');
+    const subcategory=String(latest.subcategory||'');
     const details=list.map(r=>`
       <div class="rate-history-detail">
-        <span>${esc(r.dateISO||'—')}</span>
-        <span>${esc(r.quoteNo ? ('Quotation '+r.quoteNo) : (r.note||r.source||'Rate quoted'))}</span>
-        <strong class="amount">${money(r.rate)}</strong>
+        <span>${esc(r.dateISO||'—')}${invoiceMode && r.invoiceNo?' • Invoice '+esc(r.invoiceNo):''}</span>
+        <span>${esc(r.subcategory||'')}${r.spec?' • '+esc(r.spec):''}</span>
+        <strong>${money(r.rate)}</strong>
       </div>`).join('');
-
     return `<div class="rate-history-card">
       <div class="rate-history-top">
         <div>
-          <div class="rate-history-product">${esc([model,latest.subcategory].filter(Boolean).join(' — '))}</div>
-          <div class="rate-history-meta">${esc([latest.subcategory,spec].filter(Boolean).join(' · ')||'Standard specification')}</div>
+          <div class="rate-history-product">${esc(model)}</div>
+          <div class="rate-history-meta">${esc(subcategory||'')}${spec?' • '+esc(spec):''}</div>
         </div>
         <div class="rate-history-latest"><small>LATEST RATE</small>${money(latest.rate)}</div>
-        <div class="rate-history-count">${list.length} saved rate${list.length===1?'':'s'} · ${esc(latest.dateISO||'—')}</div>
+        <div class="rate-history-count">${list.length} record${list.length===1?'':'s'}</div>
       </div>
-      ${list.length>1 ? `<details class="rate-history-details" ${idx===0?'open':''}>
-        <summary>View previous rates</summary>
-        ${details}
-      </details>` : ''}
+      <div class="rate-history-details">${details}</div>
     </div>`;
   }).join('');
 }
