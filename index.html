@@ -8259,40 +8259,46 @@ function crmRenderRates(){
   if(input && input.value!==crmRateSearchText) input.value=crmRateSearchText;
 
   const invoiceMode=seerviAdminPanelMode==='invoices';
-
-  /*
-   * QUOTATION PANEL:
-   *   Keep the existing Firebase rateHistory collection.
-   *
-   * INVOICE PANEL:
-   *   Do NOT reuse quotation rateHistory. Build rate history directly from
-   *   the active party's invoice item snapshots, so every rate shown here
-   *   belongs to an actual sale invoice.
-   */
-  let sourceRates=crmRates;
+  let sourceRates=[];
 
   if(invoiceMode){
-    sourceRates=[];
+    // Only invoice-scoped rate-history records belong to the Invoice Panel.
+    // This deliberately excludes quotation rateHistory.
+    sourceRates=(crmRates||[]).filter(r=>
+      r.panelScope==='invoices' || !!r.invoiceId
+    );
+
+    // Legacy invoices created before invoice rate-history existed are shown
+    // at least once using their saved item rates. Once a new invoice save/edit
+    // creates snapshots, the immutable history records take over.
+    const knownKeys=new Set(sourceRates.map(r=>
+      String(r.invoiceId||'')+'|'+String(r.productModel||r.model||r.item||'')+'|'+
+      String(r.spec||r.thickness||'')
+    ));
     (crmInvoices||[]).forEach(inv=>{
-      const invoiceNo=String(inv.invoiceNo||'').trim();
-      const dateISO=String(inv.dateISO||'').trim();
       (inv.items||[]).forEach(item=>{
         const model=String(item.productModel||item.model||item.name||item.item||'').trim();
-        if(!model)return;
+        if(!model || Number(item.rate||0)<=0)return;
+        const spec=String(item.spec||item.thickness||'');
+        const key=String(inv.id||'')+'|'+model+'|'+spec;
+        if(knownKeys.has(key))return;
         sourceRates.push({
-          id:String(inv.id||'')+'::'+model+'::'+String(item.spec||item.thickness||''),
+          id:String(inv.id||'')+'::legacy::'+model+'::'+spec,
           productModel:model,
           model:model,
           item:model,
-          spec:item.spec||item.thickness||'',
+          spec,
           subcategory:item.subcategory||'',
           rate:Number(item.rate||0),
-          qty:Number(item.qty||0),
-          dateISO,
-          invoiceNo
+          dateISO:inv.dateISO||'',
+          invoiceNo:inv.invoiceNo||'',
+          invoiceId:inv.id||''
         });
       });
     });
+  }else{
+    // Quotation Panel keeps the existing quotation history.
+    sourceRates=(crmRates||[]).filter(r=>!r.panelScope || r.panelScope==='quotes' || !!r.quoteId);
   }
 
   if(!sourceRates.length){
@@ -8328,23 +8334,30 @@ function crmRenderRates(){
     const latest=list[0]||{};
     const model=String(latest.productModel||latest.model||latest.item||'Item');
     const spec=String(latest.spec||latest.thickness||'');
-    const subcategory=String(latest.subcategory||'');
     const details=list.map(r=>`
       <div class="rate-history-detail">
-        <span>${esc(r.dateISO||'—')}${invoiceMode && r.invoiceNo?' • Invoice '+esc(r.invoiceNo):''}</span>
-        <span>${esc(r.subcategory||'')}${r.spec?' • '+esc(r.spec):''}</span>
-        <strong>${money(r.rate)}</strong>
+        <span>${esc(r.dateISO ? new Date(r.dateISO).toLocaleDateString('en-IN') : '—')}</span>
+        <span>${esc(
+          invoiceMode
+            ? (r.invoiceNo ? 'Invoice '+r.invoiceNo : (r.note||'Invoice rate'))
+            : (r.quoteNo ? 'Quotation '+r.quoteNo : (r.note||r.source||'Rate quoted'))
+        )}</span>
+        <strong class="amount">${money(r.rate)}</strong>
       </div>`).join('');
+
     return `<div class="rate-history-card">
       <div class="rate-history-top">
         <div>
-          <div class="rate-history-product">${esc(model)}</div>
-          <div class="rate-history-meta">${esc(subcategory||'')}${spec?' • '+esc(spec):''}</div>
+          <div class="rate-history-product">${esc([model,latest.subcategory].filter(Boolean).join(' — '))}</div>
+          <div class="rate-history-meta">${esc([latest.subcategory,spec].filter(Boolean).join(' · ')||'Standard specification')}</div>
         </div>
         <div class="rate-history-latest"><small>LATEST RATE</small>${money(latest.rate)}</div>
-        <div class="rate-history-count">${list.length} record${list.length===1?'':'s'}</div>
+        <div class="rate-history-count">${list.length} saved rate${list.length===1?'':'s'} · ${esc(latest.dateISO||'—')}</div>
       </div>
-      <div class="rate-history-details">${details}</div>
+      ${list.length>1 ? `<details class="rate-history-details" ${idx===0?'open':''}>
+        <summary>View previous rates</summary>
+        ${details}
+      </details>` : ''}
     </div>`;
   }).join('');
 }
@@ -10080,13 +10093,45 @@ window.crmConvertQuoteToInvoice=async function(id){
 
   try{
     const invRef=doc(collection(db,SEERVI_INVOICE_COLLECTION));
-    await setDoc(invRef,{...invoice,createdAt:serverTimestamp()});
-    await updateDoc(doc(db,'quotations',q.id),{
+    const createInvoiceBatch=writeBatch(db);
+    createInvoiceBatch.set(invRef,{...invoice,createdAt:serverTimestamp()});
+
+    // Invoice Panel rate history: every invoice save creates its own immutable
+    // item-rate snapshots. Older snapshots are never overwritten, so changing
+    // an invoice rate later can be shown as a proper history.
+    for(const item of (invoice.items||[])){
+      if(Number(item.rate)>0){
+        const rateRef=doc(collection(db,'rateHistory'));
+        createInvoiceBatch.set(rateRef,{
+          partyId:invoice.partyId||'',
+          invoiceId:invRef.id,
+          invoiceNo:invoice.invoiceNo||'',
+          quotationId:invoice.quotationId||'',
+          quoteNo:invoice.quoteNo||'',
+          panelScope:'invoices',
+          productType:item.type||'',
+          productName:item.name||item.model||'',
+          productModel:item.model||item.name||'',
+          categoryId:item.categoryId||'',
+          category:item.category||'',
+          subcategoryId:item.subcategoryId||'',
+          subcategory:item.subcategory||'',
+          spec:item.spec||'',
+          rate:Number(item.rate||0),
+          dateISO:invoice.dateISO||new Date().toISOString(),
+          createdBy:crmUser.uid,
+          createdAt:serverTimestamp()
+        });
+      }
+    }
+
+    createInvoiceBatch.update(doc(db,'quotations',q.id),{
       invoiceId:invRef.id,
       invoiceNo,
       invoicedAt:serverTimestamp(),
       updatedAt:serverTimestamp()
     });
+    await createInvoiceBatch.commit();
     q.invoiceId=invRef.id;q.invoiceNo=invoiceNo;q.invoicedAt=new Date();
     const savedInvoiceForAdmin={id:invRef.id,...invoice,createdAt:new Date()};
     adminGlobalInvoices=[savedInvoiceForAdmin,...adminGlobalInvoices.filter(x=>x.id!==invRef.id)];
@@ -10215,6 +10260,14 @@ window.crmDeleteInvoice=async function(id){
   try{
     const quoteId=inv.quotationId||inv.quoteId;
     const batch=writeBatch(db);
+
+    // Remove only rate-history snapshots belonging to this invoice.
+    const invoiceRateSnap=await getDocs(query(
+      collection(db,'rateHistory'),
+      where('invoiceId','==',id),
+      limit(2000)
+    ));
+    for(const d of invoiceRateSnap.docs) batch.delete(d.ref);
 
     // Always delete the invoice itself.
     batch.delete(doc(db,SEERVI_INVOICE_COLLECTION,id));
@@ -10499,6 +10552,35 @@ window.crmSaveCurrentQuote = async function(){
         gstRate:pricing.gstRate, gst:pricing.gst,
         grandTotal:pricing.grandTotal, updatedAt:serverTimestamp()
       });
+
+      // Keep every invoice-rate change as a new immutable history snapshot.
+      // Never overwrite/delete the previous rate.
+      for(const item of items){
+        if(Number(item.rate)>0){
+          const rateRef=doc(collection(db,'rateHistory'));
+          editInvoiceBatch.set(rateRef,{
+            partyId:crmPartyId,
+            invoiceId:crmEditingInvoiceId,
+            invoiceNo:editInvoiceMeta.invoiceNo || oldInv.invoiceNo || '',
+            quotationId:oldInv.quotationId||oldInv.quoteId||'',
+            quoteNo:oldInv.quoteNo||'',
+            panelScope:'invoices',
+            productType:item.type||'',
+            productName:item.name||item.model||'',
+            productModel:item.model||item.name||'',
+            categoryId:item.categoryId||'',
+            category:item.category||'',
+            subcategoryId:item.subcategoryId||'',
+            subcategory:item.subcategory||'',
+            spec:item.spec||item.thickness||'',
+            rate:Number(item.rate||0),
+            dateISO:new Date().toISOString(),
+            createdBy:crmUser.uid,
+            createdAt:serverTimestamp()
+          });
+        }
+      }
+
       editInvoiceBatch.set(doc(db,'parties',crmPartyId),{updatedAt:serverTimestamp()},{merge:true});
       await editInvoiceBatch.commit();
 
