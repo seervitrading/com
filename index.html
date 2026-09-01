@@ -8576,7 +8576,7 @@ window.crmEditQuote=async function(id){
   openCart();
 };
 
-let crmPartyLedgerState={partyId:null,party:null,transactions:[],filter:'all'};
+let crmPartyLedgerState={partyId:null,party:null,transactions:[],filter:'all',type:'quotations'};
 
 window.crmClosePartyLedgerView=function(){
   const m=$('crmPartyLedgerViewModal');
@@ -8613,7 +8613,9 @@ function crmRenderPartyLedgerView(){
   const body=$('crmPartyLedgerViewBody');
   if(!body || !state.party)return;
 
-  const tx=state.transactions.filter(x=>crmPartyLedgerInRange(crmPartyLedgerDate(x),state.filter));
+  const tx=state.transactions
+    .filter(x=>x.ledgerType===state.type)
+    .filter(x=>crmPartyLedgerInRange(crmPartyLedgerDate(x),state.filter));
   const debit=tx.filter(x=>x.type==='debit').reduce((s,x)=>s+Number(x.amount||0),0);
   const credit=tx.filter(x=>x.type==='credit').reduce((s,x)=>s+Number(x.amount||0),0);
   const outstanding=debit-credit;
@@ -8642,6 +8644,12 @@ function crmRenderPartyLedgerView(){
     </table>`;
 }
 
+window.crmSetPartyLedgerType=function(type){
+  crmPartyLedgerState.type=(type==='invoices')?'invoices':'quotations';
+  document.querySelectorAll('.crm-ledger-type').forEach(b=>b.classList.toggle('active',b.dataset.ledgerType===crmPartyLedgerState.type));
+  crmRenderPartyLedgerView();
+};
+
 window.crmSetPartyLedgerFilter=function(range){
   crmPartyLedgerState.filter=range||'all';
   document.querySelectorAll('.crm-ledger-filter').forEach(b=>b.classList.toggle('active',b.dataset.range===crmPartyLedgerState.filter));
@@ -8658,31 +8666,36 @@ window.crmViewPartyLedger=function(partyId){
       date:q.dateISO||'',
       sort:q.dateISO||'',
       type:'debit',
+      ledgerType:'quotations',
       label:'QUOTATION',
       ref:q.quoteNo||'Quotation',
       note:'Quotation amount',
       amount:Number(q.grandTotal||0),
-      quoteId:q.id
+      quoteId:q.id,
+      invoiceId:''
     }));
 
-  const manualTx=adminGlobalLedger
-    .filter(x=>x.partyId===partyId && x.source!=='quotation' && !x.quoteId)
-    .map(x=>({
-      date:x.dateISO||'',
-      sort:x.dateISO||'',
-      type:x.type==='credit'?'credit':'debit',
-      label:x.type==='credit'?'PAYMENT':'DEBIT',
-      ref:'',
-      note:x.note||'Manual ledger entry',
-      amount:Number(x.amount||0),
-      quoteId:''
+  const invoiceTx=adminGlobalInvoices
+    .filter(inv=>inv.partyId===partyId)
+    .map(inv=>({
+      date:inv.dateISO||'',
+      sort:inv.dateISO||'',
+      type:'debit',
+      ledgerType:'invoices',
+      label:'SALE INVOICE',
+      ref:inv.invoiceNo||'Invoice',
+      note:inv.ewayBillNo ? 'Invoice amount · E-Way Bill '+inv.ewayBillNo : 'Invoice amount',
+      amount:Number(inv.grandTotal||0),
+      quoteId:inv.quotationId||'',
+      invoiceId:inv.id
     }));
 
   crmPartyLedgerState={
     partyId,
     party,
-    transactions:[...quoteTx,...manualTx].sort((a,b)=>String(b.sort).localeCompare(String(a.sort))),
-    filter:'all'
+    transactions:[...quoteTx,...invoiceTx].sort((a,b)=>String(b.sort).localeCompare(String(a.sort))),
+    filter:'all',
+    type:'quotations'
   };
 
   const title=$('crmPartyLedgerViewTitle');
@@ -8690,6 +8703,7 @@ window.crmViewPartyLedger=function(partyId){
   if(title) title.textContent=adminPartyLabel(party);
   if(meta) meta.textContent=[party.phone,party.email,party.city].filter(Boolean).join(' · ') || 'Party account';
 
+  document.querySelectorAll('.crm-ledger-type').forEach(b=>b.classList.toggle('active',b.dataset.ledgerType==='quotations'));
   document.querySelectorAll('.crm-ledger-filter').forEach(b=>b.classList.toggle('active',b.dataset.range==='all'));
   crmRenderPartyLedgerView();
 
@@ -8701,7 +8715,9 @@ window.crmDownloadPartyLedger=async function(){
   const state=crmPartyLedgerState;
   if(!state.party){alert('Open a party ledger first.');return;}
 
-  const tx=state.transactions.filter(x=>crmPartyLedgerInRange(crmPartyLedgerDate(x),state.filter));
+  const tx=state.transactions
+    .filter(x=>x.ledgerType===state.type)
+    .filter(x=>crmPartyLedgerInRange(crmPartyLedgerDate(x),state.filter));
   const party=state.party;
   const debit=tx.filter(x=>x.type==='debit').reduce((s,x)=>s+Number(x.amount||0),0);
   const credit=tx.filter(x=>x.type==='credit').reduce((s,x)=>s+Number(x.amount||0),0);
@@ -8722,7 +8738,7 @@ window.crmDownloadPartyLedger=async function(){
     doc.setTextColor(18,22,27); doc.setFont('helvetica','bold'); doc.setFontSize(20);
     doc.text('SEERVI TRADING',left,y);
     doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(105,113,122);
-    doc.text('PARTY LEDGER',left,y+7);
+    doc.text((state.type==='invoices'?'INVOICE LEDGER':'QUOTATION LEDGER'),left,y+7);
     doc.setTextColor(18,22,27);
     doc.text('Party: '+String(party.company||party.name||'Party').slice(0,55),right,y,{align:'right'});
     doc.setTextColor(105,113,122);
@@ -13552,7 +13568,7 @@ function seerviWrapActivity(name,module,action,description){const original=windo
 seerviWrapActivity('seerviCreateItem','items','item_created',r=>`Added product: ${r?.name||'New item'}`);seerviWrapActivity('seerviUpdateItem','items','item_updated',r=>`Updated product: ${r?.name||r?.id||'Item'}`);seerviWrapActivity('seerviDeleteItem','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviCreateItemCategory','categories','category_created',r=>`Added ${r?.type||'category'}: ${r?.name||'Category'}`);seerviWrapActivity('seerviUpdateItemCategory','categories','category_updated',r=>`Updated ${r?.type||'category'}: ${r?.name||r?.id||'Category'}`);seerviWrapActivity('seerviDeleteItemCategory','categories','category_deleted',(_,a)=>`Deleted category/subcategory: ${a?.[0]||'Category'}`);seerviWrapActivity('crmSaveParty','parties','party_saved',()=>`Saved party/customer: ${document.getElementById('crmPartyName')?.value||'Party'}`);seerviWrapActivity('crmSaveCurrentQuote','quotations','quotation_saved',()=>`Saved quotation`);seerviWrapActivity('crmSaveQuoteStatus','quotations','quotation_status_updated',()=>`Updated quotation status`);seerviWrapActivity('crmDeleteParty','parties','party_deleted',(_,a)=>`Deleted party/customer: ${a?.[0]||'Party'}`);seerviWrapActivity('crmEditInvoice','invoices','invoice_edit_opened',(_,a)=>`Editing invoice: ${a?.[0]||'Invoice'}`);seerviWrapActivity('crmDeleteInvoice','invoices','invoice_deleted',(_,a)=>`Deleted invoice: ${a?.[0]||'Invoice'}`);seerviWrapActivity('crmDeleteQuote','quotations','quotation_deleted',(_,a)=>`Deleted quotation: ${a?.[0]||'Quotation'}`);seerviWrapActivity('crmDeleteLedgerEntry','ledger','ledger_entry_deleted',(_,a)=>`Deleted ledger entry: ${a?.[0]||'Entry'}`);seerviWrapActivity('crmAddLedgerEntry','ledger','ledger_entry_added',()=>`Added payment/ledger entry`);seerviWrapActivity('submitNotificationPost','notifications','notification_posted',()=>`Posted notification`);seerviWrapActivity('seerviToggleItemActive','items','item_status_changed',(_,a)=>`Changed item active status: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviDuplicateItem','items','item_duplicated',(_,a)=>`Duplicated product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveItemForm','items','item_saved',()=>`Saved product from Items panel`);seerviWrapActivity('seerviDeleteItemConfirm','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveAdminSettings','settings','settings_updated',()=>`Updated global website settings`);seerviWrapActivity('seerviBackupItems','backup','items_backup',()=>`Created items backup`);seerviWrapActivity('seerviBackupCategories','backup','categories_backup',()=>`Created categories backup`);seerviWrapActivity('seerviBackupQuotationsWithParty','backup','quotations_backup',()=>`Created quotations backup`);seerviWrapActivity('setInventorySubcategoryStock','inventory','subcategory_stock_updated',(_,a)=>`Updated subcategory stock: ${a?.[1]||a?.[0]||'Subcategory'}`);seerviWrapActivity('setInventoryCategoryStock','inventory','category_stock_updated',(_,a)=>`Updated category stock: ${a?.[0]||'Category'}`);seerviWrapActivity('setInventoryQuantity','inventory','inventory_quantity_updated',(_,a)=>`Updated inventory quantity: ${a?.[0]||'Item'}`);seerviWrapActivity('setInventoryStock','inventory','inventory_stock_updated',(_,a)=>`Updated stock status: ${a?.[0]||'Item'}`);seerviWrapActivity('toggleInventoryStock','inventory','inventory_stock_toggled',()=>`Toggled inventory stock status`);seerviWrapActivity('seerviBulkImport','items','bulk_items_imported',()=>`Imported products in bulk`);seerviWrapActivity('seerviCategoryBulkImport','categories','bulk_categories_imported',()=>`Imported categories/subcategories in bulk`);
 seerviWrapActivity('saveCustomerCartRequest','quotations','quotation_requested',()=>`Requested a quotation`);seerviWrapActivity('customerSaveProfile','profile','profile_updated',()=>`Updated customer profile`);seerviWrapActivity('crmSignIn','auth','admin_signed_in',()=>`Admin signed in`);seerviWrapActivity('customerSignIn','auth','customer_signed_in',()=>`Customer signed in`);
 
-</script><div id="crmPartyLedgerViewModal" class="crm-quote-view-modal" aria-hidden="true"><div class="crm-quote-view-backdrop" onclick="crmClosePartyLedgerView()"></div><div class="crm-quote-view-card crm-party-ledger-view-card" role="dialog" aria-modal="true" aria-labelledby="crmPartyLedgerViewTitle"><div class="crm-quote-view-head"><div><div class="crm-kicker">PARTY LEDGER</div><h3 id="crmPartyLedgerViewTitle">Party Ledger</h3><div id="crmPartyLedgerViewMeta" class="crm-quote-view-meta"></div></div><button class="crm-close" type="button" onclick="crmClosePartyLedgerView()">×</button></div><div class="crm-ledger-view-toolbar"><div class="crm-ledger-filter-group"><button class="crm-ledger-filter active" data-range="all" type="button" onclick="crmSetPartyLedgerFilter('all')">ALL</button><button class="crm-ledger-filter" data-range="weekly" type="button" onclick="crmSetPartyLedgerFilter('weekly')">WEEKLY</button><button class="crm-ledger-filter" data-range="monthly" type="button" onclick="crmSetPartyLedgerFilter('monthly')">MONTHLY</button><button class="crm-ledger-filter" data-range="quarterly" type="button" onclick="crmSetPartyLedgerFilter('quarterly')">QUARTERLY</button><button class="crm-ledger-filter" data-range="yearly" type="button" onclick="crmSetPartyLedgerFilter('yearly')">YEARLY</button></div><button id="crmPartyLedgerDownload" class="crm-primary small" type="button" onclick="crmDownloadPartyLedger()">DOWNLOAD LEDGER</button></div><div id="crmPartyLedgerViewBody" class="crm-quote-view-body"></div></div></div><div id="crmQuoteViewModal" class="crm-quote-view-modal" aria-hidden="true"><div class="crm-quote-view-backdrop" onclick="crmCloseQuoteView()"></div><div class="crm-quote-view-card" role="dialog" aria-modal="true" aria-labelledby="crmQuoteViewTitle"><div class="crm-quote-view-head"><div><div class="crm-kicker">QUOTATION VIEW</div><h3 id="crmQuoteViewTitle">Quotation</h3><div id="crmQuoteViewMeta" class="crm-quote-view-meta"></div></div><button class="crm-close" type="button" onclick="crmCloseQuoteView()">×</button></div><div id="crmQuoteViewStatusBar" class="crm-quote-status-bar"><span>STATUS</span><select id="crmQuoteViewStatus"><option value="saved">SAVED</option><option value="sent">SENT</option><option value="confirmed">CONFIRMED</option><option value="cancelled">CANCELLED</option></select><button type="button" class="crm-secondary small" onclick="crmSaveQuoteStatus()">SAVE STATUS</button></div><div id="crmQuoteViewBody" class="crm-quote-view-body"></div><div class="crm-quote-view-actions"><button class="crm-secondary" type="button" onclick="crmCloseQuoteView()">CLOSE</button><button id="crmQuoteViewDownload" class="crm-primary" type="button">DOWNLOAD PDF</button></div></div></div><div id="seerviActivityModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeAdminActivity()"></div><div class="crm-panel seervi-activity-panel" role="dialog" aria-modal="true" aria-labelledby="seerviActivityTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / ACTIVITY</div><h3 id="seerviActivityTitle">Activity Log</h3><div class="crm-auth-status">Meaningful updates from admin and customers.</div></div><button class="crm-close" type="button" onclick="closeAdminActivity()">×</button></div><div class="seervi-activity-toolbar"><div class="seervi-activity-filters"><button type="button" class="seervi-activity-filter active" data-activity-filter="all" onclick="seerviActivityFilter('all')">ALL</button><button type="button" class="seervi-activity-filter" data-activity-filter="admin" onclick="seerviActivityFilter('admin')">ADMIN</button><button type="button" class="seervi-activity-filter" data-activity-filter="customer" onclick="seerviActivityFilter('customer')">CUSTOMER</button></div><button type="button" class="crm-secondary small" onclick="loadAdminActivity()">↻ REFRESH</button></div><div id="seerviActivityStatus" class="crm-muted"></div><div id="seerviActivityList" class="seervi-activity-list"></div></div></div>
+</script><div id="crmPartyLedgerViewModal" class="crm-quote-view-modal" aria-hidden="true"><div class="crm-quote-view-backdrop" onclick="crmClosePartyLedgerView()"></div><div class="crm-quote-view-card crm-party-ledger-view-card" role="dialog" aria-modal="true" aria-labelledby="crmPartyLedgerViewTitle"><div class="crm-quote-view-head"><div><div class="crm-kicker">PARTY LEDGER</div><h3 id="crmPartyLedgerViewTitle">Party Ledger</h3><div id="crmPartyLedgerViewMeta" class="crm-quote-view-meta"></div></div><button class="crm-close" type="button" onclick="crmClosePartyLedgerView()">×</button></div><div class="crm-ledger-view-toolbar"><div class="crm-ledger-filter-group"><button class="crm-ledger-type active" data-ledger-type="quotations" type="button" onclick="crmSetPartyLedgerType('quotations')">QUOTATIONS</button><button class="crm-ledger-type" data-ledger-type="invoices" type="button" onclick="crmSetPartyLedgerType('invoices')">INVOICES</button></div><div class="crm-ledger-filter-group"><button class="crm-ledger-filter active" data-range="all" type="button" onclick="crmSetPartyLedgerFilter('all')">ALL</button><button class="crm-ledger-filter" data-range="weekly" type="button" onclick="crmSetPartyLedgerFilter('weekly')">WEEKLY</button><button class="crm-ledger-filter" data-range="monthly" type="button" onclick="crmSetPartyLedgerFilter('monthly')">MONTHLY</button><button class="crm-ledger-filter" data-range="quarterly" type="button" onclick="crmSetPartyLedgerFilter('quarterly')">QUARTERLY</button><button class="crm-ledger-filter" data-range="yearly" type="button" onclick="crmSetPartyLedgerFilter('yearly')">YEARLY</button></div><button id="crmPartyLedgerDownload" class="crm-primary small" type="button" onclick="crmDownloadPartyLedger()">DOWNLOAD LEDGER</button></div><div id="crmPartyLedgerViewBody" class="crm-quote-view-body"></div></div></div><div id="crmQuoteViewModal" class="crm-quote-view-modal" aria-hidden="true"><div class="crm-quote-view-backdrop" onclick="crmCloseQuoteView()"></div><div class="crm-quote-view-card" role="dialog" aria-modal="true" aria-labelledby="crmQuoteViewTitle"><div class="crm-quote-view-head"><div><div class="crm-kicker">QUOTATION VIEW</div><h3 id="crmQuoteViewTitle">Quotation</h3><div id="crmQuoteViewMeta" class="crm-quote-view-meta"></div></div><button class="crm-close" type="button" onclick="crmCloseQuoteView()">×</button></div><div id="crmQuoteViewStatusBar" class="crm-quote-status-bar"><span>STATUS</span><select id="crmQuoteViewStatus"><option value="saved">SAVED</option><option value="sent">SENT</option><option value="confirmed">CONFIRMED</option><option value="cancelled">CANCELLED</option></select><button type="button" class="crm-secondary small" onclick="crmSaveQuoteStatus()">SAVE STATUS</button></div><div id="crmQuoteViewBody" class="crm-quote-view-body"></div><div class="crm-quote-view-actions"><button class="crm-secondary" type="button" onclick="crmCloseQuoteView()">CLOSE</button><button id="crmQuoteViewDownload" class="crm-primary" type="button">DOWNLOAD PDF</button></div></div></div><div id="seerviActivityModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeAdminActivity()"></div><div class="crm-panel seervi-activity-panel" role="dialog" aria-modal="true" aria-labelledby="seerviActivityTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / ACTIVITY</div><h3 id="seerviActivityTitle">Activity Log</h3><div class="crm-auth-status">Meaningful updates from admin and customers.</div></div><button class="crm-close" type="button" onclick="closeAdminActivity()">×</button></div><div class="seervi-activity-toolbar"><div class="seervi-activity-filters"><button type="button" class="seervi-activity-filter active" data-activity-filter="all" onclick="seerviActivityFilter('all')">ALL</button><button type="button" class="seervi-activity-filter" data-activity-filter="admin" onclick="seerviActivityFilter('admin')">ADMIN</button><button type="button" class="seervi-activity-filter" data-activity-filter="customer" onclick="seerviActivityFilter('customer')">CUSTOMER</button></div><button type="button" class="crm-secondary small" onclick="loadAdminActivity()">↻ REFRESH</button></div><div id="seerviActivityStatus" class="crm-muted"></div><div id="seerviActivityList" class="seervi-activity-list"></div></div></div>
 <div id="seerviGlobalLoader" aria-live="polite" aria-busy="false"><div class="seervi-loader-card"><div class="seervi-loader-spinner"></div><div class="seervi-loader-title" id="seerviLoaderTitle">PLEASE WAIT</div><div class="seervi-loader-sub" id="seerviLoaderSub">Processing securely…</div></div></div><script id="seervi-professional-loading-script">
 (function(){
   const loader=document.getElementById('seerviGlobalLoader');
