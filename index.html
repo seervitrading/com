@@ -4935,7 +4935,7 @@ body.seervi-ai-open .float-wa{display:none!important}
     </div>
   </div>
   <div id="inventoryStockGrid" class="inventory-stock-grid"></div>
-</div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs"><button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button><button class="crm-tab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button><button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button><button class="crm-tab" data-tab="ledger" onclick="crmTab('ledger')">PAYMENT ENTRY</button></div><div id="crmOverview" class="crm-tab-panel"><div class="crm-stat-grid"><div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div><div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div><div><span>LEDGER BALANCE</span><strong id="crmLedgerBalance">₹0.00</strong></div></div></div><div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div><div id="crmRates" class="crm-tab-panel" hidden><div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div><div id="crmRatesList" class="crm-list"></div></div><div id="crmLedger" class="crm-tab-panel" hidden><div class="crm-ledger-help">Quotation amounts are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.</div><div class="crm-ledger-add"><select id="crmLedgerType"><option value="debit">Debit / Sale</option><option value="credit">Credit / Payment Received</option></select><input id="crmLedgerAmount" type="number" min="0" step="0.01" placeholder="Amount ₹"><input id="crmLedgerNote" placeholder="Note / Reference"><button class="crm-primary small" type="button" onclick="crmAddLedgerEntry()">ADD ENTRY</button></div><div id="crmLedgerList" class="crm-list"></div></div></div></div>
+</div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs"><button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button><button class="crm-tab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button><button class="crm-tab" data-tab="invoices" onclick="crmTab('invoices')">INVOICES</button><button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button><button class="crm-tab" data-tab="ledger" onclick="crmTab('ledger')">PAYMENT ENTRY</button></div><div id="crmOverview" class="crm-tab-panel"><div class="crm-stat-grid"><div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div><div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div><div><span>INVOICES</span><strong id="crmInvoiceCount">0</strong></div><div><span>LEDGER BALANCE</span><strong id="crmLedgerBalance">₹0.00</strong></div></div></div><div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div><div id="crmInvoices" class="crm-tab-panel" hidden><div id="crmInvoicesList" class="crm-list"></div></div><div id="crmRates" class="crm-tab-panel" hidden><div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div><div id="crmRatesList" class="crm-list"></div></div><div id="crmLedger" class="crm-tab-panel" hidden><div class="crm-ledger-help">Sale invoices are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.</div><div class="crm-ledger-add"><select id="crmLedgerType"><option value="debit">Debit / Sale</option><option value="credit">Credit / Payment Received</option></select><input id="crmLedgerAmount" type="number" min="0" step="0.01" placeholder="Amount ₹"><input id="crmLedgerNote" placeholder="Note / Reference"><button class="crm-primary small" type="button" onclick="crmAddLedgerEntry()">ADD ENTRY</button></div><div id="crmLedgerList" class="crm-list"></div></div></div></div>
 <div id="seerviItemsModal" class="crm-modal seervi-items-modal" aria-hidden="true" hidden>
   <div class="crm-modal-backdrop" onclick="seerviCloseItemsPanel()"></div>
   <div class="crm-modal-card seervi-items-modal-card" role="dialog" aria-modal="true" aria-labelledby="seerviItemsModalTitle">
@@ -6913,6 +6913,7 @@ let crmUser = null;
 let crmPartyId = '';
 let crmParties = [];
 let crmQuotes = [];
+let crmInvoices = [];
 let crmRates = [];
 let crmLedger = [];
 let crmEditingQuoteId = '';
@@ -7541,24 +7542,29 @@ window.seerviAdminBackToPrevious=function(){
 
 function seerviOpenAdminDataPanel(tab){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+
+  seerviAdminPanelMode=tab==='invoices'?'invoices':'quotes';
   seerviAdminReturnTarget='dashboard';
   seerviAdminOpenedFromDashboard=true;
   seerviCloseItemsPanel();
   closeAccountDashboard();
   openAdminPanel();
+
   const items=$('adminItemsArea');
   if(items)items.hidden=true;
   const global=$('adminGlobalArea');
   if(global)global.hidden=false;
 
   const title=$('crmTitle');
-  const desc=document.querySelector('.admin-global-head p');
-  if(title)title.textContent=tab==='invoices'?'Invoice Panel':'Quotation Panel';
-  if(desc)desc.textContent=tab==='invoices'
-    ?'All sale invoices, invoice details and invoice management in one place.'
-    :'All quotations, parties and complete party ledger in one place.';
-  $('crmWorkspace')?.setAttribute('data-active-workspace',tab==='invoices'?'invoice-panel':'quotation-panel');
-  adminGlobalTab(tab);
+  if(title)title.textContent=seerviAdminPanelMode==='invoices'?'Invoice Panel':'Quotation Panel';
+
+  $('crmWorkspace')?.setAttribute(
+    'data-active-workspace',
+    seerviAdminPanelMode==='invoices'?'invoice-panel':'quotation-panel'
+  );
+
+  seerviApplyAdminPanelMode();
+  adminGlobalTab(seerviAdminPanelMode==='invoices'?'invoices':'quotes');
 }
 
 window.accountDashboardAdminPanel=function(){
@@ -7959,6 +7965,8 @@ function crmShowWorkspace(){
   if($('crmPartyMaster')) $('crmPartyMaster').hidden=true;
   crmRefresh();
   crmLoadGlobalAdmin();
+  seerviApplyAdminPanelMode();
+  adminGlobalTab(seerviAdminPanelMode==='invoices'?'invoices':'quotes');
 }
 
 window.crmSignIn = async function(){
@@ -8162,32 +8170,67 @@ window.crmSaveParty = async function(){
 
 async function crmLoadPartyData(id){
   if(!id)return;
-  const [qs,rs,ls]=await Promise.all([
+  const [qs,is,rs,ls]=await Promise.all([
     seerviCachedRead('party:'+id+':quotes:200',()=>getDocs(query(collection(db,'quotations'),where('partyId','==',id),limit(200))),8000),
+    seerviCachedRead('party:'+id+':invoices:200',()=>getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),where('partyId','==',id),limit(200))),8000),
     seerviCachedRead('party:'+id+':rates:500',()=>getDocs(query(collection(db,'rateHistory'),where('partyId','==',id),limit(500))),8000),
     seerviCachedRead('party:'+id+':ledger:500',()=>getDocs(query(collection(db,'ledger'),where('partyId','==',id),limit(500))),8000)
   ]);
   crmQuotes=qs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+  crmInvoices=is.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   crmRates=rs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   crmLedger=ls.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   crmRenderAll();
 }
 
 function crmRenderAll(){
+  const mode=seerviAdminPanelMode==='invoices'?'invoices':'quotes';
+
   $('crmQuoteCount').textContent=crmQuotes.length;
   $('crmLastQuote').textContent=crmQuotes[0]?.quoteNo||'—';
-  // Outstanding = ALL saved quotation totals - payments received.
-  // Quotation DEBIT ledger rows are ignored here to prevent double-counting,
-  // while manual Cash/NEFT/IMPS/UPI credits reduce the balance.
-  const billed=crmQuotes.reduce((s,q)=>s+Number(q.grandTotal||0),0);
-  const manualLedger=crmLedger
-    .filter(x=>x.source!=='quotation')
-    .reduce((s,x)=>s+(x.type==='debit'?Number(x.amount||0):-Number(x.amount||0)),0);
+  if($('crmInvoiceCount')) $('crmInvoiceCount').textContent=crmInvoices.length;
+
+  const overviewCards=document.querySelectorAll('#crmOverview .crm-stat-grid > div');
+  if(overviewCards.length>=4){
+    const firstLabel=overviewCards[0].querySelector('span');
+    const firstValue=overviewCards[0].querySelector('strong');
+    const secondLabel=overviewCards[1].querySelector('span');
+    const secondValue=overviewCards[1].querySelector('strong');
+    const invoiceCard=overviewCards[2];
+
+    if(mode==='invoices'){
+      if(firstLabel)firstLabel.textContent='INVOICES';
+      if(firstValue)firstValue.textContent=crmInvoices.length;
+      if(secondLabel)secondLabel.textContent='LAST INVOICE';
+      if(secondValue)secondValue.textContent=crmInvoices[0]?.invoiceNo||'—';
+      invoiceCard.hidden=true;
+    }else{
+      if(firstLabel)firstLabel.textContent='QUOTATIONS';
+      if(firstValue)firstValue.textContent=crmQuotes.length;
+      if(secondLabel)secondLabel.textContent='LAST QUOTE';
+      if(secondValue)secondValue.textContent=crmQuotes[0]?.quoteNo||'—';
+      invoiceCard.hidden=true;
+    }
+  }
+
+  const billed=mode==='invoices'
+    ? crmInvoices.reduce((s,inv)=>s+Number(inv.grandTotal||0),0)
+    : crmQuotes.reduce((s,q)=>s+Number(q.grandTotal||0),0);
+
+  const manualLedger=mode==='invoices'
+    ? crmLedger
+        .filter(x=>x.source!=='quotation' && !x.quoteId)
+        .reduce((s,x)=>s+(x.type==='debit'?Number(x.amount||0):-Number(x.amount||0)),0)
+    : 0;
+
   const balance=billed+manualLedger;
   $('crmLedgerBalance').textContent=money(balance);
+
   crmRenderQuotes();
+  crmRenderInvoices();
   crmRenderRates();
   crmRenderLedger();
+  seerviApplyAdminPanelMode();
 }
 
 function crmRenderQuotes(){
@@ -8213,6 +8256,25 @@ window.crmRateSearch=function(value){
   crmRateSearchText=String(value||'').trim().toLowerCase();
   crmRenderRates();
 };
+
+function crmRenderInvoices(){
+  const el=$('crmInvoicesList'); if(!el)return;
+  if(!crmInvoices.length){
+    el.innerHTML='<div class="crm-list-empty">No sale invoices saved for this party yet.</div>';
+    return;
+  }
+  el.innerHTML=crmInvoices.map(inv=>`
+    <div class="crm-row">
+      <strong>${esc(inv.invoiceNo||'Invoice')}</strong>
+      <span>${esc(inv.dateISO||'')}</span>
+      <span>${esc(String((inv.items||[]).length))} items</span>
+      <span class="amount">${money(inv.grandTotal)}</span>
+      <span class="crm-row-actions">
+        <button type="button" class="crm-mini-btn" onclick="crmEditInvoice('${esc(inv.id)}')">EDIT</button>
+        <button type="button" class="crm-mini-btn" onclick="crmViewInvoice('${esc(inv.id)}')">VIEW</button>
+      </span>
+    </div>`).join('');
+}
 
 function crmRenderRates(){
   const el=$('crmRatesList'); if(!el)return;
@@ -8296,10 +8358,23 @@ function crmRenderLedger(){
 }
 
 window.crmTab=function(tab){
-  document.querySelectorAll('.crm-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
-  [['overview','crmOverview'],['quotes','crmQuotes'],['rates','crmRates'],['ledger','crmLedger']].forEach(([key,id])=>{
-    $(id).hidden=key!==tab;
+  const mode=seerviAdminPanelMode==='invoices'?'invoices':'quotes';
+  const allowed=mode==='invoices'
+    ? ['overview','invoices','rates','ledger']
+    : ['overview','quotes','rates'];
+  if(!allowed.includes(tab)) tab=mode==='invoices'?'invoices':'quotes';
+
+  document.querySelectorAll('.crm-tab').forEach(b=>{
+    const visible=allowed.includes(b.dataset.tab);
+    b.hidden=!visible;
+    b.classList.toggle('active',visible && b.dataset.tab===tab);
   });
+
+  [['overview','crmOverview'],['quotes','crmQuotes'],['invoices','crmInvoices'],['rates','crmRates'],['ledger','crmLedger']].forEach(([key,id])=>{
+    const el=$(id);
+    if(el) el.hidden=key!==tab || !allowed.includes(key);
+  });
+  seerviApplyAdminPanelMode();
 };
 
 
@@ -8308,10 +8383,75 @@ let adminGlobalQuotes=[];
 let adminGlobalInvoices=[];
 let adminGlobalLedger=[];
 
-window.adminGlobalTab=function(tab){
-  document.querySelectorAll('.admin-global-tab').forEach(b=>b.classList.toggle('active',b.dataset.adminTab===tab));
+// Which business workspace is currently open from the Admin Dashboard.
+// QUOTATION PANEL owns quotations; INVOICE PANEL owns invoices + payment entry.
+let seerviAdminPanelMode='quotes';
+
+function seerviApplyAdminPanelMode(){
+  const mode=seerviAdminPanelMode==='invoices'?'invoices':'quotes';
+
+  // Global panel tabs: keep only data that belongs to the active panel.
+  const allowed=mode==='invoices'
+    ? new Set(['parties','invoices','ledger'])
+    : new Set(['parties','quotes','ledger']);
+
+  document.querySelectorAll('.admin-global-tab').forEach(btn=>{
+    const key=btn.dataset.adminTab;
+    btn.hidden=!allowed.has(key);
+    if(!allowed.has(key)) btn.classList.remove('active');
+  });
+
   const map={parties:'adminGlobalParties',quotes:'adminGlobalQuotes',invoices:'adminGlobalInvoices',ledger:'adminGlobalLedger'};
-  Object.entries(map).forEach(([k,id])=>{const el=$(id); if(el) el.hidden=k!==tab;});
+  Object.entries(map).forEach(([k,id])=>{
+    const el=$(id);
+    if(el && !allowed.has(k)) el.hidden=true;
+  });
+
+  // Party workspace tabs: quotation panel never shows invoice/payment-entry
+  // transactions; invoice panel owns invoices and payment entries.
+  document.querySelectorAll('.crm-tab').forEach(btn=>{
+    const key=btn.dataset.tab;
+    const visible=mode==='invoices'
+      ? new Set(['overview','invoices','rates','ledger']).has(key)
+      : new Set(['overview','quotes','rates']).has(key);
+    btn.hidden=!visible;
+    if(!visible) btn.classList.remove('active');
+  });
+
+  const quotePanel=$('crmQuotes');
+  const invoicePanel=$('crmInvoices');
+  const ledgerPanel=$('crmLedger');
+  if(quotePanel && mode==='invoices') quotePanel.hidden=true;
+  if(invoicePanel && mode==='quotes') invoicePanel.hidden=true;
+  if(ledgerPanel && mode==='quotes') ledgerPanel.hidden=true;
+
+  const desc=document.querySelector('.admin-global-head p');
+  if(desc) desc.textContent=mode==='invoices'
+    ? 'All parties, all sale invoices and complete invoice payment ledger in one place.'
+    : 'All parties, all quotations and quotation-side records in one place.';
+}
+
+window.adminGlobalTab=function(tab){
+  const mode=seerviAdminPanelMode==='invoices'?'invoices':'quotes';
+  const allowed=mode==='invoices'
+    ? ['parties','invoices','ledger']
+    : ['parties','quotes','ledger'];
+
+  // Ignore accidental calls to a tab belonging to the other panel.
+  if(!allowed.includes(tab)) tab=mode==='invoices'?'invoices':'quotes';
+
+  document.querySelectorAll('.admin-global-tab').forEach(b=>{
+    const visible=allowed.includes(b.dataset.adminTab);
+    b.hidden=!visible;
+    b.classList.toggle('active',visible && b.dataset.adminTab===tab);
+  });
+
+  const map={parties:'adminGlobalParties',quotes:'adminGlobalQuotes',invoices:'adminGlobalInvoices',ledger:'adminGlobalLedger'};
+  Object.entries(map).forEach(([k,id])=>{
+    const el=$(id);
+    if(el) el.hidden=k!==tab || !allowed.includes(k);
+  });
+  seerviApplyAdminPanelMode();
 };
 
 function crmSafeEsc(s){
@@ -8328,6 +8468,8 @@ function adminPartyLabel(p){
 window.crmRefreshAdminData=async function(){
   if(!crmUser){crmShowLogin();return;}
   await crmLoadGlobalAdmin();
+  seerviApplyAdminPanelMode();
+  adminGlobalTab(seerviAdminPanelMode==='invoices'?'invoices':'quotes');
 };
 
 function crmBackupSafeValue(value){
@@ -8416,16 +8558,29 @@ function crmAdminMatches(value){
 
 function crmRenderAdminKpis(){
   const set=(id,val)=>{const e=$(id);if(e)e.textContent=val;};
-  const billed=adminGlobalQuotes.reduce((s,q)=>s+Number(q.grandTotal||0),0);
-  const received=adminGlobalLedger
-    .filter(x=>x.source!=='quotation' && !x.quoteId && x.type==='credit')
-    .reduce((s,x)=>s+Number(x.amount||0),0);
-  const manualDebit=adminGlobalLedger
-    .filter(x=>x.source!=='quotation' && !x.quoteId && x.type==='debit')
-    .reduce((s,x)=>s+Number(x.amount||0),0);
+  const mode=seerviAdminPanelMode==='invoices'?'invoices':'quotes';
+
+  const billed=mode==='invoices'
+    ? adminGlobalInvoices.reduce((s,inv)=>s+Number(inv.grandTotal||0),0)
+    : adminGlobalQuotes.reduce((s,q)=>s+Number(q.grandTotal||0),0);
+
+  const received=mode==='invoices'
+    ? adminGlobalLedger
+        .filter(x=>x.source!=='quotation' && !x.quoteId && x.type==='credit')
+        .reduce((s,x)=>s+Number(x.amount||0),0)
+    : 0;
+
+  const manualDebit=mode==='invoices'
+    ? adminGlobalLedger
+        .filter(x=>x.source!=='quotation' && !x.quoteId && x.type==='debit')
+        .reduce((s,x)=>s+Number(x.amount||0),0)
+    : 0;
+
   const outstanding=Math.max(0,billed+manualDebit-received);
   set('adminKpiParties',adminGlobalParties.length);
-  set('adminKpiQuotes',adminGlobalQuotes.length);
+  set('adminKpiQuotes',mode==='invoices'?adminGlobalInvoices.length:adminGlobalQuotes.length);
+  const kpiLabel=document.querySelector('#adminKpiQuotes')?.parentElement?.querySelector('span');
+  if(kpiLabel)kpiLabel.textContent=mode==='invoices'?'INVOICES':'QUOTATIONS';
   set('adminKpiBilled',money(billed));
   set('adminKpiReceived',money(received));
   set('adminKpiOutstanding',money(outstanding));
@@ -8509,41 +8664,50 @@ function crmRenderGlobalAdmin(){
   }
 
   if(lEl){
-    // Global Party Ledger:
-    // Show every saved party, including parties with no transactions yet.
-    // Quotation totals are DEBITs; manual debit entries are DEBITs;
-    // manual credit entries (Cash / NEFT / IMPS / UPI etc.) reduce outstanding.
+    // Panel-specific ledger:
+    // Quotation Panel = quotation debits only.
+    // Invoice Panel = sale-invoice debits + manual payment entries.
+    const mode=seerviAdminPanelMode==='invoices'?'invoices':'quotes';
     const balances=new Map();
     adminGlobalParties.forEach(p=>balances.set(p.id,0));
 
-    adminGlobalQuotes.forEach(q=>{
-      balances.set(q.partyId,(balances.get(q.partyId)||0)+Number(q.grandTotal||0));
-    });
-
-    adminGlobalLedger
-      .filter(x=>x.source!=='quotation' && !x.quoteId)
-      .forEach(x=>{
-        const v=(x.type==='debit'?1:-1)*Number(x.amount||0);
-        balances.set(x.partyId,(balances.get(x.partyId)||0)+v);
+    if(mode==='invoices'){
+      adminGlobalInvoices.forEach(inv=>{
+        balances.set(inv.partyId,(balances.get(inv.partyId)||0)+Number(inv.grandTotal||0));
       });
+    }else{
+      adminGlobalQuotes.forEach(q=>{
+        balances.set(q.partyId,(balances.get(q.partyId)||0)+Number(q.grandTotal||0));
+      });
+    }
+
+    if(mode==='invoices'){
+      adminGlobalLedger
+        .filter(x=>x.source!=='quotation' && !x.quoteId)
+        .forEach(x=>{
+          const v=(x.type==='debit'?1:-1)*Number(x.amount||0);
+          balances.set(x.partyId,(balances.get(x.partyId)||0)+v);
+        });
+    }
 
     lEl.innerHTML=partyRows.length ? partyRows.map(p=>{
       const balance=balances.get(p.id)||0;
-      const partyTxCount =
-        adminGlobalQuotes.filter(q=>q.partyId===p.id).length +
-        adminGlobalInvoices.filter(inv=>inv.partyId===p.id).length +
-        adminGlobalLedger.filter(x=>x.partyId===p.id && x.source!=='quotation' && !x.quoteId).length;
+      const partyTxCount=mode==='invoices'
+        ? adminGlobalInvoices.filter(inv=>inv.partyId===p.id).length +
+          adminGlobalLedger.filter(x=>x.partyId===p.id && x.source!=='quotation' && !x.quoteId).length
+        : adminGlobalQuotes.filter(q=>q.partyId===p.id).length;
 
       return `<div class="admin-global-row">
         <strong>${safeEsc(adminPartyLabel(p))}</strong>
         <span>${partyTxCount} transaction${partyTxCount===1?'':'s'}</span>
-        <span class="${balance>0?'crm-ledger-debit':'crm-ledger-credit'}">Outstanding ${money(balance)}</span>
+        <span class="${balance>0?'crm-ledger-debit':'crm-ledger-credit'}">${mode==='invoices'?'Outstanding ':'Quotation Total '}${money(balance)}</span>
         <span class="crm-row-actions">
           <button class="crm-mini-btn" type="button" onclick="crmViewPartyLedger('${safeEsc(p.id)}')">VIEW</button>
         </span>
       </div>`;
     }).join('') : '<div class="admin-global-empty">No parties saved yet.</div>';
   }
+}
 }
 
 
@@ -8669,36 +8833,37 @@ window.crmViewPartyLedger=function(partyId){
   const party=adminGlobalParties.find(p=>p.id===partyId) || crmParties.find(p=>p.id===partyId);
   if(!party){alert('Party not found. Refresh the Admin Panel.');return;}
 
-  const quoteTx=adminGlobalQuotes
+  const mode=seerviAdminPanelMode==='invoices'?'invoices':'quotes';
+
+  const quoteTx=mode==='quotes' ? adminGlobalQuotes
     .filter(q=>q.partyId===partyId)
     .map(q=>({
-      date:q.dateISO||'',
-      sort:q.dateISO||'',
-      type:'debit',
-      label:'QUOTATION',
-      ref:q.quoteNo||'Quotation',
-      note:'Quotation amount',
-      amount:Number(q.grandTotal||0),
-      quoteId:q.id
-    }));
+      date:q.dateISO||'', sort:q.dateISO||'', type:'debit',
+      label:'QUOTATION', ref:q.quoteNo||'Quotation',
+      note:'Quotation amount', amount:Number(q.grandTotal||0), quoteId:q.id
+    })) : [];
 
-  const manualTx=adminGlobalLedger
+  const invoiceTx=mode==='invoices' ? adminGlobalInvoices
+    .filter(inv=>inv.partyId===partyId)
+    .map(inv=>({
+      date:inv.dateISO||'', sort:inv.dateISO||'', type:'debit',
+      label:'SALE INVOICE', ref:inv.invoiceNo||'Invoice',
+      note:inv.notes||'Sale invoice amount',
+      amount:Number(inv.grandTotal||0), invoiceId:inv.id
+    })) : [];
+
+  // Payment entries belong to the Invoice Panel only.
+  const manualTx=mode==='invoices' ? adminGlobalLedger
     .filter(x=>x.partyId===partyId && x.source!=='quotation' && !x.quoteId)
     .map(x=>({
-      date:x.dateISO||'',
-      sort:x.dateISO||'',
-      type:x.type==='credit'?'credit':'debit',
-      label:x.type==='credit'?'PAYMENT':'DEBIT',
-      ref:'',
-      note:x.note||'Manual ledger entry',
-      amount:Number(x.amount||0),
-      quoteId:''
-    }));
+      date:x.dateISO||'', sort:x.dateISO||'', type:x.type==='credit'?'credit':'debit',
+      label:x.type==='credit'?'PAYMENT':'DEBIT', ref:'',
+      note:x.note||'Manual ledger entry', amount:Number(x.amount||0), quoteId:''
+    })) : [];
 
   crmPartyLedgerState={
-    partyId,
-    party,
-    transactions:[...quoteTx,...manualTx].sort((a,b)=>String(b.sort).localeCompare(String(a.sort))),
+    partyId, party,
+    transactions:[...quoteTx,...invoiceTx,...manualTx].sort((a,b)=>String(b.sort).localeCompare(String(a.sort))),
     filter:'all'
   };
 
@@ -10001,6 +10166,8 @@ window.crmDownloadInvoiceByQuotation=async function(id){
 
 window.crmEditInvoice=async function(id){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+  seerviAdminPanelMode='invoices';
+  seerviApplyAdminPanelMode();
 
   // Edit the Firebase invoice directly. Never require the source quotation.
   const inv=adminGlobalInvoices.find(x=>x.id===id);
@@ -10504,7 +10671,7 @@ window.crmSaveCurrentQuote = async function(){
          local cart so an interrupted save never destroys the working quote. */
       clearCart();
       renderCart();
-      crmTab('quotes');
+      crmTab(seerviAdminPanelMode==='invoices'?'invoices':'quotes');
       if(typeof seerviClearAdminQuoteReturnState==='function') seerviClearAdminQuoteReturnState();
       closeCart();
       crmShowWorkspace();
