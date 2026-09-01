@@ -4935,7 +4935,7 @@ body.seervi-ai-open .float-wa{display:none!important}
     </div>
   </div>
   <div id="inventoryStockGrid" class="inventory-stock-grid"></div>
-</div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs"><button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button><button class="crm-tab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button><button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button><button class="crm-tab" data-tab="ledger" onclick="crmTab('ledger')">PAYMENT ENTRY</button></div><div id="crmOverview" class="crm-tab-panel"><div class="crm-stat-grid"><div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div><div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div><div><span>LEDGER BALANCE</span><strong id="crmLedgerBalance">₹0.00</strong></div></div></div><div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div><div id="crmRates" class="crm-tab-panel" hidden><div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div><div id="crmRatesList" class="crm-list"></div></div><div id="crmLedger" class="crm-tab-panel" hidden><div class="crm-ledger-help">Quotation amounts are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.</div><div class="crm-ledger-add"><select id="crmLedgerType"><option value="debit">Debit / Sale</option><option value="credit">Credit / Payment Received</option></select><input id="crmLedgerAmount" type="number" min="0" step="0.01" placeholder="Amount ₹"><input id="crmLedgerNote" placeholder="Note / Reference"><button class="crm-primary small" type="button" onclick="crmAddLedgerEntry()">ADD ENTRY</button></div><div id="crmLedgerList" class="crm-list"></div></div></div></div>
+</div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs"><button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button><button class="crm-tab" id="crmPartyBillsTab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button><button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button><button class="crm-tab" data-tab="ledger" onclick="crmTab('ledger')">PAYMENT ENTRY</button></div><div id="crmOverview" class="crm-tab-panel"><div class="crm-stat-grid"><div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div><div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div><div><span>LEDGER BALANCE</span><strong id="crmLedgerBalance">₹0.00</strong></div></div></div><div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div><div id="crmRates" class="crm-tab-panel" hidden><div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div><div id="crmRatesList" class="crm-list"></div></div><div id="crmLedger" class="crm-tab-panel" hidden><div class="crm-ledger-help">Quotation amounts are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.</div><div class="crm-ledger-add"><select id="crmLedgerType"><option value="debit">Debit / Sale</option><option value="credit">Credit / Payment Received</option></select><input id="crmLedgerAmount" type="number" min="0" step="0.01" placeholder="Amount ₹"><input id="crmLedgerNote" placeholder="Note / Reference"><button class="crm-primary small" type="button" onclick="crmAddLedgerEntry()">ADD ENTRY</button></div><div id="crmLedgerList" class="crm-list"></div></div></div></div>
 <div id="seerviItemsModal" class="crm-modal seervi-items-modal" aria-hidden="true" hidden>
   <div class="crm-modal-backdrop" onclick="seerviCloseItemsPanel()"></div>
   <div class="crm-modal-card seervi-items-modal-card" role="dialog" aria-modal="true" aria-labelledby="seerviItemsModalTitle">
@@ -6913,6 +6913,7 @@ let crmUser = null;
 let crmPartyId = '';
 let crmParties = [];
 let crmQuotes = [];
+let crmInvoices = [];
 let crmRates = [];
 let crmLedger = [];
 let crmEditingQuoteId = '';
@@ -8165,29 +8166,44 @@ window.crmSaveParty = async function(){
 
 async function crmLoadPartyData(id){
   if(!id)return;
-  const [qs,rs,ls]=await Promise.all([
+  const [qs,is,rs,ls]=await Promise.all([
     seerviCachedRead('party:'+id+':quotes:200',()=>getDocs(query(collection(db,'quotations'),where('partyId','==',id),limit(200))),8000),
+    seerviCachedRead('party:'+id+':invoices:200',()=>getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),where('partyId','==',id),limit(200))),8000),
     seerviCachedRead('party:'+id+':rates:500',()=>getDocs(query(collection(db,'rateHistory'),where('partyId','==',id),limit(500))),8000),
     seerviCachedRead('party:'+id+':ledger:500',()=>getDocs(query(collection(db,'ledger'),where('partyId','==',id),limit(500))),8000)
   ]);
   crmQuotes=qs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+  crmInvoices=is.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   crmRates=rs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   crmLedger=ls.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   crmRenderAll();
 }
 
+function crmApplyPartyPanelLabels(){
+  const invoiceMode=seerviAdminPanelMode==='invoices';
+  const tab=$('crmPartyBillsTab');
+  if(tab)tab.textContent=invoiceMode?'INVOICES':'QUOTATIONS';
+  const countLabel=document.querySelector('#crmOverview .crm-stat-grid > div:first-child span');
+  const lastLabel=document.querySelector('#crmOverview .crm-stat-grid > div:nth-child(2) span');
+  if(countLabel)countLabel.textContent=invoiceMode?'INVOICES':'QUOTATIONS';
+  if(lastLabel)lastLabel.textContent=invoiceMode?'LAST INVOICE':'LAST QUOTE';
+  const help=document.querySelector('#crmLedger .crm-ledger-help');
+  if(help)help.textContent=invoiceMode
+    ?'Invoice amounts are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.'
+    :'Quotation amounts are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.';
+}
+
 function crmRenderAll(){
-  $('crmQuoteCount').textContent=crmQuotes.length;
-  $('crmLastQuote').textContent=crmQuotes[0]?.quoteNo||'—';
-  // Outstanding = ALL saved quotation totals - payments received.
-  // Quotation DEBIT ledger rows are ignored here to prevent double-counting,
-  // while manual Cash/NEFT/IMPS/UPI credits reduce the balance.
-  const billed=crmQuotes.reduce((s,q)=>s+Number(q.grandTotal||0),0);
+  crmApplyPartyPanelLabels();
+  const invoiceMode=seerviAdminPanelMode==='invoices';
+  const bills=invoiceMode?crmInvoices:crmQuotes;
+  $('crmQuoteCount').textContent=bills.length;
+  $('crmLastQuote').textContent=invoiceMode?(crmInvoices[0]?.invoiceNo||'—'):(crmQuotes[0]?.quoteNo||'—');
+  const billed=bills.reduce((s,x)=>s+Number(x.grandTotal||0),0);
   const manualLedger=crmLedger
-    .filter(x=>x.source!=='quotation')
+    .filter(x=>x.source!=='quotation' && !x.quoteId && (!x.panelScope || x.panelScope===seerviAdminPanelMode))
     .reduce((s,x)=>s+(x.type==='debit'?Number(x.amount||0):-Number(x.amount||0)),0);
-  const balance=billed+manualLedger;
-  $('crmLedgerBalance').textContent=money(balance);
+  $('crmLedgerBalance').textContent=money(billed+manualLedger);
   crmRenderQuotes();
   crmRenderRates();
   crmRenderLedger();
@@ -8195,17 +8211,30 @@ function crmRenderAll(){
 
 function crmRenderQuotes(){
   const el=$('crmQuotesList'); if(!el)return;
-  if(!crmQuotes.length){el.innerHTML='<div class="crm-list-empty">No quotations saved for this party yet.</div>';return;}
-  el.innerHTML=crmQuotes.map(q=>`
+  const invoiceMode=seerviAdminPanelMode==='invoices';
+  const bills=invoiceMode?crmInvoices:crmQuotes;
+  if(!bills.length){el.innerHTML=`<div class="crm-list-empty">No ${invoiceMode?'invoices':'quotations'} saved for this party yet.</div>`;return;}
+  el.innerHTML=bills.map(x=>invoiceMode?`
     <div class="crm-row">
-      <strong>${esc(q.quoteNo||'Quote')}</strong>
-      <span>${esc(q.dateISO||'')}</span>
-      <span>${esc(String((q.items||[]).length))} items</span>
-      <span class="quote-status-badge status-${esc(q.status||'saved')}">${esc(crmQuoteStatusLabel(q.status))}</span>
-      <span class="amount">${money(q.grandTotal)}</span>
+      <strong>${esc(x.invoiceNo||'Invoice')}</strong>
+      <span>${esc(x.dateISO||'')}</span>
+      <span>${esc(String((x.items||[]).length))} items</span>
+      <span class="amount">${money(x.grandTotal)}</span>
       <span class="crm-row-actions">
-        <button type="button" class="crm-mini-btn" onclick="crmEditQuote('${esc(q.id)}')">EDIT</button>
-        <button type="button" class="crm-mini-btn" onclick="crmViewQuote('${esc(q.id)}')">VIEW</button>
+        <button type="button" class="crm-mini-btn" onclick="crmEditInvoice('${esc(x.id)}')">EDIT</button>
+        <button type="button" class="crm-mini-btn" onclick="crmViewInvoice('${esc(x.id)}')">VIEW</button>
+        <button type="button" class="crm-mini-btn" onclick="crmDownloadInvoiceById('${esc(x.id)}')">DOWNLOAD</button>
+      </span>
+    </div>`:`
+    <div class="crm-row">
+      <strong>${esc(x.quoteNo||'Quote')}</strong>
+      <span>${esc(x.dateISO||'')}</span>
+      <span>${esc(String((x.items||[]).length))} items</span>
+      <span class="quote-status-badge status-${esc(x.status||'saved')}">${esc(crmQuoteStatusLabel(x.status))}</span>
+      <span class="amount">${money(x.grandTotal)}</span>
+      <span class="crm-row-actions">
+        <button type="button" class="crm-mini-btn" onclick="crmEditQuote('${esc(x.id)}')">EDIT</button>
+        <button type="button" class="crm-mini-btn" onclick="crmViewQuote('${esc(x.id)}')">VIEW</button>
       </span>
     </div>`).join('');
 }
