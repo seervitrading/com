@@ -1165,6 +1165,15 @@ body.admin-quote-mode .quote-actions{display:grid!important}
 .crm-save-btn:hover{background:#fff;color:#090b0e}
 .admin-nav-btn{border:1px solid #f0c66a55;background:#f0c66a0d;color:#f0c66a;border-radius:8px;padding:10px 12px;font-size:9px;font-weight:900;letter-spacing:1px;cursor:pointer;white-space:nowrap}.admin-nav-btn:hover{background:#f0c66a18;border-color:#f0c66a99}
 .cart-party-admin-note{color:#7f8995;font-size:8px;letter-spacing:.4px;white-space:nowrap}
+/* Invoice Cloud Control Center */
+.admin-invoice-control{margin-top:14px;padding:16px;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:rgba(255,255,255,.018)}
+.admin-invoice-control-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}
+.admin-invoice-control-head p{margin:4px 0 0;opacity:.65;font-size:.86rem}
+.admin-invoice-kpi-grid{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:0}
+@media(max-width:760px){
+  .admin-invoice-control-head{align-items:flex-start;flex-direction:column}
+  .admin-invoice-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 .admin-global-area{margin:0 0 12px;padding:13px;border:1px solid #f0c66a22;border-radius:11px;background:linear-gradient(145deg,#11161c,#0b0f14)}
 .admin-global-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}.admin-global-head p{margin:0;color:#69747f;font-size:8px;line-height:1.4}.admin-global-tabs{display:flex;gap:5px;overflow:auto;border-bottom:1px solid #ffffff10;margin-bottom:10px}.admin-global-tab{border:0;background:none;color:#68737e;padding:9px 10px;font-size:8px;font-weight:900;letter-spacing:.7px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}.admin-global-tab.active{color:#fff;border-bottom-color:#f0c66a}.admin-global-list{display:flex;flex-direction:column;gap:7px;max-height:320px;overflow:auto}.admin-global-row{display:grid;grid-template-columns:1.2fr 1fr .9fr auto;gap:8px;align-items:center;padding:10px;border:1px solid #ffffff10;border-radius:8px;background:#ffffff03}.admin-global-row strong{font-size:9px}.admin-global-row span{font-size:8px;color:#7d8792}.admin-global-delete{border:1px solid #ff7f7566;background:#ff7f7510;color:#ffaaa2;border-radius:7px;padding:7px 9px;font-size:8px;font-weight:900;cursor:pointer}.admin-global-delete:hover{background:#ff7f7520}.admin-global-empty{padding:20px;text-align:center;color:#69747f;font-size:9px;border:1px dashed #ffffff12;border-radius:8px}
 @media(max-width:600px){.admin-nav-btn{padding:8px 9px;font-size:8px}.cart-party-admin-note{display:none}.admin-global-head{align-items:flex-start}.admin-global-row{grid-template-columns:1fr auto}.admin-global-row span:nth-child(2),.admin-global-row span:nth-child(3){grid-column:1/-1}}
@@ -4908,7 +4917,20 @@ body.seervi-ai-open .float-wa{display:none!important}
 
 <div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-secondary admin-universal-back" type="button" onclick="seerviAdminBackToPrevious()">← BACK</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div>
 <div id="adminGlobalArea" class="admin-global-area">
-<div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, all quotations and complete party ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span>QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="invoices" onclick="adminGlobalTab('invoices')">ALL INVOICES</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalInvoices" class="admin-global-panel" hidden><div id="adminInvoicesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div>
+<div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, quotations, invoices and complete party ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span>QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div>
+<div class="admin-invoice-control">
+  <div class="admin-invoice-control-head">
+    <div><div class="crm-section-title">INVOICE CONTROL CENTER</div><p>All saved sale invoices, invoice value and latest invoice in one place.</p></div>
+    <button class="crm-secondary" type="button" onclick="adminGlobalTab('invoices')">VIEW ALL INVOICES</button>
+  </div>
+  <div class="admin-kpi-grid admin-invoice-kpi-grid">
+    <div class="admin-kpi"><span>INVOICES</span><strong id="adminKpiInvoices">0</strong></div>
+    <div class="admin-kpi"><span>TOTAL INVOICED</span><strong id="adminKpiInvoiced">₹0.00</strong></div>
+    <div class="admin-kpi"><span>AVERAGE INVOICE</span><strong id="adminKpiAverageInvoice">₹0.00</strong></div>
+    <div class="admin-kpi"><span>LAST INVOICE</span><strong id="adminKpiLastInvoice">—</strong></div>
+  </div>
+</div>
+<div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="invoices" onclick="adminGlobalTab('invoices')">ALL INVOICES</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalInvoices" class="admin-global-panel" hidden><div id="adminInvoicesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div>
 </div><div id="inventoryStockPanel" class="inventory-stock-panel" hidden>
   <div class="inventory-stock-head">
     <div class="inventory-stock-head-copy">
@@ -8407,6 +8429,15 @@ function crmRenderAdminKpis(){
   set('adminKpiBilled',money(billed));
   set('adminKpiReceived',money(received));
   set('adminKpiOutstanding',money(outstanding));
+
+  const invoiceCount=adminGlobalInvoices.length;
+  const invoiced=adminGlobalInvoices.reduce((s,x)=>s+Number(x.grandTotal||0),0);
+  const averageInvoice=invoiceCount ? invoiced/invoiceCount : 0;
+  const lastInvoice=adminGlobalInvoices[0]?.invoiceNo || '—';
+  set('adminKpiInvoices',invoiceCount);
+  set('adminKpiInvoiced',money(invoiced));
+  set('adminKpiAverageInvoice',money(averageInvoice));
+  set('adminKpiLastInvoice',lastInvoice);
 }
 
 function crmRenderGlobalAdmin(){
