@@ -9575,9 +9575,10 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     ly+=3.7;
   }
   const sellerAddress=[profile.address,profile.city,profile.state,profile.pincode].filter(Boolean).join(', ');
-  const addressText='Address: '+seerviInvoiceSafe(sellerAddress||'—');
-  const addressLines=doc.splitTextToSize(addressText,headerSplit-left-8);
-  doc.text(addressLines.slice(0,2),left+4,ly,{lineHeightFactor:1.05});
+  const addressText=seerviInvoiceSafe(sellerAddress||'—');
+  const addressLines=doc.splitTextToSize(addressText,headerSplit-(left+27)-8);
+  doc.text('Address:',left+4,ly);
+  doc.text(addressLines.slice(0,2),left+27,ly,{lineHeightFactor:1.05});
 
   const rx=right-4;
   doc.setFont('helvetica','bold');doc.setFontSize(12.5);doc.setTextColor(18,22,27);
