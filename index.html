@@ -6538,7 +6538,7 @@ function addManualQuoteItem(){
 
   toggleManualQuoteItem(false);
 }
-</script><div id="crmDeleteConfirmModal" class="crm-delete-confirm-modal" aria-hidden="true" onclick="crmCancelDeleteParty(event)"><div class="crm-delete-confirm-card" role="dialog" aria-modal="true" aria-labelledby="crmDeleteConfirmTitle" onclick="event.stopPropagation()"><h3 id="crmDeleteConfirmTitle">DELETE PARTY</h3><p id="crmDeleteConfirmText">This action will permanently remove the party and its linked cloud records.</p><div class="crm-delete-confirm-warning"><strong>Transaction data will be deleted.</strong> Quotations, rate history and ledger/payment entries linked to this party will be removed. The <strong>party profile and login account will remain</strong>, so the customer can log in again and still see/edit their profile.</div><input id="crmDeleteConfirmInput" class="crm-delete-confirm-input" type="text" autocomplete="off" placeholder="Type DELETE to confirm" oninput="crmDeleteConfirmInputChanged(this.value)" onkeydown="if(event.key==='Enter') crmConfirmDeleteParty()"><div class="crm-delete-confirm-actions"><button class="crm-delete-confirm-cancel" type="button" onclick="crmCancelDeleteParty()">CANCEL</button><button id="crmDeleteConfirmSubmit" class="crm-delete-confirm-submit" type="button" disabled onclick="crmConfirmDeleteParty()">DELETE</button></div></div></div>
+</script><div id="crmDeleteConfirmModal" class="crm-delete-confirm-modal" aria-hidden="true" onclick="crmCancelDeleteParty(event)"><div class="crm-delete-confirm-card" role="dialog" aria-modal="true" aria-labelledby="crmDeleteConfirmTitle" onclick="event.stopPropagation()"><h3 id="crmDeleteConfirmTitle">DELETE PARTY</h3><p id="crmDeleteConfirmText">This action will permanently remove the party and its linked cloud records.</p><div class="crm-delete-confirm-warning"><strong>Transaction data will be deleted.</strong> Quotations, invoices, rate history and ledger/payment entries linked to this party will be removed. The <strong>party profile and login account will remain</strong>, so the customer can log in again and still see/edit their profile.</div><input id="crmDeleteConfirmInput" class="crm-delete-confirm-input" type="text" autocomplete="off" placeholder="Type DELETE to confirm" oninput="crmDeleteConfirmInputChanged(this.value)" onkeydown="if(event.key==='Enter') crmConfirmDeleteParty()"><div class="crm-delete-confirm-actions"><button class="crm-delete-confirm-cancel" type="button" onclick="crmCancelDeleteParty()">CANCEL</button><button id="crmDeleteConfirmSubmit" class="crm-delete-confirm-submit" type="button" disabled onclick="crmConfirmDeleteParty()">DELETE</button></div></div></div>
 <script id="seervi-error-handling-core">
 /* ===== SEERVI CENTRAL ERROR HANDLING =====
    Local feature handlers remain authoritative. This layer handles only errors
@@ -8476,8 +8476,10 @@ function crmRenderGlobalAdmin(){
         <span>${safeEsc(adminPartyLabel(party)||inv.customer?.company||inv.customer?.name||'Unknown Party')}</span>
         <span>${safeEsc(inv.dateISO ? new Date(inv.dateISO).toLocaleDateString('en-IN') : '')} · ${money(inv.grandTotal)}</span>
         <span class="crm-row-actions">
+          <button class="crm-mini-btn" type="button" onclick="crmEditInvoice('${safeEsc(inv.id)}')">EDIT</button>
           <button class="crm-mini-btn" type="button" onclick="crmViewInvoice('${safeEsc(inv.id)}')">VIEW</button>
           <button class="gst-invoice-btn primary" type="button" onclick="crmDownloadInvoiceById('${safeEsc(inv.id)}')">DOWNLOAD</button>
+          <button class="admin-global-delete" type="button" onclick="crmDeleteInvoice('${safeEsc(inv.id)}')">DELETE</button>
         </span>
       </div>`;
     }).join('') : '<div class="admin-global-empty">No invoices saved yet.</div>';
@@ -8506,6 +8508,7 @@ function crmRenderGlobalAdmin(){
       const balance=balances.get(p.id)||0;
       const partyTxCount =
         adminGlobalQuotes.filter(q=>q.partyId===p.id).length +
+        adminGlobalInvoices.filter(inv=>inv.partyId===p.id).length +
         adminGlobalLedger.filter(x=>x.partyId===p.id && x.source!=='quotation' && !x.quoteId).length;
 
       return `<div class="admin-global-row">
@@ -9968,6 +9971,87 @@ window.crmDownloadInvoiceByQuotation=async function(id){
   }
 };
 
+
+window.crmEditInvoice=async function(id){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+  const inv=adminGlobalInvoices.find(x=>x.id===id);
+  if(!inv){alert('Invoice not found. Refresh the Admin Panel.');return;}
+
+  // Every invoice created by the current conversion flow is linked to its
+  // quotation. Reuse the existing quotation editor so all existing item,
+  // HSN, subcategory, pricing, inventory and PDF logic remains unchanged.
+  const quoteId=inv.quotationId||inv.quoteId;
+  let quoteIdToEdit=quoteId;
+
+  if(!quoteIdToEdit && inv.quoteNo){
+    const linkedQuote=adminGlobalQuotes.find(q=>q.quoteNo===inv.quoteNo);
+    quoteIdToEdit=linkedQuote?.id||'';
+  }
+
+  if(!quoteIdToEdit){
+    alert('This invoice is not linked to a quotation, so the existing quotation editor cannot safely edit it.');
+    return;
+  }
+
+  await crmEditQuote(quoteIdToEdit);
+  if(typeof seerviLogActivity==='function') await seerviLogActivity(
+    'invoice_edit_opened','invoices',
+    'Opened invoice '+(inv.invoiceNo||id)+' for editing',crmUser
+  );
+};
+
+window.crmDeleteInvoice=async function(id){
+  if(!crmUser || !isAuthorisedAdmin(crmUser)) return;
+  const inv=adminGlobalInvoices.find(x=>x.id===id);
+  if(!inv){alert('Invoice not found. Refresh the Admin Panel.');return;}
+
+  const invoiceNo=inv.invoiceNo||'this invoice';
+  if(!confirm('Delete Sale Invoice '+invoiceNo+'? The linked quotation will remain saved, but its invoice link will be cleared.')) return;
+
+  try{
+    const quoteId=inv.quotationId||inv.quoteId;
+    const batch=writeBatch(db);
+
+    batch.delete(doc(db,SEERVI_INVOICE_COLLECTION,id));
+
+    // Keep the quotation, but make it convertible again.
+    if(quoteId){
+      batch.update(doc(db,'quotations',quoteId),{
+        invoiceId:deleteField(),
+        invoiceNo:deleteField(),
+        invoicedAt:deleteField(),
+        updatedAt:serverTimestamp()
+      });
+    }
+
+    await batch.commit();
+
+    if(quoteId){
+      const q=adminGlobalQuotes.find(x=>x.id===quoteId);
+      if(q){
+        delete q.invoiceId;
+        delete q.invoiceNo;
+        delete q.invoicedAt;
+      }
+    }
+
+    adminGlobalInvoices=adminGlobalInvoices.filter(x=>x.id!==id);
+    crmRenderGlobalAdmin();
+
+    if(crmPartyId) await crmLoadPartyData(crmPartyId);
+    await crmLoadGlobalAdmin();
+
+    seerviShowSaveSuccess('Sale Invoice '+invoiceNo+' deleted successfully.');
+    if(typeof seerviLogActivity==='function') await seerviLogActivity(
+      'invoice_deleted','invoices',
+      'Deleted Sale Invoice '+invoiceNo,crmUser
+    );
+  }catch(e){
+    console.error('Invoice delete failed:',e);
+    alert('Invoice delete failed: '+(e?.message||'Check Firestore rules.'));
+  }
+};
+
 window.crmViewInvoice=function(id){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
   const inv=adminGlobalInvoices.find(x=>x.id===id);
@@ -10019,7 +10103,7 @@ window.crmDeleteParty=async function(id){
   const input=document.getElementById('crmDeleteConfirmInput');
   const submit=document.getElementById('crmDeleteConfirmSubmit');
   const text=document.getElementById('crmDeleteConfirmText');
-  if(text) text.textContent='You are about to delete all quotation, rate-history and ledger data for '+adminPartyLabel(party)+'. The party profile and login account will be kept.';
+  if(text) text.textContent='You are about to delete all quotation, invoice, rate-history and ledger data for '+adminPartyLabel(party)+'. The party profile and login account will be kept.';
   if(input){input.value='';}
   if(submit)submit.disabled=true;
   if(modal){modal.classList.add('show');modal.setAttribute('aria-hidden','false');}
@@ -10049,14 +10133,16 @@ window.crmConfirmDeleteParty=async function(){
   if(submit){submit.disabled=true;submit.textContent='DELETING…';}
   try{
     // Remove every cloud record belonging to the party first.
-    const [qs,rs,ls]=await Promise.all([
+    const [qs,rs,ls,is]=await Promise.all([
       getDocs(query(collection(db,'quotations'),where('partyId','==',id),limit(1000))),
       getDocs(query(collection(db,'rateHistory'),where('partyId','==',id),limit(2000))),
-      getDocs(query(collection(db,'ledger'),where('partyId','==',id),limit(2000)))
+      getDocs(query(collection(db,'ledger'),where('partyId','==',id),limit(2000))),
+      getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),where('partyId','==',id),limit(1000)))
     ]);
     for(const d of qs.docs) await deleteDoc(d.ref);
     for(const d of rs.docs) await deleteDoc(d.ref);
     for(const d of ls.docs) await deleteDoc(d.ref);
+    for(const d of is.docs) await deleteDoc(d.ref);
     // Keep the party profile document and Firebase Authentication account.
     // Only transactional data (quotations, rate history and ledger/payment entries) is removed.
     // This lets the customer log in again and still access/edit their profile.
@@ -13332,7 +13418,7 @@ window.loadAdminActivity=async function(){if(!crmUser||!isAuthorisedAdmin(crmUse
 window.openAdminActivity=function(){if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const m=$('seerviActivityModal');if(!m)return;m.classList.add('show');m.setAttribute('aria-hidden','false');seerviActivityFilter('all');loadAdminActivity();};
 window.closeAdminActivity=function(){const m=$('seerviActivityModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');};
 function seerviWrapActivity(name,module,action,description){const original=window[name];if(typeof original!=='function'||original.__seerviActivityWrapped)return;const wrapped=async function(...args){let actor=crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser;const result=await original.apply(this,args);actor=crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser||actor;if(actor){const desc=typeof description==='function'?description(result,args):description;await window.seerviLogActivity(action,module,desc,actor);}return result;};wrapped.__seerviActivityWrapped=true;wrapped.__seerviActivityOriginal=original;window[name]=wrapped;}
-seerviWrapActivity('seerviCreateItem','items','item_created',r=>`Added product: ${r?.name||'New item'}`);seerviWrapActivity('seerviUpdateItem','items','item_updated',r=>`Updated product: ${r?.name||r?.id||'Item'}`);seerviWrapActivity('seerviDeleteItem','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviCreateItemCategory','categories','category_created',r=>`Added ${r?.type||'category'}: ${r?.name||'Category'}`);seerviWrapActivity('seerviUpdateItemCategory','categories','category_updated',r=>`Updated ${r?.type||'category'}: ${r?.name||r?.id||'Category'}`);seerviWrapActivity('seerviDeleteItemCategory','categories','category_deleted',(_,a)=>`Deleted category/subcategory: ${a?.[0]||'Category'}`);seerviWrapActivity('crmSaveParty','parties','party_saved',()=>`Saved party/customer: ${document.getElementById('crmPartyName')?.value||'Party'}`);seerviWrapActivity('crmSaveCurrentQuote','quotations','quotation_saved',()=>`Saved quotation`);seerviWrapActivity('crmSaveQuoteStatus','quotations','quotation_status_updated',()=>`Updated quotation status`);seerviWrapActivity('crmDeleteParty','parties','party_deleted',(_,a)=>`Deleted party/customer: ${a?.[0]||'Party'}`);seerviWrapActivity('crmDeleteQuote','quotations','quotation_deleted',(_,a)=>`Deleted quotation: ${a?.[0]||'Quotation'}`);seerviWrapActivity('crmDeleteLedgerEntry','ledger','ledger_entry_deleted',(_,a)=>`Deleted ledger entry: ${a?.[0]||'Entry'}`);seerviWrapActivity('crmAddLedgerEntry','ledger','ledger_entry_added',()=>`Added payment/ledger entry`);seerviWrapActivity('submitNotificationPost','notifications','notification_posted',()=>`Posted notification`);seerviWrapActivity('seerviToggleItemActive','items','item_status_changed',(_,a)=>`Changed item active status: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviDuplicateItem','items','item_duplicated',(_,a)=>`Duplicated product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveItemForm','items','item_saved',()=>`Saved product from Items panel`);seerviWrapActivity('seerviDeleteItemConfirm','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveAdminSettings','settings','settings_updated',()=>`Updated global website settings`);seerviWrapActivity('seerviBackupItems','backup','items_backup',()=>`Created items backup`);seerviWrapActivity('seerviBackupCategories','backup','categories_backup',()=>`Created categories backup`);seerviWrapActivity('seerviBackupQuotationsWithParty','backup','quotations_backup',()=>`Created quotations backup`);seerviWrapActivity('setInventorySubcategoryStock','inventory','subcategory_stock_updated',(_,a)=>`Updated subcategory stock: ${a?.[1]||a?.[0]||'Subcategory'}`);seerviWrapActivity('setInventoryCategoryStock','inventory','category_stock_updated',(_,a)=>`Updated category stock: ${a?.[0]||'Category'}`);seerviWrapActivity('setInventoryQuantity','inventory','inventory_quantity_updated',(_,a)=>`Updated inventory quantity: ${a?.[0]||'Item'}`);seerviWrapActivity('setInventoryStock','inventory','inventory_stock_updated',(_,a)=>`Updated stock status: ${a?.[0]||'Item'}`);seerviWrapActivity('toggleInventoryStock','inventory','inventory_stock_toggled',()=>`Toggled inventory stock status`);seerviWrapActivity('seerviBulkImport','items','bulk_items_imported',()=>`Imported products in bulk`);seerviWrapActivity('seerviCategoryBulkImport','categories','bulk_categories_imported',()=>`Imported categories/subcategories in bulk`);
+seerviWrapActivity('seerviCreateItem','items','item_created',r=>`Added product: ${r?.name||'New item'}`);seerviWrapActivity('seerviUpdateItem','items','item_updated',r=>`Updated product: ${r?.name||r?.id||'Item'}`);seerviWrapActivity('seerviDeleteItem','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviCreateItemCategory','categories','category_created',r=>`Added ${r?.type||'category'}: ${r?.name||'Category'}`);seerviWrapActivity('seerviUpdateItemCategory','categories','category_updated',r=>`Updated ${r?.type||'category'}: ${r?.name||r?.id||'Category'}`);seerviWrapActivity('seerviDeleteItemCategory','categories','category_deleted',(_,a)=>`Deleted category/subcategory: ${a?.[0]||'Category'}`);seerviWrapActivity('crmSaveParty','parties','party_saved',()=>`Saved party/customer: ${document.getElementById('crmPartyName')?.value||'Party'}`);seerviWrapActivity('crmSaveCurrentQuote','quotations','quotation_saved',()=>`Saved quotation`);seerviWrapActivity('crmSaveQuoteStatus','quotations','quotation_status_updated',()=>`Updated quotation status`);seerviWrapActivity('crmDeleteParty','parties','party_deleted',(_,a)=>`Deleted party/customer: ${a?.[0]||'Party'}`);seerviWrapActivity('crmEditInvoice','invoices','invoice_edit_opened',(_,a)=>`Editing invoice: ${a?.[0]||'Invoice'}`);seerviWrapActivity('crmDeleteInvoice','invoices','invoice_deleted',(_,a)=>`Deleted invoice: ${a?.[0]||'Invoice'}`);seerviWrapActivity('crmDeleteQuote','quotations','quotation_deleted',(_,a)=>`Deleted quotation: ${a?.[0]||'Quotation'}`);seerviWrapActivity('crmDeleteLedgerEntry','ledger','ledger_entry_deleted',(_,a)=>`Deleted ledger entry: ${a?.[0]||'Entry'}`);seerviWrapActivity('crmAddLedgerEntry','ledger','ledger_entry_added',()=>`Added payment/ledger entry`);seerviWrapActivity('submitNotificationPost','notifications','notification_posted',()=>`Posted notification`);seerviWrapActivity('seerviToggleItemActive','items','item_status_changed',(_,a)=>`Changed item active status: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviDuplicateItem','items','item_duplicated',(_,a)=>`Duplicated product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveItemForm','items','item_saved',()=>`Saved product from Items panel`);seerviWrapActivity('seerviDeleteItemConfirm','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveAdminSettings','settings','settings_updated',()=>`Updated global website settings`);seerviWrapActivity('seerviBackupItems','backup','items_backup',()=>`Created items backup`);seerviWrapActivity('seerviBackupCategories','backup','categories_backup',()=>`Created categories backup`);seerviWrapActivity('seerviBackupQuotationsWithParty','backup','quotations_backup',()=>`Created quotations backup`);seerviWrapActivity('setInventorySubcategoryStock','inventory','subcategory_stock_updated',(_,a)=>`Updated subcategory stock: ${a?.[1]||a?.[0]||'Subcategory'}`);seerviWrapActivity('setInventoryCategoryStock','inventory','category_stock_updated',(_,a)=>`Updated category stock: ${a?.[0]||'Category'}`);seerviWrapActivity('setInventoryQuantity','inventory','inventory_quantity_updated',(_,a)=>`Updated inventory quantity: ${a?.[0]||'Item'}`);seerviWrapActivity('setInventoryStock','inventory','inventory_stock_updated',(_,a)=>`Updated stock status: ${a?.[0]||'Item'}`);seerviWrapActivity('toggleInventoryStock','inventory','inventory_stock_toggled',()=>`Toggled inventory stock status`);seerviWrapActivity('seerviBulkImport','items','bulk_items_imported',()=>`Imported products in bulk`);seerviWrapActivity('seerviCategoryBulkImport','categories','bulk_categories_imported',()=>`Imported categories/subcategories in bulk`);
 seerviWrapActivity('saveCustomerCartRequest','quotations','quotation_requested',()=>`Requested a quotation`);seerviWrapActivity('customerSaveProfile','profile','profile_updated',()=>`Updated customer profile`);seerviWrapActivity('crmSignIn','auth','admin_signed_in',()=>`Admin signed in`);seerviWrapActivity('customerSignIn','auth','customer_signed_in',()=>`Customer signed in`);
 
 </script><div id="crmPartyLedgerViewModal" class="crm-quote-view-modal" aria-hidden="true"><div class="crm-quote-view-backdrop" onclick="crmClosePartyLedgerView()"></div><div class="crm-quote-view-card crm-party-ledger-view-card" role="dialog" aria-modal="true" aria-labelledby="crmPartyLedgerViewTitle"><div class="crm-quote-view-head"><div><div class="crm-kicker">PARTY LEDGER</div><h3 id="crmPartyLedgerViewTitle">Party Ledger</h3><div id="crmPartyLedgerViewMeta" class="crm-quote-view-meta"></div></div><button class="crm-close" type="button" onclick="crmClosePartyLedgerView()">×</button></div><div class="crm-ledger-view-toolbar"><div class="crm-ledger-filter-group"><button class="crm-ledger-filter active" data-range="all" type="button" onclick="crmSetPartyLedgerFilter('all')">ALL</button><button class="crm-ledger-filter" data-range="weekly" type="button" onclick="crmSetPartyLedgerFilter('weekly')">WEEKLY</button><button class="crm-ledger-filter" data-range="monthly" type="button" onclick="crmSetPartyLedgerFilter('monthly')">MONTHLY</button><button class="crm-ledger-filter" data-range="quarterly" type="button" onclick="crmSetPartyLedgerFilter('quarterly')">QUARTERLY</button><button class="crm-ledger-filter" data-range="yearly" type="button" onclick="crmSetPartyLedgerFilter('yearly')">YEARLY</button></div><button id="crmPartyLedgerDownload" class="crm-primary small" type="button" onclick="crmDownloadPartyLedger()">DOWNLOAD LEDGER</button></div><div id="crmPartyLedgerViewBody" class="crm-quote-view-body"></div></div></div><div id="crmQuoteViewModal" class="crm-quote-view-modal" aria-hidden="true"><div class="crm-quote-view-backdrop" onclick="crmCloseQuoteView()"></div><div class="crm-quote-view-card" role="dialog" aria-modal="true" aria-labelledby="crmQuoteViewTitle"><div class="crm-quote-view-head"><div><div class="crm-kicker">QUOTATION VIEW</div><h3 id="crmQuoteViewTitle">Quotation</h3><div id="crmQuoteViewMeta" class="crm-quote-view-meta"></div></div><button class="crm-close" type="button" onclick="crmCloseQuoteView()">×</button></div><div id="crmQuoteViewStatusBar" class="crm-quote-status-bar"><span>STATUS</span><select id="crmQuoteViewStatus"><option value="saved">SAVED</option><option value="sent">SENT</option><option value="confirmed">CONFIRMED</option><option value="cancelled">CANCELLED</option></select><button type="button" class="crm-secondary small" onclick="crmSaveQuoteStatus()">SAVE STATUS</button></div><div id="crmQuoteViewBody" class="crm-quote-view-body"></div><div class="crm-quote-view-actions"><button class="crm-secondary" type="button" onclick="crmCloseQuoteView()">CLOSE</button><button id="crmQuoteViewDownload" class="crm-primary" type="button">DOWNLOAD PDF</button></div></div></div><div id="seerviActivityModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeAdminActivity()"></div><div class="crm-panel seervi-activity-panel" role="dialog" aria-modal="true" aria-labelledby="seerviActivityTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / ACTIVITY</div><h3 id="seerviActivityTitle">Activity Log</h3><div class="crm-auth-status">Meaningful updates from admin and customers.</div></div><button class="crm-close" type="button" onclick="closeAdminActivity()">×</button></div><div class="seervi-activity-toolbar"><div class="seervi-activity-filters"><button type="button" class="seervi-activity-filter active" data-activity-filter="all" onclick="seerviActivityFilter('all')">ALL</button><button type="button" class="seervi-activity-filter" data-activity-filter="admin" onclick="seerviActivityFilter('admin')">ADMIN</button><button type="button" class="seervi-activity-filter" data-activity-filter="customer" onclick="seerviActivityFilter('customer')">CUSTOMER</button></div><button type="button" class="crm-secondary small" onclick="loadAdminActivity()">↻ REFRESH</button></div><div id="seerviActivityStatus" class="crm-muted"></div><div id="seerviActivityList" class="seervi-activity-list"></div></div></div>
