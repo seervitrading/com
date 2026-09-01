@@ -7965,8 +7965,10 @@ function crmShowWorkspace(){
   if($('crmPartyMaster')) $('crmPartyMaster').hidden=true;
   crmRefresh();
   crmLoadGlobalAdmin();
-  seerviApplyAdminPanelMode();
-  adminGlobalTab(seerviAdminPanelMode==='invoices'?'invoices':'quotes');
+  // Do not initialise panel-specific filtering during authentication.
+  // The dashboard launchers set the mode only when the user actually opens
+  // QUOTATION PANEL or INVOICE PANEL. This keeps the original Firebase login
+  // flow independent from the optional panel UI.
 }
 
 window.crmSignIn = async function(){
