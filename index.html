@@ -9491,6 +9491,10 @@ async function seerviInvoiceNumberExists(invoiceNo){
   const snap=await getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),where('invoiceNo','==',invoiceNo),limit(1)));
   return !snap.empty;
 }
+async function seerviInvoiceNumberExistsExcept(invoiceNo,excludeId){
+  const snap=await getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),where('invoiceNo','==',invoiceNo),limit(10)));
+  return snap.docs.some(d=>d.id!==excludeId);
+}
 
 function seerviInvoiceSafe(v){return String(v??'').replace(/[^\x20-\x7E₹–—]/g,' ');}
 function seerviInvoiceInr(n){return 'INR '+Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});}
@@ -9988,8 +9992,42 @@ window.crmEditInvoice=async function(id){
     return;
   }
 
+  // Invoice-level fields are intentionally kept separate from quotation/cart
+  // data because they belong to the Sale Invoice document itself.
+  const currentShip={...(inv.shipTo||inv.customer||{})};
+  const currentInvoiceNo=String(inv.invoiceNo||'').trim();
+  const currentEway=String(inv.ewayBillNo||'').trim();
+  const currentNotes=String(inv.notes||'').trim();
+
+  const editedInvoiceNo=String(window.prompt('Invoice Number:',currentInvoiceNo)||'').trim();
+  if(!editedInvoiceNo){alert('Invoice number is required.');return;}
+  if(editedInvoiceNo!==currentInvoiceNo && await seerviInvoiceNumberExistsExcept(editedInvoiceNo,id)){
+    alert('Invoice number '+editedInvoiceNo+' already exists. Please use another number.');
+    return;
+  }
+
+  const editedEway=String(window.prompt('E-Way Bill Number (optional):',currentEway)||'').trim();
+  const editedNotes=String(window.prompt('Invoice Notes (optional):',currentNotes)||'').trim();
+
+  const editedShip={
+    name:String(window.prompt('Ship To - Name:',currentShip.name||'')||'').trim(),
+    company:String(window.prompt('Ship To - Company / Shop:',currentShip.company||'')||'').trim(),
+    phone:String(window.prompt('Ship To - Phone / WhatsApp:',currentShip.phone||currentShip.whatsapp||'')||'').trim(),
+    email:String(window.prompt('Ship To - Email:',currentShip.email||'')||'').trim(),
+    city:String(window.prompt('Ship To - City:',currentShip.city||'')||'').trim(),
+    address:String(window.prompt('Ship To - Address:',currentShip.address||'')||'').trim(),
+    gstin:String(currentShip.gstin||'').trim(),
+    pan:String(currentShip.pan||'').trim()
+  };
+
   crmEditingQuoteId='';
   crmEditingInvoiceId=id;
+  window.crmEditingInvoiceMeta={
+    invoiceNo:editedInvoiceNo,
+    ewayBillNo:editedEway,
+    notes:editedNotes,
+    shipTo:editedShip
+  };
 
   seerviCart=(inv.items||[]).map(x=>({
     type:x.type||'',
@@ -10281,9 +10319,14 @@ window.crmSaveCurrentQuote = async function(){
       const editStockDeltas=inventoryQuoteDeltas(oldInv.items||[],items);
       stockApplied=await adjustInventoryForQuoteDeltas(editStockDeltas,{strict:true});
 
+      const editInvoiceMeta=window.crmEditingInvoiceMeta||{};
       const editInvoiceBatch=writeBatch(db);
       editInvoiceBatch.update(doc(db,SEERVI_INVOICE_COLLECTION,crmEditingInvoiceId),{
         partyId:crmPartyId, customer, items,
+        invoiceNo:editInvoiceMeta.invoiceNo || oldInv.invoiceNo || '',
+        ewayBillNo:editInvoiceMeta.ewayBillNo || '',
+        notes:editInvoiceMeta.notes || '',
+        shipTo:editInvoiceMeta.shipTo || oldInv.shipTo || customer,
         subtotal:pricing.subtotal, gstEnabled:pricing.gstEnabled,
         gstRate:pricing.gstRate, gst:pricing.gst,
         grandTotal:pricing.grandTotal, updatedAt:serverTimestamp()
@@ -10294,12 +10337,17 @@ window.crmSaveCurrentQuote = async function(){
       const idx=adminGlobalInvoices.findIndex(x=>x.id===crmEditingInvoiceId);
       if(idx>=0) adminGlobalInvoices[idx]={
         ...adminGlobalInvoices[idx],partyId:crmPartyId,customer,items,
+        invoiceNo:editInvoiceMeta.invoiceNo || oldInv.invoiceNo || '',
+        ewayBillNo:editInvoiceMeta.ewayBillNo || '',
+        notes:editInvoiceMeta.notes || '',
+        shipTo:editInvoiceMeta.shipTo || oldInv.shipTo || customer,
         subtotal:pricing.subtotal,gstEnabled:pricing.gstEnabled,
         gstRate:pricing.gstRate,gst:pricing.gst,grandTotal:pricing.grandTotal
       };
 
-      const invoiceNo=oldInv.invoiceNo||'';
+      const invoiceNo=editInvoiceMeta.invoiceNo || oldInv.invoiceNo || '';
       crmEditingInvoiceId='';
+      window.crmEditingInvoiceMeta=null;
       await crmRefreshParties();
       await crmLoadPartyData(crmPartyId);
       await crmLoadGlobalAdmin();
