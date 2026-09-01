@@ -8441,11 +8441,16 @@ function crmRenderAdminKpis(){
   const set=(id,val)=>{const e=$(id);if(e)e.textContent=val;};
   const billSource=seerviAdminPanelMode==='invoices'?adminGlobalInvoices:adminGlobalQuotes;
   const billed=billSource.reduce((s,x)=>s+Number(x.grandTotal||0),0);
-  const received=adminGlobalLedger
-    .filter(x=>x.source!=='quotation' && !x.quoteId && x.type==='credit')
+  const panelManualLedger=adminGlobalLedger.filter(x=>
+    x.source!=='quotation' &&
+    !x.quoteId &&
+    (!x.panelScope || x.panelScope===seerviAdminPanelMode)
+  );
+  const received=panelManualLedger
+    .filter(x=>x.type==='credit')
     .reduce((s,x)=>s+Number(x.amount||0),0);
-  const manualDebit=adminGlobalLedger
-    .filter(x=>x.source!=='quotation' && !x.quoteId && x.type==='debit')
+  const manualDebit=panelManualLedger
+    .filter(x=>x.type==='debit')
     .reduce((s,x)=>s+Number(x.amount||0),0);
   const outstanding=Math.max(0,billed+manualDebit-received);
   set('adminKpiParties',adminGlobalParties.length);
@@ -8546,7 +8551,11 @@ function crmRenderGlobalAdmin(){
     });
 
     adminGlobalLedger
-      .filter(x=>x.source!=='quotation' && !x.quoteId)
+      .filter(x=>
+        x.source!=='quotation' &&
+        !x.quoteId &&
+        (!x.panelScope || x.panelScope===seerviAdminPanelMode)
+      )
       .forEach(x=>{
         const v=(x.type==='debit'?1:-1)*Number(x.amount||0);
         balances.set(x.partyId,(balances.get(x.partyId)||0)+v);
@@ -8558,7 +8567,12 @@ function crmRenderGlobalAdmin(){
         ? adminGlobalInvoices.filter(inv=>inv.partyId===p.id).length
         : adminGlobalQuotes.filter(q=>q.partyId===p.id).length;
       const partyTxCount = panelBillCount +
-        adminGlobalLedger.filter(x=>x.partyId===p.id && x.source!=='quotation' && !x.quoteId).length;
+        adminGlobalLedger.filter(x=>
+          x.partyId===p.id &&
+          x.source!=='quotation' &&
+          !x.quoteId &&
+          (!x.panelScope || x.panelScope===seerviAdminPanelMode)
+        ).length;
 
       return `<div class="admin-global-row">
         <strong>${safeEsc(adminPartyLabel(p))}</strong>
@@ -8709,7 +8723,12 @@ window.crmViewPartyLedger=function(partyId){
     }));
 
   const manualTx=adminGlobalLedger
-    .filter(x=>x.partyId===partyId && x.source!=='quotation' && !x.quoteId)
+    .filter(x=>
+      x.partyId===partyId &&
+      x.source!=='quotation' &&
+      !x.quoteId &&
+      (!x.panelScope || x.panelScope===seerviAdminPanelMode)
+    )
     .map(x=>({
       date:x.dateISO||'',
       sort:x.dateISO||'',
@@ -10664,9 +10683,14 @@ window.crmAddLedgerEntry = async function(){
   if(!Number.isFinite(amount)||amount<=0){alert('Enter a valid amount.');return;}
   try{
     await addDoc(collection(db,'ledger'),{
-      partyId:crmPartyId,type,amount,note,
+      partyId:crmPartyId,
+      type,
+      amount,
+      note,
+      panelScope:seerviAdminPanelMode==='invoices'?'invoices':'quotes',
       dateISO:new Date().toISOString().slice(0,10),
-      createdBy:crmUser.uid,createdAt:serverTimestamp()
+      createdBy:crmUser.uid,
+      createdAt:serverTimestamp()
     });
     $('crmLedgerAmount').value='';$('crmLedgerNote').value='';
     await crmLoadPartyData(crmPartyId);
