@@ -4718,6 +4718,7 @@ body.seervi-ai-open .float-wa{display:none!important}
       <button class="crm-secondary admin-universal-back customer-dashboard-back" type="button" onclick="seerviAccountDashboardBack()">← BACK</button>
     </div>
     <div id="adminDashboardOptions" class="account-dashboard-options" hidden aria-label="Admin dashboard options">
+      <button class="account-dashboard-option danger" type="button" onclick="accountDashboardSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your admin session</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardQuotationPanel()"><span>▣</span><strong>QUOTATION PANEL</strong><small>Manage quotations, parties & ledger</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardInvoicePanel()"><span>▤</span><strong>INVOICE PANEL</strong><small>Manage all sale invoices</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardItems()"><span>▤</span><strong>ITEMS</strong><small>Manage Firebase items & categories</small></button>
@@ -4729,7 +4730,6 @@ body.seervi-ai-open .float-wa{display:none!important}
       <button class="account-dashboard-option" type="button" onclick="openAdminSettings()"><span>⚙</span><strong>SETTINGS</strong><small>Control global website, Vanta & business settings</small></button>
       <button class="account-dashboard-option" type="button" onclick="openAdminActivity()"><span>◷</span><strong>ACTIVITY</strong><small>View meaningful admin & customer activity</small></button>
       <button class="account-dashboard-option" type="button" onclick="openGstProfile()"><span>₹</span><strong>GST PROFILE</strong><small>Business details used on sale invoices</small></button>
-      <button class="account-dashboard-option danger" type="button" onclick="accountDashboardSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your admin session</small></button>
     </div>
     <div id="customerDashboardOptions" class="account-dashboard-options" hidden aria-label="Customer dashboard options">
       <button class="account-dashboard-option" type="button" onclick="accountDashboardEditProfile()"><span>✎</span><strong>EDIT PROFILE</strong><small>Update your business & contact details</small></button>
@@ -10164,6 +10164,8 @@ window.crmConvertQuoteToInvoice=async function(id){
     adminGlobalInvoices=[savedInvoiceForAdmin,...adminGlobalInvoices.filter(x=>x.id!==invRef.id)];
     crmRenderGlobalAdmin();
     seerviShowSaveSuccess('Converted to Sale Invoice '+invoiceNo+'.');
+    // Creation/conversion should use the same sound as invoice edits.
+    window.Seervi?.notify?.play('invoice');
     if(typeof seerviLogActivity==='function')await seerviLogActivity('quotation_converted_to_invoice','invoices','Converted quotation '+(q.quoteNo||q.id)+' to Sale Invoice '+invoiceNo,crmUser);
     seerviGenerateSaleInvoicePDF(invoice,profile);
   }catch(e){
@@ -10854,6 +10856,8 @@ window.crmSaveCurrentQuote = async function(){
     inventoryApplyToHome();
     if(document.getElementById('inventoryStockPanel') && !document.getElementById('inventoryStockPanel').hidden) inventoryRenderAdmin();
     seerviShowSaveSuccess('Saved successfully.');
+    // New quotation creation should use the same sound as quotation edits.
+    window.Seervi?.notify?.play('quotation');
   }catch(e){
     if(stockApplied.length) await rollbackInventoryQuoteDeltas(stockApplied);
     alert('Quotation save failed: '+(e?.message||'Check Firestore rules/database.'));
