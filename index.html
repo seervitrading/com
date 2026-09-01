@@ -9734,8 +9734,13 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
       const top=y;
       doc.setFillColor(232,234,236);doc.rect(left,top,180,11,'F');
       doc.setDrawColor(95,100,105);doc.line(left,top,right,top);
-      for(let i=1;i<x.length-1;i++)doc.line(x[i],top,x[i],top+11);
-      /* Inner Rate/Amount dividers start below CGST/SGST group titles. */
+      /* Outer column boundaries span the full header. */
+      doc.line(x[1],top,x[1],top+11);
+      doc.line(x[2],top,x[2],top+11);
+      doc.line(x[4],top,x[4],top+11);
+      doc.line(x[6],top,x[6],top+11);
+      doc.line(x[7],top,x[7],top+11);
+      /* Rate/Amount dividers begin only below the CGST/SGST group headings. */
       doc.line(x[3],top+5,x[3],top+11);
       doc.line(x[5],top+5,x[5],top+11);
       doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(30,35,40);
