@@ -9735,13 +9735,17 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
       doc.setFillColor(232,234,236);doc.rect(left,top,180,11,'F');
       doc.setDrawColor(95,100,105);doc.line(left,top,right,top);
       for(let i=1;i<x.length-1;i++)doc.line(x[i],top,x[i],top+11);
-      doc.line(x[3],top+5,x[3],top+11);doc.line(x[5],top+5,x[5],top+11);
+      /* Inner Rate/Amount dividers start below CGST/SGST group titles. */
+      doc.line(x[3],top+5,x[3],top+11);
+      doc.line(x[5],top+5,x[5],top+11);
       doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(30,35,40);
       doc.text('HSN/SAC',(x[0]+x[1])/2,top+7,{align:'center'});
       doc.text('Taxable Value',(x[1]+x[2])/2,top+7,{align:'center'});
+      /* CGST grouped header: Rate + Amount */
       doc.text('CGST',(x[2]+x[4])/2,top+3.7,{align:'center'});
       doc.text('Rate',(x[2]+x[3])/2,top+8.5,{align:'center'});
       doc.text('Amount',(x[3]+x[4])/2,top+8.5,{align:'center'});
+      /* SGST grouped header: Rate + Amount */
       doc.text('SGST',(x[4]+x[6])/2,top+3.7,{align:'center'});
       doc.text('Rate',(x[4]+x[5])/2,top+8.5,{align:'center'});
       doc.text('Amount',(x[5]+x[6])/2,top+8.5,{align:'center'});
@@ -9812,11 +9816,13 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
     const qrCenterX=left+bankW+qrW/2;
     doc.setFont('helvetica','bold');doc.setFontSize(7.2);
+    doc.setFont('helvetica','bold');doc.setFontSize(8);
+    doc.setTextColor(18,22,27);
     doc.text('Payment QR Code',left+bankW+3,boxTop+5);
     if(profile.upiId){
       doc.setFont('helvetica','normal');doc.setFontSize(6.3);
-      doc.text('UPI ID:',left+bankW+3,boxTop+10);
-      doc.text(seerviInvoiceSafe(profile.upiId).slice(0,32),left+bankW+22,boxTop+10);
+      doc.setTextColor(70,78,86);
+      doc.text(seerviInvoiceSafe(profile.upiId).slice(0,32),left+bankW+39,boxTop+5);
       if(window.QRious){
         try{
           const qrCanvas=document.createElement('canvas');
