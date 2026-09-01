@@ -9595,7 +9595,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   doc.text(seerviInvoiceSafe(invoice.ewayBillNo||'—').slice(0,20),rx,headerTop+24,{align:'right'});
 
   // Single bottom edge of the header; do not draw another overlapping horizontal line.
-  y=headerTop+headerH+3;
+  y=headerTop+headerH;
 
   /* ===== BILL TO LEFT / SHIP TO RIGHT ===== */
   doc.setTextColor(18,22,27);doc.setFont('helvetica','bold');doc.setFontSize(8);
@@ -9626,7 +9626,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   };
   detailLines(c,left+4);
   detailLines(st,shipX+4);
-  y=billTop+33;
+  y=billTop+29;
 
   const items=invoice.items||[];
 
@@ -9769,7 +9769,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
       doc.text(seerviInvoiceInr(r.totalTax),x[7]-2,y,{align:'right'});y+=5.5;
     }
     if(y+5.5>278)drawHsnHeader();
-    doc.setFillColor(232,234,236);doc.rect(left,y-3.5,180,5.5,'F');
+    doc.setFillColor(232,234,236);doc.rect(left,y,180,5.5,'F');
     doc.setDrawColor(95,100,105);
     doc.line(left,y-3.5,right,y-3.5);
     for(let i=1;i<x.length-1;i++)doc.line(x[i],y-3.5,x[i],y+2);
