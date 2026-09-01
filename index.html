@@ -4934,7 +4934,7 @@ body.seervi-ai-open .float-wa{display:none!important}
     </div>
   </div>
   <div id="inventoryStockGrid" class="inventory-stock-grid"></div>
-</div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs"><button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button><button class="crm-tab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button><button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button><button class="crm-tab" data-tab="ledger" onclick="crmTab('ledger')">PAYMENT ENTRY</button></div><div id="crmOverview" class="crm-tab-panel"><div class="crm-stat-grid"><div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div><div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div><div><span>LEDGER BALANCE</span><strong id="crmLedgerBalance">₹0.00</strong></div></div></div><div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div><div id="crmRates" class="crm-tab-panel" hidden><div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div><div id="crmRatesList" class="crm-list"></div></div><div id="crmLedger" class="crm-tab-panel" hidden><div class="crm-ledger-help">Quotation amounts are automatically counted as billed. Add only manual payments (Cash / NEFT / IMPS / UPI) here.</div><div class="crm-ledger-add"><select id="crmLedgerType"><option value="debit">Debit / Sale</option><option value="credit">Credit / Payment Received</option></select><input id="crmLedgerAmount" type="number" min="0" step="0.01" placeholder="Amount ₹"><input id="crmLedgerNote" placeholder="Note / Reference"><button class="crm-primary small" type="button" onclick="crmAddLedgerEntry()">ADD ENTRY</button></div><div id="crmLedgerList" class="crm-list"></div></div></div></div>
+</div><div id="crmPartyMaster" class="crm-party-card" hidden><div class="crm-section-title">PARTY MASTER</div><div class="crm-form-grid"><input id="crmPartyName" placeholder="Party / Customer Name *"><input id="crmPartyCompany" placeholder="Shop / Company"><input id="crmPartyPhone" placeholder="Phone / WhatsApp"><input id="crmPartyEmail" type="email" placeholder="Email"><input id="crmPartyCity" placeholder="City"><input id="crmPartyAddress" placeholder="Address"></div><div class="crm-inline-actions"><button class="crm-primary small" type="button" onclick="crmSaveParty()">SAVE PARTY</button><span id="crmPartyMeta" class="crm-muted">No party selected</span></div></div><div class="crm-tabs"><button class="crm-tab active" data-tab="overview" onclick="crmTab('overview')">OVERVIEW</button><button class="crm-tab" data-tab="quotes" onclick="crmTab('quotes')">QUOTATIONS</button><button class="crm-tab" data-tab="rates" onclick="crmTab('rates')">RATE HISTORY</button><button class="crm-tab" data-tab="ledger" onclick="crmTab('ledger')">PAYMENT ENTRY</button></div><div id="crmOverview" class="crm-tab-panel"><div class="crm-stat-grid"><div><span>QUOTATIONS</span><strong id="crmQuoteCount">0</strong></div><div><span>LAST QUOTE</span><strong id="crmLastQuote">—</strong></div><div><span>LEDGER BALANCE</span><strong id="crmLedgerBalance">₹0.00</strong></div></div></div><div id="crmQuotes" class="crm-tab-panel" hidden><div id="crmQuotesList" class="crm-list"></div></div><div id="crmRates" class="crm-tab-panel" hidden><div class="rate-history-toolbar"><div><div class="crm-section-title">RATE HISTORY</div><div class="crm-muted">See the latest rate and previous quoted rates for each product.</div></div><input id="crmRateSearch" type="search" placeholder="Search product / model..." oninput="crmRateSearch(this.value)"></div><div id="crmRatesList" class="crm-list"></div></div><div id="crmLedger" class="crm-tab-panel" hidden><div class="crm-ledger-help">Select QUOTATION or INVOICE, then select its reference. Add manual payments (Cash / NEFT / IMPS / UPI) here.</div><div class="crm-ledger-add"><select id="crmLedgerDocumentType" aria-label="Payment document type" onchange="crmRefreshLedgerReferences()"><option value="quotation">QUOTATION</option><option value="invoice">INVOICE</option></select><select id="crmLedgerReference" aria-label="Quotation or invoice reference"><option value="">SELECT REFERENCE</option></select><select id="crmLedgerType"><option value="debit">Debit / Sale</option><option value="credit">Credit / Payment Received</option></select><input id="crmLedgerAmount" type="number" min="0" step="0.01" placeholder="Amount ₹"><input id="crmLedgerNote" placeholder="Note / Reference"><button class="crm-primary small" type="button" onclick="crmAddLedgerEntry()">ADD ENTRY</button></div><div id="crmLedgerList" class="crm-list"></div></div></div></div>
 <div id="seerviItemsModal" class="crm-modal seervi-items-modal" aria-hidden="true" hidden>
   <div class="crm-modal-backdrop" onclick="seerviCloseItemsPanel()"></div>
   <div class="crm-modal-card seervi-items-modal-card" role="dialog" aria-modal="true" aria-labelledby="seerviItemsModalTitle">
@@ -8265,7 +8265,11 @@ function crmRenderLedger(){
     <div class="crm-row">
       <strong>${esc(x.type==='debit'?'DEBIT':'CREDIT')}</strong>
       <span>${esc(x.dateISO||'')}</span>
-      <span>${esc(x.note||'')}</span>
+      <span>${esc(
+        (x.documentType==='invoice'?'INVOICE':'QUOTATION')+
+        (x.documentRefId?' · '+x.documentRefId:'')+
+        (x.note?' · '+x.note:'')
+      )}</span>
       <span class="${x.type==='debit'?'crm-ledger-debit':'crm-ledger-credit'}">${x.type==='debit'?'-':'+'}${money(x.amount)}</span>
       <span class="crm-row-actions">
         <button type="button" class="crm-mini-btn crm-danger-btn" onclick="crmDeleteLedgerEntry('${esc(x.id)}')">DELETE</button>
@@ -8278,6 +8282,7 @@ window.crmTab=function(tab){
   [['overview','crmOverview'],['quotes','crmQuotes'],['rates','crmRates'],['ledger','crmLedger']].forEach(([key,id])=>{
     $(id).hidden=key!==tab;
   });
+  if(tab==='ledger')crmRefreshLedgerReferences();
 };
 
 
@@ -10628,16 +10633,36 @@ window.crmDeleteLedgerEntry = async function(id){
   }
 };
 
+window.crmRefreshLedgerReferences=function(){
+  const type=$('crmLedgerDocumentType')?.value||'quotation';
+  const sel=$('crmLedgerReference');
+  if(!sel)return;
+  const rows=(type==='invoice'
+    ? adminGlobalInvoices.filter(x=>x.partyId===crmPartyId)
+    : adminGlobalQuotes.filter(x=>x.partyId===crmPartyId)
+  ).map(x=>({
+    id:x.id,
+    label:(type==='invoice'?(x.invoiceNo||x.id):(x.quoteNo||x.id))+
+      ' · ₹'+Number(x.grandTotal||0).toFixed(2)
+  }));
+  sel.innerHTML='<option value="">SELECT '+(type==='invoice'?'INVOICE':'QUOTATION')+'</option>'+
+    rows.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.label)+'</option>').join('');
+};
+
 window.crmAddLedgerEntry = async function(){
   if(!crmUser){crmShowLogin();return;}
   if(!crmPartyId){alert('Select a party first.');return;}
   const type=$('crmLedgerType').value;
   const amount=parseFloat($('crmLedgerAmount').value||'0');
   const note=$('crmLedgerNote').value.trim();
+  const documentType=$('crmLedgerDocumentType')?.value==='invoice'?'invoice':'quotation';
+  const documentRefId=$('crmLedgerReference')?.value||'';
+  if(!documentRefId){alert('Please select a '+(documentType==='invoice'?'invoice':'quotation')+' reference.');return;}
   if(!Number.isFinite(amount)||amount<=0){alert('Enter a valid amount.');return;}
   try{
     await addDoc(collection(db,'ledger'),{
       partyId:crmPartyId,type,amount,note,
+      documentType,documentRefId,
       dateISO:new Date().toISOString().slice(0,10),
       createdBy:crmUser.uid,createdAt:serverTimestamp()
     });
