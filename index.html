@@ -6695,7 +6695,7 @@ import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously, createUserWithEmailAndPassword, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 import {
-  getFirestore, collection, addDoc, setDoc, updateDoc, doc, getDoc, getDocs, deleteDoc, runTransaction, writeBatch,
+  getFirestore, collection, addDoc, setDoc, updateDoc, doc, getDoc, getDocs, deleteDoc, deleteField, runTransaction, writeBatch,
   query, where, orderBy, limit, serverTimestamp, onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
@@ -10025,6 +10025,7 @@ window.crmEditInvoice=async function(id){
 
 window.crmDeleteInvoice=async function(id){
   if(!crmUser || !isAuthorisedAdmin(crmUser)) return;
+
   const inv=adminGlobalInvoices.find(x=>x.id===id);
   if(!inv){alert('Invoice not found. Refresh the Admin Panel.');return;}
 
@@ -10035,20 +10036,28 @@ window.crmDeleteInvoice=async function(id){
     const quoteId=inv.quotationId||inv.quoteId;
     const batch=writeBatch(db);
 
+    // Always delete the invoice itself.
     batch.delete(doc(db,SEERVI_INVOICE_COLLECTION,id));
 
-    // Keep the quotation, but make it convertible again.
+    // If the source quotation still exists, clear its invoice link so it can
+    // be converted to a new invoice again. If it was already deleted, simply
+    // skip this update instead of failing the entire batch.
     if(quoteId){
-      batch.update(doc(db,'quotations',quoteId),{
-        invoiceId:deleteField(),
-        invoiceNo:deleteField(),
-        invoicedAt:deleteField(),
-        updatedAt:serverTimestamp()
-      });
+      const quoteRef=doc(db,'quotations',quoteId);
+      const quoteSnap=await getDoc(quoteRef);
+      if(quoteSnap.exists()){
+        batch.update(quoteRef,{
+          invoiceId:deleteField(),
+          invoiceNo:deleteField(),
+          invoicedAt:deleteField(),
+          updatedAt:serverTimestamp()
+        });
+      }
     }
 
     await batch.commit();
 
+    // Keep the in-memory quotation state consistent when it still exists.
     if(quoteId){
       const q=adminGlobalQuotes.find(x=>x.id===quoteId);
       if(q){
