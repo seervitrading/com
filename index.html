@@ -8543,6 +8543,8 @@ function crmRenderAdminKpis(){
   const outstanding=Math.max(0,billed+manualDebit-received);
   set('adminKpiParties',adminGlobalParties.length);
   set('adminKpiQuotes',billSource.length);
+  const billKpiLabel=document.querySelector('.admin-kpi-grid .admin-kpi:nth-child(2) span');
+  if(billKpiLabel) billKpiLabel.textContent=seerviAdminPanelMode==='invoices'?'INVOICES':'QUOTATIONS';
   set('adminKpiBilled',money(billed));
   set('adminKpiReceived',money(received));
   set('adminKpiOutstanding',money(outstanding));
@@ -8731,9 +8733,25 @@ window.crmEditQuote=async function(id){
   renderCart();
   closeCRM();
 
-  // Mobile openCart() is route-backed, so let it perform the normal #cart
-  // navigation instead of waiting on Firestore.
-  setTimeout(()=>openCart(),0);
+  // Open the cart drawer directly for an admin quotation edit.
+  // The normal openCart() wrapper is history-backed on mobile; when the
+  // quotation-edit return state is active, that wrapper can cause a brief
+  // open/close bounce and leave the user on the dashboard. Directly opening
+  // the existing drawer preserves the same cart UI without changing the
+  // normal public/customer navigation flow.
+  setTimeout(()=>{
+    try{
+      const cart=document.getElementById('cartDrawer');
+      if(!cart)return;
+      cart.classList.add('show');
+      cart.setAttribute('aria-hidden','false');
+      document.body.classList.add('cart-open');
+      renderCart();
+      renderCartPartySelector();
+    }catch(e){
+      console.warn('Admin quotation edit cart open failed:',e);
+    }
+  },0);
 };
 
 let crmPartyLedgerState={partyId:null,party:null,transactions:[],filter:'all'};
