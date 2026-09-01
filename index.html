@@ -9975,55 +9975,52 @@ window.crmDownloadInvoiceByQuotation=async function(id){
 
 window.crmEditInvoice=async function(id){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
+
+  // Edit the Firebase invoice directly. Never require the source quotation.
   const inv=adminGlobalInvoices.find(x=>x.id===id);
   if(!inv){alert('Invoice not found. Refresh the Admin Panel.');return;}
 
-  const quoteId=inv.quotationId||inv.quoteId;
-  let quoteIdToEdit=quoteId;
-  if(!quoteIdToEdit && inv.quoteNo){
-    const linkedQuote=adminGlobalQuotes.find(q=>q.quoteNo===inv.quoteNo);
-    quoteIdToEdit=linkedQuote?.id||'';
-  }
-
-  if(quoteIdToEdit){
-    await crmEditQuote(quoteIdToEdit);
-    if(typeof seerviLogActivity==='function') await seerviLogActivity(
-      'invoice_edit_opened','invoices',
-      'Opened invoice '+(inv.invoiceNo||id)+' for editing',crmUser
-    );
+  const partyId=inv.partyId||'';
+  const party=adminGlobalParties.find(p=>p.id===partyId) ||
+               crmParties.find(p=>p.id===partyId);
+  if(!party){
+    alert('The invoice party could not be found. Refresh the Admin Panel.');
     return;
   }
 
-  // Older invoices can remain after their quotation has been deleted.
-  // In that case edit the invoice directly through the existing Cart UI.
-  const partyId=inv.partyId||'';
-  const party=adminGlobalParties.find(p=>p.id===partyId) || crmParties.find(p=>p.id===partyId);
-  if(!party){alert('The invoice party could not be found. Refresh the Admin Panel.');return;}
-
   crmEditingQuoteId='';
   crmEditingInvoiceId=id;
+
   seerviCart=(inv.items||[]).map(x=>({
-    type:x.type||'', name:x.name||x.model||'', model:x.model||x.name||'',
-    categoryId:x.categoryId||'', category:x.category||'',
-    subcategoryId:x.subcategoryId||'', subcategory:x.subcategory||'',
-    thickness:x.spec||x.thickness||'', hsnCode:x.hsnCode||x.hsn||'',
-    qty:Number(x.qty||0), rate:Number(x.rate||0), image:'', manual:!!x.manual
+    type:x.type||'',
+    name:x.name||x.model||'',
+    model:x.model||x.name||'',
+    categoryId:x.categoryId||'',
+    category:x.category||'',
+    subcategoryId:x.subcategoryId||'',
+    subcategory:x.subcategory||'',
+    thickness:x.spec||x.thickness||'',
+    hsnCode:x.hsnCode||x.hsn||'',
+    qty:Number(x.qty||0),
+    rate:Number(x.rate||0),
+    image:'',
+    manual:!!x.manual
   }));
+
   localStorage.setItem('seerviCart',JSON.stringify(seerviCart));
 
-  const gstEnabled=$('gstEnabled'), gstRate=$('gstRate');
+  const gstEnabled=$('gstEnabled');
+  const gstRate=$('gstRate');
   if(gstEnabled) gstEnabled.checked=!!inv.gstEnabled;
-  if(gstRate){gstRate.value=Number(inv.gstRate||18);gstRate.disabled=!inv.gstEnabled;}
+  if(gstRate){
+    gstRate.value=Number(inv.gstRate||18);
+    gstRate.disabled=!inv.gstEnabled;
+  }
 
   await window.crmSelectPartyFromCart(partyId);
   renderCart();
   closeCRM();
   openCart();
-
-  if(typeof seerviLogActivity==='function') await seerviLogActivity(
-    'invoice_edit_opened','invoices',
-    'Opened invoice '+(inv.invoiceNo||id)+' for direct editing',crmUser
-  );
 };
 
 window.crmDeleteInvoice=async function(id){
