@@ -4733,8 +4733,7 @@ body.seervi-ai-open .float-wa{display:none!important}
     </div>
     <div id="customerDashboardOptions" class="account-dashboard-options" hidden aria-label="Customer dashboard options">
       <button class="account-dashboard-option" type="button" onclick="accountDashboardEditProfile()"><span>✎</span><strong>EDIT PROFILE</strong><small>Update your business & contact details</small></button>
-      <button class="account-dashboard-option" type="button" onclick="accountDashboardMyQuotations()"><span>▣</span><strong>MY QUOTATIONS</strong><small>View your quotations & order requests</small></button>
-      <button class="account-dashboard-option" type="button" onclick="accountDashboardMyInvoices()"><span>▤</span><strong>MY INVOICES</strong><small>View your sale invoices</small></button>
+      <button class="account-dashboard-option" type="button" onclick="accountDashboardMyOrder()"><span>▣</span><strong>MY ORDER</strong><small>View your quotations & order requests</small></button>
       <button class="account-dashboard-option danger" type="button" onclick="accountDashboardCustomerSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your customer session</small></button>
     </div>
   </div>
@@ -4905,7 +4904,7 @@ body.seervi-ai-open .float-wa{display:none!important}
     </form>
   </div>
 </div>
-<div id="customerLoginModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCustomerLogin()"></div><div class="crm-panel customer-portal-panel" role="dialog" aria-modal="true" aria-labelledby="customerPortalTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / SECURE LOGIN</div><h3 id="customerPortalTitle">Login</h3><div id="customerAuthStatus" class="crm-auth-status">Admin and customers can log in here. You will be taken to your own dashboard.</div></div><button class="crm-close" type="button" onclick="closeCustomerLogin()">×</button></div><div id="customerLoginView" class="crm-login"><div class="crm-section-title">LOGIN</div><p>Use your Seervi Trading email and password. Admin accounts open the Admin Dashboard; customer accounts open the Customer Dashboard.</p><div class="crm-login-grid"><input id="customerLoginEmail" type="email" placeholder="Email" autocomplete="username"><input id="customerLoginPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="customerSignIn()">LOGIN</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('customer')">FORGOT PASSWORD?</button></div><div id="customerLoginError" class="crm-error"></div><div class="customer-login-help">Don't have an account? <button type="button" onclick="closeCustomerLogin();openPartySignup();">SIGN UP</button></div></div><div id="customerDashboardView" class="customer-dashboard" hidden><div class="customer-dashboard-head"><div><div class="crm-section-title">WELCOME</div><h4 id="customerWelcomeName">Customer</h4><div id="customerWelcomeMeta" class="crm-auth-status"></div></div><div style="display:flex;gap:6px;align-items:center"><button class="crm-secondary customer-dashboard-refresh" type="button" onclick="customerRefreshDashboard()">↻ REFRESH</button><button class="crm-secondary danger" type="button" onclick="customerSignOut()">SIGN OUT</button></div></div><div id="customerDashboardSummary" class="customer-dashboard-summary" hidden></div><div id="customerProfileCard" class="customer-profile-card"></div><div class="customer-portal-tabs"><button class="customer-tab active" type="button" onclick="customerPortalTab('quotes')">MY QUOTATIONS</button><button class="customer-tab" type="button" onclick="customerPortalTab('invoices')">MY INVOICES</button><button class="customer-tab" type="button" onclick="customerPortalTab('ledger')">MY LEDGER</button><button class="customer-tab" type="button" onclick="customerPortalTab('rates')">RATE HISTORY</button></div><div id="customerQuotesList" class="customer-portal-list"></div><div id="customerInvoicesList" class="customer-portal-list" hidden></div><div id="customerRatesList" class="customer-portal-list" hidden></div><div id="customerLedgerList" class="customer-portal-list" hidden></div><div id="customerProfileEdit" class="customer-profile-edit" hidden></div></div></div></div>
+<div id="customerLoginModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCustomerLogin()"></div><div class="crm-panel customer-portal-panel" role="dialog" aria-modal="true" aria-labelledby="customerPortalTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / SECURE LOGIN</div><h3 id="customerPortalTitle">Login</h3><div id="customerAuthStatus" class="crm-auth-status">Admin and customers can log in here. You will be taken to your own dashboard.</div></div><button class="crm-close" type="button" onclick="closeCustomerLogin()">×</button></div><div id="customerLoginView" class="crm-login"><div class="crm-section-title">LOGIN</div><p>Use your Seervi Trading email and password. Admin accounts open the Admin Dashboard; customer accounts open the Customer Dashboard.</p><div class="crm-login-grid"><input id="customerLoginEmail" type="email" placeholder="Email" autocomplete="username"><input id="customerLoginPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="customerSignIn()">LOGIN</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('customer')">FORGOT PASSWORD?</button></div><div id="customerLoginError" class="crm-error"></div><div class="customer-login-help">Don't have an account? <button type="button" onclick="closeCustomerLogin();openPartySignup();">SIGN UP</button></div></div><div id="customerDashboardView" class="customer-dashboard" hidden><div class="customer-dashboard-head"><div><div class="crm-section-title">WELCOME</div><h4 id="customerWelcomeName">Customer</h4><div id="customerWelcomeMeta" class="crm-auth-status"></div></div><div style="display:flex;gap:6px;align-items:center"><button class="crm-secondary customer-dashboard-refresh" type="button" onclick="customerRefreshDashboard()">↻ REFRESH</button><button class="crm-secondary danger" type="button" onclick="customerSignOut()">SIGN OUT</button></div></div><div id="customerDashboardSummary" class="customer-dashboard-summary" hidden></div><div id="customerProfileCard" class="customer-profile-card"></div><div class="customer-portal-tabs"><button class="customer-tab active" type="button" onclick="customerPortalTab('quotes')">MY ORDER</button><button class="customer-tab" type="button" onclick="customerPortalTab('ledger')">MY LEDGER</button><button class="customer-tab" type="button" onclick="customerPortalTab('rates')">RATE HISTORY</button></div><div id="customerQuotesList" class="customer-portal-list"></div><div id="customerRatesList" class="customer-portal-list" hidden></div><div id="customerLedgerList" class="customer-portal-list" hidden></div><div id="customerProfileEdit" class="customer-profile-edit" hidden></div></div></div></div>
 
 
 <div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-secondary admin-universal-back" type="button" onclick="seerviAdminBackToPrevious()">← BACK</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div>
@@ -7137,7 +7136,7 @@ window.openCustomerLogin=function(){
   setTimeout(()=>{if(panel)panel.scrollTop=0;$('customerLoginEmail')?.focus();},40);
 };
 window.closeCustomerLogin=function(){const m=$('customerLoginModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');const panel=m.querySelector('.crm-panel');if(panel)panel.scrollTop=0;};
-let customerUser=null, customerParty=null, customerQuotes=[], customerInvoices=[], customerRates=[], customerLedger=[];
+let customerUser=null, customerParty=null, customerQuotes=[], customerRates=[], customerLedger=[];
 let customerDashboardRequestedView='orders';
 function customerErr(msg){if($('customerLoginError'))$('customerLoginError').textContent=msg||'';}
 function customerShowLogin(){if($('customerLoginView'))$('customerLoginView').hidden=false;if($('customerDashboardView'))$('customerDashboardView').hidden=true;customerErr('');}
@@ -7145,12 +7144,9 @@ function customerShowDashboard(){
   if($('customerLoginView'))$('customerLoginView').hidden=true;
   if($('customerDashboardView'))$('customerDashboardView').hidden=false;
   // Apply the requested dashboard view immediately, before the async Firebase
-  // profile load completes. This prevents the default quotation view from
-  // flashing when the customer explicitly opens invoices or profile.
-  if(typeof customerDashboardView==='function'){
-    const v=customerDashboardRequestedView;
-    customerDashboardView(v==='profile'?'profile':(v==='invoices'?'invoices':'quotes'));
-  }
+  // profile load completes. This prevents MY ORDER from flashing when the
+  // customer opens EDIT PROFILE.
+  if(typeof customerDashboardView==='function') customerDashboardView(customerDashboardRequestedView==='profile'?'profile':'orders');
   customerLoadDashboard().catch(e=>{console.error(e);customerErr((e?.message||'Could not load your customer data.').replace('Firebase: ',''));});
 }
 window.sendSeerviPasswordReset=async function(source){
@@ -7255,7 +7251,7 @@ window.customerSignOut=async function(){
     await signOut(auth).catch(()=>{});
   }finally{
     crmUser=null;
-    customerUser=null;customerParty=null;customerQuotes=[];customerInvoices=[];customerRates=[];customerLedger=[];
+    customerUser=null;customerParty=null;customerQuotes=[];customerRates=[];customerLedger=[];
     hideCustomerHomeProfile();customerShowLogin();updateAuthNav();closeCustomerLogin();goHomeAfterAuth();
     window.Seervi?.notify?.play('signout');
     if(typeof syncQuotationModeWithAuth==='function') syncQuotationModeWithAuth(false);
@@ -7299,14 +7295,12 @@ async function customerLoadDashboard(){
     customerParty=snap.docs.map(d=>({id:d.id,...d.data()}))[0]||null;
   }
   if(!customerParty)throw new Error('No party profile is linked to this account yet. Please complete your party details.');
-  const [qs,is,rs,ls]=await Promise.all([
+  const [qs,rs,ls]=await Promise.all([
     seerviCachedRead('customer:'+customerParty.id+':quotes:200',()=>getDocs(query(collection(publicSignupDb,'quotations'),where('partyId','==',customerParty.id),limit(200))),8000),
-    seerviCachedRead('customer:'+customerParty.id+':invoices:200',()=>getDocs(query(collection(publicSignupDb,SEERVI_INVOICE_COLLECTION),where('partyId','==',customerParty.id),limit(200))),8000),
     seerviCachedRead('customer:'+customerParty.id+':rates:500',()=>getDocs(query(collection(publicSignupDb,'rateHistory'),where('partyId','==',customerParty.id),limit(500))),8000),
     seerviCachedRead('customer:'+customerParty.id+':ledger:1000',()=>getDocs(query(collection(publicSignupDb,'ledger'),where('partyId','==',customerParty.id),limit(1000))),8000)
   ]);
   customerQuotes=qs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
-  customerInvoices=is.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   customerRates=rs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   customerLedger=ls.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   $('customerWelcomeName').textContent=customerParty.name||'Customer';
@@ -7357,73 +7351,6 @@ function customerRenderQuotes(){
   if(!customerQuotes.length){el.innerHTML='<div class="crm-list-empty">No quotations available yet.</div>';return;}
   el.innerHTML=customerQuotes.map(q=>{const status=String(q.status||'customer_request').toLowerCase();const statusLabel=status.replace(/_/g,' ').toUpperCase();return `<div class="customer-quote-row"><strong>${esc(q.quoteNo||'Quotation')}</strong><span>${esc(q.dateISO||'')}</span><span class="customer-quote-status ${esc(status)}">${esc(statusLabel)}</span><span>${money(q.grandTotal||0)}</span><button class="customer-portal-btn" type="button" onclick="customerViewQuote('${esc(q.id)}')">VIEW</button></div>`;}).join('');
 }
-function customerRenderInvoices(){
-  const el=$('customerInvoicesList');if(!el)return;
-  if(!customerInvoices.length){
-    el.innerHTML='<div class="crm-list-empty">No sale invoices available yet.</div>';
-    return;
-  }
-  el.innerHTML=customerInvoices.map(inv=>`
-    <div class="customer-quote-row">
-      <strong>${esc(inv.invoiceNo||'Invoice')}</strong>
-      <span>${esc(inv.dateISO||'')}</span>
-      <span class="customer-quote-status saved">SALE INVOICE</span>
-      <span>${money(inv.grandTotal||0)}</span>
-      <button class="customer-portal-btn" type="button" onclick="customerViewInvoice('${esc(inv.id)}')">VIEW</button>
-    </div>`).join('');
-}
-window.customerViewInvoice=function(id){
-  const inv=customerInvoices.find(x=>x.id===id);if(!inv)return;
-  const party=customerParty||inv.customer||{};
-  const title=$('crmQuoteViewTitle'),meta=$('crmQuoteViewMeta'),body=$('crmQuoteViewBody'),dl=$('crmQuoteViewDownload'),statusBar=$('crmQuoteViewStatusBar');
-  if(!title||!meta||!body||!dl)return;
-  if(statusBar)statusBar.hidden=true;
-  title.textContent='SALE INVOICE '+(inv.invoiceNo||'');
-  meta.textContent=[
-    inv.dateISO?new Date(inv.dateISO).toLocaleDateString('en-IN'):'',
-    party.company||party.name||inv.customer?.company||inv.customer?.name||'',
-    inv.ewayBillNo?'E-WAY BILL '+inv.ewayBillNo:''
-  ].filter(Boolean).join(' · ');
-  const items=inv.items||[];
-  const rows=items.map((item,i)=>`
-    <tr>
-      <td>${i+1}</td>
-      <td>${esc([item.model||item.name||'Item',item.subcategory].filter(Boolean).join(' — '))}</td>
-      <td>${esc(item.spec||'—')}</td>
-      <td class="num">${Number(item.qty||0)}</td>
-      <td class="num">${money(item.rate)}</td>
-      <td class="num">${money(item.amount ?? Number(item.qty||0)*Number(item.rate||0))}</td>
-    </tr>`).join('');
-  body.innerHTML=`
-    <div class="crm-quote-view-summary">
-      <div><small>BILL TO</small><strong>${crmSafeEsc(inv.customer?.name||party.name||'—')}</strong></div>
-      <div><small>SHIP TO</small><strong>${crmSafeEsc(inv.shipTo?.name||inv.customer?.name||party.name||'—')}</strong></div>
-      <div><small>GRAND TOTAL</small><strong>${money(inv.grandTotal)}</strong></div>
-    </div>
-    <table class="crm-qv-table">
-      <thead><tr><th>#</th><th>Product / Model + Subcategory</th><th>Spec</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead>
-      <tbody>${rows||'<tr><td colspan="6">No items in this invoice.</td></tr>'}</tbody>
-    </table>
-    <div class="crm-qv-totals">
-      <div class="crm-qv-total"><span>Subtotal</span><strong>${money(inv.subtotal)}</strong></div>
-      ${inv.gstEnabled?`<div class="crm-qv-total"><span>GST (${Number(inv.gstRate||0)}%)</span><strong>${money(inv.gst)}</strong></div>`:''}
-      <div class="crm-qv-total crm-qv-grand"><span>Grand Total</span><strong>${money(inv.grandTotal)}</strong></div>
-    </div>`;
-  dl.textContent='DOWNLOAD PDF';
-  dl.onclick=()=>customerDownloadInvoice(id);
-  const m=$('crmQuoteViewModal');m?.classList.add('show');m?.setAttribute('aria-hidden','false');
-};
-window.customerDownloadInvoice=async function(id){
-  const inv=customerInvoices.find(x=>x.id===id);if(!inv)return;
-  try{
-    const profile=inv.gstProfile||await seerviLoadInvoiceProfile();
-    seerviGenerateSaleInvoicePDF(inv,profile);
-  }catch(e){
-    console.error('Customer invoice PDF failed:',e);
-    alert('Invoice PDF failed: '+(e?.message||'Please try again.'));
-  }
-};
-
 function customerRenderRates(){
   const el=$('customerRatesList');if(!el)return;
   if(!customerRates.length){el.innerHTML='<div class="customer-rate-history-empty">No previous item-wise rates are available yet.</div>';return;}
@@ -7459,14 +7386,14 @@ window.customerDashboardView=function(view){
   const signOut=head?.querySelector('.danger');
   const profile=$('customerProfileCard');
   const tabs=document.querySelector('.customer-portal-tabs');
-  const quotes=$('customerQuotesList'), invoices=$('customerInvoicesList'), rates=$('customerRatesList'), ledger=$('customerLedgerList');
+  const quotes=$('customerQuotesList'), rates=$('customerRatesList'), ledger=$('customerLedgerList');
   const edit=$('customerProfileEdit');
   const isProfile=view==='profile';
-  const activeTab=isProfile?'':(view==='invoices'?'invoices':'quotes');
 
-  // Customer Dashboard keeps the existing profile/ledger/rate-history flow,
-  // while MY ORDER is split into two independent document views:
-  // MY QUOTATIONS and MY INVOICES.
+  // Customer Dashboard is intentionally split into two clean views:
+  // EDIT PROFILE = welcome identity + edit form only.
+  // MY ORDER = orders / ledger / rate history only.
+  // Nothing from one view is allowed to leak into the other.
   if(head) head.hidden=!isProfile;
   if(signOut) signOut.hidden=true;
   if(profile) profile.hidden=true;
@@ -7475,18 +7402,10 @@ window.customerDashboardView=function(view){
 
   if(isProfile){
     if(quotes) quotes.hidden=true;
-    if(invoices) invoices.hidden=true;
     if(rates) rates.hidden=true;
     if(ledger) ledger.hidden=true;
   }else{
     if(edit) edit.hidden=true;
-    if(quotes) quotes.hidden=activeTab!=='quotes';
-    if(invoices) invoices.hidden=activeTab!=='invoices';
-    // Preserve the existing ledger/rate-history access.
-    if(rates) rates.hidden=true;
-    if(ledger) ledger.hidden=true;
-    if(activeTab==='quotes') customerPortalTab('quotes');
-    if(activeTab==='invoices') customerPortalTab('invoices');
   }
 };
 window.customerEditProfile=function(){
@@ -7504,17 +7423,11 @@ window.customerSaveProfile=async function(){
   try{await updateDoc(doc(publicSignupDb,'parties',customerParty.id),payload);await customerLoadDashboard();$('customerProfileEdit').hidden=true;seerviShowSaveSuccess('Profile updated successfully.');}catch(e){alert('Profile update failed: '+(e?.message||'Check Firebase rules.'));}
 };
 window.customerPortalTab=function(tab){
-  if(tab==='quotes'||tab==='invoices') customerDashboardRequestedView=tab;
-  const q=$('customerQuotesList'),i=$('customerInvoicesList'),r=$('customerRatesList'),l=$('customerLedgerList');
-  if(!q||!i||!r||!l)return;
-  q.hidden=tab!=='quotes';
-  i.hidden=tab!=='invoices';
-  r.hidden=tab!=='rates';
-  l.hidden=tab!=='ledger';
-  document.querySelectorAll('.customer-tab').forEach((b,idx)=>{
-    const tabs=['quotes','invoices','ledger','rates'];
-    b.classList.toggle('active',tabs[idx]===tab);
-  });
+  customerDashboardRequestedView='orders';
+  const q=$('customerQuotesList'),r=$('customerRatesList'),l=$('customerLedgerList');if(!q||!r||!l)return;
+  customerDashboardView('orders');
+  q.hidden=tab!=='quotes';r.hidden=tab!=='rates';l.hidden=tab!=='ledger';
+  document.querySelectorAll('.customer-tab').forEach((b,i)=>b.classList.toggle('active',(tab==='quotes'&&i===0)||(tab==='ledger'&&i===1)||(tab==='rates'&&i===2)));
 };
 window.customerViewQuote=function(id){
   const q=customerQuotes.find(x=>x.id===id);if(!q)return;
@@ -7928,22 +7841,12 @@ window.accountDashboardEditProfile=function(){
   customerDashboardRequestedView='profile';
   customerShowDashboard();
 };
-window.accountDashboardMyQuotations=function(){
-  closeAccountDashboard();
+window.accountDashboardMyOrder=function(){
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
-  customerDashboardRequestedView='quotes';
+  customerDashboardRequestedView='orders';
   customerShowDashboard();
 };
-window.accountDashboardMyInvoices=function(){
-  closeAccountDashboard();
-  const m=$('customerLoginModal');if(!m)return;
-  m.classList.add('show');m.setAttribute('aria-hidden','false');
-  customerDashboardRequestedView='invoices';
-  customerShowDashboard();
-};
-// Backward-compatible alias so any existing caller of MY ORDER does not break.
-window.accountDashboardMyOrder=window.accountDashboardMyQuotations;
 window.accountDashboardCustomerSignOut=function(){closeAccountDashboard();customerSignOut();};
 
 onAuthStateChanged(publicSignupAuth,user=>{
