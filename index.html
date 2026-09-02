@@ -11517,7 +11517,7 @@ function seerviRefreshNotificationReadState(){
 window.addEventListener('storage',e=>{
   if(e.key&&e.key.startsWith('seervi_notification_read_')) seerviRenderNotificationList();
 });
-if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{seerviStartNotificationListener().catch(()=>{});if('Notification' in window&&Notification.permission==='default'){const ask=()=>{seerviRequestNotificationPermission().catch(()=>{});window.removeEventListener('click',ask,true);window.removeEventListener('touchstart',ask,true)};window.addEventListener('click',ask,true,{once:true});window.addEventListener('touchstart',ask,true,{once:true})}},{once:true})}else{seerviStartNotificationListener().catch(()=>{});if('Notification' in window&&Notification.permission==='default'){const ask=()=>{seerviRequestNotificationPermission().catch(()=>{});window.removeEventListener('click',ask,true);window.removeEventListener('touchstart',ask,true)};window.addEventListener('click',ask,true,{once:true});window.addEventListener('touchstart',ask,true,{once:true})}}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{seerviStartNotificationListener().catch(()=>{});seerviRequestActivityLocationPermission().catch(()=>{});if('Notification' in window&&Notification.permission==='default'){const ask=()=>{seerviRequestNotificationPermission().catch(()=>{});window.removeEventListener('click',ask,true);window.removeEventListener('touchstart',ask,true)};window.addEventListener('click',ask,true,{once:true});window.addEventListener('touchstart',ask,true,{once:true})}},{once:true})}else{seerviStartNotificationListener().catch(()=>{});seerviRequestActivityLocationPermission().catch(()=>{});if('Notification' in window&&Notification.permission==='default'){const ask=()=>{seerviRequestNotificationPermission().catch(()=>{});window.removeEventListener('click',ask,true);window.removeEventListener('touchstart',ask,true)};window.addEventListener('click',ask,true,{once:true});window.addEventListener('touchstart',ask,true,{once:true})}}
 
 window.addEventListener('beforeunload',()=>{
   if(seerviNotificationUnsubscribe){seerviNotificationUnsubscribe();seerviNotificationUnsubscribe=null;}
@@ -13771,6 +13771,16 @@ let seerviActivityFilterValue='all';
 let seerviActivityCache=[];
 function seerviActivityText(value,max=500){return String(value??'').replace(/\s+/g,' ').trim().slice(0,max);}
 let seerviActivityLocation=null;
+async function seerviRequestActivityLocationPermission(){
+  try{
+    if(!navigator.geolocation)return;
+    if(navigator.permissions?.query){
+      const permission=await navigator.permissions.query({name:'geolocation'});
+      if(permission.state==='granted')return;
+    }
+    await new Promise((resolve)=>navigator.geolocation.getCurrentPosition(resolve,()=>resolve(),{enableHighAccuracy:true,timeout:8000,maximumAge:0}));
+  }catch(e){}
+}
 async function seerviGetActivityLocation(){
   if(seerviActivityLocation)return seerviActivityLocation;
   const fallback={locationPermission:'unavailable'};
