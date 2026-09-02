@@ -13754,15 +13754,37 @@ const SEERVI_ACTIVITY_COLLECTION='activityLogs';
 let seerviActivityFilterValue='all';
 let seerviActivityCache=[];
 function seerviActivityText(value,max=500){return String(value??'').replace(/\s+/g,' ').trim().slice(0,max);}
+let seerviActivityLocation=null;
+async function seerviGetActivityLocation(){
+  if(seerviActivityLocation)return seerviActivityLocation;
+  const fallback={locationPermission:'unavailable'};
+  try{
+    if(!navigator.geolocation){seerviActivityLocation=fallback;return fallback;}
+    if(navigator.permissions?.query){
+      const permission=await navigator.permissions.query({name:'geolocation'});
+      if(permission.state==='denied'){seerviActivityLocation={locationPermission:'denied'};return seerviActivityLocation;}
+    }
+    const position=await new Promise((resolve,reject)=>navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:true,timeout:8000,maximumAge:300000}));
+    const c=position.coords;
+    seerviActivityLocation={locationPermission:'granted',latitude:Number(c.latitude.toFixed(6)),longitude:Number(c.longitude.toFixed(6)),accuracyMeters:Math.round(c.accuracy||0)};
+  }catch(error){
+    seerviActivityLocation={locationPermission:error?.code===1?'denied':'unavailable'};
+  }
+  return seerviActivityLocation;
+}
 window.seerviLogActivity=async function(action,module,description,actor){
   const user=actor||crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser;if(!user)return false;
   const admin=isAuthorisedAdmin(user), activityDb=admin?db:publicSignupDb, actorType=admin?'admin':'customer';
   const cleanAction=seerviActivityText(action,100),cleanModule=seerviActivityText(module,80),cleanDescription=seerviActivityText(description,500);
   if(!cleanAction||!cleanModule||!cleanDescription)return false;
-  try{await addDoc(collection(activityDb,SEERVI_ACTIVITY_COLLECTION),{actorType,actorUid:user.uid,actorEmail:user.email||'',action:cleanAction,module:cleanModule,description:cleanDescription,createdAt:serverTimestamp()});return true;}catch(error){console.warn('[Seervi] Activity log failed:',error);return false;}
+  try{
+    const location=await seerviGetActivityLocation();
+    await addDoc(collection(activityDb,SEERVI_ACTIVITY_COLLECTION),{actorType,actorUid:user.uid,actorEmail:user.email||'',action:cleanAction,module:cleanModule,description:cleanDescription,locationPermission:location.locationPermission||'unavailable',...(location.latitude!=null?{latitude:location.latitude,longitude:location.longitude,accuracyMeters:location.accuracyMeters}:{}),createdAt:serverTimestamp()});
+    return true;
+  }catch(error){console.warn('[Seervi] Activity log failed:',error);return false;}
 };
 function seerviActivityTimestamp(value){if(!value)return 'Just now';const d=value.toDate?value.toDate():(value instanceof Date?value:new Date(value));if(Number.isNaN(d.getTime()))return 'Just now';return d.toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}
-function seerviActivityRender(){const list=$('seerviActivityList');if(!list)return;const rows=seerviActivityCache.filter(x=>seerviActivityFilterValue==='all'||x.actorType===seerviActivityFilterValue);if(!rows.length){list.innerHTML='<div class="seervi-activity-empty">No activity found.</div>';return;}list.innerHTML=rows.map(x=>{const actor=x.actorType==='admin'?'ADMIN':'CUSTOMER',who=seerviEscHtml(x.actorEmail||actor),desc=seerviEscHtml(x.description||x.action||'Activity'),module=seerviEscHtml(x.module||''),time=seerviEscHtml(seerviActivityTimestamp(x.createdAt));return `<article class="seervi-activity-item"><div class="seervi-activity-badge ${actor.toLowerCase()}">${actor}</div><div class="seervi-activity-main"><strong>${desc}</strong><span>${who}${module?' · '+module:''}</span></div><div class="seervi-activity-time">${time}</div></article>`;}).join('');}
+function seerviActivityRender(){const list=$('seerviActivityList');if(!list)return;const rows=seerviActivityCache.filter(x=>seerviActivityFilterValue==='all'||x.actorType===seerviActivityFilterValue);if(!rows.length){list.innerHTML='<div class="seervi-activity-empty">No activity found.</div>';return;}list.innerHTML=rows.map(x=>{const actor=x.actorType==='admin'?'ADMIN':'CUSTOMER',who=seerviEscHtml(x.actorEmail||actor),desc=seerviEscHtml(x.description||x.action||'Activity'),module=seerviEscHtml(x.module||''),time=seerviEscHtml(seerviActivityTimestamp(x.createdAt)),loc=x.latitude!=null?` · <a href="https://www.google.com/maps?q=${encodeURIComponent(x.latitude+','+x.longitude)}" target="_blank" rel="noopener noreferrer">LOCATION</a>`:(x.locationPermission==='denied'?' · LOCATION DENIED':'');return `<article class="seervi-activity-item"><div class="seervi-activity-badge ${actor.toLowerCase()}">${actor}</div><div class="seervi-activity-main"><strong>${desc}</strong><span>${who}${module?' · '+module:''}${loc}</span></div><div class="seervi-activity-time">${time}</div></article>`;}).join('');}
 window.seerviActivityFilter=function(filter){seerviActivityFilterValue=['all','admin','customer'].includes(filter)?filter:'all';document.querySelectorAll('[data-activity-filter]').forEach(btn=>btn.classList.toggle('active',btn.dataset.activityFilter===seerviActivityFilterValue));seerviActivityRender();};
 window.loadAdminActivity=async function(){if(!crmUser||!isAuthorisedAdmin(crmUser)){closeAdminActivity();openAdminPanel();return;}const status=$('seerviActivityStatus'),list=$('seerviActivityList');if(status)status.textContent='Loading activity…';if(list)list.innerHTML='';try{const snap=await getDocs(query(collection(db,SEERVI_ACTIVITY_COLLECTION),limit(250)));seerviActivityCache=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.toMillis?b.createdAt.toMillis():0)-(a.createdAt?.toMillis?a.createdAt.toMillis():0));if(status)status.textContent=`Showing ${seerviActivityCache.length} recent activities.`;seerviActivityRender();}catch(error){console.error('Activity load failed:',error);if(status)status.textContent='Activity load failed: '+(error?.message||'Check Firebase rules.');if(list)list.innerHTML='<div class="seervi-activity-empty">Could not load activity log.</div>';}};
 window.openAdminActivity=function(){if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const m=$('seerviActivityModal');if(!m)return;m.classList.add('show');m.setAttribute('aria-hidden','false');seerviActivityFilter('all');loadAdminActivity();};
