@@ -7296,11 +7296,22 @@ async function customerLoadDashboard(){
     customerParty=snap.docs.map(d=>({id:d.id,...d.data()}))[0]||null;
   }
   if(!customerParty)throw new Error('No party profile is linked to this account yet. Please complete your party details.');
+  // Customer login must not fail just because one optional customer panel
+  // (invoice/rate/ledger) is blocked by a Firebase rule. Authentication and
+  // the party profile are independent of those panel reads.
+  const customerSafeRead=async(label,reader)=>{
+    try{
+      return await seerviCachedRead(label,reader,8000);
+    }catch(e){
+      console.warn('Customer panel read skipped:',label,e);
+      return {docs:[]};
+    }
+  };
   const [qs,is,rs,ls]=await Promise.all([
-    seerviCachedRead('customer:'+customerParty.id+':quotes:200',()=>getDocs(query(collection(publicSignupDb,'quotations'),where('partyId','==',customerParty.id),limit(200))),8000),
-    seerviCachedRead('customer:'+customerParty.id+':invoices:200',()=>getDocs(query(collection(publicSignupDb,'invoices'),where('partyId','==',customerParty.id),limit(200))),8000),
-    seerviCachedRead('customer:'+customerParty.id+':rates:500',()=>getDocs(query(collection(publicSignupDb,'rateHistory'),where('partyId','==',customerParty.id),limit(500))),8000),
-    seerviCachedRead('customer:'+customerParty.id+':ledger:1000',()=>getDocs(query(collection(publicSignupDb,'ledger'),where('partyId','==',customerParty.id),limit(1000))),8000)
+    customerSafeRead('customer:'+customerParty.id+':quotes:200',()=>getDocs(query(collection(publicSignupDb,'quotations'),where('partyId','==',customerParty.id),limit(200)))),
+    customerSafeRead('customer:'+customerParty.id+':invoices:200',()=>getDocs(query(collection(publicSignupDb,'invoices'),where('partyId','==',customerParty.id),limit(200)))),
+    customerSafeRead('customer:'+customerParty.id+':rates:500',()=>getDocs(query(collection(publicSignupDb,'rateHistory'),where('partyId','==',customerParty.id),limit(500)))),
+    customerSafeRead('customer:'+customerParty.id+':ledger:1000',()=>getDocs(query(collection(publicSignupDb,'ledger'),where('partyId','==',customerParty.id),limit(1000))))
   ]);
   customerQuotes=qs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   customerInvoices=is.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
@@ -7331,7 +7342,8 @@ function customerRenderDashboardSummary(){
   const billCount=invoiceMode?customerInvoices.length:customerQuotes.length;
   const pending=invoiceMode?0:customerQuotes.filter(q=>['customer_request','pending','requested'].includes(String(q.status||'').toLowerCase())).length;
   const total=(invoiceMode?customerInvoices:customerQuotes).reduce((sum,q)=>sum+Number(q.grandTotal||0),0);
-  let debit=0,credit=0;customerLedger.forEach(x=>{if(x.type==='credit')credit+=Number(x.amount||0);else debit+=Number(x.amount||0);});
+  const ledgerForPanel=customerLedger.filter(x=>invoiceMode ? x.panelScope==='invoices' : (!x.panelScope||x.panelScope==='quotes'));
+  let debit=0,credit=0;ledgerForPanel.forEach(x=>{if(x.type==='credit')credit+=Number(x.amount||0);else debit+=Number(x.amount||0);});
   const outstanding=Math.max(0,debit-credit);
   el.hidden=false;
   el.innerHTML=invoiceMode
