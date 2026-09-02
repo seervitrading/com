@@ -7301,12 +7301,30 @@ async function customerLoadDashboard(){
     customerParty=snap.docs.map(d=>({id:d.id,...d.data()}))[0]||null;
   }
   if(!customerParty)throw new Error('No party profile is linked to this account yet. Please complete your party details.');
+  // IMPORTANT DATA FLOW
+  // Quotations/customer profiles are written by the customer portal to
+  // publicSignupDb. Admin-created invoices, invoice rate snapshots and
+  // ledger/payment records are written to the main admin Firestore `db`.
+  // Read each dataset from the same Firestore namespace in which it is saved.
+  const safeCustomerRead=async(label,reader)=>{
+    try{return await reader();}
+    catch(e){
+      console.error('Customer '+label+' read failed:',e);
+      return {docs:[],empty:true,permissionError:true,error:e};
+    }
+  };
   const [qs,is,rs,ls]=await Promise.all([
-    seerviCachedRead('customer:'+customerParty.id+':quotes:200',()=>getDocs(query(collection(publicSignupDb,'quotations'),where('partyId','==',customerParty.id),limit(200))),8000),
-    seerviCachedRead('customer:'+customerParty.id+':invoices:200',()=>getDocs(query(collection(publicSignupDb,SEERVI_INVOICE_COLLECTION),where('partyId','==',customerParty.id),limit(200))),8000),
-    seerviCachedRead('customer:'+customerParty.id+':rates:500',()=>getDocs(query(collection(publicSignupDb,'rateHistory'),where('partyId','==',customerParty.id),limit(500))),8000),
-    seerviCachedRead('customer:'+customerParty.id+':ledger:1000',()=>getDocs(query(collection(publicSignupDb,'ledger'),where('partyId','==',customerParty.id),limit(1000))),8000)
+    safeCustomerRead('quotation',()=>seerviCachedRead('customer:'+customerParty.id+':quotes:200',()=>getDocs(query(collection(publicSignupDb,'quotations'),where('partyId','==',customerParty.id),limit(200))),8000)),
+    safeCustomerRead('invoice',()=>seerviCachedRead('customer:'+customerParty.id+':invoices:200',()=>getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),where('partyId','==',customerParty.id),limit(200))),8000)),
+    safeCustomerRead('rate history',()=>seerviCachedRead('customer:'+customerParty.id+':rates:500',()=>getDocs(query(collection(db,'rateHistory'),where('partyId','==',customerParty.id),limit(500))),8000)),
+    safeCustomerRead('payment history',()=>seerviCachedRead('customer:'+customerParty.id+':ledger:1000',()=>getDocs(query(collection(db,'ledger'),where('partyId','==',customerParty.id),limit(1000))),8000))
   ]);
+  const customerPermissionWarnings=[];
+  if(qs.permissionError)customerPermissionWarnings.push('quotations');
+  if(is.permissionError)customerPermissionWarnings.push('invoices');
+  if(rs.permissionError)customerPermissionWarnings.push('rate history');
+  if(ls.permissionError)customerPermissionWarnings.push('payment history');
+
   customerQuotes=qs.docs.map(d=>({id:d.id,...d.data()}))
     .filter(q=>q.panelScope!=='invoices')
     .sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
@@ -7325,7 +7343,10 @@ async function customerLoadDashboard(){
   customerInvoiceLedger=allLedger.filter(x=>x.panelScope==='invoices' || !!x.invoiceId)
     .sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   $('customerWelcomeName').textContent=customerParty.name||'Customer';
-  $('customerWelcomeMeta').textContent=(customerParty.company||'')+' • '+(customerParty.email||customerUser.email||'');
+  const customerMetaBase=(customerParty.company||'')+' • '+(customerParty.email||customerUser.email||'');
+  $('customerWelcomeMeta').textContent=customerPermissionWarnings.length
+    ? customerMetaBase+' • Some transaction data is unavailable under the current Firebase rules.'
+    : customerMetaBase;
   renderCustomerProfileCard($('customerProfileCard'));
   renderCustomerHomeProfile();
   customerRenderDashboardSummary();customerRenderQuotes();customerRenderInvoices();customerRenderRates();customerRenderInvoiceRates();customerRenderLedger();customerRenderInvoiceLedger();
@@ -7461,7 +7482,22 @@ window.customerViewInvoice=function(id){
   const items=inv.items||[];
   body.innerHTML=`<div class="crm-quote-view-summary"><div><small>BILL TO</small><strong>${crmSafeEsc(inv.customer?.name||party.name||'—')}</strong></div><div><small>SHIP TO</small><strong>${crmSafeEsc(inv.shipTo?.name||inv.customer?.name||party.name||'—')}</strong></div><div><small>GRAND TOTAL</small><strong>${money(inv.grandTotal)}</strong></div></div><div class="crm-quote-view-note">${inv.notes?'<strong>NOTES:</strong> '+crmSafeEsc(inv.notes):'No notes saved.'}</div><table class="crm-quote-view-table"><thead><tr><th>#</th><th>PRODUCT / MODEL</th><th>HSN</th><th>QTY</th><th>RATE</th><th>AMOUNT</th></tr></thead><tbody>${items.map((item,i)=>`<tr><td>${i+1}</td><td>${crmSafeEsc(seerviQuotationItemLabel(item)||item.model||item.name||'Item')}</td><td>${crmSafeEsc(item.hsnCode||item.hsn||'—')}</td><td>${Number(item.qty||0)}</td><td>${money(item.rate)}</td><td>${money(item.amount??Number(item.qty||0)*Number(item.rate||0))}</td></tr>`).join('')}</tbody></table>`;
   dl.textContent='DOWNLOAD INVOICE PDF';
-  dl.onclick=async()=>{try{const snap=await getDoc(doc(publicSignupDb,SEERVI_INVOICE_COLLECTION,id));if(!snap.exists()){alert('Invoice record is missing from Firebase.');return;}const invoice={id:snap.id,...snap.data()};const profile=invoice.gstProfile||await seerviLoadInvoiceProfile();seerviGenerateSaleInvoicePDF(invoice,profile);}catch(e){console.error(e);alert('Invoice PDF failed: '+(e?.message||'Check Firebase connection.'));}};
+  dl.onclick=async()=>{
+    try{
+      const snap=await getDoc(doc(db,SEERVI_INVOICE_COLLECTION,id));
+      if(!snap.exists()){alert('Invoice record is missing from Firebase.');return;}
+      const invoice={id:snap.id,...snap.data()};
+      let profile=invoice.gstProfile||null;
+      if(!profile){
+        try{profile=await seerviLoadInvoiceProfile();}catch(profileErr){console.warn('GST profile fallback unavailable:',profileErr);}
+      }
+      if(!profile) profile={...SEERVI_GST_PROFILE_DEFAULTS};
+      seerviGenerateSaleInvoicePDF(invoice,profile);
+    }catch(e){
+      console.error('Customer invoice PDF failed:',e);
+      alert('Invoice PDF failed: '+(e?.message||'Check Firebase connection.'));
+    }
+  };
   const m=$('crmQuoteViewModal');if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}
 };
 
