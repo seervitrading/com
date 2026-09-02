@@ -8724,14 +8724,33 @@ window.crmEditQuote=async function(id){
   }
 
   renderCart();
-  closeCRM();
 
-  // Mobile openCart() internally closes the current cart during route
-  // navigation. Suppress the quotation-edit return handler for that one
-  // internal close; the return-to-dashboard state remains active for the
-  // user's actual cart close.
+  // On mobile, open the cart without first exposing the Home view. The
+  // universal mobile route normally switches Home → Cart, which creates a
+  // brief visible blink when an admin edits a quotation. Keep the existing
+  // desktop flow unchanged.
   window.__seerviQuoteEditOpeningCart=true;
-  openCart();
+  if(window.innerWidth<=600){
+    const cart=document.getElementById('cartDrawer');
+    if(cart){
+      cart.classList.add('show');
+      cart.setAttribute('aria-hidden','false');
+    }
+    document.body.classList.add('cart-open');
+    if(typeof syncQuotationModeWithAuth==='function')syncQuotationModeWithAuth(true);
+    renderCart();
+    if(window.crmRefreshParties){
+      window.crmRefreshParties().catch(()=>{}).finally(()=>renderCartPartySelector());
+    }else{
+      renderCartPartySelector();
+    }
+    closeCRM();
+    window.history.pushState({seerviUniversalNav:true,view:'cart',overlay:null},'', '#cart');
+    window.__seerviQuoteEditOpeningCart=false;
+  }else{
+    closeCRM();
+    openCart();
+  }
 };
 
 let crmPartyLedgerState={partyId:null,party:null,transactions:[],filter:'all'};
