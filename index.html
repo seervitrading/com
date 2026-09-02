@@ -14582,7 +14582,7 @@ function seerviShowSaveSuccess(message){
   }
   window.crmEditQuote=function(id){open('quote',id);};
   window.crmEditInvoice=function(id){open('invoice',id);};
-  function patchOriginalSave(){if(window.__seerviOriginalCrmSave)return;if(typeof window.crmSaveCurrentQuote==='function'){window.__seerviOriginalCrmSave=window.crmSaveCurrentQuote;const original=window.crmSaveCurrentQuote;window.crmSaveCurrentQuote=async function(){return original.apply(this,arguments);};}}
+  function patchOriginalSave(){if(window.__seerviOriginalCrmSave)return;if(typeof window.crmSaveCurrentQuote==='function'){window.__seerviOriginalCrmSave=window.crmSaveCurrentQuote;}}
   function install(){patchOriginalSave();const ge=$id('seerviDocGstEnabled'),gr=$id('seerviDocGstRate');ge?.addEventListener('change',renderTotals);gr?.addEventListener('input',renderTotals);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
   new MutationObserver(()=>{if(!$id('seerviDocEditorStatus'))return;patchOriginalSave();}).observe(document.body,{childList:true,subtree:true});
