@@ -3963,14 +3963,6 @@ body.nav-is-scrolled{padding-top:76px;}
 @media(max-width:700px){.customer-home-profile{width:calc(100% - 20px);padding:16px}.customer-home-profile-head{display:block}.customer-home-profile-actions{margin-top:12px}.customer-home-profile-grid{grid-template-columns:1fr 1fr}.customer-profile-edit-grid{grid-template-columns:1fr}.customer-ledger-row{grid-template-columns:70px 1fr auto}}
 
 .account-dashboard-panel{width:min(620px,100%)}
-/* Customer portal split: quotations and invoices are isolated datasets. */
-.customer-customer-options{margin:12px 0 0}
-.customer-customer-options:not([hidden]){display:grid}
-.customer-customer-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 8px}
-.customer-customer-panel-head .crm-secondary{min-width:92px}
-.customer-customer-panel-head .crm-section-title{margin:0}
-.customer-customer-options .account-dashboard-option{min-height:104px}
-
 .account-dashboard-options{display:none;grid-template-columns:repeat(3,1fr);gap:10px;padding:4px 0 2px}
 .account-dashboard-options:not([hidden]){display:grid}
 .account-dashboard-option{min-height:128px;border:1px solid #ffffff18;background:#11171e;color:#eef1f4;border-radius:12px;padding:16px 13px;text-align:left;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-start;transition:.18s ease}
@@ -4741,7 +4733,8 @@ body.seervi-ai-open .float-wa{display:none!important}
     </div>
     <div id="customerDashboardOptions" class="account-dashboard-options" hidden aria-label="Customer dashboard options">
       <button class="account-dashboard-option" type="button" onclick="accountDashboardEditProfile()"><span>✎</span><strong>EDIT PROFILE</strong><small>Update your business & contact details</small></button>
-      <button class="account-dashboard-option" type="button" onclick="accountDashboardMyOrder()"><span>▣</span><strong>MY ORDER</strong><small>View your quotations & order requests</small></button>
+      <button class="account-dashboard-option" type="button" onclick="accountDashboardMyQuotations()"><span>▣</span><strong>MY QUOTATIONS</strong><small>View your quotations & order requests</small></button>
+      <button class="account-dashboard-option" type="button" onclick="accountDashboardMyInvoices()"><span>▤</span><strong>MY INVOICES</strong><small>View your sale invoices</small></button>
       <button class="account-dashboard-option danger" type="button" onclick="accountDashboardCustomerSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your customer session</small></button>
     </div>
   </div>
@@ -4912,7 +4905,7 @@ body.seervi-ai-open .float-wa{display:none!important}
     </form>
   </div>
 </div>
-<div id="customerLoginModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCustomerLogin()"></div><div class="crm-panel customer-portal-panel" role="dialog" aria-modal="true" aria-labelledby="customerPortalTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / SECURE LOGIN</div><h3 id="customerPortalTitle">Login</h3><div id="customerAuthStatus" class="crm-auth-status">Admin and customers can log in here. You will be taken to your own dashboard.</div></div><button class="crm-close" type="button" onclick="closeCustomerLogin()">×</button></div><div id="customerLoginView" class="crm-login"><div class="crm-section-title">LOGIN</div><p>Use your Seervi Trading email and password. Admin accounts open the Admin Dashboard; customer accounts open the Customer Dashboard.</p><div class="crm-login-grid"><input id="customerLoginEmail" type="email" placeholder="Email" autocomplete="username"><input id="customerLoginPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="customerSignIn()">LOGIN</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('customer')">FORGOT PASSWORD?</button></div><div id="customerLoginError" class="crm-error"></div><div class="customer-login-help">Don't have an account? <button type="button" onclick="closeCustomerLogin();openPartySignup();">SIGN UP</button></div></div><div id="customerDashboardView" class="customer-dashboard" hidden><div class="customer-dashboard-head"><div><div class="crm-section-title">WELCOME</div><h4 id="customerWelcomeName">Customer</h4><div id="customerWelcomeMeta" class="crm-auth-status"></div></div><div style="display:flex;gap:6px;align-items:center"><button class="crm-secondary customer-dashboard-refresh" type="button" onclick="customerRefreshDashboard()">↻ REFRESH</button><button class="crm-secondary danger" type="button" onclick="customerSignOut()">SIGN OUT</button></div></div><div id="customerDashboardSummary" class="customer-dashboard-summary" hidden></div><div id="customerProfileCard" class="customer-profile-card"></div><div id="customerCustomerHomeOptions" class="account-dashboard-options customer-customer-options"><button class="account-dashboard-option" type="button" onclick="customerOpenPanel('quotes')"><span>▣</span><strong>MY QUOTATIONS</strong><small>View your quotations, payment entries and quotation rate history</small></button><button class="account-dashboard-option" type="button" onclick="customerOpenPanel('invoices')"><span>▤</span><strong>MY INVOICES</strong><small>View your sale invoices, payment entries and invoice rate history</small></button></div><div id="customerCustomerPanel" hidden><div class="customer-customer-panel-head"><button class="crm-secondary" type="button" onclick="customerOpenPanel('home')">← BACK</button><div id="customerCustomerPanelTitle" class="crm-section-title">MY QUOTATIONS</div></div><div class="customer-portal-tabs"><button class="customer-tab active" type="button" data-customer-tab="bills" onclick="customerPortalTab('bills')">QUOTATIONS</button><button class="customer-tab" type="button" data-customer-tab="ledger" onclick="customerPortalTab('ledger')">PAYMENT HISTORY</button><button class="customer-tab" type="button" data-customer-tab="rates" onclick="customerPortalTab('rates')">RATE HISTORY</button></div><div id="customerQuotesList" class="customer-portal-list"></div><div id="customerInvoicesList" class="customer-portal-list" hidden></div><div id="customerRatesList" class="customer-portal-list" hidden></div><div id="customerInvoiceRatesList" class="customer-portal-list" hidden></div><div id="customerLedgerList" class="customer-portal-list"></div><div id="customerInvoiceLedgerList" class="customer-portal-list" hidden></div></div><div id="customerProfileEdit" class="customer-profile-edit" hidden></div></div></div></div>
+<div id="customerLoginModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCustomerLogin()"></div><div class="crm-panel customer-portal-panel" role="dialog" aria-modal="true" aria-labelledby="customerPortalTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / SECURE LOGIN</div><h3 id="customerPortalTitle">Login</h3><div id="customerAuthStatus" class="crm-auth-status">Admin and customers can log in here. You will be taken to your own dashboard.</div></div><button class="crm-close" type="button" onclick="closeCustomerLogin()">×</button></div><div id="customerLoginView" class="crm-login"><div class="crm-section-title">LOGIN</div><p>Use your Seervi Trading email and password. Admin accounts open the Admin Dashboard; customer accounts open the Customer Dashboard.</p><div class="crm-login-grid"><input id="customerLoginEmail" type="email" placeholder="Email" autocomplete="username"><input id="customerLoginPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="customerSignIn()">LOGIN</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('customer')">FORGOT PASSWORD?</button></div><div id="customerLoginError" class="crm-error"></div><div class="customer-login-help">Don't have an account? <button type="button" onclick="closeCustomerLogin();openPartySignup();">SIGN UP</button></div></div><div id="customerDashboardView" class="customer-dashboard" hidden><div class="customer-dashboard-head"><div><div class="crm-section-title">WELCOME</div><h4 id="customerWelcomeName">Customer</h4><div id="customerWelcomeMeta" class="crm-auth-status"></div></div><div style="display:flex;gap:6px;align-items:center"><button class="crm-secondary customer-dashboard-refresh" type="button" onclick="customerRefreshDashboard()">↻ REFRESH</button><button class="crm-secondary danger" type="button" onclick="customerSignOut()">SIGN OUT</button></div></div><div id="customerDashboardSummary" class="customer-dashboard-summary" hidden></div><div id="customerProfileCard" class="customer-profile-card"></div><div class="customer-portal-tabs"><button class="customer-tab active" type="button" onclick="customerPortalTab('quotes')">MY QUOTATIONS</button><button class="customer-tab" type="button" onclick="customerPortalTab('invoices')">MY INVOICES</button><button class="customer-tab" type="button" onclick="customerPortalTab('ledger')">MY LEDGER</button><button class="customer-tab" type="button" onclick="customerPortalTab('rates')">RATE HISTORY</button></div><div id="customerQuotesList" class="customer-portal-list"></div><div id="customerInvoicesList" class="customer-portal-list" hidden></div><div id="customerRatesList" class="customer-portal-list" hidden></div><div id="customerLedgerList" class="customer-portal-list" hidden></div><div id="customerProfileEdit" class="customer-profile-edit" hidden></div></div></div></div>
 
 
 <div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-secondary admin-universal-back" type="button" onclick="seerviAdminBackToPrevious()">← BACK</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div>
@@ -7144,15 +7137,20 @@ window.openCustomerLogin=function(){
   setTimeout(()=>{if(panel)panel.scrollTop=0;$('customerLoginEmail')?.focus();},40);
 };
 window.closeCustomerLogin=function(){const m=$('customerLoginModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');const panel=m.querySelector('.crm-panel');if(panel)panel.scrollTop=0;};
-let customerUser=null, customerParty=null, customerQuotes=[], customerInvoices=[], customerRates=[], customerInvoiceRates=[], customerLedger=[], customerInvoiceLedger=[];
-let customerDashboardRequestedView='home';
-let customerActivePanel='quotes';
+let customerUser=null, customerParty=null, customerQuotes=[], customerInvoices=[], customerRates=[], customerLedger=[];
+let customerDashboardRequestedView='orders';
 function customerErr(msg){if($('customerLoginError'))$('customerLoginError').textContent=msg||'';}
 function customerShowLogin(){if($('customerLoginView'))$('customerLoginView').hidden=false;if($('customerDashboardView'))$('customerDashboardView').hidden=true;customerErr('');}
 function customerShowDashboard(){
   if($('customerLoginView'))$('customerLoginView').hidden=true;
   if($('customerDashboardView'))$('customerDashboardView').hidden=false;
-  if(typeof customerDashboardView==='function') customerDashboardView(customerDashboardRequestedView==='profile'?'profile':'home');
+  // Apply the requested dashboard view immediately, before the async Firebase
+  // profile load completes. This prevents the default quotation view from
+  // flashing when the customer explicitly opens invoices or profile.
+  if(typeof customerDashboardView==='function'){
+    const v=customerDashboardRequestedView;
+    customerDashboardView(v==='profile'?'profile':(v==='invoices'?'invoices':'quotes'));
+  }
   customerLoadDashboard().catch(e=>{console.error(e);customerErr((e?.message||'Could not load your customer data.').replace('Firebase: ',''));});
 }
 window.sendSeerviPasswordReset=async function(source){
@@ -7257,7 +7255,7 @@ window.customerSignOut=async function(){
     await signOut(auth).catch(()=>{});
   }finally{
     crmUser=null;
-    customerUser=null;customerParty=null;customerQuotes=[];customerInvoices=[];customerRates=[];customerInvoiceRates=[];customerLedger=[];customerInvoiceLedger=[];customerActivePanel='quotes';customerDashboardRequestedView='home';
+    customerUser=null;customerParty=null;customerQuotes=[];customerInvoices=[];customerRates=[];customerLedger=[];
     hideCustomerHomeProfile();customerShowLogin();updateAuthNav();closeCustomerLogin();goHomeAfterAuth();
     window.Seervi?.notify?.play('signout');
     if(typeof syncQuotationModeWithAuth==='function') syncQuotationModeWithAuth(false);
@@ -7301,57 +7299,23 @@ async function customerLoadDashboard(){
     customerParty=snap.docs.map(d=>({id:d.id,...d.data()}))[0]||null;
   }
   if(!customerParty)throw new Error('No party profile is linked to this account yet. Please complete your party details.');
-  // IMPORTANT DATA FLOW
-  // Quotations/customer profiles are written by the customer portal to
-  // publicSignupDb. Admin-created invoices, invoice rate snapshots and
-  // ledger/payment records are written to the main admin Firestore `db`.
-  // Read each dataset from the same Firestore namespace in which it is saved.
-  const safeCustomerRead=async(label,reader)=>{
-    try{return await reader();}
-    catch(e){
-      console.error('Customer '+label+' read failed:',e);
-      return {docs:[],empty:true,permissionError:true,error:e};
-    }
-  };
   const [qs,is,rs,ls]=await Promise.all([
-    safeCustomerRead('quotation',()=>seerviCachedRead('customer:'+customerParty.id+':quotes:200',()=>getDocs(query(collection(publicSignupDb,'quotations'),where('partyId','==',customerParty.id),limit(200))),8000)),
-    safeCustomerRead('invoice',()=>seerviCachedRead('customer:'+customerParty.id+':invoices:200',()=>getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),where('partyId','==',customerParty.id),limit(200))),8000)),
-    safeCustomerRead('rate history',()=>seerviCachedRead('customer:'+customerParty.id+':rates:500',()=>getDocs(query(collection(db,'rateHistory'),where('partyId','==',customerParty.id),limit(500))),8000)),
-    safeCustomerRead('payment history',()=>seerviCachedRead('customer:'+customerParty.id+':ledger:1000',()=>getDocs(query(collection(db,'ledger'),where('partyId','==',customerParty.id),limit(1000))),8000))
+    seerviCachedRead('customer:'+customerParty.id+':quotes:200',()=>getDocs(query(collection(publicSignupDb,'quotations'),where('partyId','==',customerParty.id),limit(200))),8000),
+    seerviCachedRead('customer:'+customerParty.id+':invoices:200',()=>getDocs(query(collection(publicSignupDb,SEERVI_INVOICE_COLLECTION),where('partyId','==',customerParty.id),limit(200))),8000),
+    seerviCachedRead('customer:'+customerParty.id+':rates:500',()=>getDocs(query(collection(publicSignupDb,'rateHistory'),where('partyId','==',customerParty.id),limit(500))),8000),
+    seerviCachedRead('customer:'+customerParty.id+':ledger:1000',()=>getDocs(query(collection(publicSignupDb,'ledger'),where('partyId','==',customerParty.id),limit(1000))),8000)
   ]);
-  const customerPermissionWarnings=[];
-  if(qs.permissionError)customerPermissionWarnings.push('quotations');
-  if(is.permissionError)customerPermissionWarnings.push('invoices');
-  if(rs.permissionError)customerPermissionWarnings.push('rate history');
-  if(ls.permissionError)customerPermissionWarnings.push('payment history');
-
-  customerQuotes=qs.docs.map(d=>({id:d.id,...d.data()}))
-    .filter(q=>q.panelScope!=='invoices')
-    .sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
-  customerInvoices=is.docs.map(d=>({id:d.id,...d.data()}))
-    .sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
-
-  const allRates=rs.docs.map(d=>({id:d.id,...d.data()}));
-  customerRates=allRates.filter(r=>r.panelScope!=='invoices' && !r.invoiceId)
-    .sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
-  customerInvoiceRates=allRates.filter(r=>r.panelScope==='invoices' || !!r.invoiceId)
-    .sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
-
-  const allLedger=ls.docs.map(d=>({id:d.id,...d.data()}));
-  customerLedger=allLedger.filter(x=>x.panelScope!=='invoices' && !x.invoiceId)
-    .sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
-  customerInvoiceLedger=allLedger.filter(x=>x.panelScope==='invoices' || !!x.invoiceId)
-    .sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+  customerQuotes=qs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+  customerInvoices=is.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+  customerRates=rs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+  customerLedger=ls.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   $('customerWelcomeName').textContent=customerParty.name||'Customer';
-  const customerMetaBase=(customerParty.company||'')+' • '+(customerParty.email||customerUser.email||'');
-  $('customerWelcomeMeta').textContent=customerPermissionWarnings.length
-    ? customerMetaBase+' • Some transaction data is unavailable under the current Firebase rules.'
-    : customerMetaBase;
+  $('customerWelcomeMeta').textContent=(customerParty.company||'')+' • '+(customerParty.email||customerUser.email||'');
   renderCustomerProfileCard($('customerProfileCard'));
   renderCustomerHomeProfile();
-  customerRenderDashboardSummary();customerRenderQuotes();customerRenderInvoices();customerRenderRates();customerRenderInvoiceRates();customerRenderLedger();customerRenderInvoiceLedger();
+  customerRenderDashboardSummary();customerRenderQuotes();customerRenderRates();customerRenderLedger();
   if(customerDashboardRequestedView==='profile') customerEditProfile();
-  else {customerActivePanel='quotes';customerDashboardRequestedView='home';customerDashboardView('home');}
+  else customerPortalTab('quotes');
 }
 
 function customerProfileFieldsHtml(p){
@@ -7366,16 +7330,13 @@ function showCustomerHomeProfile(){renderCustomerHomeProfile();$('customerHomePr
 function hideCustomerHomeProfile(){if($('customerHomeProfile'))$('customerHomeProfile').hidden=true;}
 function customerRenderDashboardSummary(){
   const el=$('customerDashboardSummary');if(!el)return;
-  const invoiceMode=customerActivePanel==='invoices';
-  const bills=invoiceMode?customerInvoices:customerQuotes;
-  const ledger=invoiceMode?customerInvoiceLedger:customerLedger;
-  const label=invoiceMode?'INVOICES':'QUOTATIONS';
-  const pending=invoiceMode?0:bills.filter(q=>['customer_request','pending','requested'].includes(String(q.status||'').toLowerCase())).length;
-  const total=bills.reduce((sum,q)=>sum+Number(q.grandTotal||0),0);
-  let debit=0,credit=0;ledger.forEach(x=>{if(x.type==='credit')credit+=Number(x.amount||0);else debit+=Number(x.amount||0);});
+  const quoteCount=customerQuotes.length;
+  const pending=customerQuotes.filter(q=>['customer_request','pending','requested'].includes(String(q.status||'').toLowerCase())).length;
+  const total=customerQuotes.reduce((sum,q)=>sum+Number(q.grandTotal||0),0);
+  let debit=0,credit=0;customerLedger.forEach(x=>{if(x.type==='credit')credit+=Number(x.amount||0);else debit+=Number(x.amount||0);});
   const outstanding=Math.max(0,debit-credit);
   el.hidden=false;
-  el.innerHTML=`<div class="customer-dashboard-summary-card"><span>${label}</span><strong>${bills.length}</strong><small>Saved ${label.toLowerCase()}</small></div><div class="customer-dashboard-summary-card"><span>${invoiceMode?'TOTAL BILLED':'PENDING'}</span><strong>${invoiceMode?money(total):pending}</strong><small>${invoiceMode?'Invoice value':'Awaiting action'}</small></div><div class="customer-dashboard-summary-card"><span>${invoiceMode?'RECEIVED':'QUOTED VALUE'}</span><strong>${invoiceMode?money(credit):money(total)}</strong><small>${invoiceMode?'Payments received':'All saved quotations'}</small></div><div class="customer-dashboard-summary-card"><span>OUTSTANDING</span><strong>${money(outstanding)}</strong><small>${invoiceMode?'Invoice ledger balance':'Quotation ledger balance'}</small></div>`;
+  el.innerHTML=`<div class="customer-dashboard-summary-card"><span>QUOTATIONS</span><strong>${quoteCount}</strong><small>Total saved quotations</small></div><div class="customer-dashboard-summary-card"><span>PENDING</span><strong>${pending}</strong><small>Awaiting action</small></div><div class="customer-dashboard-summary-card"><span>QUOTED VALUE</span><strong>${money(total)}</strong><small>All saved quotations</small></div><div class="customer-dashboard-summary-card"><span>OUTSTANDING</span><strong>${money(outstanding)}</strong><small>Ledger balance</small></div>`;
 }
 window.customerRefreshDashboard=async function(){
   if(!customerUser)return;
@@ -7384,8 +7345,6 @@ window.customerRefreshDashboard=async function(){
   try{
     seerviInvalidateCache('customer:'+customerParty?.id+':');
     await customerLoadDashboard();
-    if(customerActivePanel==='invoices') customerOpenPanel('invoices');
-    else if(customerActivePanel==='quotes') customerOpenPanel('quotes');
     seerviShowSaveSuccess('Customer dashboard refreshed.');
   }catch(e){
     console.error('Customer dashboard refresh failed:',e);
@@ -7400,55 +7359,136 @@ function customerRenderQuotes(){
 }
 function customerRenderInvoices(){
   const el=$('customerInvoicesList');if(!el)return;
-  if(!customerInvoices.length){el.innerHTML='<div class="crm-list-empty">No invoices available yet.</div>';return;}
-  el.innerHTML=customerInvoices.map(inv=>`<div class="customer-quote-row"><strong>${esc(inv.invoiceNo||'Invoice')}</strong><span>${esc(inv.dateISO||'')}</span><span>${esc(String((inv.items||[]).length))} items</span><span>${money(inv.grandTotal||0)}</span><button class="customer-portal-btn" type="button" onclick="customerViewInvoice('${esc(inv.id)}')">VIEW</button></div>`).join('');
+  if(!customerInvoices.length){
+    el.innerHTML='<div class="crm-list-empty">No sale invoices available yet.</div>';
+    return;
+  }
+  el.innerHTML=customerInvoices.map(inv=>`
+    <div class="customer-quote-row">
+      <strong>${esc(inv.invoiceNo||'Invoice')}</strong>
+      <span>${esc(inv.dateISO||'')}</span>
+      <span class="customer-quote-status saved">SALE INVOICE</span>
+      <span>${money(inv.grandTotal||0)}</span>
+      <button class="customer-portal-btn" type="button" onclick="customerViewInvoice('${esc(inv.id)}')">VIEW</button>
+    </div>`).join('');
 }
-function customerRateHistoryHtml(list,invoiceMode){
-  if(!list.length)return '<div class="customer-rate-history-empty">No previous item-wise rates are available yet.</div>';
+window.customerViewInvoice=function(id){
+  const inv=customerInvoices.find(x=>x.id===id);if(!inv)return;
+  const party=customerParty||inv.customer||{};
+  const title=$('crmQuoteViewTitle'),meta=$('crmQuoteViewMeta'),body=$('crmQuoteViewBody'),dl=$('crmQuoteViewDownload'),statusBar=$('crmQuoteViewStatusBar');
+  if(!title||!meta||!body||!dl)return;
+  if(statusBar)statusBar.hidden=true;
+  title.textContent='SALE INVOICE '+(inv.invoiceNo||'');
+  meta.textContent=[
+    inv.dateISO?new Date(inv.dateISO).toLocaleDateString('en-IN'):'',
+    party.company||party.name||inv.customer?.company||inv.customer?.name||'',
+    inv.ewayBillNo?'E-WAY BILL '+inv.ewayBillNo:''
+  ].filter(Boolean).join(' · ');
+  const items=inv.items||[];
+  const rows=items.map((item,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td>${esc([item.model||item.name||'Item',item.subcategory].filter(Boolean).join(' — '))}</td>
+      <td>${esc(item.spec||'—')}</td>
+      <td class="num">${Number(item.qty||0)}</td>
+      <td class="num">${money(item.rate)}</td>
+      <td class="num">${money(item.amount ?? Number(item.qty||0)*Number(item.rate||0))}</td>
+    </tr>`).join('');
+  body.innerHTML=`
+    <div class="crm-quote-view-summary">
+      <div><small>BILL TO</small><strong>${crmSafeEsc(inv.customer?.name||party.name||'—')}</strong></div>
+      <div><small>SHIP TO</small><strong>${crmSafeEsc(inv.shipTo?.name||inv.customer?.name||party.name||'—')}</strong></div>
+      <div><small>GRAND TOTAL</small><strong>${money(inv.grandTotal)}</strong></div>
+    </div>
+    <table class="crm-qv-table">
+      <thead><tr><th>#</th><th>Product / Model + Subcategory</th><th>Spec</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead>
+      <tbody>${rows||'<tr><td colspan="6">No items in this invoice.</td></tr>'}</tbody>
+    </table>
+    <div class="crm-qv-totals">
+      <div class="crm-qv-total"><span>Subtotal</span><strong>${money(inv.subtotal)}</strong></div>
+      ${inv.gstEnabled?`<div class="crm-qv-total"><span>GST (${Number(inv.gstRate||0)}%)</span><strong>${money(inv.gst)}</strong></div>`:''}
+      <div class="crm-qv-total crm-qv-grand"><span>Grand Total</span><strong>${money(inv.grandTotal)}</strong></div>
+    </div>`;
+  dl.textContent='DOWNLOAD PDF';
+  dl.onclick=()=>customerDownloadInvoice(id);
+  const m=$('crmQuoteViewModal');m?.classList.add('show');m?.setAttribute('aria-hidden','false');
+};
+window.customerDownloadInvoice=async function(id){
+  const inv=customerInvoices.find(x=>x.id===id);if(!inv)return;
+  try{
+    const profile=inv.gstProfile||await seerviLoadInvoiceProfile();
+    seerviGenerateSaleInvoicePDF(inv,profile);
+  }catch(e){
+    console.error('Customer invoice PDF failed:',e);
+    alert('Invoice PDF failed: '+(e?.message||'Please try again.'));
+  }
+};
+
+function customerRenderRates(){
+  const el=$('customerRatesList');if(!el)return;
+  if(!customerRates.length){el.innerHTML='<div class="customer-rate-history-empty">No previous item-wise rates are available yet.</div>';return;}
   const groups=new Map();
-  list.forEach(r=>{
-    const model=String(r.productModel||r.model||r.item||'Item'),spec=String(r.spec||r.thickness||''),subcategory=String(r.subcategory||'').trim();
-    const key=model+'|'+subcategory+'|'+spec;
+  customerRates.forEach(r=>{
+    const model=String(r.productModel||r.model||r.item||'Item');
+    const spec=String(r.spec||r.thickness||'');
+    const subcategory=String(r.subcategory||'').trim();
+     const key=model+'|'+subcategory+'|'+spec;
     if(!groups.has(key))groups.set(key,[]);
     groups.get(key).push(r);
   });
-  return [...groups.values()].map(list=>{
-    list.sort((a,b)=>String(b.historyAt||b.dateISO||'').localeCompare(String(a.historyAt||a.dateISO||'')));
-    const latest=list[0]||{},model=String(latest.productModel||latest.model||latest.item||'Item'),spec=String(latest.spec||latest.thickness||'');
-    const details=list.map(r=>`<div class="customer-rate-history-row"><span>${esc(r.dateISO||'—')}</span><span>${esc(invoiceMode?(r.invoiceNo?('Invoice '+r.invoiceNo):(r.note||r.source||'Rate saved')):(r.quoteNo?('Quotation '+r.quoteNo):(r.note||r.source||'Rate quoted')))}</span><strong>${money(r.rate)}</strong></div>`).join('');
-    return `<div class="customer-rate-history-card"><div class="customer-rate-history-top"><div><div class="customer-rate-history-product">${esc([model,latest.subcategory].filter(Boolean).join(' — '))}</div><div class="customer-rate-history-meta">${esc([latest.subcategory,spec].filter(Boolean).join(' · ')||'Standard specification')} · ${list.length} saved rate${list.length===1?'':'s'}</div></div><div class="customer-rate-history-latest"><small>LATEST RATE</small>${money(latest.rate)}</div></div>${list.length>1?`<details class="customer-rate-history-details"><summary>VIEW PREVIOUS RATES</summary>${details}</details>`:`<div class="customer-rate-history-details">${details}</div>`}</div>`;
+  const lists=[...groups.values()].map(list=>list.sort((a,b)=>String(b.historyAt||b.dateISO||'').localeCompare(String(a.historyAt||a.dateISO||'')))).sort((a,b)=>String(b[0]?.historyAt||b[0]?.dateISO||'').localeCompare(String(a[0]?.historyAt||a[0]?.dateISO||'')));
+  el.innerHTML=lists.map((list,idx)=>{
+    const latest=list[0]||{};
+    const model=String(latest.productModel||latest.model||latest.item||'Item');
+    const spec=String(latest.spec||latest.thickness||'');
+    const details=list.map(r=>`<div class="customer-rate-history-row"><span>${esc(r.dateISO||'—')}</span><span>${esc(r.quoteNo ? ('Quotation '+r.quoteNo) : (r.note||r.source||'Rate quoted'))}</span><strong>${money(r.rate)}</strong></div>`).join('');
+    return `<div class="customer-rate-history-card"><div class="customer-rate-history-top"><div><div class="customer-rate-history-product">${esc([model,latest.subcategory].filter(Boolean).join(' — '))}</div><div class="customer-rate-history-meta">${esc([latest.subcategory,spec].filter(Boolean).join(' · ')||'Standard specification')} · ${list.length} saved rate${list.length===1?'':'s'}</div></div><div class="customer-rate-history-latest"><small>LATEST RATE</small>${money(latest.rate)}</div></div>${list.length>1?`<details class="customer-rate-history-details"><summary>VIEW PREVIOUS RATES</summary>${details}</details>`:`<div class="customer-rate-history-details"><div class="customer-rate-history-row"><span>${esc(latest.dateISO||'—')}</span><span>${esc(latest.note||latest.source||'Rate quoted')}</span><strong>${money(latest.rate)}</strong></div></div>`}</div>`;
   }).join('');
 }
-function customerRenderRates(){const el=$('customerRatesList');if(el)el.innerHTML=customerRateHistoryHtml(customerRates,false);}
-function customerRenderInvoiceRates(){const el=$('customerInvoiceRatesList');if(el)el.innerHTML=customerRateHistoryHtml(customerInvoiceRates,true);}
-
-function customerLedgerHtml(list,label){
-  if(!list.length)return '<div class="crm-list-empty">No '+label.toLowerCase()+' payment entries available yet.</div>';
-  let debit=0,credit=0;list.forEach(x=>{if(x.type==='credit')credit+=Number(x.amount||0);else debit+=Number(x.amount||0);});
+function customerRenderLedger(){
+  const el=$('customerLedgerList');if(!el)return;
+  if(!customerLedger.length){el.innerHTML='<div class="crm-list-empty">No ledger transactions available yet.</div>';return;}
+  let debit=0,credit=0;
+  customerLedger.forEach(x=>{if(x.type==='credit')credit+=Number(x.amount||0);else debit+=Number(x.amount||0);});
   const outstanding=Math.max(0,debit-credit);
-  return `<div class="customer-ledger-summary"><span>DEBIT <strong>${money(debit)}</strong></span><span>CREDIT <strong>${money(credit)}</strong></span><span>OUTSTANDING <strong>${money(outstanding)}</strong></span></div>`+list.map(x=>{const ty=x.type==='credit'?'credit':'debit';return `<div class="customer-ledger-row"><span class="customer-ledger-type ${ty}">${ty.toUpperCase()}</span><span>${esc(x.dateISO||'')} · ${esc(x.note||x.invoiceNo||x.quoteNo||'Payment')}</span><strong class="customer-ledger-amount ${ty}">${ty==='credit'?'+':'-'}${money(x.amount||0)}</strong></div>`;}).join('');
+  el.innerHTML=`<div class="customer-ledger-summary"><span>DEBIT <strong>${money(debit)}</strong></span><span>CREDIT <strong>${money(credit)}</strong></span><span>OUTSTANDING <strong>${money(outstanding)}</strong></span></div>`+
+    customerLedger.map(x=>{const t=x.type==='credit'?'credit':'debit';return `<div class="customer-ledger-row"><span class="customer-ledger-type ${t}">${t.toUpperCase()}</span><span>${esc(x.dateISO||'')} · ${esc(x.note||x.quoteNo||'Payment')}</span><strong class="customer-ledger-amount ${t}">${t==='credit'?'+':'-'}${money(x.amount||0)}</strong></div>`;}).join('');
 }
-function customerRenderLedger(){const el=$('customerLedgerList');if(el)el.innerHTML=customerLedgerHtml(customerLedger,'Quotation');}
-function customerRenderInvoiceLedger(){const el=$('customerInvoiceLedgerList');if(el)el.innerHTML=customerLedgerHtml(customerInvoiceLedger,'Invoice');}
-
 window.customerDashboardView=function(view){
-  const profile=$('customerProfileCard'),options=$('customerCustomerHomeOptions'),panel=$('customerCustomerPanel'),edit=$('customerProfileEdit'),summary=$('customerDashboardSummary');
-  const isProfile=view==='profile',isHome=view==='home';
-  if(profile)profile.hidden=isProfile;
-  if(edit)edit.hidden=!isProfile;
-  if(summary)summary.hidden=isProfile||isHome;
-  if(options)options.hidden=isProfile||!isHome;
-  if(panel)panel.hidden=isProfile||isHome;
-};
-window.customerOpenPanel=function(panel){
-  if(panel==='home'){customerActivePanel='quotes';customerDashboardRequestedView='home';customerDashboardView('home');return;}
-  customerActivePanel=panel==='invoices'?'invoices':'quotes';
-  customerDashboardRequestedView=customerActivePanel;
-  customerDashboardView('orders');
-  customerRenderDashboardSummary();customerRenderQuotes();customerRenderInvoices();customerRenderRates();customerRenderInvoiceRates();customerRenderLedger();customerRenderInvoiceLedger();
-  customerPortalTab('bills');
-};
+  const head=document.querySelector('#customerDashboardView .customer-dashboard-head');
+  const signOut=head?.querySelector('.danger');
+  const profile=$('customerProfileCard');
+  const tabs=document.querySelector('.customer-portal-tabs');
+  const quotes=$('customerQuotesList'), invoices=$('customerInvoicesList'), rates=$('customerRatesList'), ledger=$('customerLedgerList');
+  const edit=$('customerProfileEdit');
+  const isProfile=view==='profile';
+  const activeTab=isProfile?'':(view==='invoices'?'invoices':'quotes');
 
+  // Customer Dashboard keeps the existing profile/ledger/rate-history flow,
+  // while MY ORDER is split into two independent document views:
+  // MY QUOTATIONS and MY INVOICES.
+  if(head) head.hidden=!isProfile;
+  if(signOut) signOut.hidden=true;
+  if(profile) profile.hidden=true;
+  if(tabs) tabs.hidden=isProfile;
+  if(edit) edit.hidden=!isProfile;
+
+  if(isProfile){
+    if(quotes) quotes.hidden=true;
+    if(invoices) invoices.hidden=true;
+    if(rates) rates.hidden=true;
+    if(ledger) ledger.hidden=true;
+  }else{
+    if(edit) edit.hidden=true;
+    if(quotes) quotes.hidden=activeTab!=='quotes';
+    if(invoices) invoices.hidden=activeTab!=='invoices';
+    // Preserve the existing ledger/rate-history access.
+    if(rates) rates.hidden=true;
+    if(ledger) ledger.hidden=true;
+    if(activeTab==='quotes') customerPortalTab('quotes');
+    if(activeTab==='invoices') customerPortalTab('invoices');
+  }
+};
 window.customerEditProfile=function(){
   customerDashboardRequestedView='profile';
   if(!customerParty)return;
@@ -7464,43 +7504,18 @@ window.customerSaveProfile=async function(){
   try{await updateDoc(doc(publicSignupDb,'parties',customerParty.id),payload);await customerLoadDashboard();$('customerProfileEdit').hidden=true;seerviShowSaveSuccess('Profile updated successfully.');}catch(e){alert('Profile update failed: '+(e?.message||'Check Firebase rules.'));}
 };
 window.customerPortalTab=function(tab){
-  const invoiceMode=customerActivePanel==='invoices';
-  const q=$('customerQuotesList'),qi=$('customerInvoicesList'),r=$('customerRatesList'),ri=$('customerInvoiceRatesList'),l=$('customerLedgerList'),li=$('customerInvoiceLedgerList');
-  if(!q||!qi||!r||!ri||!l||!li)return;
-  q.hidden=true;qi.hidden=true;r.hidden=true;ri.hidden=true;l.hidden=true;li.hidden=true;
-  if(invoiceMode){if(tab==='bills')qi.hidden=false;else if(tab==='rates')ri.hidden=false;else li.hidden=false;}
-  else{if(tab==='bills')q.hidden=false;else if(tab==='rates')r.hidden=false;else l.hidden=false;}
-  document.querySelectorAll('.customer-tab').forEach(b=>b.classList.toggle('active',b.dataset.customerTab===tab));
-  const title=$('customerCustomerPanelTitle');if(title)title.textContent=invoiceMode?'MY INVOICES':'MY QUOTATIONS';
+  if(tab==='quotes'||tab==='invoices') customerDashboardRequestedView=tab;
+  const q=$('customerQuotesList'),i=$('customerInvoicesList'),r=$('customerRatesList'),l=$('customerLedgerList');
+  if(!q||!i||!r||!l)return;
+  q.hidden=tab!=='quotes';
+  i.hidden=tab!=='invoices';
+  r.hidden=tab!=='rates';
+  l.hidden=tab!=='ledger';
+  document.querySelectorAll('.customer-tab').forEach((b,idx)=>{
+    const tabs=['quotes','invoices','ledger','rates'];
+    b.classList.toggle('active',tabs[idx]===tab);
+  });
 };
-window.customerViewInvoice=function(id){
-  const inv=customerInvoices.find(x=>x.id===id);if(!inv)return;
-  const party=customerParty||inv.customer||{},title=$('crmQuoteViewTitle'),meta=$('crmQuoteViewMeta'),body=$('crmQuoteViewBody'),dl=$('crmQuoteViewDownload');
-  if(!title||!meta||!body||!dl)return;
-  title.textContent='SALE INVOICE '+(inv.invoiceNo||'');
-  meta.textContent=[inv.dateISO?new Date(inv.dateISO).toLocaleDateString('en-IN'):'',party.company||party.name||inv.customer?.company||inv.customer?.name||'',inv.ewayBillNo?'E-WAY BILL '+inv.ewayBillNo:''].filter(Boolean).join(' · ');
-  const items=inv.items||[];
-  body.innerHTML=`<div class="crm-quote-view-summary"><div><small>BILL TO</small><strong>${crmSafeEsc(inv.customer?.name||party.name||'—')}</strong></div><div><small>SHIP TO</small><strong>${crmSafeEsc(inv.shipTo?.name||inv.customer?.name||party.name||'—')}</strong></div><div><small>GRAND TOTAL</small><strong>${money(inv.grandTotal)}</strong></div></div><div class="crm-quote-view-note">${inv.notes?'<strong>NOTES:</strong> '+crmSafeEsc(inv.notes):'No notes saved.'}</div><table class="crm-quote-view-table"><thead><tr><th>#</th><th>PRODUCT / MODEL</th><th>HSN</th><th>QTY</th><th>RATE</th><th>AMOUNT</th></tr></thead><tbody>${items.map((item,i)=>`<tr><td>${i+1}</td><td>${crmSafeEsc(seerviQuotationItemLabel(item)||item.model||item.name||'Item')}</td><td>${crmSafeEsc(item.hsnCode||item.hsn||'—')}</td><td>${Number(item.qty||0)}</td><td>${money(item.rate)}</td><td>${money(item.amount??Number(item.qty||0)*Number(item.rate||0))}</td></tr>`).join('')}</tbody></table>`;
-  dl.textContent='DOWNLOAD INVOICE PDF';
-  dl.onclick=async()=>{
-    try{
-      const snap=await getDoc(doc(db,SEERVI_INVOICE_COLLECTION,id));
-      if(!snap.exists()){alert('Invoice record is missing from Firebase.');return;}
-      const invoice={id:snap.id,...snap.data()};
-      let profile=invoice.gstProfile||null;
-      if(!profile){
-        try{profile=await seerviLoadInvoiceProfile();}catch(profileErr){console.warn('GST profile fallback unavailable:',profileErr);}
-      }
-      if(!profile) profile={...SEERVI_GST_PROFILE_DEFAULTS};
-      seerviGenerateSaleInvoicePDF(invoice,profile);
-    }catch(e){
-      console.error('Customer invoice PDF failed:',e);
-      alert('Invoice PDF failed: '+(e?.message||'Check Firebase connection.'));
-    }
-  };
-  const m=$('crmQuoteViewModal');if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}
-};
-
 window.customerViewQuote=function(id){
   const q=customerQuotes.find(x=>x.id===id);if(!q)return;
   const party=customerParty||q.customer||{};
@@ -7913,12 +7928,22 @@ window.accountDashboardEditProfile=function(){
   customerDashboardRequestedView='profile';
   customerShowDashboard();
 };
-window.accountDashboardMyOrder=function(){
+window.accountDashboardMyQuotations=function(){
+  closeAccountDashboard();
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
-  customerDashboardRequestedView='orders';
+  customerDashboardRequestedView='quotes';
   customerShowDashboard();
 };
+window.accountDashboardMyInvoices=function(){
+  closeAccountDashboard();
+  const m=$('customerLoginModal');if(!m)return;
+  m.classList.add('show');m.setAttribute('aria-hidden','false');
+  customerDashboardRequestedView='invoices';
+  customerShowDashboard();
+};
+// Backward-compatible alias so any existing caller of MY ORDER does not break.
+window.accountDashboardMyOrder=window.accountDashboardMyQuotations;
 window.accountDashboardCustomerSignOut=function(){closeAccountDashboard();customerSignOut();};
 
 onAuthStateChanged(publicSignupAuth,user=>{
