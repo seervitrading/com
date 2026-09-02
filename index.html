@@ -11351,6 +11351,22 @@ function seerviRenderNotificationList(){
 let seerviFloatingNotificationTimer=null;
 function seerviShowFloatingNotification(n){const toast=document.getElementById('notificationFloatingToast');if(!toast)return;const title=seerviNotificationSafeText(n.title),msg=seerviNotificationSafeText(n.message);const media=n.videoUrl?`<video controls playsinline preload="metadata" src="${String(n.videoUrl).replace(/"/g,'&quot;')}"></video>`:(n.imageDataUrl?`<img src="${String(n.imageDataUrl).replace(/"/g,'&quot;')}" alt="Notification">`:'');toast.innerHTML=`<button class="notification-toast-close" type="button" aria-label="Close notification" onclick="event.stopPropagation();seerviHideFloatingNotification()">×</button><div class="notification-toast-kicker">NEW NOTIFICATION</div><div class="notification-toast-title">${title}</div><div class="notification-toast-message">${msg}</div>${media}`;toast.classList.add('show');toast.setAttribute('aria-hidden','false');toast.onclick=()=>{seerviHideFloatingNotification();openNotifications()};clearTimeout(seerviFloatingNotificationTimer);seerviFloatingNotificationTimer=setTimeout(seerviHideFloatingNotification,10000)}
 function seerviHideFloatingNotification(){const toast=document.getElementById('notificationFloatingToast');if(!toast)return;toast.classList.remove('show');toast.setAttribute('aria-hidden','true');toast.innerHTML=''}
+async function seerviRequestNotificationPermission(){
+  if(!('Notification' in window))return 'unsupported';
+  try{
+    if(Notification.permission==='default')return await Notification.requestPermission();
+    return Notification.permission;
+  }catch(e){return 'denied'}
+}
+function seerviBrowserNotify(n){
+  if(!('Notification' in window)||Notification.permission!=='granted')return;
+  try{
+    const title=seerviNotificationSafeText(n.title)||'New Notification';
+    const body=seerviNotificationSafeText(n.message);
+    const notification=new Notification(title,{body,tag:`seervi-notification-${String(n.id)}`});
+    notification.onclick=()=>{window.focus();openNotifications();notification.close()};
+  }catch(e){}
+}
 async function seerviStartNotificationListener(){
   if(seerviNotificationUnsubscribe){seerviNotificationUnsubscribe();seerviNotificationUnsubscribe=null;}
   await seerviLoadNotificationReads();
@@ -11360,7 +11376,7 @@ async function seerviStartNotificationListener(){
       const previousIds=new Set(seerviNotificationsCache.map(n=>String(n.id)));
       seerviNotificationsCache=next;
       const newest=next.filter(n=>!previousIds.has(String(n.id))).sort((a,b)=>seerviNotificationMillis(b.createdAt)-seerviNotificationMillis(a.createdAt))[0];
-      if(newest && !seerviNotificationIsRead(newest) && newest.createdByUid!==auth.currentUser?.uid) seerviShowFloatingNotification(newest);
+      if(newest && !seerviNotificationIsRead(newest) && newest.createdByUid!==auth.currentUser?.uid){seerviShowFloatingNotification(newest);seerviBrowserNotify(newest);}
       seerviRenderNotificationList();
     },()=>{seerviRenderNotificationList();});
   }catch(e){
@@ -11501,7 +11517,7 @@ function seerviRefreshNotificationReadState(){
 window.addEventListener('storage',e=>{
   if(e.key&&e.key.startsWith('seervi_notification_read_')) seerviRenderNotificationList();
 });
-if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{seerviStartNotificationListener().catch(()=>{})},{once:true})}else{seerviStartNotificationListener().catch(()=>{})}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{seerviStartNotificationListener().catch(()=>{});if('Notification' in window&&Notification.permission==='default'){const ask=()=>{seerviRequestNotificationPermission().catch(()=>{});window.removeEventListener('click',ask,true);window.removeEventListener('touchstart',ask,true)};window.addEventListener('click',ask,true,{once:true});window.addEventListener('touchstart',ask,true,{once:true})}},{once:true})}else{seerviStartNotificationListener().catch(()=>{});if('Notification' in window&&Notification.permission==='default'){const ask=()=>{seerviRequestNotificationPermission().catch(()=>{});window.removeEventListener('click',ask,true);window.removeEventListener('touchstart',ask,true)};window.addEventListener('click',ask,true,{once:true});window.addEventListener('touchstart',ask,true,{once:true})}}
 
 window.addEventListener('beforeunload',()=>{
   if(seerviNotificationUnsubscribe){seerviNotificationUnsubscribe();seerviNotificationUnsubscribe=null;}
