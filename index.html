@@ -7287,7 +7287,12 @@ async function customerLoadDashboard(){
     seerviCachedRead('customer:'+customerParty.id+':ledger:1000',()=>getDocs(query(collection(publicSignupDb,'ledger'),where('partyId','==',customerParty.id),limit(1000))),8000)
   ]);
   customerQuotes=qs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
-  customerRates=rs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+  // Customer RATE HISTORY must show quotation rates only.
+  // Invoice snapshots are stored in the same rateHistory collection but are
+  // explicitly marked with panelScope:'invoices' and/or invoiceId.
+  customerRates=rs.docs.map(d=>({id:d.id,...d.data()})).filter(r=>
+    r.panelScope!=='invoices' && !r.invoiceId
+  ).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   customerLedger=ls.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   $('customerWelcomeName').textContent=customerParty.name||'Customer';
   $('customerWelcomeMeta').textContent=(customerParty.company||'')+' • '+(customerParty.email||customerUser.email||'');
