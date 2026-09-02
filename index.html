@@ -4594,7 +4594,11 @@ body.seervi-ai-open .float-wa{display:none!important}
 .admin-settings-scroll{overflow:auto;padding:18px 22px 6px}
 .admin-settings-section{border:1px solid #ffffff12;background:rgba(255,255,255,.02);border-radius:12px;padding:15px;margin-bottom:12px}
 .admin-settings-section .crm-section-title{margin-bottom:6px}
-.admin-settings-help{margin:0 0 12px;color:#7f8b96;font-size:10px;line-height:1.55}
+.admin-settings-subnav{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 14px;padding:2px}
+.admin-settings-subnav button{border:1px solid #ffffff12;background:#ffffff04;color:#8e99a5;border-radius:9px;padding:9px 12px;font-size:9px;font-weight:900;letter-spacing:.07em;cursor:pointer}
+.admin-settings-subnav button.active{background:#ffffff12;color:#fff;border-color:#ffffff28}
+.admin-settings-section[hidden]{display:none!important}
+{margin:0 0 12px;color:#7f8b96;font-size:10px;line-height:1.55}
 .admin-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .admin-settings-grid label{display:flex;flex-direction:column;gap:6px;color:#8e99a5;font-size:9px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
 .admin-settings-grid label.full{grid-column:1/-1}
@@ -4787,7 +4791,18 @@ body.seervi-ai-open .float-wa{display:none!important}
       <button class="crm-close" type="button" onclick="closeAdminSettings()">×</button>
     </div>
     <div class="admin-settings-scroll">
-      <section class="admin-settings-section"><div class="crm-section-title">VANTA BACKGROUND</div><p class="admin-settings-help">These are the only Vanta controls. Changes are global and are saved to Firebase.</p>
+      <div class="admin-settings-subnav" role="tablist" aria-label="Settings sections">
+        <button type="button" class="active" data-settings-section="vanta" onclick="seerviSettingsSection('vanta')">VANTA</button>
+        <button type="button" data-settings-section="branding" onclick="seerviSettingsSection('branding')">BRANDING</button>
+        <button type="button" data-settings-section="homepage" onclick="seerviSettingsSection('homepage')">HOMEPAGE</button>
+        <button type="button" data-settings-section="catalogue" onclick="seerviSettingsSection('catalogue')">CATALOGUE</button>
+        <button type="button" data-settings-section="customer" onclick="seerviSettingsSection('customer')">CUSTOMER / ORDER</button>
+        <button type="button" data-settings-section="notifications" onclick="seerviSettingsSection('notifications')">NOTIFICATIONS</button>
+        <button type="button" data-settings-section="privacy" onclick="seerviSettingsSection('privacy')">PRIVACY &amp; PERMISSIONS</button>
+        <button type="button" data-settings-section="quotationInvoice" onclick="seerviSettingsSection('quotationInvoice')">QUOTATION &amp; INVOICE</button>
+        <button type="button" data-settings-section="advanced" onclick="seerviSettingsSection('advanced')">ADVANCED</button>
+      </div>
+      <section id="adminSettingsSectionVanta" class="admin-settings-section"><div class="crm-section-title">VANTA BACKGROUND</div><p class="admin-settings-help">These are the only Vanta controls. Changes are global and are saved to Firebase.</p>
         <div class="admin-settings-grid">
           <label>Color<input id="settingVantaColor" type="color"></label>
           <label>Background Color<input id="settingVantaBg" type="color"></label>
@@ -4797,23 +4812,29 @@ body.seervi-ai-open .float-wa{display:none!important}
           <label class="admin-settings-check"><input id="settingVantaDots" type="checkbox"> Show Dots</label>
         </div>
       </section>
-      <section class="admin-settings-section"><div class="crm-section-title">BRANDING / BUSINESS</div><div class="admin-settings-grid">
+      <section id="adminSettingsSectionBranding" class="admin-settings-section" hidden><div class="crm-section-title">BRANDING / BUSINESS</div><div class="admin-settings-grid">
         <label>Company Name<input id="settingCompany" type="text"></label><label>Tagline<input id="settingTagline" type="text"></label><label>Email<input id="settingEmail" type="email"></label><label>WhatsApp Number<input id="settingWhatsapp" type="text" inputmode="numeric"></label>
       </div></section>
-      <section class="admin-settings-section"><div class="crm-section-title">HOMEPAGE</div><div class="admin-settings-grid">
+      <section id="adminSettingsSectionHomepage" class="admin-settings-section" hidden><div class="crm-section-title">HOMEPAGE</div><div class="admin-settings-grid">
         <label>Hero Kicker<input id="settingHeroKicker" type="text"></label><label>Hero Title<input id="settingHeroTitle" type="text"></label><label>Hero Highlight<input id="settingHeroHighlight" type="text"></label><label>Hero CTA<input id="settingHeroCta" type="text"></label><label class="full">Hero Description<textarea id="settingHeroDescription"></textarea></label><label class="full">Hero Image URL / Path<input id="settingHeroImage" type="text"></label>
         <label class="admin-settings-check"><input id="settingShowSupply" type="checkbox"> Show Supply Flow</label><label class="admin-settings-check"><input id="settingShowAbout" type="checkbox"> Show About</label><label class="admin-settings-check"><input id="settingShowWhy" type="checkbox"> Show Why Seervi</label><label class="admin-settings-check"><input id="settingShowContact" type="checkbox"> Show Contact</label>
       </div></section>
-      <section class="admin-settings-section"><div class="crm-section-title">CATALOGUE</div><div class="admin-settings-grid">
+      <section id="adminSettingsSectionCatalogue" class="admin-settings-section" hidden><div class="crm-section-title">CATALOGUE</div><div class="admin-settings-grid">
         <label>Products Section Title<input id="settingCatalogueTitle" type="text"></label><label class="admin-settings-check"><input id="settingShowCatalogue" type="checkbox"> Show Catalogue</label><label class="admin-settings-check"><input id="settingShowSearch" type="checkbox"> Show Search</label><label class="admin-settings-check"><input id="settingShowSort" type="checkbox"> Show Sort</label><label class="admin-settings-check"><input id="settingShowCategory" type="checkbox"> Show Category Filter</label><label class="admin-settings-check"><input id="settingShowSubcategory" type="checkbox"> Show Subcategory Filter</label>
       </div></section>
-      <section class="admin-settings-section"><div class="crm-section-title">CUSTOMER / ORDER</div><div class="admin-settings-grid">
+      <section id="adminSettingsSectionCustomer" class="admin-settings-section" hidden><div class="crm-section-title">CUSTOMER / ORDER</div><div class="admin-settings-grid">
         <label class="admin-settings-check"><input id="settingLogin" type="checkbox"> Customer Login</label><label class="admin-settings-check"><input id="settingSignup" type="checkbox"> Customer Sign Up</label><label>Order WhatsApp Number<input id="settingOrderWhatsapp" type="text" inputmode="numeric"></label>
       </div></section>
-      <section class="admin-settings-section"><div class="crm-section-title">NOTIFICATIONS</div><div class="admin-settings-grid">
-        <label class="admin-settings-check"><input id="settingNotifications" type="checkbox"> Notifications Enabled</label><label class="admin-settings-check"><input id="settingSound" type="checkbox"> Notification Sound Enabled</label>
-      </div></section>
-      <section class="admin-settings-section"><div class="crm-section-title">ADVANCED</div><div class="admin-settings-grid">
+      <section id="adminSettingsSectionNotifications" class="admin-settings-section" hidden><div class="crm-section-title">NOTIFICATIONS</div><p class="admin-settings-help">Control the notification bell, notification sound and browser notifications for new admin posts.</p><div class="admin-settings-grid">
+        <label class="admin-settings-check"><input id="settingNotifications" type="checkbox"> Notifications Enabled</label><label class="admin-settings-check"><input id="settingSound" type="checkbox"> Notification Sound Enabled</label><label class="admin-settings-check"><input id="settingBrowserNotifications" type="checkbox"> Browser Notifications</label>
+      </div><div class="admin-settings-readonly">Browser notifications require browser permission. This setting cannot override a permission denied by the browser.</div></section>
+      <section id="adminSettingsSectionPrivacy" class="admin-settings-section" hidden><div class="crm-section-title">PRIVACY &amp; PERMISSIONS</div><p class="admin-settings-help">Control permission-based browser data used by Activity Log.</p><div class="admin-settings-grid">
+        <label class="admin-settings-check"><input id="settingActivityLocation" type="checkbox"> Activity Location Logging</label>
+      </div><div class="admin-settings-readonly">When enabled, Activity Log may save browser-provided latitude, longitude and accuracy with the activity record. Browser permission is still required. Disabling this setting stops new Activity Log location collection; it does not erase older records.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="crm-secondary" type="button" onclick="seerviRequestActivityLocationPermission();seerviSettingsRefreshPermissionStatus()">REQUEST LOCATION PERMISSION</button><span id="settingsLocationPermissionStatus" class="crm-auth-status">Location permission: checking…</span></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><span id="settingsNotificationPermissionStatus" class="crm-auth-status">Browser notification permission: checking…</span></div></section>
+      <section id="adminSettingsSectionQuotationInvoice" class="admin-settings-section" hidden><div class="crm-section-title">QUOTATION &amp; INVOICE</div><p class="admin-settings-help">Quick access to the existing quotation, invoice and GST profile controls. No quotation/invoice workflow is changed here.</p><div class="admin-settings-grid">
+        <label class="full">Quotation data is managed from the existing Quotation Panel. Invoice data is managed from the existing Invoice Panel. GST/business details used on Sale Invoices remain in GST Profile.</label>
+      </div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="crm-secondary" type="button" onclick="closeAdminSettings();accountDashboardQuotationPanel()">OPEN QUOTATION PANEL</button><button class="crm-secondary" type="button" onclick="closeAdminSettings();accountDashboardInvoicePanel()">OPEN INVOICE PANEL</button><button class="crm-primary" type="button" onclick="closeAdminSettings();openGstProfile()">OPEN GST PROFILE</button></div></section>
+      <section id="adminSettingsSectionAdvanced" class="admin-settings-section" hidden><div class="crm-section-title">ADVANCED</div><div class="admin-settings-grid">
         <label class="admin-settings-check"><input id="settingMaintenance" type="checkbox"> Maintenance Mode</label><label class="full">Maintenance Message<textarea id="settingMaintenanceMessage"></textarea></label>
       </div><div class="admin-settings-readonly">Security: Admin access remains controlled by Firebase Authentication + Firestore Rules. This panel cannot change the authorised admin email.</div></section>
     </div>
@@ -11352,6 +11373,7 @@ let seerviFloatingNotificationTimer=null;
 function seerviShowFloatingNotification(n){const toast=document.getElementById('notificationFloatingToast');if(!toast)return;const title=seerviNotificationSafeText(n.title),msg=seerviNotificationSafeText(n.message);const media=n.videoUrl?`<video controls playsinline preload="metadata" src="${String(n.videoUrl).replace(/"/g,'&quot;')}"></video>`:(n.imageDataUrl?`<img src="${String(n.imageDataUrl).replace(/"/g,'&quot;')}" alt="Notification">`:'');toast.innerHTML=`<button class="notification-toast-close" type="button" aria-label="Close notification" onclick="event.stopPropagation();seerviHideFloatingNotification()">×</button><div class="notification-toast-kicker">NEW NOTIFICATION</div><div class="notification-toast-title">${title}</div><div class="notification-toast-message">${msg}</div>${media}`;toast.classList.add('show');toast.setAttribute('aria-hidden','false');toast.onclick=()=>{seerviHideFloatingNotification();openNotifications()};clearTimeout(seerviFloatingNotificationTimer);seerviFloatingNotificationTimer=setTimeout(seerviHideFloatingNotification,10000)}
 function seerviHideFloatingNotification(){const toast=document.getElementById('notificationFloatingToast');if(!toast)return;toast.classList.remove('show');toast.setAttribute('aria-hidden','true');toast.innerHTML=''}
 async function seerviRequestNotificationPermission(){
+  if(!seerviSiteSettings.notifications.browserEnabled)return 'disabled';
   if(!('Notification' in window))return 'unsupported';
   try{
     if(Notification.permission==='default')return await Notification.requestPermission();
@@ -11359,6 +11381,7 @@ async function seerviRequestNotificationPermission(){
   }catch(e){return 'denied'}
 }
 function seerviBrowserNotify(n){
+  if(!seerviSiteSettings.notifications.browserEnabled)return;
   if(!('Notification' in window)||Notification.permission!=='granted')return;
   try{
     const title=seerviNotificationSafeText(n.title)||'New Notification';
@@ -11517,7 +11540,7 @@ function seerviRefreshNotificationReadState(){
 window.addEventListener('storage',e=>{
   if(e.key&&e.key.startsWith('seervi_notification_read_')) seerviRenderNotificationList();
 });
-if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{seerviStartNotificationListener().catch(()=>{});seerviRequestActivityLocationPermission().catch(()=>{});if('Notification' in window&&Notification.permission==='default'){const ask=()=>{seerviRequestNotificationPermission().catch(()=>{});window.removeEventListener('click',ask,true);window.removeEventListener('touchstart',ask,true)};window.addEventListener('click',ask,true,{once:true});window.addEventListener('touchstart',ask,true,{once:true})}},{once:true})}else{seerviStartNotificationListener().catch(()=>{});seerviRequestActivityLocationPermission().catch(()=>{});if('Notification' in window&&Notification.permission==='default'){const ask=()=>{seerviRequestNotificationPermission().catch(()=>{});window.removeEventListener('click',ask,true);window.removeEventListener('touchstart',ask,true)};window.addEventListener('click',ask,true,{once:true});window.addEventListener('touchstart',ask,true,{once:true})}}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{seerviStartNotificationListener().catch(()=>{});seerviRequestActivityLocationPermission().catch(()=>{});if('Notification' in window&&Notification.permission==='default'&&seerviSiteSettings.notifications.browserEnabled){const ask=()=>{seerviRequestNotificationPermission().catch(()=>{});window.removeEventListener('click',ask,true);window.removeEventListener('touchstart',ask,true)};window.addEventListener('click',ask,true,{once:true});window.addEventListener('touchstart',ask,true,{once:true})}},{once:true})}else{seerviStartNotificationListener().catch(()=>{});seerviRequestActivityLocationPermission().catch(()=>{});if('Notification' in window&&Notification.permission==='default'&&seerviSiteSettings.notifications.browserEnabled){const ask=()=>{seerviRequestNotificationPermission().catch(()=>{});window.removeEventListener('click',ask,true);window.removeEventListener('touchstart',ask,true)};window.addEventListener('click',ask,true,{once:true});window.addEventListener('touchstart',ask,true,{once:true})}}
 
 window.addEventListener('beforeunload',()=>{
   if(seerviNotificationUnsubscribe){seerviNotificationUnsubscribe();seerviNotificationUnsubscribe=null;}
@@ -13536,7 +13559,8 @@ const SEERVI_SITE_SETTINGS_DEFAULTS={
   homepage:{heroKicker:'SEERVI TRADING / GLOBAL SOURCING',heroTitle:'Sourced Globally.',heroHighlight:'Supplied by Seervi.',heroDescription:'Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.',heroCta:'Explore Our Solutions',heroImage:'images/00-old-products/product-image-001-055cde1217d3c801.webp',showSupplyFlow:true,showAbout:true,showWhy:true,showContact:true},
   catalogue:{sectionTitle:'Our Products',showCatalogue:true,showSearch:true,showSort:true,showCategoryFilter:true,showSubcategoryFilter:true},
   customer:{loginEnabled:true,signupEnabled:true},
-  notifications:{enabled:true,soundEnabled:true},
+  privacy:{activityLocationEnabled:true},
+  notifications:{enabled:true,soundEnabled:true,browserEnabled:true},
   order:{whatsappNumber:'917073741650'},
   advanced:{maintenanceMode:false,maintenanceMessage:'We are updating the website. Please check again shortly.'}
 };
@@ -13585,6 +13609,8 @@ function seerviNormaliseSettings(raw){
   s.customer.signupEnabled=!!s.customer.signupEnabled;
   s.notifications.enabled=!!s.notifications.enabled;
   s.notifications.soundEnabled=!!s.notifications.soundEnabled;
+  s.notifications.browserEnabled=!!s.notifications.browserEnabled;
+  s.privacy.activityLocationEnabled=!!s.privacy.activityLocationEnabled;
   s.order.whatsappNumber=String(s.order.whatsappNumber||s.branding.whatsapp).replace(/\D/g,'').slice(0,20)||SEERVI_SITE_SETTINGS_DEFAULTS.order.whatsappNumber;
   s.advanced.maintenanceMode=!!s.advanced.maintenanceMode;
   s.advanced.maintenanceMessage=String(s.advanced.maintenanceMessage||SEERVI_SITE_SETTINGS_DEFAULTS.advanced.maintenanceMessage).slice(0,300);
@@ -13690,11 +13716,25 @@ function seerviRequireSettingsAdmin(){
   if(!crmUser || !isAuthorisedAdmin(crmUser)) throw new Error('Admin access required.');
 }
 
+function seerviSettingsRefreshPermissionStatus(){
+  const loc=document.getElementById('settingsLocationPermissionStatus');
+  const note=document.getElementById('settingsNotificationPermissionStatus');
+  if(loc){
+    if(!seerviSiteSettings.privacy.activityLocationEnabled) loc.textContent='Location permission: disabled by Settings';
+    else if(!navigator.geolocation) loc.textContent='Location permission: unavailable';
+    else if(navigator.permissions?.query) navigator.permissions.query({name:'geolocation'}).then(p=>{loc.textContent='Location permission: '+p.state;}).catch(()=>{loc.textContent='Location permission: unknown';});
+    else loc.textContent='Location permission: browser controlled';
+  }
+  if(note)note.textContent='Browser notification permission: '+(('Notification' in window)?Notification.permission:'unsupported');
+}
+
 window.openAdminSettings=function(){
   try{seerviRequireSettingsAdmin();}catch(e){alert(e.message||'Admin access required.');return;}
   const modal=document.getElementById('adminSettingsModal');
   if(!modal)return;
   seerviSettingsFillForm();
+  seerviSettingsRefreshPermissionStatus();
+  seerviSettingsSection('vanta');
   modal.classList.add('show');modal.setAttribute('aria-hidden','false');
   document.body.classList.add('modal-open');
 };
@@ -13706,6 +13746,11 @@ window.closeAdminSettings=function(){
 };
 
 function seerviSettingsField(id){return document.getElementById(id);}
+window.seerviSettingsSection=function(section){
+  const map={vanta:'adminSettingsSectionVanta',branding:'adminSettingsSectionBranding',homepage:'adminSettingsSectionHomepage',catalogue:'adminSettingsSectionCatalogue',customer:'adminSettingsSectionCustomer',notifications:'adminSettingsSectionNotifications',privacy:'adminSettingsSectionPrivacy',quotationInvoice:'adminSettingsSectionQuotationInvoice',advanced:'adminSettingsSectionAdvanced'};
+  Object.entries(map).forEach(([key,id])=>{const el=document.getElementById(id);if(el)el.hidden=key!==section;});
+  document.querySelectorAll('.admin-settings-subnav button[data-settings-section]').forEach(btn=>{const active=btn.dataset.settingsSection===section;btn.classList.toggle('active',active);btn.setAttribute('aria-selected',active?'true':'false');});
+};
 function seerviSettingsFillForm(){
   const s=seerviSiteSettings;
   const vals={
@@ -13713,7 +13758,7 @@ function seerviSettingsFillForm(){
     settingCompany:s.branding.companyName,settingTagline:s.branding.tagline,settingEmail:s.branding.email,settingWhatsapp:s.branding.whatsapp,
     settingHeroKicker:s.homepage.heroKicker,settingHeroTitle:s.homepage.heroTitle,settingHeroHighlight:s.homepage.heroHighlight,settingHeroDescription:s.homepage.heroDescription,settingHeroCta:s.homepage.heroCta,settingHeroImage:s.homepage.heroImage,settingShowSupply:s.homepage.showSupplyFlow,settingShowAbout:s.homepage.showAbout,settingShowWhy:s.homepage.showWhy,settingShowContact:s.homepage.showContact,
     settingCatalogueTitle:s.catalogue.sectionTitle,settingShowCatalogue:s.catalogue.showCatalogue,settingShowSearch:s.catalogue.showSearch,settingShowSort:s.catalogue.showSort,settingShowCategory:s.catalogue.showCategoryFilter,settingShowSubcategory:s.catalogue.showSubcategoryFilter,
-    settingLogin:s.customer.loginEnabled,settingSignup:s.customer.signupEnabled,settingNotifications:s.notifications.enabled,settingSound:s.notifications.soundEnabled,settingOrderWhatsapp:s.order.whatsappNumber,
+    settingLogin:s.customer.loginEnabled,settingSignup:s.customer.signupEnabled,settingNotifications:s.notifications.enabled,settingSound:s.notifications.soundEnabled,settingBrowserNotifications:s.notifications.browserEnabled,settingActivityLocation:s.privacy.activityLocationEnabled,settingOrderWhatsapp:s.order.whatsappNumber,
     settingMaintenance:s.advanced.maintenanceMode,settingMaintenanceMessage:s.advanced.maintenanceMessage
   };
   Object.entries(vals).forEach(([id,val])=>{const el=seerviSettingsField(id);if(!el)return;if(el.type==='checkbox')el.checked=!!val;else el.value=val;});
@@ -13736,13 +13781,15 @@ window.seerviSaveAdminSettings=async function(){
     heroKicker:seerviSettingsField('settingHeroKicker')?.value,heroTitle:seerviSettingsField('settingHeroTitle')?.value,heroHighlight:seerviSettingsField('settingHeroHighlight')?.value,heroDescription:seerviSettingsField('settingHeroDescription')?.value,heroCta:seerviSettingsField('settingHeroCta')?.value,heroImage:seerviSettingsField('settingHeroImage')?.value,showSupplyFlow:!!seerviSettingsField('settingShowSupply')?.checked,showAbout:!!seerviSettingsField('settingShowAbout')?.checked,showWhy:!!seerviSettingsField('settingShowWhy')?.checked,showContact:!!seerviSettingsField('settingShowContact')?.checked
   },catalogue:{
     sectionTitle:seerviSettingsField('settingCatalogueTitle')?.value,showCatalogue:!!seerviSettingsField('settingShowCatalogue')?.checked,showSearch:!!seerviSettingsField('settingShowSearch')?.checked,showSort:!!seerviSettingsField('settingShowSort')?.checked,showCategoryFilter:!!seerviSettingsField('settingShowCategory')?.checked,showSubcategoryFilter:!!seerviSettingsField('settingShowSubcategory')?.checked
-  },customer:{loginEnabled:!!seerviSettingsField('settingLogin')?.checked,signupEnabled:!!seerviSettingsField('settingSignup')?.checked},notifications:{enabled:!!seerviSettingsField('settingNotifications')?.checked,soundEnabled:!!seerviSettingsField('settingSound')?.checked},order:{whatsappNumber:seerviSettingsField('settingOrderWhatsapp')?.value},advanced:{maintenanceMode:!!seerviSettingsField('settingMaintenance')?.checked,maintenanceMessage:seerviSettingsField('settingMaintenanceMessage')?.value}});
+  },customer:{loginEnabled:!!seerviSettingsField('settingLogin')?.checked,signupEnabled:!!seerviSettingsField('settingSignup')?.checked},notifications:{enabled:!!seerviSettingsField('settingNotifications')?.checked,soundEnabled:!!seerviSettingsField('settingSound')?.checked,browserEnabled:!!seerviSettingsField('settingBrowserNotifications')?.checked},privacy:{activityLocationEnabled:!!seerviSettingsField('settingActivityLocation')?.checked},order:{whatsappNumber:seerviSettingsField('settingOrderWhatsapp')?.value},advanced:{maintenanceMode:!!seerviSettingsField('settingMaintenance')?.checked,maintenanceMessage:seerviSettingsField('settingMaintenanceMessage')?.value}});
   const clean=seerviNormaliseSettings(s);
   const status=seerviSettingsField('adminSettingsStatus');
   if(status)status.textContent='Saving global settings…';
   try{
     await setDoc(doc(db,'siteSettings','global'),clean);
     seerviApplySiteSettings(clean);
+    seerviActivityLocation=null;
+    seerviSettingsRefreshPermissionStatus();
     if(status)status.textContent='Saved successfully. All visitors will use these settings.';
     window.Seervi?.notify?.play('quotation');
   }catch(error){
@@ -13773,6 +13820,7 @@ function seerviActivityText(value,max=500){return String(value??'').replace(/\s+
 let seerviActivityLocation=null;
 async function seerviRequestActivityLocationPermission(){
   try{
+    if(!seerviSiteSettings.privacy.activityLocationEnabled)return;
     if(!navigator.geolocation)return;
     if(navigator.permissions?.query){
       const permission=await navigator.permissions.query({name:'geolocation'});
@@ -13782,6 +13830,7 @@ async function seerviRequestActivityLocationPermission(){
   }catch(e){}
 }
 async function seerviGetActivityLocation(){
+  if(!seerviSiteSettings.privacy.activityLocationEnabled){seerviActivityLocation={locationPermission:'disabled'};return seerviActivityLocation;}
   if(seerviActivityLocation)return seerviActivityLocation;
   const fallback={locationPermission:'unavailable'};
   try{
