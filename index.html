@@ -7313,10 +7313,30 @@ async function customerLoadDashboard(){
     customerSafeRead('customer:'+customerParty.id+':rates:500',()=>getDocs(query(collection(publicSignupDb,'rateHistory'),where('partyId','==',customerParty.id),limit(500)))),
     customerSafeRead('customer:'+customerParty.id+':ledger:1000',()=>getDocs(query(collection(publicSignupDb,'ledger'),where('partyId','==',customerParty.id),limit(1000))))
   ]);
-  customerQuotes=qs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
-  customerInvoices=is.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
-  customerRates=rs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
-  customerLedger=ls.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+  // Strict separation:
+  // A converted quotation belongs to the Invoice side once it has an invoiceId.
+  // A quotation must never appear in MY INVOICES, and an invoice-linked
+  // quotation must not remain in MY QUOTATIONS.
+  const quoteDocs=qs.docs.map(d=>({id:d.id,...d.data()}))
+    .filter(x=>!x.invoiceId && !x.invoiceNo && String(x.source||'').toLowerCase()!=='invoice');
+  const invoiceDocs=is.docs.map(d=>({id:d.id,...d.data()}))
+    .filter(x=>String(x.invoiceNo||'').trim()!=='');
+  customerQuotes=quoteDocs.sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+  customerInvoices=invoiceDocs.sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+  customerRates=rs.docs.map(d=>({id:d.id,...d.data()})).filter(x=>{
+    const scope=String(x.panelScope||'').toLowerCase();
+    if(scope==='invoices') return !!x.invoiceId || !!x.invoiceNo;
+    if(scope==='quotes') return !x.invoiceId && !x.invoiceNo;
+    return !x.invoiceId && !x.invoiceNo;
+  }).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
+  customerLedger=ls.docs.map(d=>({id:d.id,...d.data()})).filter(x=>{
+    const scope=String(x.panelScope||'').toLowerCase();
+    if(scope==='invoices') return true;
+    if(scope==='quotes') return !x.invoiceId && !x.invoiceNo && !x.invoiceId;
+    if(x.invoiceId || x.invoiceNo) return true;
+    if(x.quoteId || x.source==='quotation') return true;
+    return true;
+  }).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   $('customerWelcomeName').textContent=customerParty.name||'Customer';
   $('customerWelcomeMeta').textContent=(customerParty.company||'')+' • '+(customerParty.email||customerUser.email||'');
   renderCustomerProfileCard($('customerProfileCard'));
@@ -7387,8 +7407,9 @@ function customerRenderRates(){
   const el=$('customerRatesList');if(!el)return;
   const invoiceMode=customerDashboardRequestedView==='invoices';
   const source=customerRates.filter(r=>{
-    if(invoiceMode)return r.panelScope==='invoices'||!!r.invoiceId;
-    return !r.panelScope||r.panelScope==='quotes'||!!r.quoteId;
+    const scope=String(r.panelScope||'').toLowerCase();
+    if(invoiceMode)return scope==='invoices'||!!r.invoiceId||!!r.invoiceNo;
+    return scope==='quotes'||(!scope&&!r.invoiceId&&!r.invoiceNo);
   });
   if(!source.length){el.innerHTML='<div class="customer-rate-history-empty">No previous item-wise rates are available yet.</div>';return;}
   const groups=new Map();
@@ -7423,16 +7444,18 @@ function customerRenderLedger(){
         label:'INVOICE',ref:x.invoiceNo||'',note:'Invoice amount',
         amount:Number(x.grandTotal||0),invoiceId:x.id||''
       }))
-    : customerQuotes.filter(x=>!x.invoiceId).map(x=>({
+    : customerQuotes.filter(x=>!x.invoiceId&&!x.invoiceNo).map(x=>({
         date:x.dateISO||'',sort:x.dateISO||'',type:'debit',
         label:'QUOTATION',ref:x.quoteNo||'',note:'Quotation amount',
         amount:Number(x.grandTotal||0),quoteId:x.id||''
       }));
 
   const manualTx=customerLedger.filter(x=>{
-    if(x.source==='quotation'||x.quoteId)return false;
-    if(invoiceMode)return x.panelScope==='invoices';
-    return !x.panelScope||x.panelScope==='quotes';
+    const scope=String(x.panelScope||'').toLowerCase();
+    const isInvoiceTx=scope==='invoices'||!!x.invoiceId||!!x.invoiceNo;
+    const isQuoteTx=scope==='quotes'||!!x.quoteId||x.source==='quotation';
+    if(invoiceMode)return isInvoiceTx && !isQuoteTx;
+    return isQuoteTx && !isInvoiceTx;
   }).map(x=>({
     date:x.dateISO||'',sort:x.dateISO||'',type:x.type==='credit'?'credit':'debit',
     label:x.type==='credit'?'PAYMENT':'DEBIT',ref:x.invoiceNo||x.quoteNo||'',
