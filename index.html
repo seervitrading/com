@@ -3922,8 +3922,10 @@ body.nav-is-scrolled{padding-top:76px;}
 .notification-admin-grid textarea{grid-column:1/-1;min-height:105px;resize:vertical}
 .notification-admin-image{grid-column:1/-1}
 .notification-admin-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
-.notification-image-preview{display:none;max-width:180px;max-height:110px;object-fit:contain;border:1px solid #ffffff12;border-radius:8px;margin-top:8px}
-.notification-image-preview.show{display:block}
+.notification-media-preview{display:none;max-width:320px;max-height:190px;margin-top:8px;border:1px solid #ffffff12;border-radius:8px;overflow:hidden}
+.notification-media-preview.show{display:block}
+.notification-media-preview img,.notification-media-preview video{display:block;width:100%;max-width:320px;max-height:190px;object-fit:contain;background:#080c11}
+.notification-card-video{display:block;width:100%;max-height:360px;margin-top:10px;border:1px solid #ffffff12;border-radius:8px;background:#000}
 @media(max-width:600px){
   nav .notification-bell{grid-column:4;grid-row:1;margin-left:0;width:40px}
   nav .wrap{grid-template-columns:minmax(0,1fr) auto auto auto!important}
@@ -4470,6 +4472,7 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 @media(max-width:700px){.seervi-item-gallery-main{max-height:360px}.seervi-item-gallery-main img{max-height:360px}}
 
 
+.notification-floating-toast{position:fixed;right:18px;bottom:18px;width:min(380px,calc(100vw - 24px));z-index:1200;display:none;background:#10141a;border:1px solid #3a414b;border-radius:16px;box-shadow:0 18px 50px #000b;color:#f4f6f8;padding:14px;cursor:pointer;animation:seerviNotifToastIn .28s ease-out}.notification-floating-toast.show{display:block}.notification-floating-toast .notification-toast-kicker{font-size:9px;letter-spacing:1.4px;color:#f0c66a;font-weight:800;margin-bottom:6px}.notification-floating-toast .notification-toast-title{font-size:15px;font-weight:800;margin-bottom:6px}.notification-floating-toast .notification-toast-message{font-size:12px;line-height:1.45;color:#cbd2da;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.notification-floating-toast img,.notification-floating-toast video{display:block;width:100%;max-height:210px;object-fit:contain;border-radius:10px;margin-top:10px;background:#080a0d}.notification-floating-toast .notification-toast-close{position:absolute;right:8px;top:7px;width:26px;height:26px;border:1px solid #ffffff22;border-radius:50%;background:#ffffff0d;color:#fff;cursor:pointer}@keyframes seerviNotifToastIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}@media(max-width:520px){.notification-floating-toast{right:12px;bottom:12px;width:calc(100vw - 24px)}}
 </style><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script type="application/ld+json">
 {
@@ -4878,10 +4881,10 @@ body.seervi-ai-open .float-wa{display:none!important}
       <div class="crm-section-title">CREATE NOTICE</div>
       <div class="notification-admin-grid">
         <input id="notificationPostTitleInput" maxlength="120" required placeholder="Notification title *">
-        <input id="notificationPostImage" class="notification-admin-image" type="file" accept="image/*">
+        <input id="notificationPostImage" class="notification-admin-image" type="file" accept="image/*,video/*">
         <textarea id="notificationPostMessage" maxlength="4000" required placeholder="Write your important message *"></textarea>
       </div>
-      <img id="notificationImagePreview" class="notification-image-preview" alt="Selected notification image preview">
+      <div id="notificationMediaPreview" class="notification-media-preview"></div>
       <div class="notification-admin-actions">
         <button class="crm-secondary" type="button" onclick="closeNotificationPost()">CANCEL</button>
         <button id="notificationPostSubmit" class="crm-primary" type="submit">POST NOTIFICATION</button>
@@ -4890,6 +4893,7 @@ body.seervi-ai-open .float-wa{display:none!important}
     </form>
   </div>
 </div>
+<div id="notificationFloatingToast" class="notification-floating-toast" aria-live="polite" aria-hidden="true"></div>
 <div id="customerLoginModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCustomerLogin()"></div><div class="crm-panel customer-portal-panel" role="dialog" aria-modal="true" aria-labelledby="customerPortalTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / SECURE LOGIN</div><h3 id="customerPortalTitle">Login</h3><div id="customerAuthStatus" class="crm-auth-status">Admin and customers can log in here. You will be taken to your own dashboard.</div></div><button class="crm-close" type="button" onclick="closeCustomerLogin()">×</button></div><div id="customerLoginView" class="crm-login"><div class="crm-section-title">LOGIN</div><p>Use your Seervi Trading email and password. Admin accounts open the Admin Dashboard; customer accounts open the Customer Dashboard.</p><div class="crm-login-grid"><input id="customerLoginEmail" type="email" placeholder="Email" autocomplete="username"><input id="customerLoginPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="customerSignIn()">LOGIN</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('customer')">FORGOT PASSWORD?</button></div><div id="customerLoginError" class="crm-error"></div><div class="customer-login-help">Don't have an account? <button type="button" onclick="closeCustomerLogin();openPartySignup();">SIGN UP</button></div></div><div id="customerDashboardView" class="customer-dashboard" hidden><div class="customer-dashboard-head"><div><div class="crm-section-title">WELCOME</div><h4 id="customerWelcomeName">Customer</h4><div id="customerWelcomeMeta" class="crm-auth-status"></div></div><div style="display:flex;gap:6px;align-items:center"><button class="crm-secondary customer-dashboard-refresh" type="button" onclick="customerRefreshDashboard()">↻ REFRESH</button><button class="crm-secondary danger" type="button" onclick="customerSignOut()">SIGN OUT</button></div></div><div id="customerDashboardSummary" class="customer-dashboard-summary" hidden></div><div id="customerProfileCard" class="customer-profile-card"></div><div class="customer-portal-tabs"><button class="customer-tab active" type="button" onclick="customerPortalTab('quotes')">MY ORDER</button><button class="customer-tab" type="button" onclick="customerPortalTab('ledger')">MY LEDGER</button><button class="customer-tab" type="button" onclick="customerPortalTab('rates')">RATE HISTORY</button></div><div id="customerQuotesList" class="customer-portal-list"></div><div id="customerRatesList" class="customer-portal-list" hidden></div><div id="customerLedgerList" class="customer-portal-list" hidden></div><div id="customerProfileEdit" class="customer-profile-edit" hidden></div></div></div></div>
 
 
@@ -6686,6 +6690,7 @@ document.addEventListener('keydown',unlockSeerviAudio,{capture:true,passive:true
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously, createUserWithEmailAndPassword, sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
@@ -6706,6 +6711,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 // Single authorised administrator account. Only this Firebase account may
 // enter the private Admin Panel / quotation workspace.
@@ -11336,18 +11342,25 @@ function seerviRenderNotificationList(){
     const image=n.imageDataUrl?`<img src="${String(n.imageDataUrl).replace(/"/g,'&quot;')}" alt="Notification image">`:'';
     return `<article class="notification-card ${read?'':'unread'}" data-notification-id="${seerviNotificationSafeText(n.id)}">
       <div class="notification-card-head"><div class="notification-card-title">${title}</div><div class="notification-card-date">${date}</div></div>
-      <div class="notification-card-message">${msg}</div>${image}
+      <div class="notification-card-message">${msg}</div>${image}${n.videoUrl?`<video class="notification-card-video" controls playsinline preload="metadata" src="${String(n.videoUrl).replace(/"/g,'&quot;')}"></video>`:''}
       <button class="notification-read-btn" type="button" onclick="event.stopPropagation();markNotificationRead('${seerviNotificationSafeText(n.id)}')">MARK READ</button>
     </article>`;
   }).join('');
   seerviRenderNotificationBadge();
 }
+let seerviFloatingNotificationTimer=null;
+function seerviShowFloatingNotification(n){const toast=document.getElementById('notificationFloatingToast');if(!toast)return;const title=seerviNotificationSafeText(n.title),msg=seerviNotificationSafeText(n.message);const media=n.videoUrl?`<video controls playsinline preload="metadata" src="${String(n.videoUrl).replace(/"/g,'&quot;')}"></video>`:(n.imageDataUrl?`<img src="${String(n.imageDataUrl).replace(/"/g,'&quot;')}" alt="Notification">`:'');toast.innerHTML=`<button class="notification-toast-close" type="button" aria-label="Close notification" onclick="event.stopPropagation();seerviHideFloatingNotification()">×</button><div class="notification-toast-kicker">NEW NOTIFICATION</div><div class="notification-toast-title">${title}</div><div class="notification-toast-message">${msg}</div>${media}`;toast.classList.add('show');toast.setAttribute('aria-hidden','false');toast.onclick=()=>{seerviHideFloatingNotification();openNotifications()};clearTimeout(seerviFloatingNotificationTimer);seerviFloatingNotificationTimer=setTimeout(seerviHideFloatingNotification,10000)}
+function seerviHideFloatingNotification(){const toast=document.getElementById('notificationFloatingToast');if(!toast)return;toast.classList.remove('show');toast.setAttribute('aria-hidden','true');toast.innerHTML=''}
 async function seerviStartNotificationListener(){
   if(seerviNotificationUnsubscribe){seerviNotificationUnsubscribe();seerviNotificationUnsubscribe=null;}
   await seerviLoadNotificationReads();
   try{
     seerviNotificationUnsubscribe=onSnapshot(collection(db,'notifications'),snap=>{
-      seerviNotificationsCache=snap.docs.map(d=>({id:d.id,...d.data()})).filter(n=>seerviNotificationMillis(n.expiresAt)>seerviNotificationNow());
+      const next=snap.docs.map(d=>({id:d.id,...d.data()})).filter(n=>seerviNotificationMillis(n.expiresAt)>seerviNotificationNow());
+      const previousIds=new Set(seerviNotificationsCache.map(n=>String(n.id)));
+      seerviNotificationsCache=next;
+      const newest=next.filter(n=>!previousIds.has(String(n.id))).sort((a,b)=>seerviNotificationMillis(b.createdAt)-seerviNotificationMillis(a.createdAt))[0];
+      if(newest && !seerviNotificationIsRead(newest) && newest.createdByUid!==auth.currentUser?.uid) seerviShowFloatingNotification(newest);
       seerviRenderNotificationList();
     },()=>{seerviRenderNotificationList();});
   }catch(e){
@@ -11392,24 +11405,26 @@ window.openNotificationPost=function(){
   const m=document.getElementById('notificationPostModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
   const status=document.getElementById('notificationPostStatus');if(status)status.textContent='';
-  const preview=document.getElementById('notificationImagePreview');if(preview){preview.src='';preview.classList.remove('show');}
+  const preview=document.getElementById('notificationMediaPreview');if(preview){preview.innerHTML='';preview.classList.remove('show');}
 };
 window.closeNotificationPost=function(){
   const m=document.getElementById('notificationPostModal');if(!m)return;
   m.classList.remove('show');m.setAttribute('aria-hidden','true');
 };
-async function seerviCompressNotificationImage(file){
-  if(!file)return '';
-  return await new Promise((resolve,reject)=>{
+function seerviCompressNotificationImage(file){
+  return new Promise((resolve,reject)=>{
     const reader=new FileReader();
     reader.onload=()=>{
       const img=new Image();
       img.onload=()=>{
-        const max=1000, scale=Math.min(1,max/Math.max(img.width,img.height));
-        const c=document.createElement('canvas');
-        c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));
-        const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);
-        resolve(c.toDataURL('image/jpeg',0.78));
+        const max=1200;
+        const scale=Math.min(1,max/Math.max(img.width,img.height));
+        const canvas=document.createElement('canvas');
+        canvas.width=Math.max(1,Math.round(img.width*scale));
+        canvas.height=Math.max(1,Math.round(img.height*scale));
+        const ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        resolve(canvas.toDataURL('image/jpeg',0.82));
       };
       img.onerror=reject;img.src=reader.result;
     };
@@ -11419,10 +11434,23 @@ async function seerviCompressNotificationImage(file){
 const notificationImageInput=document.getElementById('notificationPostImage');
 if(notificationImageInput) notificationImageInput.addEventListener('change',async()=>{
   const file=notificationImageInput.files?.[0];
-  const preview=document.getElementById('notificationImagePreview');
+  const preview=document.getElementById('notificationMediaPreview');
   if(!file||!preview)return;
-  try{preview.src=await seerviCompressNotificationImage(file);preview.classList.add('show');}
-  catch(e){preview.src='';preview.classList.remove('show');}
+  try{
+    preview.innerHTML='';
+    if(file.type.startsWith('video/')){
+      const video=document.createElement('video');
+      video.controls=true;video.muted=true;video.playsInline=true;
+      video.src=URL.createObjectURL(file);
+      preview.appendChild(video);
+    }else{
+      const img=document.createElement('img');
+      img.alt='Selected notification image preview';
+      img.src=await seerviCompressNotificationImage(file);
+      preview.appendChild(img);
+    }
+    preview.classList.add('show');
+  }catch(e){preview.innerHTML='';preview.classList.remove('show');}
 });
 window.submitNotificationPost=async function(e){
   e.preventDefault();
@@ -11436,20 +11464,32 @@ window.submitNotificationPost=async function(e){
   try{
     if(submit){submit.disabled=true;submit.textContent='POSTING…';}
     if(status)status.textContent='Preparing notification…';
-    let imageDataUrl='';
-    if(file) imageDataUrl=await seerviCompressNotificationImage(file);
+    let imageDataUrl='',videoUrl='',mediaType='';
     const createdAt=Date.now(), expiresAt=createdAt+SEERVI_NOTIFICATION_TTL_MS;
-    await addDoc(collection(db,'notifications'),{
-      title,message,imageDataUrl,createdAt,expiresAt,
+    const notificationRef=doc(collection(db,'notifications'));
+    if(file?.type?.startsWith('video/')){
+      mediaType='video';
+      if(status)status.textContent='Uploading video…';
+      const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+      const videoRef=storageRef(storage,`notifications/${notificationRef.id}/${Date.now()}_${safeName}`);
+      await uploadBytes(videoRef,file,{contentType:file.type});
+      videoUrl=await getDownloadURL(videoRef);
+    }else if(file){
+      mediaType='image';
+      imageDataUrl=await seerviCompressNotificationImage(file);
+    }
+    await setDoc(notificationRef,{
+      title,message,imageDataUrl,videoUrl,mediaType,createdAt,expiresAt,
       createdByUid:crmUser.uid,createdByEmail:crmUser.email||''
     });
     if(status)status.textContent='Notification posted successfully. It will expire automatically after 7 days.';
     const form=document.querySelector('#notificationPostModal form');
     if(form)form.reset();
-    const preview=document.getElementById('notificationImagePreview');
-    if(preview){preview.src='';preview.classList.remove('show');}
+    const preview=document.getElementById('notificationMediaPreview');
+    if(preview){preview.innerHTML='';preview.classList.remove('show');}
     setTimeout(closeNotificationPost,700);
   }catch(err){
+    console.error('Notification post failed:',err);
     if(status)status.textContent='Could not post notification. Please try again.';
   }finally{
     if(submit){submit.disabled=false;submit.textContent='POST NOTIFICATION';}
@@ -11461,6 +11501,8 @@ function seerviRefreshNotificationReadState(){
 window.addEventListener('storage',e=>{
   if(e.key&&e.key.startsWith('seervi_notification_read_')) seerviRenderNotificationList();
 });
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{seerviStartNotificationListener().catch(()=>{})},{once:true})}else{seerviStartNotificationListener().catch(()=>{})}
+
 window.addEventListener('beforeunload',()=>{
   if(seerviNotificationUnsubscribe){seerviNotificationUnsubscribe();seerviNotificationUnsubscribe=null;}
 });
