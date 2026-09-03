@@ -4599,6 +4599,7 @@ body.seervi-ai-open .float-wa{display:none!important}
 .admin-settings-subnav button.active{background:#ffffff12;color:#fff;border-color:#ffffff28}
 .admin-settings-section[hidden]{display:none!important}
 .pdf-custom-settings{margin-top:14px;border-top:1px solid #ffffff12;padding-top:14px}.pdf-custom-settings .crm-section-title{margin-top:4px}.pdf-custom-settings .admin-settings-grid{margin-bottom:14px}
+.pdf-layout-subnav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px;padding:2px}.pdf-layout-subnav button{border:1px solid #ffffff12;background:#ffffff04;color:#8e99a5;border-radius:9px;padding:10px 14px;font-size:10px;font-weight:900;letter-spacing:.07em;cursor:pointer}.pdf-layout-subnav button.active{background:#ffffff12;color:#fff;border-color:#ffffff28}.pdf-layout-option[hidden]{display:none!important}
 .admin-settings-grid select{width:100%;box-sizing:border-box;background:#ffffff08;color:#fff;border:1px solid #ffffff18;border-radius:8px;padding:10px;font-size:11px;font-weight:800;outline:none}
 {margin:0 0 12px;color:#7f8b96;font-size:10px;line-height:1.55}
 .admin-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -4829,50 +4830,64 @@ body.seervi-ai-open .float-wa{display:none!important}
       <section id="adminSettingsSectionNotifications" class="admin-settings-section" hidden><div class="crm-section-title">NOTIFICATIONS</div><div class="admin-settings-grid">
         <label class="admin-settings-check"><input id="settingNotifications" type="checkbox"> Notifications Enabled</label><label class="admin-settings-check"><input id="settingSound" type="checkbox"> Notification Sound Enabled</label>
       </div></section>
-      <section id="adminSettingsSectionPdf" class="admin-settings-section" hidden><div class="crm-section-title">QUOTATION / INVOICE PDF LAYOUT</div><p class="admin-settings-help">Customize quotation and invoice PDFs. Choose CUSTOM to control margins, font sizes, row spacing and document spacing. Standard / Compact / Spacious remain available as presets.</p>
-        <div class="admin-settings-grid">
-          <label>Quotation PDF Layout<select id="settingQuotationPdfLayout"><option value="standard">STANDARD</option><option value="compact">COMPACT</option><option value="spacious">SPACIOUS</option><option value="custom">CUSTOM</option></select></label>
-          <label>Invoice PDF Layout<select id="settingInvoicePdfLayout"><option value="standard">STANDARD</option><option value="compact">COMPACT</option><option value="spacious">SPACIOUS</option><option value="custom">CUSTOM</option></select></label>
+      <section id="adminSettingsSectionPdf" class="admin-settings-section" hidden><div class="crm-section-title">PDF LAYOUT</div><p class="admin-settings-help">Choose the document first. Then only that document's PDF layout settings are shown.</p>
+        <div class="pdf-layout-subnav" role="tablist" aria-label="PDF layout options">
+          <button type="button" class="active" data-pdf-layout-section="quotation" onclick="seerviPdfLayoutSection('quotation')">QUOTATION</button>
+          <button type="button" data-pdf-layout-section="invoice" onclick="seerviPdfLayoutSection('invoice')">INVOICE</button>
         </div>
-        <div class="pdf-custom-settings">
-          <div class="crm-section-title">QUOTATION CUSTOM SETTINGS</div>
+        <div id="pdfQuotationSettings" class="pdf-layout-option">
+          <div class="crm-section-title">QUOTATION PDF</div>
           <div class="admin-settings-grid">
-            <label>Top Margin / Start (mm)<input id="settingQuoteMarginTop" type="number" min="5" max="60" step="0.5"></label>
-            <label>Right Margin (mm)<input id="settingQuoteMarginRight" type="number" min="5" max="50" step="0.5"></label>
-            <label>Bottom Margin (mm)<input id="settingQuoteMarginBottom" type="number" min="5" max="50" step="0.5"></label>
-            <label>Left Margin (mm)<input id="settingQuoteMarginLeft" type="number" min="5" max="50" step="0.5"></label>
-            <label>Header Font (pt)<input id="settingQuoteHeaderFont" type="number" min="6" max="40" step="0.5"></label>
-            <label>Customer / Body Font (pt)<input id="settingQuoteBodyFont" type="number" min="5" max="20" step="0.5"></label>
-            <label>Table Font (pt)<input id="settingQuoteTableFont" type="number" min="5" max="20" step="0.5"></label>
-            <label>Total Font (pt)<input id="settingQuoteTotalFont" type="number" min="5" max="20" step="0.5"></label>
-            <label>Grand Total Font (pt)<input id="settingQuoteGrandFont" type="number" min="6" max="30" step="0.5"></label>
-            <label>Footer Font (pt)<input id="settingQuoteFooterFont" type="number" min="5" max="16" step="0.5"></label>
-            <label>Minimum Row Height (mm)<input id="settingQuoteRowMin" type="number" min="3" max="20" step="0.5"></label>
-            <label>Row Line Spacing (mm)<input id="settingQuoteRowLine" type="number" min="1" max="10" step="0.1"></label>
-            <label>Row Padding (mm)<input id="settingQuoteRowPad" type="number" min="0" max="10" step="0.1"></label>
+            <label>PDF Layout<select id="settingQuotationPdfLayout"><option value="standard">STANDARD</option><option value="compact">COMPACT</option><option value="spacious">SPACIOUS</option><option value="custom">CUSTOM</option></select></label>
           </div>
-          <div class="crm-section-title">INVOICE CUSTOM SETTINGS</div>
-          <div class="admin-settings-grid">
-            <label>Top Margin / Start (mm)<input id="settingInvoiceMarginTop" type="number" min="5" max="40" step="0.5"></label>
-            <label>Right Margin (mm)<input id="settingInvoiceMarginRight" type="number" min="5" max="50" step="0.5"></label>
-            <label>Bottom Margin (mm)<input id="settingInvoiceMarginBottom" type="number" min="5" max="40" step="0.5"></label>
-            <label>Left Margin (mm)<input id="settingInvoiceMarginLeft" type="number" min="5" max="50" step="0.5"></label>
-            <label>Header Font (pt)<input id="settingInvoiceHeaderFont" type="number" min="6" max="30" step="0.5"></label>
-            <label>Body Font (pt)<input id="settingInvoiceBodyFont" type="number" min="5" max="16" step="0.5"></label>
-            <label>Table Font (pt)<input id="settingInvoiceTableFont" type="number" min="5" max="16" step="0.5"></label>
-            <label>Total Font (pt)<input id="settingInvoiceTotalFont" type="number" min="5" max="16" step="0.5"></label>
-            <label>Grand Total Font (pt)<input id="settingInvoiceGrandFont" type="number" min="6" max="24" step="0.5"></label>
-            <label>Footer Font (pt)<input id="settingInvoiceFooterFont" type="number" min="5" max="16" step="0.5"></label>
-            <label>Minimum Row Height (mm)<input id="settingInvoiceRowMin" type="number" min="3" max="20" step="0.5"></label>
-            <label>Row Line Spacing (mm)<input id="settingInvoiceRowLine" type="number" min="1" max="10" step="0.1"></label>
-            <label>Row Padding (mm)<input id="settingInvoiceRowPad" type="number" min="0" max="10" step="0.1"></label>
-            <label>Header Height (mm)<input id="settingInvoiceHeaderH" type="number" min="20" max="70" step="0.5"></label>
-            <label>Bill / Ship Box Height (mm)<input id="settingInvoiceBillH" type="number" min="20" max="70" step="0.5"></label>
+          <div class="pdf-custom-settings">
+            <div class="crm-section-title">QUOTATION CUSTOM SETTINGS</div>
+            <div class="admin-settings-grid">
+              <label>Top Margin / Start (mm)<input id="settingQuoteMarginTop" type="number" min="5" max="60" step="0.5"></label>
+              <label>Right Margin (mm)<input id="settingQuoteMarginRight" type="number" min="5" max="50" step="0.5"></label>
+              <label>Bottom Margin (mm)<input id="settingQuoteMarginBottom" type="number" min="5" max="50" step="0.5"></label>
+              <label>Left Margin (mm)<input id="settingQuoteMarginLeft" type="number" min="5" max="50" step="0.5"></label>
+              <label>Header Font (pt)<input id="settingQuoteHeaderFont" type="number" min="6" max="40" step="0.5"></label>
+              <label>Customer / Body Font (pt)<input id="settingQuoteBodyFont" type="number" min="5" max="20" step="0.5"></label>
+              <label>Table Font (pt)<input id="settingQuoteTableFont" type="number" min="5" max="20" step="0.5"></label>
+              <label>Total Font (pt)<input id="settingQuoteTotalFont" type="number" min="5" max="20" step="0.5"></label>
+              <label>Grand Total Font (pt)<input id="settingQuoteGrandFont" type="number" min="6" max="30" step="0.5"></label>
+              <label>Footer Font (pt)<input id="settingQuoteFooterFont" type="number" min="5" max="16" step="0.5"></label>
+              <label>Minimum Row Height (mm)<input id="settingQuoteRowMin" type="number" min="3" max="20" step="0.5"></label>
+              <label>Row Line Spacing (mm)<input id="settingQuoteRowLine" type="number" min="1" max="10" step="0.1"></label>
+              <label>Row Padding (mm)<input id="settingQuoteRowPad" type="number" min="0" max="10" step="0.1"></label>
+            </div>
           </div>
-          <div class="admin-settings-readonly">Custom values are used only when that document is set to CUSTOM. Changes apply to new quotation/invoice PDFs; existing PDF files are not modified.</div>
         </div>
+        <div id="pdfInvoiceSettings" class="pdf-layout-option" hidden>
+          <div class="crm-section-title">INVOICE PDF</div>
+          <div class="admin-settings-grid">
+            <label>PDF Layout<select id="settingInvoicePdfLayout"><option value="standard">STANDARD</option><option value="compact">COMPACT</option><option value="spacious">SPACIOUS</option><option value="custom">CUSTOM</option></select></label>
+          </div>
+          <div class="pdf-custom-settings">
+            <div class="crm-section-title">INVOICE CUSTOM SETTINGS</div>
+            <div class="admin-settings-grid">
+              <label>Top Margin / Start (mm)<input id="settingInvoiceMarginTop" type="number" min="5" max="40" step="0.5"></label>
+              <label>Right Margin (mm)<input id="settingInvoiceMarginRight" type="number" min="5" max="50" step="0.5"></label>
+              <label>Bottom Margin (mm)<input id="settingInvoiceMarginBottom" type="number" min="5" max="40" step="0.5"></label>
+              <label>Left Margin (mm)<input id="settingInvoiceMarginLeft" type="number" min="5" max="50" step="0.5"></label>
+              <label>Header Font (pt)<input id="settingInvoiceHeaderFont" type="number" min="6" max="30" step="0.5"></label>
+              <label>Body Font (pt)<input id="settingInvoiceBodyFont" type="number" min="5" max="16" step="0.5"></label>
+              <label>Table Font (pt)<input id="settingInvoiceTableFont" type="number" min="5" max="16" step="0.5"></label>
+              <label>Total Font (pt)<input id="settingInvoiceTotalFont" type="number" min="5" max="16" step="0.5"></label>
+              <label>Grand Total Font (pt)<input id="settingInvoiceGrandFont" type="number" min="6" max="24" step="0.5"></label>
+              <label>Footer Font (pt)<input id="settingInvoiceFooterFont" type="number" min="5" max="16" step="0.5"></label>
+              <label>Minimum Row Height (mm)<input id="settingInvoiceRowMin" type="number" min="3" max="20" step="0.5"></label>
+              <label>Row Line Spacing (mm)<input id="settingInvoiceRowLine" type="number" min="1" max="10" step="0.1"></label>
+              <label>Row Padding (mm)<input id="settingInvoiceRowPad" type="number" min="0" max="10" step="0.1"></label>
+              <label>Header Height (mm)<input id="settingInvoiceHeaderH" type="number" min="20" max="70" step="0.5"></label>
+              <label>Bill / Ship Box Height (mm)<input id="settingInvoiceBillH" type="number" min="20" max="70" step="0.5"></label>
+            </div>
+          </div>
+        </div>
+        <div class="admin-settings-readonly">Custom values are used only when that document is set to CUSTOM. Changes apply to new quotation/invoice PDFs; existing PDF files are not modified.</div>
       </section>
-      <section id="adminSettingsSectionAdvanced" class="admin-settings-section" hidden><div class="crm-section-title">ADVANCED</div><div class="admin-settings-grid">
+<section id="adminSettingsSectionAdvanced" class="admin-settings-section" hidden><div class="crm-section-title">ADVANCED</div><div class="admin-settings-grid">
         <label class="admin-settings-check"><input id="settingMaintenance" type="checkbox"> Maintenance Mode</label><label class="full">Maintenance Message<textarea id="settingMaintenanceMessage"></textarea></label>
       </div><div class="admin-settings-readonly">Security: Admin access remains controlled by Firebase Authentication + Firestore Rules. This panel cannot change the authorised admin email.</div></section>
     </div>
@@ -13796,10 +13811,21 @@ function seerviPdfLayoutPreset(type){
   if(mode==='spacious')return {mode,left:15,right:195,width:180,topMargin:type==='invoice'?14:20,bottomMargin:10,startY:type==='invoice'?14:20,headerFont:type==='invoice'?14:24,bodyFont:type==='invoice'?7.2:9,tableFont:type==='invoice'?8:8.8,totalFont:type==='invoice'?8.5:10,grandFont:type==='invoice'?11.5:13,footerFont:type==='invoice'?8:8.5,rowMin:type==='invoice'?7:9,rowLine:type==='invoice'?3.5:4.8,rowPad:type==='invoice'?2:3.5,headerH:type==='invoice'?40:0,billH:type==='invoice'?35:0};
   return {mode:'standard',left:15,right:195,width:180,topMargin:type==='invoice'?12:17,bottomMargin:10,startY:type==='invoice'?12:17,headerFont:type==='invoice'?12.5:22,bodyFont:type==='invoice'?6.7:8.5,tableFont:type==='invoice'?7.1:8,totalFont:type==='invoice'?7.8:9,grandFont:type==='invoice'?10.5:12,footerFont:type==='invoice'?7.4:8,rowMin:type==='invoice'?6:8,rowLine:type==='invoice'?3.1:4.3,rowPad:type==='invoice'?1.5:3,headerH:type==='invoice'?36:0,billH:type==='invoice'?33:0};
 }
+window.seerviPdfLayoutSection=function(section){
+  const selected=section==='invoice'?'invoice':'quotation';
+  const q=document.getElementById('pdfQuotationSettings'),i=document.getElementById('pdfInvoiceSettings');
+  if(q)q.hidden=selected!=='quotation';
+  if(i)i.hidden=selected!=='invoice';
+  document.querySelectorAll('.pdf-layout-subnav button[data-pdf-layout-section]').forEach(btn=>{
+    const active=btn.dataset.pdfLayoutSection===selected;
+    btn.classList.toggle('active',active);btn.setAttribute('aria-selected',active?'true':'false');
+  });
+};
 window.seerviSettingsSection=function(section){
   const map={vanta:'adminSettingsSectionVanta',branding:'adminSettingsSectionBranding',homepage:'adminSettingsSectionHomepage',catalogue:'adminSettingsSectionCatalogue',customer:'adminSettingsSectionCustomer',notifications:'adminSettingsSectionNotifications',pdf:'adminSettingsSectionPdf',advanced:'adminSettingsSectionAdvanced'};
   Object.entries(map).forEach(([key,id])=>{const el=document.getElementById(id);if(el)el.hidden=key!==section;});
   document.querySelectorAll('.admin-settings-subnav button[data-settings-section]').forEach(btn=>{const active=btn.dataset.settingsSection===section;btn.classList.toggle('active',active);btn.setAttribute('aria-selected',active?'true':'false');});
+  if(section==='pdf')seerviPdfLayoutSection('quotation');
 };
 function seerviSettingsFillForm(){
   const s=seerviSiteSettings;
