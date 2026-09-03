@@ -4831,14 +4831,9 @@ body.seervi-ai-open .float-wa{display:none!important}
       <section id="adminSettingsSectionPrivacy" class="admin-settings-section" hidden><div class="crm-section-title">PRIVACY &amp; PERMISSIONS</div><p class="admin-settings-help">Control permission-based browser data used by Activity Log.</p><div class="admin-settings-grid">
         <label class="admin-settings-check"><input id="settingActivityLocation" type="checkbox"> Activity Location Logging</label>
       </div><div class="admin-settings-readonly">When enabled, Activity Log may save browser-provided latitude, longitude and accuracy with the activity record. Browser permission is still required. Disabling this setting stops new Activity Log location collection; it does not erase older records.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="crm-secondary" type="button" onclick="seerviRequestActivityLocationPermission();seerviSettingsRefreshPermissionStatus()">REQUEST LOCATION PERMISSION</button><span id="settingsLocationPermissionStatus" class="crm-auth-status">Location permission: checking…</span></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><span id="settingsNotificationPermissionStatus" class="crm-auth-status">Browser notification permission: checking…</span></div></section>
-      <section id="adminSettingsSectionQuotationInvoice" class="admin-settings-section" hidden><div class="crm-section-title">QUOTATION &amp; INVOICE</div><p class="admin-settings-help">PDF appearance controls for both Quotation and Sale Invoice. These settings do not change document data, calculations, Firebase records or the existing workflow.</p><div class="admin-settings-grid">
-        <label>PDF Font<select id="settingPdfFont"><option value="helvetica">Helvetica — Clean</option><option value="times">Times — Formal</option><option value="courier">Courier — Technical</option></select></label>
-        <label>Font Scale<input id="settingPdfFontScale" type="number" min="0.75" max="1.35" step="0.05"></label>
-        <label>Top Margin (mm)<input id="settingPdfMarginTop" type="number" min="8" max="25" step="1"></label>
-        <label>Bottom Margin (mm)<input id="settingPdfMarginBottom" type="number" min="8" max="25" step="1"></label>
-        <label>Table Row Spacing<input id="settingPdfRowSpacing" type="number" min="0.5" max="2" step="0.1"></label>
-        <label>Section Spacing<input id="settingPdfSectionSpacing" type="number" min="0.5" max="2" step="0.1"></label>
-      </div><div class="admin-settings-readonly">Horizontal PDF margins and A4 content width stay fixed intentionally, so existing table columns, GST/HSN layout and invoice borders cannot shift or break. Recommended: Helvetica, 1.00 scale, Top 12 mm, Bottom 12 mm, Row 1.0, Section 1.0.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="crm-secondary" type="button" onclick="closeAdminSettings();accountDashboardQuotationPanel()">OPEN QUOTATION PANEL</button><button class="crm-secondary" type="button" onclick="closeAdminSettings();accountDashboardInvoicePanel()">OPEN INVOICE PANEL</button><button class="crm-primary" type="button" onclick="closeAdminSettings();openGstProfile()">OPEN GST PROFILE</button></div></section>
+      <section id="adminSettingsSectionQuotationInvoice" class="admin-settings-section" hidden><div class="crm-section-title">QUOTATION &amp; INVOICE</div><p class="admin-settings-help">Quick access to the existing quotation, invoice and GST profile controls. No quotation/invoice workflow is changed here.</p><div class="admin-settings-grid">
+        <label class="full">Quotation data is managed from the existing Quotation Panel. Invoice data is managed from the existing Invoice Panel. GST/business details used on Sale Invoices remain in GST Profile.</label>
+      </div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="crm-secondary" type="button" onclick="closeAdminSettings();accountDashboardQuotationPanel()">OPEN QUOTATION PANEL</button><button class="crm-secondary" type="button" onclick="closeAdminSettings();accountDashboardInvoicePanel()">OPEN INVOICE PANEL</button><button class="crm-primary" type="button" onclick="closeAdminSettings();openGstProfile()">OPEN GST PROFILE</button></div></section>
       <section id="adminSettingsSectionAdvanced" class="admin-settings-section" hidden><div class="crm-section-title">ADVANCED</div><div class="admin-settings-grid">
         <label class="admin-settings-check"><input id="settingMaintenance" type="checkbox"> Maintenance Mode</label><label class="full">Maintenance Message<textarea id="settingMaintenanceMessage"></textarea></label>
       </div><div class="admin-settings-readonly">Security: Admin access remains controlled by Firebase Authentication + Firestore Rules. This panel cannot change the authorised admin email.</div></section>
@@ -5443,12 +5438,6 @@ function validateQuoteCustomer(){
 }
 
 
-function seerviGetPdfAppearance(){
-  const p=seerviSiteSettings?.quotationInvoice?.pdf||SEERVI_SITE_SETTINGS_DEFAULTS.quotationInvoice.pdf;
-  return {font:p.font||'helvetica',fontScale:Number(p.fontScale)||1,marginTop:Number(p.marginTop)||12,marginBottom:Number(p.marginBottom)||12,rowSpacing:Number(p.rowSpacing)||1,sectionSpacing:Number(p.sectionSpacing)||1};
-}
-function seerviPdfFontSize(base,pdf){return Math.max(4,Number(base||0)*Number(pdf?.fontScale||1));}
-
 function pdfINR(value){
   const n=Number(value||0);
   return 'INR ' + n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -5474,11 +5463,8 @@ function downloadCartPDF(){
   const p=getCartPricing();
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({unit:'mm',format:'a4'});
-  const pdf=seerviGetPdfAppearance();
   const W=210, H=297, left=15, right=195;
-  const contentTop=pdf.marginTop;
-  const contentBottom=H-pdf.marginBottom;
-  let y=Math.max(14,contentTop+6);
+  let y=18;
 
   // Clean white A4 quotation — avoids black background and improves printing.
   doc.setFillColor(255,255,255);
@@ -5486,17 +5472,17 @@ function downloadCartPDF(){
 
   // Header
   doc.setTextColor(18,22,27);
-  doc.setFont(pdf.font,'bold');
-  doc.setFontSize(seerviPdfFontSize(22,pdf));
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(22);
   doc.text('SEERVI TRADING',left,y);
 
-  doc.setFont(pdf.font,'normal');
-  doc.setFontSize(seerviPdfFontSize(9,pdf));
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
   doc.setTextColor(105,113,122);
   doc.text('WHOLESALE PRODUCT QUOTATION',left,y+7);
 
   doc.setTextColor(18,22,27);
-  doc.setFontSize(seerviPdfFontSize(9,pdf));
+  doc.setFontSize(9);
   doc.text('Quotation No: '+quotationNumber(),right,y,{align:'right'});
   doc.setTextColor(105,113,122);
   doc.text('Date: '+new Date().toLocaleDateString('en-IN'),right,y+6,{align:'right'});
@@ -5509,18 +5495,18 @@ function downloadCartPDF(){
   // Optional customer details
   if(c.name || c.company || c.city){
     doc.setTextColor(18,22,27);
-    doc.setFont(pdf.font,'bold');
-    doc.setFontSize(seerviPdfFontSize(9,pdf));
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
     doc.text('CUSTOMER DETAILS',left,y);
-    y+=6*pdf.sectionSpacing;
+    y+=6;
 
-    doc.setFont(pdf.font,'normal');
+    doc.setFont('helvetica','normal');
     doc.setTextColor(80,88,97);
     if(c.name) doc.text('Name: '+c.name,left,y);
     if(c.company) doc.text('Company / Shop: '+c.company,105,y);
-    y+=6*pdf.sectionSpacing;
+    y+=6;
     if(c.city) doc.text('City: '+c.city,left,y);
-    y+=10*pdf.sectionSpacing;
+    y+=10;
   }
 
   // Table
@@ -5528,8 +5514,8 @@ function downloadCartPDF(){
   doc.setFillColor(242,244,246);
   doc.roundedRect(left,tableTop-5,180,9,1,1,'F');
 
-  doc.setFont(pdf.font,'bold');
-  doc.setFontSize(seerviPdfFontSize(8,pdf));
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(8);
   doc.setTextColor(30,35,40);
   doc.text('SR',18,tableTop);
   doc.text('PRODUCT / MODEL',30,tableTop);
@@ -5540,7 +5526,7 @@ function downloadCartPDF(){
   doc.text('AMOUNT',174,tableTop);
 
   y=tableTop+8;
-  doc.setFont(pdf.font,'normal');
+  doc.setFont('helvetica','normal');
 
   for(let i=0;i<seerviCart.length;i++){
     const item=seerviCart[i];
@@ -5552,14 +5538,14 @@ function downloadCartPDF(){
     const rowLines=Math.min(productLines.length,3);
     const rowHeight=Math.max(8,rowLines*4.3+3);
 
-    if(y+rowHeight>contentBottom-30){
+    if(y+rowHeight>258){
       doc.addPage();
       doc.setFillColor(255,255,255);
       doc.rect(0,0,W,H,'F');
-      y=contentTop+8;
+      y=20;
     }
 
-    doc.setFontSize(seerviPdfFontSize(8,pdf));
+    doc.setFontSize(8);
     doc.setTextColor(45,50,56);
 
     doc.text(String(i+1),18,y);
@@ -5574,46 +5560,46 @@ function downloadCartPDF(){
 
     doc.setDrawColor(225,228,231);
     doc.line(left,y+rowHeight-3,right,y+rowHeight-3);
-    y+=rowHeight*pdf.rowSpacing;
+    y+=rowHeight;
   }
 
-  y+=8*pdf.sectionSpacing;
+  y+=8;
 
   // Totals
-  doc.setFontSize(seerviPdfFontSize(9,pdf));
+  doc.setFontSize(9);
   doc.setTextColor(105,113,122);
   doc.text('Subtotal',145,y);
   doc.setTextColor(25,30,35);
   doc.text(pdfINR(p.subtotal),right,y,{align:'right'});
-  y+=7*pdf.sectionSpacing;
+  y+=7;
 
   if(p.gstEnabled){
     doc.setTextColor(105,113,122);
     doc.text('GST ('+p.gstRate+'%)',145,y);
     doc.setTextColor(25,30,35);
     doc.text(pdfINR(p.gst),right,y,{align:'right'});
-    y+=7*pdf.sectionSpacing;
+    y+=7;
   }
 
   doc.setDrawColor(40,45,50);
   doc.line(135,y-2,right,y-2);
 
-  doc.setFont(pdf.font,'bold');
-  doc.setFontSize(seerviPdfFontSize(12,pdf));
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(12);
   doc.setTextColor(18,22,27);
   doc.text('GRAND TOTAL',128,y+6);
   doc.text(pdfINR(p.grandTotal),right,y+6,{align:'right'});
-  y+=18*pdf.sectionSpacing;
+  y+=18;
 
   // Optional notes
   if(c.notes){
-    doc.setFont(pdf.font,'bold');
-    doc.setFontSize(seerviPdfFontSize(9,pdf));
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
     doc.setTextColor(18,22,27);
     doc.text('REQUIREMENT / NOTES',left,y);
-    y+=6*pdf.sectionSpacing;
+    y+=6;
 
-    doc.setFont(pdf.font,'normal');
+    doc.setFont('helvetica','normal');
     doc.setTextColor(90,98,106);
     const lines=doc.splitTextToSize(c.notes,180);
     doc.text(lines,left,y);
@@ -5621,12 +5607,12 @@ function downloadCartPDF(){
 
   // Footer
   doc.setDrawColor(215,219,223);
-  doc.line(left,contentBottom-11,right,contentBottom-11);
-  doc.setFont(pdf.font,'normal');
-  doc.setFontSize(seerviPdfFontSize(8,pdf));
+  doc.line(left,274,right,274);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8);
   doc.setTextColor(120,128,136);
-  doc.text('Seervi Trading | Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072',left,contentBottom-3);
-  doc.text('This quotation is prepared based on the rates entered in the cart.',left,contentBottom+2);
+  doc.text('Seervi Trading | Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072',left,282);
+  doc.text('This quotation is prepared based on the rates entered in the cart.',left,287);
 
   doc.save('Seervi_Quotation_'+new Date().toISOString().slice(0,10)+'.pdf');
 }
@@ -9764,15 +9750,12 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   if(!window.jspdf || !window.jspdf.jsPDF)throw new Error('PDF engine is not available.');
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({unit:'mm',format:'a4'});
-  const pdf=seerviGetPdfAppearance();
   const W=210,H=297,left=15,right=195;
-  const contentTop=pdf.marginTop;
-  const contentBottom=H-pdf.marginBottom;
-  let y=Math.max(10,contentTop);
+  let y=12;
 
   // Border surrounds only the actual invoice content, never the unused page area.
   const drawContentBorder=(endY,skipBottom=false)=>{
-    const bottom=Math.min(Math.max(endY+3,18),contentBottom);
+    const bottom=Math.min(Math.max(endY+3,18),H-8);
     doc.setDrawColor(85,90,95);
     if(skipBottom){
       doc.line(left,8,left,bottom);
@@ -9786,7 +9769,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     drawContentBorder(y);
     doc.addPage();
     doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
-    y=contentTop;
+    y=12;
   };
 
   /* ===== HEADER: FIRM DETAILS LEFT / INVOICE DETAILS RIGHT ===== */
@@ -9799,11 +9782,11 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   doc.line(headerSplit,headerTop-4,headerSplit,headerTop+headerH-4);
 
   doc.setTextColor(18,22,27);
-  doc.setFont(pdf.font,'bold');doc.setFontSize(seerviPdfFontSize(14,pdf));
+  doc.setFont('helvetica','bold');doc.setFontSize(14);
   doc.text(seerviInvoiceSafe(profile.businessName||'SEERVI TRADING').slice(0,43),left+4,headerTop+4);
 
   // Keep every firm-detail value inside the LEFT half so nothing crosses the divider.
-  doc.setFont(pdf.font,'normal');doc.setFontSize(seerviPdfFontSize(5.9,pdf));doc.setTextColor(75,83,92);
+  doc.setFont('helvetica','normal');doc.setFontSize(5.9);doc.setTextColor(75,83,92);
   const fL=left+4, fV=left+25, fR=left+48, fRV=left+70;
   let ly=headerTop+9;
   const firmRows=[
@@ -9825,27 +9808,27 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   doc.text(addressLines.slice(0,2),left+27,ly,{lineHeightFactor:1.05});
 
   const rx=right-4;
-  doc.setFont(pdf.font,'bold');doc.setFontSize(seerviPdfFontSize(12.5,pdf));doc.setTextColor(18,22,27);
+  doc.setFont('helvetica','bold');doc.setFontSize(12.5);doc.setTextColor(18,22,27);
   doc.text('SALE INVOICE',headerSplit+4,headerTop+4);
 
-  doc.setFont(pdf.font,'bold');doc.setFontSize(seerviPdfFontSize(7.5,pdf));doc.setTextColor(55,62,70);
+  doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(55,62,70);
   doc.text('Invoice No:',headerSplit+4,headerTop+12);
-  doc.setFont(pdf.font,'normal');
+  doc.setFont('helvetica','normal');
   doc.text(seerviInvoiceSafe(invoice.invoiceNo||'—'),rx,headerTop+12,{align:'right'});
 
-  doc.setFont(pdf.font,'bold');doc.text('Date:',headerSplit+4,headerTop+18);
-  doc.setFont(pdf.font,'normal');
+  doc.setFont('helvetica','bold');doc.text('Date:',headerSplit+4,headerTop+18);
+  doc.setFont('helvetica','normal');
   doc.text(invoice.dateISO?new Date(invoice.dateISO).toLocaleDateString('en-IN'):new Date().toLocaleDateString('en-IN'),rx,headerTop+18,{align:'right'});
 
-  doc.setFont(pdf.font,'bold');doc.text('E-Way Bill No:',headerSplit+4,headerTop+24);
-  doc.setFont(pdf.font,'normal');
+  doc.setFont('helvetica','bold');doc.text('E-Way Bill No:',headerSplit+4,headerTop+24);
+  doc.setFont('helvetica','normal');
   doc.text(seerviInvoiceSafe(invoice.ewayBillNo||'—').slice(0,20),rx,headerTop+24,{align:'right'});
 
   // Single bottom edge of the header; do not draw another overlapping horizontal line.
   y=headerTop+headerH;
 
   /* ===== BILL TO LEFT / SHIP TO RIGHT ===== */
-  doc.setTextColor(18,22,27);doc.setFont(pdf.font,'bold');doc.setFontSize(seerviPdfFontSize(8,pdf));
+  doc.setTextColor(18,22,27);doc.setFont('helvetica','bold');doc.setFontSize(8);
   const billTop=y;
   const c=invoice.customer||{};
   const st=invoice.shipTo||c;
@@ -9854,7 +9837,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   doc.line(shipX,billTop-4,shipX,billTop+29);
   doc.text('BILL TO / CUSTOMER',left+4,billTop+3);
   doc.text('SHIP TO',shipX+4,billTop+3);
-  doc.setFont(pdf.font,'normal');doc.setFontSize(seerviPdfFontSize(6.7,pdf));doc.setTextColor(70,78,86);
+  doc.setFont('helvetica','normal');doc.setFontSize(6.7);doc.setTextColor(70,78,86);
   const detailLines=(obj,x)=>{
     let yy=billTop+8;
     const lines=[
@@ -9883,7 +9866,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     const top=y;
     doc.setFillColor(242,244,246);doc.rect(left,top,180,7,'F');
     doc.setDrawColor(120,125,130);doc.rect(left,top,180,7,'S');
-    doc.setFont(pdf.font,'bold');doc.setFontSize(seerviPdfFontSize(7.1,pdf));doc.setTextColor(30,35,40);
+    doc.setFont('helvetica','bold');doc.setFontSize(7.1);doc.setTextColor(30,35,40);
     doc.text('SR',18,top+4.6);
     doc.text('PRODUCT / MODEL + SUBCATEGORY',30,top+4.6);
     doc.text('SPEC',85,top+4.6);
@@ -9901,8 +9884,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     const productLines=doc.splitTextToSize(seerviInvoiceSafe(productLabel||item.model||item.name||'Item'),51);
     const rowLines=Math.min(productLines.length,2);
     const rowHeight=Math.max(6,rowLines*3.1+1.5);
-    if(y+rowHeight>contentBottom-25){newInvoicePage();drawHeader();}
-    doc.setFont(pdf.font,'normal');doc.setFontSize(seerviPdfFontSize(6.8,pdf));doc.setTextColor(45,50,56);
+    if(y+rowHeight>272){newInvoicePage();drawHeader();}
+    doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(45,50,56);
     doc.text(String(i+1),18,y+3.7);
     doc.text(productLines.slice(0,2),30,y+3.7);
     doc.text(seerviInvoiceSafe(item.spec||item.thickness||'—').slice(0,10),85,y+3.7);
@@ -9911,11 +9894,11 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     doc.text(seerviInvoiceInr(rate),151,y+3.7);
     doc.text(seerviInvoiceInr(amount),174,y+3.7);
     doc.setDrawColor(225,228,231);doc.line(left,y+rowHeight,right,y+rowHeight);
-    y+=rowHeight*pdf.rowSpacing;
+    y+=rowHeight;
   }
 
   /* ===== NOTES LEFT / TOTALS RIGHT ===== */
-  y+=2*pdf.sectionSpacing;
+  y+=2;
   const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
   const notesText=seerviInvoiceSafe(invoice.notes||invoice.customer?.notes||'').trim();
   const noteLines=notesText ? doc.splitTextToSize(notesText,102).slice(0,5) : [];
@@ -9925,28 +9908,28 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const summaryTop=y+1;
 
   doc.setDrawColor(205,209,213);doc.rect(left,summaryTop,112,summaryH,'S');
-  doc.setFont(pdf.font,'bold');doc.setFontSize(seerviPdfFontSize(7.4,pdf));doc.setTextColor(35,40,45);
+  doc.setFont('helvetica','bold');doc.setFontSize(7.4);doc.setTextColor(35,40,45);
   doc.text('NOTES',left+4,summaryTop+6);
-  doc.setFont(pdf.font,'normal');doc.setFontSize(seerviPdfFontSize(6.8,pdf));doc.setTextColor(85,92,99);
+  doc.setFont('helvetica','normal');doc.setFontSize(6.8);doc.setTextColor(85,92,99);
   if(noteLines.length)doc.text(noteLines,left+4,summaryTop+11);
   else doc.text('—',left+4,summaryTop+11);
 
   const totalX=145;
   let ty=summaryTop+6;
-  doc.setFontSize(seerviPdfFontSize(7.8,pdf));doc.setTextColor(105,113,122);
+  doc.setFontSize(7.8);doc.setTextColor(105,113,122);
   doc.text('Subtotal',totalX,ty);
-  doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(subtotal),right-3,ty,{align:'right'});ty+=5*pdf.sectionSpacing;
+  doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(subtotal),right-3,ty,{align:'right'});ty+=5;
   if(invoice.gstEnabled){
     doc.setTextColor(105,113,122);doc.text('GST ('+Number(invoice.gstRate||0)+'%)',totalX,ty);
-    doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(gst),right-3,ty,{align:'right'});ty+=5*pdf.sectionSpacing;
+    doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(gst),right-3,ty,{align:'right'});ty+=5;
   }
   doc.setDrawColor(40,45,50);doc.line(135,ty-1.5,right-3,ty-1.5);
-  doc.setFont(pdf.font,'bold');doc.setFontSize(seerviPdfFontSize(10.5,pdf));doc.setTextColor(18,22,27);
+  doc.setFont('helvetica','bold');doc.setFontSize(10.5);doc.setTextColor(18,22,27);
   doc.text('GRAND TOTAL',128,ty+4);
   doc.text(seerviInvoiceInr(grand),right-3,ty+4,{align:'right'});
   y=summaryTop+summaryH+3;
 
-  doc.setFont(pdf.font,'italic');doc.setFontSize(seerviPdfFontSize(7.4,pdf));doc.setTextColor(80,88,97);
+  doc.setFont('helvetica','italic');doc.setFontSize(7.4);doc.setTextColor(80,88,97);
   const amountWords='Amount in Words: '+seerviInvoiceAmountInWords(grand);
   const amountWordLines=doc.splitTextToSize(amountWords,180).slice(0,2);
   doc.text(amountWordLines,left,y);
@@ -9990,7 +9973,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
       /* Rate/Amount dividers begin only below the CGST/SGST group headings. */
       doc.line(x[3],top+5,x[3],top+11);
       doc.line(x[5],top+5,x[5],top+11);
-      doc.setFont(pdf.font,'bold');doc.setFontSize(seerviPdfFontSize(6.5,pdf));doc.setTextColor(30,35,40);
+      doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(30,35,40);
       doc.text('HSN/SAC',(x[0]+x[1])/2,top+7,{align:'center'});
       doc.text('Taxable Value',(x[1]+x[2])/2,top+7,{align:'center'});
       /* CGST grouped header: Rate + Amount */
@@ -10008,7 +9991,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     drawHsnHeader();
     for(const r of hsnRows){
       if(y+5.5>278)drawHsnHeader();
-      doc.setFont(pdf.font,'normal');doc.setFontSize(seerviPdfFontSize(6.4,pdf));doc.setTextColor(45,50,56);
+      doc.setFont('helvetica','normal');doc.setFontSize(6.4);doc.setTextColor(45,50,56);
       // Draw one shared boundary at each row junction.
       doc.setDrawColor(125,130,135);
       doc.line(left,y-3.5,right,y-3.5);
@@ -10029,12 +10012,12 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     doc.setDrawColor(95,100,105);
     doc.line(left,y-3.5,right,y-3.5);
     for(let i=1;i<x.length-1;i++)doc.line(x[i],y-3.5,x[i],y+2);
-    doc.setFont(pdf.font,'bold');doc.setFontSize(seerviPdfFontSize(6.4,pdf));doc.setTextColor(25,30,35);
+    doc.setFont('helvetica','bold');doc.setFontSize(6.4);doc.setTextColor(25,30,35);
     doc.text('Total',(x[0]+x[1])/2,y,{align:'center'});
     doc.text(seerviInvoiceInr(totalTaxable),x[2]-2,y,{align:'right'});
     doc.text(seerviInvoiceInr(totalCgst),x[4]-2,y,{align:'right'});
     doc.text(seerviInvoiceInr(totalSgst),x[6]-2,y,{align:'right'});
-    doc.text(seerviInvoiceInr(totalHsnTax),x[7]-2,y,{align:'right'});y+=2*pdf.sectionSpacing;
+    doc.text(seerviInvoiceInr(totalHsnTax),x[7]-2,y,{align:'right'});y+=2;
   }
 
   /* ===== BANK / QR / SIGNATORY — COMPACT ===== */
@@ -10053,9 +10036,9 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     doc.line(left+bankW,boxTop,left+bankW,boxTop+boxH);
     doc.line(left+bankW+qrW,boxTop,left+bankW+qrW,boxTop+boxH);
 
-    doc.setFont(pdf.font,'bold');doc.setFontSize(seerviPdfFontSize(7.2,pdf));doc.setTextColor(30,35,40);
+    doc.setFont('helvetica','bold');doc.setFontSize(7.2);doc.setTextColor(30,35,40);
     doc.text('Bank Details',left+3,boxTop+5);
-    doc.setFont(pdf.font,'normal');doc.setFontSize(seerviPdfFontSize(6.3,pdf));doc.setTextColor(55,62,70);
+    doc.setFont('helvetica','normal');doc.setFontSize(6.3);doc.setTextColor(55,62,70);
     let by=boxTop+10;
     const bankLine=(label,value)=>{
       if(value){doc.text(label,left+3,by);doc.text(seerviInvoiceSafe(value).slice(0,28),left+24,by);by+=3.7;}
@@ -10067,12 +10050,12 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     bankLine('Branch:',profile.bankBranch);
 
     const qrCenterX=left+bankW+qrW/2;
-    doc.setFont(pdf.font,'bold');doc.setFontSize(seerviPdfFontSize(7.2,pdf));
-    doc.setFont(pdf.font,'bold');doc.setFontSize(seerviPdfFontSize(8,pdf));
+    doc.setFont('helvetica','bold');doc.setFontSize(7.2);
+    doc.setFont('helvetica','bold');doc.setFontSize(8);
     doc.setTextColor(18,22,27);
     doc.text('Payment QR Code',left+bankW+3,boxTop+5);
     if(profile.upiId){
-      doc.setFont(pdf.font,'normal');doc.setFontSize(seerviPdfFontSize(6.3,pdf));
+      doc.setFont('helvetica','normal');doc.setFontSize(6.3);
       doc.setTextColor(70,78,86);
       doc.text(seerviInvoiceSafe(profile.upiId).slice(0,32),left+bankW+39,boxTop+5);
       if(window.QRious){
@@ -10085,12 +10068,12 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     }
 
     const sigCenter=left+bankW+qrW+sigW/2;
-    doc.setFont(pdf.font,'normal');doc.setFontSize(seerviPdfFontSize(6.3,pdf));doc.setTextColor(90,96,102);
+    doc.setFont('helvetica','normal');doc.setFontSize(6.3);doc.setTextColor(90,96,102);
     doc.text('For '+seerviInvoiceSafe(profile.businessName||'').slice(0,28),sigCenter,boxTop+17,{align:'center'});
-    doc.setFont(pdf.font,'bold');doc.setFontSize(seerviPdfFontSize(7,pdf));
+    doc.setFont('helvetica','bold');doc.setFontSize(7);
     doc.text('Authorised Signatory',sigCenter,boxTop+23,{align:'center'});
     if(profile.signatoryName){
-      doc.setFont(pdf.font,'normal');doc.setFontSize(seerviPdfFontSize(6.3,pdf));
+      doc.setFont('helvetica','normal');doc.setFontSize(6.3);
       doc.text(seerviInvoiceSafe(profile.signatoryName).slice(0,28),sigCenter,boxTop+27,{align:'center'});
     }
     y=boxTop+boxH;
@@ -13578,7 +13561,6 @@ const SEERVI_SITE_SETTINGS_DEFAULTS={
   customer:{loginEnabled:true,signupEnabled:true},
   privacy:{activityLocationEnabled:true},
   notifications:{enabled:true,soundEnabled:true,browserEnabled:true},
-  quotationInvoice:{pdf:{font:'helvetica',fontScale:1,marginTop:12,marginBottom:12,rowSpacing:1,sectionSpacing:1}},
   order:{whatsappNumber:'917073741650'},
   advanced:{maintenanceMode:false,maintenanceMessage:'We are updating the website. Please check again shortly.'}
 };
@@ -13629,16 +13611,6 @@ function seerviNormaliseSettings(raw){
   s.notifications.soundEnabled=!!s.notifications.soundEnabled;
   s.notifications.browserEnabled=!!s.notifications.browserEnabled;
   s.privacy.activityLocationEnabled=!!s.privacy.activityLocationEnabled;
-  s.quotationInvoice=s.quotationInvoice||seerviSettingsClone(SEERVI_SITE_SETTINGS_DEFAULTS.quotationInvoice);
-  s.quotationInvoice.pdf=s.quotationInvoice.pdf||seerviSettingsClone(SEERVI_SITE_SETTINGS_DEFAULTS.quotationInvoice.pdf);
-  const pdfSettings=s.quotationInvoice.pdf,defaultPdf=SEERVI_SITE_SETTINGS_DEFAULTS.quotationInvoice.pdf;
-  pdfSettings.font=['helvetica','times','courier'].includes(String(pdfSettings.font||'').toLowerCase())?String(pdfSettings.font).toLowerCase():defaultPdf.font;
-  ['fontScale','marginTop','marginBottom','rowSpacing','sectionSpacing'].forEach(k=>{const n=Number(pdfSettings[k]);pdfSettings[k]=Number.isFinite(n)?n:defaultPdf[k];});
-  pdfSettings.fontScale=Math.max(.75,Math.min(1.35,pdfSettings.fontScale));
-  pdfSettings.marginTop=Math.max(8,Math.min(25,pdfSettings.marginTop));
-  pdfSettings.marginBottom=Math.max(8,Math.min(25,pdfSettings.marginBottom));
-  pdfSettings.rowSpacing=Math.max(.5,Math.min(2,pdfSettings.rowSpacing));
-  pdfSettings.sectionSpacing=Math.max(.5,Math.min(2,pdfSettings.sectionSpacing));
   s.order.whatsappNumber=String(s.order.whatsappNumber||s.branding.whatsapp).replace(/\D/g,'').slice(0,20)||SEERVI_SITE_SETTINGS_DEFAULTS.order.whatsappNumber;
   s.advanced.maintenanceMode=!!s.advanced.maintenanceMode;
   s.advanced.maintenanceMessage=String(s.advanced.maintenanceMessage||SEERVI_SITE_SETTINGS_DEFAULTS.advanced.maintenanceMessage).slice(0,300);
@@ -13786,7 +13758,7 @@ function seerviSettingsFillForm(){
     settingCompany:s.branding.companyName,settingTagline:s.branding.tagline,settingEmail:s.branding.email,settingWhatsapp:s.branding.whatsapp,
     settingHeroKicker:s.homepage.heroKicker,settingHeroTitle:s.homepage.heroTitle,settingHeroHighlight:s.homepage.heroHighlight,settingHeroDescription:s.homepage.heroDescription,settingHeroCta:s.homepage.heroCta,settingHeroImage:s.homepage.heroImage,settingShowSupply:s.homepage.showSupplyFlow,settingShowAbout:s.homepage.showAbout,settingShowWhy:s.homepage.showWhy,settingShowContact:s.homepage.showContact,
     settingCatalogueTitle:s.catalogue.sectionTitle,settingShowCatalogue:s.catalogue.showCatalogue,settingShowSearch:s.catalogue.showSearch,settingShowSort:s.catalogue.showSort,settingShowCategory:s.catalogue.showCategoryFilter,settingShowSubcategory:s.catalogue.showSubcategoryFilter,
-    settingLogin:s.customer.loginEnabled,settingSignup:s.customer.signupEnabled,settingNotifications:s.notifications.enabled,settingSound:s.notifications.soundEnabled,settingBrowserNotifications:s.notifications.browserEnabled,settingActivityLocation:s.privacy.activityLocationEnabled,settingPdfFont:s.quotationInvoice.pdf.font,settingPdfFontScale:s.quotationInvoice.pdf.fontScale,settingPdfMarginTop:s.quotationInvoice.pdf.marginTop,settingPdfMarginBottom:s.quotationInvoice.pdf.marginBottom,settingPdfRowSpacing:s.quotationInvoice.pdf.rowSpacing,settingPdfSectionSpacing:s.quotationInvoice.pdf.sectionSpacing,settingOrderWhatsapp:s.order.whatsappNumber,
+    settingLogin:s.customer.loginEnabled,settingSignup:s.customer.signupEnabled,settingNotifications:s.notifications.enabled,settingSound:s.notifications.soundEnabled,settingBrowserNotifications:s.notifications.browserEnabled,settingActivityLocation:s.privacy.activityLocationEnabled,settingOrderWhatsapp:s.order.whatsappNumber,
     settingMaintenance:s.advanced.maintenanceMode,settingMaintenanceMessage:s.advanced.maintenanceMessage
   };
   Object.entries(vals).forEach(([id,val])=>{const el=seerviSettingsField(id);if(!el)return;if(el.type==='checkbox')el.checked=!!val;else el.value=val;});
@@ -13809,7 +13781,7 @@ window.seerviSaveAdminSettings=async function(){
     heroKicker:seerviSettingsField('settingHeroKicker')?.value,heroTitle:seerviSettingsField('settingHeroTitle')?.value,heroHighlight:seerviSettingsField('settingHeroHighlight')?.value,heroDescription:seerviSettingsField('settingHeroDescription')?.value,heroCta:seerviSettingsField('settingHeroCta')?.value,heroImage:seerviSettingsField('settingHeroImage')?.value,showSupplyFlow:!!seerviSettingsField('settingShowSupply')?.checked,showAbout:!!seerviSettingsField('settingShowAbout')?.checked,showWhy:!!seerviSettingsField('settingShowWhy')?.checked,showContact:!!seerviSettingsField('settingShowContact')?.checked
   },catalogue:{
     sectionTitle:seerviSettingsField('settingCatalogueTitle')?.value,showCatalogue:!!seerviSettingsField('settingShowCatalogue')?.checked,showSearch:!!seerviSettingsField('settingShowSearch')?.checked,showSort:!!seerviSettingsField('settingShowSort')?.checked,showCategoryFilter:!!seerviSettingsField('settingShowCategory')?.checked,showSubcategoryFilter:!!seerviSettingsField('settingShowSubcategory')?.checked
-  },customer:{loginEnabled:!!seerviSettingsField('settingLogin')?.checked,signupEnabled:!!seerviSettingsField('settingSignup')?.checked},notifications:{enabled:!!seerviSettingsField('settingNotifications')?.checked,soundEnabled:!!seerviSettingsField('settingSound')?.checked,browserEnabled:!!seerviSettingsField('settingBrowserNotifications')?.checked},privacy:{activityLocationEnabled:!!seerviSettingsField('settingActivityLocation')?.checked},quotationInvoice:{pdf:{font:seerviSettingsField('settingPdfFont')?.value,fontScale:Number(seerviSettingsField('settingPdfFontScale')?.value),marginTop:Number(seerviSettingsField('settingPdfMarginTop')?.value),marginBottom:Number(seerviSettingsField('settingPdfMarginBottom')?.value),rowSpacing:Number(seerviSettingsField('settingPdfRowSpacing')?.value),sectionSpacing:Number(seerviSettingsField('settingPdfSectionSpacing')?.value)}},order:{whatsappNumber:seerviSettingsField('settingOrderWhatsapp')?.value},advanced:{maintenanceMode:!!seerviSettingsField('settingMaintenance')?.checked,maintenanceMessage:seerviSettingsField('settingMaintenanceMessage')?.value}});
+  },customer:{loginEnabled:!!seerviSettingsField('settingLogin')?.checked,signupEnabled:!!seerviSettingsField('settingSignup')?.checked},notifications:{enabled:!!seerviSettingsField('settingNotifications')?.checked,soundEnabled:!!seerviSettingsField('settingSound')?.checked,browserEnabled:!!seerviSettingsField('settingBrowserNotifications')?.checked},privacy:{activityLocationEnabled:!!seerviSettingsField('settingActivityLocation')?.checked},order:{whatsappNumber:seerviSettingsField('settingOrderWhatsapp')?.value},advanced:{maintenanceMode:!!seerviSettingsField('settingMaintenance')?.checked,maintenanceMessage:seerviSettingsField('settingMaintenanceMessage')?.value}});
   const clean=seerviNormaliseSettings(s);
   const status=seerviSettingsField('adminSettingsStatus');
   if(status)status.textContent='Saving global settings…';
