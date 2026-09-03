@@ -13790,6 +13790,43 @@ let seerviActivityFilterValue='all';
 let seerviActivityCache=[];
 function seerviActivityText(value,max=500){return String(value??'').replace(/\s+/g,' ').trim().slice(0,max);}
 let seerviActivityLocation=null;
+let seerviActivityNetwork=null;
+function seerviActivityDeviceInfo(){
+  try{
+    const ua=navigator.userAgent||'';
+    const platform=navigator.userAgentData?.platform||navigator.platform||'';
+    const mobile=/Mobi|Android|iPhone|iPad|iPod/i.test(ua);
+    let os='Unknown OS';
+    if(/Windows NT/i.test(ua))os='Windows';
+    else if(/Android/i.test(ua))os='Android';
+    else if(/iPhone|iPad|iPod/i.test(ua))os='iOS';
+    else if(/Mac OS X/i.test(ua))os='macOS';
+    else if(/Linux/i.test(ua))os='Linux';
+    let browser='Unknown Browser';
+    if(/Edg\//i.test(ua))browser='Edge';
+    else if(/OPR\//i.test(ua))browser='Opera';
+    else if(/Chrome\//i.test(ua)&&!/Edg\//i.test(ua))browser='Chrome';
+    else if(/Firefox\//i.test(ua))browser='Firefox';
+    else if(/Safari\//i.test(ua)&&!/Chrome\//i.test(ua))browser='Safari';
+    const type=mobile?'Mobile':'Desktop';
+    return seerviActivityText(`${type} · ${os} · ${browser}${platform?' · '+platform:''}`,250);
+  }catch(e){return 'Unknown device';}
+}
+async function seerviGetActivityNetwork(){
+  if(seerviActivityNetwork)return seerviActivityNetwork;
+  seerviActivityNetwork={deviceInfo:seerviActivityDeviceInfo(),ipAddress:'Unavailable'};
+  try{
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),5000);
+    const response=await fetch('https://api64.ipify.org?format=json',{cache:'no-store',signal:controller.signal});
+    clearTimeout(timer);
+    if(response.ok){
+      const data=await response.json();
+      if(data?.ip)seerviActivityNetwork.ipAddress=seerviActivityText(data.ip,80);
+    }
+  }catch(e){}
+  return seerviActivityNetwork;
+}
 async function seerviRequestActivityLocationPermission(){
   try{
     if(!navigator.geolocation)return;
@@ -13823,13 +13860,13 @@ window.seerviLogActivity=async function(action,module,description,actor){
   const cleanAction=seerviActivityText(action,100),cleanModule=seerviActivityText(module,80),cleanDescription=seerviActivityText(description,500);
   if(!cleanAction||!cleanModule||!cleanDescription)return false;
   try{
-    const location=await seerviGetActivityLocation();
-    await addDoc(collection(activityDb,SEERVI_ACTIVITY_COLLECTION),{actorType,actorUid:user.uid,actorEmail:user.email||'',action:cleanAction,module:cleanModule,description:cleanDescription,locationPermission:location.locationPermission||'unavailable',...(location.latitude!=null?{latitude:location.latitude,longitude:location.longitude,accuracyMeters:location.accuracyMeters}:{}),createdAt:serverTimestamp()});
+    const [location,network]=await Promise.all([seerviGetActivityLocation(),seerviGetActivityNetwork()]);
+    await addDoc(collection(activityDb,SEERVI_ACTIVITY_COLLECTION),{actorType,actorUid:user.uid,actorEmail:user.email||'',action:cleanAction,module:cleanModule,description:cleanDescription,locationPermission:location.locationPermission||'unavailable',deviceInfo:network.deviceInfo||'Unknown device',ipAddress:network.ipAddress||'Unavailable',...(location.latitude!=null?{latitude:location.latitude,longitude:location.longitude,accuracyMeters:location.accuracyMeters}:{}),createdAt:serverTimestamp()});
     return true;
   }catch(error){console.warn('[Seervi] Activity log failed:',error);return false;}
 };
 function seerviActivityTimestamp(value){if(!value)return 'Just now';const d=value.toDate?value.toDate():(value instanceof Date?value:new Date(value));if(Number.isNaN(d.getTime()))return 'Just now';return d.toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}
-function seerviActivityRender(){const list=$('seerviActivityList');if(!list)return;const rows=seerviActivityCache.filter(x=>seerviActivityFilterValue==='all'||x.actorType===seerviActivityFilterValue);if(!rows.length){list.innerHTML='<div class="seervi-activity-empty">No activity found.</div>';return;}list.innerHTML=rows.map(x=>{const actor=x.actorType==='admin'?'ADMIN':'CUSTOMER',who=seerviEscHtml(x.actorEmail||actor),desc=seerviEscHtml(x.description||x.action||'Activity'),module=seerviEscHtml(x.module||''),time=seerviEscHtml(seerviActivityTimestamp(x.createdAt)),loc=x.latitude!=null?` · <a href="https://www.google.com/maps?q=${encodeURIComponent(x.latitude+','+x.longitude)}" target="_blank" rel="noopener noreferrer">LOCATION</a>`:(x.locationPermission==='denied'?' · LOCATION DENIED':'');return `<article class="seervi-activity-item"><div class="seervi-activity-badge ${actor.toLowerCase()}">${actor}</div><div class="seervi-activity-main"><strong>${desc}</strong><span>${who}${module?' · '+module:''}${loc}</span></div><div class="seervi-activity-time">${time}</div></article>`;}).join('');}
+function seerviActivityRender(){const list=$('seerviActivityList');if(!list)return;const rows=seerviActivityCache.filter(x=>seerviActivityFilterValue==='all'||x.actorType===seerviActivityFilterValue);if(!rows.length){list.innerHTML='<div class="seervi-activity-empty">No activity found.</div>';return;}list.innerHTML=rows.map(x=>{const actor=x.actorType==='admin'?'ADMIN':'CUSTOMER',who=seerviEscHtml(x.actorEmail||actor),desc=seerviEscHtml(x.description||x.action||'Activity'),module=seerviEscHtml(x.module||''),time=seerviEscHtml(seerviActivityTimestamp(x.createdAt)),device=seerviEscHtml(x.deviceInfo||'Unknown device'),ip=seerviEscHtml(x.ipAddress||'Unavailable'),loc=x.latitude!=null?` · <a href="https://www.google.com/maps?q=${encodeURIComponent(x.latitude+','+x.longitude)}" target="_blank" rel="noopener noreferrer">LOCATION</a>`:(x.locationPermission==='denied'?' · LOCATION DENIED':'');return `<article class="seervi-activity-item"><div class="seervi-activity-badge ${actor.toLowerCase()}">${actor}</div><div class="seervi-activity-main"><strong>${desc}</strong><span>${who}${module?' · '+module:''}${loc} · DEVICE ${device} · IP ${ip}</span></div><div class="seervi-activity-time">${time}</div></article>`;}).join('');}
 window.seerviActivityFilter=function(filter){seerviActivityFilterValue=['all','admin','customer'].includes(filter)?filter:'all';document.querySelectorAll('[data-activity-filter]').forEach(btn=>btn.classList.toggle('active',btn.dataset.activityFilter===seerviActivityFilterValue));seerviActivityRender();};
 window.loadAdminActivity=async function(){if(!crmUser||!isAuthorisedAdmin(crmUser)){closeAdminActivity();openAdminPanel();return;}const status=$('seerviActivityStatus'),list=$('seerviActivityList');if(status)status.textContent='Loading activity…';if(list)list.innerHTML='';try{const snap=await getDocs(query(collection(db,SEERVI_ACTIVITY_COLLECTION),limit(250)));seerviActivityCache=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.toMillis?b.createdAt.toMillis():0)-(a.createdAt?.toMillis?a.createdAt.toMillis():0));if(status)status.textContent=`Showing ${seerviActivityCache.length} recent activities.`;seerviActivityRender();}catch(error){console.error('Activity load failed:',error);if(status)status.textContent='Activity load failed: '+(error?.message||'Check Firebase rules.');if(list)list.innerHTML='<div class="seervi-activity-empty">Could not load activity log.</div>';}};
 window.openAdminActivity=function(){if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const m=$('seerviActivityModal');if(!m)return;m.classList.add('show');m.setAttribute('aria-hidden','false');seerviActivityFilter('all');loadAdminActivity();};
