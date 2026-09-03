@@ -11475,7 +11475,10 @@ async function seerviStartNotificationListener(){
 window.openNotifications=async function(){
   const m=document.getElementById('notificationModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
-  await seerviStartNotificationListener();
+  // The realtime listener already starts on page load. Do not restart it here:
+  // restarting caused a race where the modal rendered the old/empty cache before
+  // Firestore's initial snapshot arrived, producing a brief blink and blank inbox.
+  try{await seerviLoadNotificationReads();}catch(e){}
   seerviRenderNotificationList();
 };
 window.closeNotifications=function(){
