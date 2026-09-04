@@ -4656,159 +4656,130 @@ body.seervi-ai-open .float-wa{display:none!important}
 @media print{body>*:not(#seerviAdminDocEditor){display:none!important}#seerviAdminDocEditor{position:static!important;display:block!important;background:#fff!important}.seervi-doc-editor-head{display:none!important}.seervi-doc-editor-body{padding:0!important}.seervi-doc-sheet{box-shadow:none!important;width:210mm!important;min-height:297mm!important;border:0!important}}
 </style>
 
-<style id="seervi-login-signup-vanta-theme">
-/* Login / Signup: Vanta-glass authentication theme. Isolated override only. */
-#customerLoginModal .crm-backdrop,
-#partySignupModal .crm-backdrop{
-  background:rgba(3,7,12,.34)!important;
-  backdrop-filter:blur(2px)!important;
-  -webkit-backdrop-filter:blur(2px)!important;
+<style id="seervi-auth-premium-theme">
+/* ===== SEERVI LOGIN / SIGNUP PREMIUM SPLIT THEME ===== */
+#customerLoginModal, #partySignupModal{
+  padding:20px !important;
+  align-items:center !important;
+  justify-content:center !important;
+  background:rgba(4,7,10,.82) !important;
+  backdrop-filter:blur(10px) !important;
 }
-#customerLoginModal .crm-panel,
-#partySignupModal .crm-panel{
-  width:min(560px,calc(100vw - 32px))!important;
-  max-height:min(92vh,820px)!important;
-  overflow:auto!important;
-  background:linear-gradient(145deg,rgba(13,27,35,.88),rgba(8,14,21,.84))!important;
-  border:1px solid rgba(240,198,106,.34)!important;
-  border-radius:20px!important;
-  box-shadow:0 30px 100px rgba(0,0,0,.62),0 0 0 1px rgba(255,255,255,.04) inset!important;
-  backdrop-filter:blur(18px) saturate(125%)!important;
-  -webkit-backdrop-filter:blur(18px) saturate(125%)!important;
+#customerLoginModal .crm-panel, #partySignupModal .crm-panel{
+  width:min(1080px,96vw) !important;
+  max-height:min(760px,92vh) !important;
+  min-height:560px;
+  padding:0 !important;
+  overflow:hidden !important;
+  display:grid !important;
+  grid-template-columns:minmax(360px,.92fr) minmax(420px,1.08fr);
+  grid-template-rows:auto 1fr;
+  background:#f5f5f2 !important;
+  color:#111 !important;
+  border:1px solid rgba(255,255,255,.5) !important;
+  border-radius:24px !important;
+  box-shadow:0 30px 100px rgba(0,0,0,.55) !important;
 }
-#customerLoginModal .crm-head,
-#partySignupModal .crm-head{
-  position:relative!important;
-  background:linear-gradient(180deg,rgba(16,31,40,.76),rgba(12,22,29,.42))!important;
-  border-bottom:1px solid rgba(240,198,106,.18)!important;
-  padding:22px 24px 18px!important;
+#partySignupModal .crm-panel{grid-template-columns:minmax(360px,.88fr) minmax(420px,1.12fr);}
+.customer-auth-visual{
+  position:relative;
+  min-width:0;
+  min-height:100%;
+  padding:42px 42px 38px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  overflow:hidden;
+  color:#fff;
+  background:
+    linear-gradient(180deg,rgba(5,8,12,.08) 0%,rgba(5,8,12,.78) 72%,rgba(5,8,12,.96) 100%),
+    url('images/00-old-products/product-image-001-055cde1217d3c801.webp') center/cover no-repeat;
 }
-#customerLoginModal .crm-head h3,
-#partySignupModal .crm-head h3{
-  margin:6px 0 5px!important;
-  font-size:26px!important;
-  letter-spacing:.4px!important;
-  color:#f7f8fa!important;
+.customer-auth-visual:after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 78% 18%,rgba(255,255,255,.18),transparent 28%);
 }
-#customerLoginModal .crm-auth-status,
-#partySignupModal .crm-auth-status{
-  color:#a6b2ba!important;
-  line-height:1.55!important;
+.customer-auth-visual-kicker,.customer-auth-visual-title,.customer-auth-visual-copy,.customer-auth-visual-mark{position:relative;z-index:1}
+.customer-auth-visual-kicker{font-size:10px;font-weight:900;letter-spacing:.18em;color:#d7b86b;margin-bottom:auto}
+.customer-auth-visual-title{font-size:42px;line-height:.96;font-weight:900;letter-spacing:-.04em;text-transform:uppercase;text-shadow:0 5px 22px rgba(0,0,0,.35)}
+.customer-auth-visual-title span{color:#e1c47a}
+.customer-auth-visual-copy{max-width:360px;margin-top:18px;color:rgba(255,255,255,.78);font-size:12px;line-height:1.7}
+.customer-auth-visual-mark{position:absolute;right:30px;top:30px;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:rgba(231,204,135,.96);color:#111;font-size:25px;font-weight:900;box-shadow:0 10px 35px rgba(0,0,0,.3)}
+#customerLoginModal .crm-head, #partySignupModal .crm-head{
+  grid-column:2;grid-row:1;
+  min-height:0 !important;
+  padding:30px 34px 18px !important;
+  background:#f5f5f2 !important;
+  border-bottom:1px solid #deded8 !important;
+  color:#111 !important;
+  align-items:flex-start !important;
 }
-#customerLoginModal .crm-login,
-#partySignupModal .party-signup-form{
-  max-width:none!important;
-  padding:24px!important;
+#customerLoginModal .crm-head h3, #partySignupModal .crm-head h3{color:#111 !important;font-size:27px !important;letter-spacing:-.03em;margin:3px 0 5px !important}
+#customerLoginModal .crm-kicker, #partySignupModal .crm-kicker{color:#8d6f2d !important}
+#customerLoginModal .crm-auth-status, #partySignupModal .crm-auth-status{color:#777 !important}
+#customerLoginModal .crm-close, #partySignupModal .crm-close{
+  color:#111 !important;background:#fff !important;border:1px solid #d7d7d2 !important;
+  width:38px;height:38px;border-radius:50%;font-size:22px;
 }
-#customerLoginModal .crm-login::before,
-#partySignupModal .party-signup-form::before{
-  content:'SECURE SEERVI MEMBER ACCESS';
-  display:block;
-  margin:0 0 13px;
-  color:#f0c66a;
-  font-size:8px;
-  font-weight:900;
-  letter-spacing:1.5px;
+#customerLoginModal #customerLoginView, #partySignupModal form{
+  grid-column:2;grid-row:2;
+  align-self:stretch;
+  margin-top:104px;
+  padding:22px 34px 34px !important;
+  overflow:auto;
+  background:#f5f5f2 !important;
+  color:#111 !important;
 }
-#partySignupModal .party-signup-form::before{content:'CREATE YOUR SEERVI MEMBER ACCOUNT'}
-#customerLoginModal .crm-section-title,
-#partySignupModal .crm-section-title{
-  font-size:12px!important;
-  letter-spacing:1.5px!important;
-  color:#fff!important;
-  margin-bottom:8px!important;
+#customerLoginModal #customerLoginView .crm-section-title, #partySignupModal .crm-section-title{
+  color:#111 !important;font-size:13px;letter-spacing:.14em;
 }
-#customerLoginModal .crm-login p,
-#partySignupModal .party-signup-form p{
-  color:#9aa8b1!important;
-  font-size:10px!important;
-  line-height:1.65!important;
+#customerLoginModal #customerLoginView p, #partySignupModal form p{color:#777 !important;font-size:11px;line-height:1.6}
+#customerLoginModal .crm-login-grid input, #partySignupModal .crm-login-grid input, #partySignupModal textarea{
+  background:#fff !important;color:#111 !important;border:0 !important;border-bottom:1px solid #d5d5cf !important;
+  border-radius:0 !important;padding:13px 2px !important;font-size:12px !important;
+  box-shadow:none !important;
 }
-#customerLoginModal .crm-login-grid,
-#partySignupModal .crm-login-grid{
-  gap:10px!important;
-  margin-bottom:12px!important;
+#customerLoginModal .crm-login-grid input:focus, #partySignupModal .crm-login-grid input:focus, #partySignupModal textarea:focus{border-bottom-color:#b38c38 !important;outline:none !important}
+#customerLoginModal .crm-primary, #partySignupModal .crm-primary{
+  background:#111 !important;color:#fff !important;border:0 !important;border-radius:8px !important;
+  min-height:46px;padding:12px 18px !important;letter-spacing:.08em;
 }
-#customerLoginModal .crm-panel input,
-#partySignupModal .crm-panel input,
-#partySignupModal .party-signup-note{
-  min-height:44px!important;
-  padding:12px 13px!important;
-  border-radius:9px!important;
-  background:rgba(4,12,18,.68)!important;
-  border:1px solid rgba(255,255,255,.14)!important;
-  color:#fff!important;
-  font-size:11px!important;
-  box-shadow:0 1px 0 rgba(255,255,255,.03) inset!important;
+#customerLoginModal .crm-secondary, #partySignupModal .crm-secondary{
+  background:#fff !important;color:#111 !important;border:1px solid #d5d5cf !important;border-radius:8px !important;
 }
-#customerLoginModal .crm-panel input:focus,
-#partySignupModal .crm-panel input:focus,
-#partySignupModal .party-signup-note:focus{
-  border-color:rgba(240,198,106,.62)!important;
-  box-shadow:0 0 0 2px rgba(240,198,106,.10)!important;
-}
-#customerLoginModal .crm-primary,
-#partySignupModal .crm-primary{
-  width:100%!important;
-  min-height:46px!important;
-  border-radius:9px!important;
-  background:linear-gradient(135deg,#f6f1df,#d8b45a)!important;
-  color:#11151a!important;
-  font-size:10px!important;
-  letter-spacing:1.1px!important;
-  box-shadow:0 10px 24px rgba(216,180,90,.16)!important;
-}
-#customerLoginModal .customer-login-actions{margin-top:10px!important;text-align:center!important}
-#customerLoginModal .customer-forgot{color:#d8b45a!important}
-#customerLoginModal .customer-login-help{
-  text-align:center!important;
-  margin-top:17px!important;
-  padding-top:14px!important;
-  border-top:1px solid rgba(255,255,255,.10)!important;
-}
-#customerLoginModal .crm-close,
-#partySignupModal .crm-close{
-  flex:0 0 auto!important;
-  background:rgba(255,255,255,.06)!important;
-  border-color:rgba(255,255,255,.16)!important;
-}
-#partySignupModal .party-signup-actions{margin-top:4px!important}
-#partySignupModal .party-signup-actions .crm-primary,
-#partySignupModal .party-signup-actions .crm-secondary{min-width:0!important}
-@media(max-width:600px){
-  #customerLoginModal,
-  #partySignupModal{
-    padding:14px!important;
-    align-items:center!important;
-    justify-content:center!important;
-    overflow:auto!important;
+#customerLoginModal .customer-forgot, #customerLoginModal .customer-login-help button{color:#8d6f2d !important}
+#customerLoginModal .customer-login-help, #customerLoginModal .customer-login-actions{color:#777 !important}
+#customerLoginModal .crm-error, #partySignupModal .crm-error{color:#b33d3d !important}
+#customerLoginModal .customer-dashboard{grid-column:1/-1;grid-row:1 / -1;overflow:auto;background:#f5f5f2;color:#111}
+#customerLoginModal .crm-panel:has(#customerDashboardView:not([hidden])) .customer-auth-visual,
+#customerLoginModal .crm-panel:has(#customerDashboardView:not([hidden])) .crm-head{display:none !important}
+#customerLoginModal .crm-panel:has(#customerDashboardView:not([hidden])) #customerLoginView{display:none !important}
+#customerLoginModal .crm-panel:has(#customerDashboardView:not([hidden])) .customer-dashboard{display:block !important}
+@media(max-width:760px){
+  #customerLoginModal, #partySignupModal{padding:0 !important;align-items:stretch !important;justify-content:stretch !important}
+  #customerLoginModal .crm-panel, #partySignupModal .crm-panel{
+    width:100vw !important;height:100dvh !important;max-height:none !important;min-height:0;
+    border-radius:0 !important;display:flex !important;flex-direction:column !important;
+    overflow-y:auto !important;overflow-x:hidden !important;
   }
-  #customerLoginModal .crm-panel,
-  #partySignupModal .crm-panel{
-    width:100%!important;
-    height:auto!important;
-    max-height:calc(100dvh - 28px)!important;
-    min-height:0!important;
-    margin:0!important;
-    border-radius:18px!important;
+  .customer-auth-visual{flex:0 0 31dvh;min-height:220px;padding:24px 22px 25px;background-position:center}
+  .customer-auth-visual-title{font-size:31px}
+  .customer-auth-visual-copy{font-size:10px;max-width:300px;margin-top:12px}
+  .customer-auth-visual-mark{width:48px;height:48px;right:20px;top:20px;font-size:21px}
+  #customerLoginModal .crm-head, #partySignupModal .crm-head{
+    position:relative !important;top:auto !important;grid-column:auto;grid-row:auto;
+    flex:0 0 auto;padding:20px 20px 10px !important;border-bottom:0 !important;
   }
-  #customerLoginModal .crm-head,
-  #partySignupModal .crm-head{
-    padding:18px 16px 15px!important;
+  #customerLoginModal .crm-head h3, #partySignupModal .crm-head h3{font-size:24px !important}
+  #customerLoginModal #customerLoginView, #partySignupModal form{
+    grid-column:auto;grid-row:auto;flex:1;margin-top:0;padding:12px 20px 28px !important;overflow:visible;background:#f5f5f2 !important;
   }
-  #customerLoginModal .crm-head h3,
-  #partySignupModal .crm-head h3{font-size:22px!important}
-  #customerLoginModal .crm-login,
-  #partySignupModal .party-signup-form{padding:18px 16px 20px!important}
-  #customerLoginModal .crm-login-grid,
-  #partySignupModal .crm-login-grid{grid-template-columns:1fr!important}
-  #customerLoginModal .crm-panel input,
-  #partySignupModal .crm-panel input,
-  #partySignupModal .party-signup-note{min-height:46px!important}
-  #partySignupModal .party-signup-actions{grid-template-columns:1fr 1fr!important}
+  #partySignupModal .party-signup-actions{grid-template-columns:1fr 1fr}
+}
+@media(min-width:761px){
+  #partySignupModal .party-signup-form{min-height:0}
 }
 </style>
-
 </head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -4862,7 +4833,7 @@ body.seervi-ai-open .float-wa{display:none!important}
 
 <section id="customerHomeProfile" class="customer-home-profile" hidden><div class="customer-home-profile-inner"><div class="customer-home-profile-head"><div><div class="crm-kicker">SEERVI TRADING / MY PROFILE</div><h2>Welcome, <span id="customerHomeName">Customer</span></h2><p id="customerHomeMeta">Your account details and business profile.</p></div><div class="customer-home-profile-actions"><button class="crm-primary" type="button" onclick="customerEditProfile()">EDIT PROFILE</button><button class="crm-secondary" type="button" onclick="openCustomerLogin()">MY ACCOUNT</button></div></div><div id="customerHomeProfileGrid" class="customer-home-profile-grid"></div></div></section>
 
-<section id="how-seervi-works" class="supply-flow-section"><div class="wrap"><div class="section-head"><div><div class="tag">HOW SEERVI WORKS</div><h2>FROM FACTORY TO RETAIL</h2></div><p>We connect trusted overseas manufacturers with Indian retailers through quality-focused wholesale supply.</p></div><div class="supply-flow"><div class="supply-step"><div class="supply-icon">⌂</div><h3>FACTORY SOURCING</h3><p>Products are sourced from trusted manufacturers in China.</p></div><div class="supply-line"></div><div class="supply-step"><div class="supply-icon">✓</div><h3>QUALITY VERIFIED</h3><p>Products are checked as part of our quality-focused sourcing process.</p></div><div class="supply-line"></div><div class="supply-step"><div class="supply-icon">S</div><h3>SEERVI SUPPLY</h3><p>Imported products are supplied in India for wholesale requirements.</p></div><div class="supply-line"></div><div class="supply-step"><div class="supply-icon">R</div><h3>RETAILER / BUSINESS</h3><p>Supply reaches retailers, shops, businesses and project requirements.</p></div></div></div></section></main><section id="about"><div class="wrap"><div class="section-head"><div><div class="tag">ABOUT SEERVI</div><h2>BUILT AROUND TRUST</h2></div><p>Seervi is built around trusted sourcing, quality-verified imported items and dependable wholesale supply.</p></div><div class="about-grid"><div class="about-panel"><h3>Seervi Trading</h3><p>Seervi is the name we chose for our company because it is our Sir's name. We source imported items from trusted companies in China and focus on quality-verified products before supplying them to our customers.</p><div class="about-bullets"><div class="about-bullet"><b>Trusted Sourcing</b>Imported items sourced from trusted companies in China.</div><div class="about-bullet"><b>Quality Focus</b>Products are quality-verified as part of our sourcing process.</div></div></div><div class="about-panel"><h3>What We Supply</h3><p>Wholesale supply for interiors, exteriors and kitchen items, with a growing range of practical products for businesses and projects.</p><div class="about-bullets"><div class="about-bullet"><b>Interiors</b>Products for interior applications and finishing.</div><div class="about-bullet"><b>Exteriors</b>Products for exterior and project requirements.</div><div class="about-bullet"><b>Kitchen</b>Practical kitchen-related items for wholesale supply.</div><div class="about-bullet"><b>Wholesale</b>Business-focused quantities and enquiry-based supply.</div></div></div></div></div></section><section id="why-seervi"><div class="wrap"><div class="section-head"><div><div class="tag">WHY SEERVI</div><h2>STRAIGHTFORWARD SUPPLY</h2></div><p>A clear focus on sourcing, quality and service.</p></div><div class="why-grid"><div class="why-card"><strong>Trusted Import Sourcing</strong><p>Imported items sourced from trusted Chinese companies for our product range.</p></div><div class="why-card"><strong>Quality Verified</strong><p>Quality is checked as part of our sourcing and supply approach.</p></div><div class="why-card"><strong>Wholesale Focus</strong><p>Built for shops, businesses, interiors, exteriors and kitchen requirements.</p></div><div class="why-card"><strong>Direct Enquiry</strong><p>Send your product requirements directly through WhatsApp for faster discussion.</p></div></div></div></section><section id="contact"><div class="wrap"><div class="section-head"><div><div class="tag">CONTACT</div><h2>LET'S TALK BUSINESS</h2></div><p>Have a product requirement? Send us the model, quantity or photos and we'll take it from there.</p></div><div class="contact-grid"><div class="contact-card"><b>Location</b><span>Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072</span></div><div class="contact-card"><b>WhatsApp</b><a href="https://wa.me/917073741650" target="_blank" rel="noopener">Chat with Seervi</a></div><div class="contact-card"><b>Email</b><a href="mailto:info@seervitrading.com">Email Seervi</a></div><div class="contact-card"><b>Business</b><span>Wholesale supplier for interiors, exteriors &amp; kitchen items.</span></div></div></div></section><footer><div class="wrap" style="width:100%;display:flex;justify-content:space-between"><span>© 2026 Seervi Trading. All rights reserved.</span><span>Kailash Choudhary</span></div></footer><div id="cartDrawer" class="cart-drawer" aria-hidden="true"><div class="cart-backdrop" onclick="closeCart()"></div><aside class="cart-panel"><div class="cart-head"><div><div class="cart-title-row"><span class="tag">SEERVI ORDER</span><span id="adminModeBadge" class="admin-only admin-mode-badge" title="Quotation Mode active">QUOTATION MODE</span></div><h3>Your Cart</h3></div><button class="cart-close cart-back-btn" type="button" onclick="closeCart()" aria-label="Back to previous page">← <span>BACK</span></button></div><div class="cart-party-selector"><div class="cart-party-selector-head"><div><div class="admin-section-title">SELECT PARTY <span>FROM CRM</span></div><p class="cart-party-help">Party pehle CRM me create/save karo. Yahin se quotation ke liye select hoga.</p></div><span class="cart-party-admin-note">Manage parties from ADMIN PANEL</span></div><div class="cart-party-select-row"><select id="cartPartySelect" class="cart-party-select" onchange="selectCartParty(this.value)"><option value="">Select Party</option></select><span id="cartPartyStatus" class="cart-party-status">No party selected</span></div></div><div id="cartItems" class="cart-items"></div><div class="cart-empty" id="cartEmpty"><div class="cart-empty-icon">🛒</div><h4>Your cart is empty</h4><p>Add items to build your enquiry.</p></div><div class="cart-admin-area admin-only"><div class="manual-quote-item-box"><div class="manual-item-head"><div><div class="admin-section-title">ADD MANUAL ITEM <span>PRIVATE</span></div><p class="manual-item-help">Product website par nahi hai? Yahan manually add kar sakte ho.</p></div><button type="button" class="manual-item-toggle" onclick="toggleManualQuoteItem()">+ ADD ITEM</button></div><div id="manualQuoteItemForm" class="manual-item-form" hidden><div class="manual-item-grid"><div class="full"><label for="manualItemName">Product / Item Name *</label><input id="manualItemName" type="text" placeholder="e.g. Pop Wood Screw 4 x 1 inch"></div><div><label for="manualItemType">Category</label><input id="manualItemType" type="text" placeholder="e.g. Hardware"></div><div><label for="manualItemSpec">Specification</label><input id="manualItemSpec" type="text" placeholder="Size / model / spec"></div><div><label for="manualItemQty">Qty *</label><input id="manualItemQty" type="number" min="1" step="1" value="1"></div><div><label for="manualItemRate">Rate ₹ *</label><input id="manualItemRate" type="number" min="0" step="0.01" placeholder="Enter rate"></div></div><div class="manual-item-actions"><button type="button" class="manual-item-add-btn" onclick="addManualQuoteItem()">ADD TO QUOTATION</button><button type="button" class="manual-item-cancel-btn" onclick="toggleManualQuoteItem(false)">Cancel</button></div></div></div><div class="cart-pricing-box"><div class="cart-price-row"><span>Total Items</span><strong id="cartTotalItems">0</strong></div><div class="cart-price-row"><span>Subtotal</span><strong id="cartSubtotal">₹0</strong></div><div class="cart-gst-row"><input id="gstEnabled" type="checkbox" onchange="renderCart()"><label for="gstEnabled">Add GST</label><input id="gstRate" class="cart-gst-rate" type="number" min="0" max="100" step="0.01" value="18" disabled onchange="renderCart()"><span>%</span></div><div class="cart-price-row" id="gstAmountRow" style="display:none"><span>GST</span><strong id="cartGstAmount">₹0</strong></div><div class="cart-price-row cart-grand-total"><span>Grand Total</span><strong id="cartGrandTotal">₹0</strong></div></div></div><div class="cart-footer"><div class="cart-process-row"><button type="button" class="cart-process-btn" onclick="renderCart()">↻ UPDATE CART</button><button type="button" class="cart-process-btn primary" onclick="closeCart()">CONTINUE SHOPPING</button></div><div class="cart-bottom-grid"><div><div class="cart-tools-title">ORDER / QUOTATION</div><p class="cart-tools-note">Review your selected products, update quantities, then continue with WhatsApp enquiry or quotation.</p><button class="whatsapp-order-btn" type="button" onclick="sendCartToWhatsApp()">ORDER ON WHATSAPP <span>↗</span></button><div id="quoteEditStatus" class="quote-edit-status admin-only"></div><div class="quote-actions admin-only"><button class="quote-pdf-btn" type="button" onclick="downloadCartPDF()">DOWNLOAD PDF QUOTATION</button><button class="crm-save-btn" type="button" onclick="crmSaveCurrentQuote()">SAVE</button><button class="clear-cart-btn" type="button" onclick="clearCart()">Clear Cart</button></div><button class="clear-cart-btn customer-clear-cart" type="button" onclick="clearCart()">Clear Cart</button></div><div class="admin-only"><div class="cart-tools-title">CART TOTALS</div><div class="cart-totals-card"><div class="cart-summary-line"><span>Total Items</span><strong id="cartTotalItemsSummary">0</strong></div><div class="cart-summary-line"><span>Subtotal</span><strong id="cartSubtotalSummary">₹0</strong></div><div class="cart-summary-line" id="cartGstSummaryLine" style="display:none"><span>GST</span><strong id="cartGstSummary">₹0</strong></div><div class="cart-summary-line cart-grand"><span>Grand Total</span><strong id="cartGrandTotalSummary">₹0</strong></div></div></div><p class="cart-note">Send your selected models and quantities on WhatsApp. Quotation pricing is handled separately.</p></div></aside></div><div id="partySignupModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closePartySignup()"></div><div class="crm-panel party-signup-panel" role="dialog" aria-modal="true" aria-labelledby="partySignupTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / PARTY REGISTRATION</div><h3 id="partySignupTitle">Sign Up</h3><div class="crm-auth-status">Create your Seervi Trading customer account and save your party details securely.</div></div><button class="crm-close" type="button" onclick="closePartySignup()">×</button></div><form class="crm-login party-signup-form" onsubmit="submitPartySignup(event)"><section id="publicSignupStep1"><div class="crm-section-title">CREATE ACCOUNT</div><p>Create your Seervi Trading account first. After this, we will ask for your compulsory party/business details.</p><div class="crm-login-grid"><input id="publicAccountName" required placeholder="Your Name *" autocomplete="name"><input id="publicAccountEmail" type="email" required placeholder="Email *" autocomplete="email"><input id="publicAccountPassword" type="password" required minlength="6" placeholder="Create Password *" autocomplete="new-password"></div><div class="party-signup-actions"><button class="crm-primary" type="button" onclick="createPublicCustomerAccount()">NEXT →</button><button class="crm-secondary" type="button" onclick="closePartySignup()">CANCEL</button></div></section><section id="publicSignupStep2" hidden><div class="crm-section-title">PARTY DETAILS</div><p>Account created. Now enter the compulsory party/business details to complete your Seervi Trading profile.</p><div class="crm-login-grid"><input id="publicPartyName" required placeholder="Party / Customer Name *" autocomplete="organization"><input id="publicPartyCompany" placeholder="Shop / Company"><input id="publicPartyPhone" required placeholder="Phone / WhatsApp *" autocomplete="tel"><input id="publicPartyCity" required placeholder="City *" autocomplete="address-level2"><input id="publicPartyAddress" required placeholder="Address *" autocomplete="street-address"></div><textarea id="publicPartyNote" class="party-signup-note" placeholder="Requirement / Note (optional)"></textarea><div class="party-signup-actions"><button class="crm-primary" type="submit">COMPLETE SIGN UP</button><button class="crm-secondary" type="button" onclick="closePartySignup()">CANCEL</button></div></section><div id="publicPartySignupStatus" class="crm-auth-status"></div></form></div></div><div id="accountDashboardModal" class="crm-modal" aria-hidden="true">
+<section id="how-seervi-works" class="supply-flow-section"><div class="wrap"><div class="section-head"><div><div class="tag">HOW SEERVI WORKS</div><h2>FROM FACTORY TO RETAIL</h2></div><p>We connect trusted overseas manufacturers with Indian retailers through quality-focused wholesale supply.</p></div><div class="supply-flow"><div class="supply-step"><div class="supply-icon">⌂</div><h3>FACTORY SOURCING</h3><p>Products are sourced from trusted manufacturers in China.</p></div><div class="supply-line"></div><div class="supply-step"><div class="supply-icon">✓</div><h3>QUALITY VERIFIED</h3><p>Products are checked as part of our quality-focused sourcing process.</p></div><div class="supply-line"></div><div class="supply-step"><div class="supply-icon">S</div><h3>SEERVI SUPPLY</h3><p>Imported products are supplied in India for wholesale requirements.</p></div><div class="supply-line"></div><div class="supply-step"><div class="supply-icon">R</div><h3>RETAILER / BUSINESS</h3><p>Supply reaches retailers, shops, businesses and project requirements.</p></div></div></div></section></main><section id="about"><div class="wrap"><div class="section-head"><div><div class="tag">ABOUT SEERVI</div><h2>BUILT AROUND TRUST</h2></div><p>Seervi is built around trusted sourcing, quality-verified imported items and dependable wholesale supply.</p></div><div class="about-grid"><div class="about-panel"><h3>Seervi Trading</h3><p>Seervi is the name we chose for our company because it is our Sir's name. We source imported items from trusted companies in China and focus on quality-verified products before supplying them to our customers.</p><div class="about-bullets"><div class="about-bullet"><b>Trusted Sourcing</b>Imported items sourced from trusted companies in China.</div><div class="about-bullet"><b>Quality Focus</b>Products are quality-verified as part of our sourcing process.</div></div></div><div class="about-panel"><h3>What We Supply</h3><p>Wholesale supply for interiors, exteriors and kitchen items, with a growing range of practical products for businesses and projects.</p><div class="about-bullets"><div class="about-bullet"><b>Interiors</b>Products for interior applications and finishing.</div><div class="about-bullet"><b>Exteriors</b>Products for exterior and project requirements.</div><div class="about-bullet"><b>Kitchen</b>Practical kitchen-related items for wholesale supply.</div><div class="about-bullet"><b>Wholesale</b>Business-focused quantities and enquiry-based supply.</div></div></div></div></div></section><section id="why-seervi"><div class="wrap"><div class="section-head"><div><div class="tag">WHY SEERVI</div><h2>STRAIGHTFORWARD SUPPLY</h2></div><p>A clear focus on sourcing, quality and service.</p></div><div class="why-grid"><div class="why-card"><strong>Trusted Import Sourcing</strong><p>Imported items sourced from trusted Chinese companies for our product range.</p></div><div class="why-card"><strong>Quality Verified</strong><p>Quality is checked as part of our sourcing and supply approach.</p></div><div class="why-card"><strong>Wholesale Focus</strong><p>Built for shops, businesses, interiors, exteriors and kitchen requirements.</p></div><div class="why-card"><strong>Direct Enquiry</strong><p>Send your product requirements directly through WhatsApp for faster discussion.</p></div></div></div></section><section id="contact"><div class="wrap"><div class="section-head"><div><div class="tag">CONTACT</div><h2>LET'S TALK BUSINESS</h2></div><p>Have a product requirement? Send us the model, quantity or photos and we'll take it from there.</p></div><div class="contact-grid"><div class="contact-card"><b>Location</b><span>Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072</span></div><div class="contact-card"><b>WhatsApp</b><a href="https://wa.me/917073741650" target="_blank" rel="noopener">Chat with Seervi</a></div><div class="contact-card"><b>Email</b><a href="mailto:info@seervitrading.com">Email Seervi</a></div><div class="contact-card"><b>Business</b><span>Wholesale supplier for interiors, exteriors &amp; kitchen items.</span></div></div></div></section><footer><div class="wrap" style="width:100%;display:flex;justify-content:space-between"><span>© 2026 Seervi Trading. All rights reserved.</span><span>Kailash Choudhary</span></div></footer><div id="cartDrawer" class="cart-drawer" aria-hidden="true"><div class="cart-backdrop" onclick="closeCart()"></div><aside class="cart-panel"><div class="cart-head"><div><div class="cart-title-row"><span class="tag">SEERVI ORDER</span><span id="adminModeBadge" class="admin-only admin-mode-badge" title="Quotation Mode active">QUOTATION MODE</span></div><h3>Your Cart</h3></div><button class="cart-close cart-back-btn" type="button" onclick="closeCart()" aria-label="Back to previous page">← <span>BACK</span></button></div><div class="cart-party-selector"><div class="cart-party-selector-head"><div><div class="admin-section-title">SELECT PARTY <span>FROM CRM</span></div><p class="cart-party-help">Party pehle CRM me create/save karo. Yahin se quotation ke liye select hoga.</p></div><span class="cart-party-admin-note">Manage parties from ADMIN PANEL</span></div><div class="cart-party-select-row"><select id="cartPartySelect" class="cart-party-select" onchange="selectCartParty(this.value)"><option value="">Select Party</option></select><span id="cartPartyStatus" class="cart-party-status">No party selected</span></div></div><div id="cartItems" class="cart-items"></div><div class="cart-empty" id="cartEmpty"><div class="cart-empty-icon">🛒</div><h4>Your cart is empty</h4><p>Add items to build your enquiry.</p></div><div class="cart-admin-area admin-only"><div class="manual-quote-item-box"><div class="manual-item-head"><div><div class="admin-section-title">ADD MANUAL ITEM <span>PRIVATE</span></div><p class="manual-item-help">Product website par nahi hai? Yahan manually add kar sakte ho.</p></div><button type="button" class="manual-item-toggle" onclick="toggleManualQuoteItem()">+ ADD ITEM</button></div><div id="manualQuoteItemForm" class="manual-item-form" hidden><div class="manual-item-grid"><div class="full"><label for="manualItemName">Product / Item Name *</label><input id="manualItemName" type="text" placeholder="e.g. Pop Wood Screw 4 x 1 inch"></div><div><label for="manualItemType">Category</label><input id="manualItemType" type="text" placeholder="e.g. Hardware"></div><div><label for="manualItemSpec">Specification</label><input id="manualItemSpec" type="text" placeholder="Size / model / spec"></div><div><label for="manualItemQty">Qty *</label><input id="manualItemQty" type="number" min="1" step="1" value="1"></div><div><label for="manualItemRate">Rate ₹ *</label><input id="manualItemRate" type="number" min="0" step="0.01" placeholder="Enter rate"></div></div><div class="manual-item-actions"><button type="button" class="manual-item-add-btn" onclick="addManualQuoteItem()">ADD TO QUOTATION</button><button type="button" class="manual-item-cancel-btn" onclick="toggleManualQuoteItem(false)">Cancel</button></div></div></div><div class="cart-pricing-box"><div class="cart-price-row"><span>Total Items</span><strong id="cartTotalItems">0</strong></div><div class="cart-price-row"><span>Subtotal</span><strong id="cartSubtotal">₹0</strong></div><div class="cart-gst-row"><input id="gstEnabled" type="checkbox" onchange="renderCart()"><label for="gstEnabled">Add GST</label><input id="gstRate" class="cart-gst-rate" type="number" min="0" max="100" step="0.01" value="18" disabled onchange="renderCart()"><span>%</span></div><div class="cart-price-row" id="gstAmountRow" style="display:none"><span>GST</span><strong id="cartGstAmount">₹0</strong></div><div class="cart-price-row cart-grand-total"><span>Grand Total</span><strong id="cartGrandTotal">₹0</strong></div></div></div><div class="cart-footer"><div class="cart-process-row"><button type="button" class="cart-process-btn" onclick="renderCart()">↻ UPDATE CART</button><button type="button" class="cart-process-btn primary" onclick="closeCart()">CONTINUE SHOPPING</button></div><div class="cart-bottom-grid"><div><div class="cart-tools-title">ORDER / QUOTATION</div><p class="cart-tools-note">Review your selected products, update quantities, then continue with WhatsApp enquiry or quotation.</p><button class="whatsapp-order-btn" type="button" onclick="sendCartToWhatsApp()">ORDER ON WHATSAPP <span>↗</span></button><div id="quoteEditStatus" class="quote-edit-status admin-only"></div><div class="quote-actions admin-only"><button class="quote-pdf-btn" type="button" onclick="downloadCartPDF()">DOWNLOAD PDF QUOTATION</button><button class="crm-save-btn" type="button" onclick="crmSaveCurrentQuote()">SAVE</button><button class="clear-cart-btn" type="button" onclick="clearCart()">Clear Cart</button></div><button class="clear-cart-btn customer-clear-cart" type="button" onclick="clearCart()">Clear Cart</button></div><div class="admin-only"><div class="cart-tools-title">CART TOTALS</div><div class="cart-totals-card"><div class="cart-summary-line"><span>Total Items</span><strong id="cartTotalItemsSummary">0</strong></div><div class="cart-summary-line"><span>Subtotal</span><strong id="cartSubtotalSummary">₹0</strong></div><div class="cart-summary-line" id="cartGstSummaryLine" style="display:none"><span>GST</span><strong id="cartGstSummary">₹0</strong></div><div class="cart-summary-line cart-grand"><span>Grand Total</span><strong id="cartGrandTotalSummary">₹0</strong></div></div></div><p class="cart-note">Send your selected models and quantities on WhatsApp. Quotation pricing is handled separately.</p></div></aside></div><div id="partySignupModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closePartySignup()"></div><div class="crm-panel party-signup-panel" role="dialog" aria-modal="true" aria-labelledby="partySignupTitle"><div class="customer-auth-visual"><div class="customer-auth-visual-kicker">SEERVI TRADING / BUSINESS ACCOUNT</div><div class="customer-auth-visual-title">SOURCE.<br><span>SUPPLY. GROW.</span></div><div class="customer-auth-visual-copy">Create your account and keep your Seervi business enquiries, quotations and order history connected.</div><div class="customer-auth-visual-mark">S</div></div><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / PARTY REGISTRATION</div><h3 id="partySignupTitle">Sign Up</h3><div class="crm-auth-status">Create your Seervi Trading customer account and save your party details securely.</div></div><button class="crm-close" type="button" onclick="closePartySignup()">×</button></div><form class="crm-login party-signup-form" onsubmit="submitPartySignup(event)"><section id="publicSignupStep1"><div class="crm-section-title">CREATE ACCOUNT</div><p>Create your Seervi Trading account first. After this, we will ask for your compulsory party/business details.</p><div class="crm-login-grid"><input id="publicAccountName" required placeholder="Your Name *" autocomplete="name"><input id="publicAccountEmail" type="email" required placeholder="Email *" autocomplete="email"><input id="publicAccountPassword" type="password" required minlength="6" placeholder="Create Password *" autocomplete="new-password"></div><div class="party-signup-actions"><button class="crm-primary" type="button" onclick="createPublicCustomerAccount()">NEXT →</button><button class="crm-secondary" type="button" onclick="closePartySignup()">CANCEL</button></div></section><section id="publicSignupStep2" hidden><div class="crm-section-title">PARTY DETAILS</div><p>Account created. Now enter the compulsory party/business details to complete your Seervi Trading profile.</p><div class="crm-login-grid"><input id="publicPartyName" required placeholder="Party / Customer Name *" autocomplete="organization"><input id="publicPartyCompany" placeholder="Shop / Company"><input id="publicPartyPhone" required placeholder="Phone / WhatsApp *" autocomplete="tel"><input id="publicPartyCity" required placeholder="City *" autocomplete="address-level2"><input id="publicPartyAddress" required placeholder="Address *" autocomplete="street-address"></div><textarea id="publicPartyNote" class="party-signup-note" placeholder="Requirement / Note (optional)"></textarea><div class="party-signup-actions"><button class="crm-primary" type="submit">COMPLETE SIGN UP</button><button class="crm-secondary" type="button" onclick="closePartySignup()">CANCEL</button></div></section><div id="publicPartySignupStatus" class="crm-auth-status"></div></form></div></div><div id="accountDashboardModal" class="crm-modal" aria-hidden="true">
   <div class="crm-backdrop" onclick="closeAccountDashboard()"></div>
   <div class="crm-panel account-dashboard-panel" role="dialog" aria-modal="true" aria-labelledby="accountDashboardTitle">
     <div class="crm-head">
@@ -5124,7 +5095,7 @@ body.seervi-ai-open .float-wa{display:none!important}
   </div>
 </div>
 <div id="notificationFloatingToast" class="notification-floating-toast" aria-live="polite" aria-hidden="true"></div>
-<div id="customerLoginModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCustomerLogin()"></div><div class="crm-panel customer-portal-panel" role="dialog" aria-modal="true" aria-labelledby="customerPortalTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / SECURE LOGIN</div><h3 id="customerPortalTitle">Login</h3><div id="customerAuthStatus" class="crm-auth-status">Admin and customers can log in here. You will be taken to your own dashboard.</div></div><button class="crm-close" type="button" onclick="closeCustomerLogin()">×</button></div><div id="customerLoginView" class="crm-login"><div class="crm-section-title">LOGIN</div><p>Use your Seervi Trading email and password. Admin accounts open the Admin Dashboard; customer accounts open the Customer Dashboard.</p><div class="crm-login-grid"><input id="customerLoginEmail" type="email" placeholder="Email" autocomplete="username"><input id="customerLoginPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="customerSignIn()">LOGIN</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('customer')">FORGOT PASSWORD?</button></div><div id="customerLoginError" class="crm-error"></div><div class="customer-login-help">Don't have an account? <button type="button" onclick="closeCustomerLogin();openPartySignup();">SIGN UP</button></div></div><div id="customerDashboardView" class="customer-dashboard" hidden><div class="customer-dashboard-head"><div><div class="crm-section-title">WELCOME</div><h4 id="customerWelcomeName">Customer</h4><div id="customerWelcomeMeta" class="crm-auth-status"></div></div><div style="display:flex;gap:6px;align-items:center"><button class="crm-secondary customer-dashboard-refresh" type="button" onclick="customerRefreshDashboard()">↻ REFRESH</button><button class="crm-secondary danger" type="button" onclick="customerSignOut()">SIGN OUT</button></div></div><div id="customerDashboardSummary" class="customer-dashboard-summary" hidden></div><div id="customerProfileCard" class="customer-profile-card"></div><div class="customer-portal-tabs"><button class="customer-tab active" type="button" onclick="customerPortalTab('quotes')">MY ORDER</button><button class="customer-tab" type="button" onclick="customerPortalTab('ledger')">MY LEDGER</button><button class="customer-tab" type="button" onclick="customerPortalTab('rates')">RATE HISTORY</button></div><div id="customerQuotesList" class="customer-portal-list"></div><div id="customerRatesList" class="customer-portal-list" hidden></div><div id="customerLedgerList" class="customer-portal-list" hidden></div><div id="customerProfileEdit" class="customer-profile-edit" hidden></div></div></div></div>
+<div id="customerLoginModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCustomerLogin()"></div><div class="crm-panel customer-portal-panel" role="dialog" aria-modal="true" aria-labelledby="customerPortalTitle"><div class="customer-auth-visual"><div class="customer-auth-visual-kicker">SEERVI TRADING / GLOBAL SUPPLY</div><div class="customer-auth-visual-title">QUALITY<br><span>BEYOND STANDARDS.</span></div><div class="customer-auth-visual-copy">Trusted sourcing. Quality-focused supply. Built for professional business requirements.</div><div class="customer-auth-visual-mark">S</div></div><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / SECURE LOGIN</div><h3 id="customerPortalTitle">Login</h3><div id="customerAuthStatus" class="crm-auth-status">Admin and customers can log in here. You will be taken to your own dashboard.</div></div><button class="crm-close" type="button" onclick="closeCustomerLogin()">×</button></div><div id="customerLoginView" class="crm-login"><div class="crm-section-title">LOGIN</div><p>Use your Seervi Trading email and password. Admin accounts open the Admin Dashboard; customer accounts open the Customer Dashboard.</p><div class="crm-login-grid"><input id="customerLoginEmail" type="email" placeholder="Email" autocomplete="username"><input id="customerLoginPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="customerSignIn()">LOGIN</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('customer')">FORGOT PASSWORD?</button></div><div id="customerLoginError" class="crm-error"></div><div class="customer-login-help">Don't have an account? <button type="button" onclick="closeCustomerLogin();openPartySignup();">SIGN UP</button></div></div><div id="customerDashboardView" class="customer-dashboard" hidden><div class="customer-dashboard-head"><div><div class="crm-section-title">WELCOME</div><h4 id="customerWelcomeName">Customer</h4><div id="customerWelcomeMeta" class="crm-auth-status"></div></div><div style="display:flex;gap:6px;align-items:center"><button class="crm-secondary customer-dashboard-refresh" type="button" onclick="customerRefreshDashboard()">↻ REFRESH</button><button class="crm-secondary danger" type="button" onclick="customerSignOut()">SIGN OUT</button></div></div><div id="customerDashboardSummary" class="customer-dashboard-summary" hidden></div><div id="customerProfileCard" class="customer-profile-card"></div><div class="customer-portal-tabs"><button class="customer-tab active" type="button" onclick="customerPortalTab('quotes')">MY ORDER</button><button class="customer-tab" type="button" onclick="customerPortalTab('ledger')">MY LEDGER</button><button class="customer-tab" type="button" onclick="customerPortalTab('rates')">RATE HISTORY</button></div><div id="customerQuotesList" class="customer-portal-list"></div><div id="customerRatesList" class="customer-portal-list" hidden></div><div id="customerLedgerList" class="customer-portal-list" hidden></div><div id="customerProfileEdit" class="customer-profile-edit" hidden></div></div></div></div>
 
 
 <div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-secondary admin-universal-back" type="button" onclick="seerviAdminBackToPrevious()">← BACK</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div>
