@@ -14863,222 +14863,193 @@ function seerviShowSaveSuccess(message){
 </body>
 </html>
 
-<style id="seervi-auth-reference-theme">
-/* ===== SEERVI AUTH — reference-inspired login/signup layout ===== */
-#customerLoginModal .customer-portal-panel,
-#partySignupModal .party-signup-panel{
-  width:min(1040px,calc(100vw - 34px)) !important;
-  max-width:1040px !important;
-  min-height:620px;
-  display:grid !important;
-  grid-template-columns:42% 58%;
-  grid-template-rows:auto 1fr;
-  position:relative !important;
-  overflow:hidden !important;
-  background:#0c1117 !important;
-  border:1px solid #ffffff16 !important;
-  border-radius:22px !important;
-  box-shadow:0 35px 120px #000d !important;
+<style id="seervi-auth-vanta-theme">
+/* ===== SEERVI AUTH — VANTA GLASS LOGIN / SIGNUP THEME ===== */
+#customerLoginModal .crm-backdrop,
+#partySignupModal .crm-backdrop{
+  background:rgba(3,8,14,.34)!important;
+  backdrop-filter:blur(3px) saturate(1.05)!important;
 }
-#customerLoginModal .customer-portal-panel::before,
-#partySignupModal .party-signup-panel::before{
+#customerLoginModal .crm-panel,
+#partySignupModal .crm-panel{
+  width:min(560px,calc(100vw - 32px));
+  max-height:min(92vh,900px);
+  overflow:auto;
+  background:linear-gradient(145deg,rgba(8,16,25,.88),rgba(9,24,32,.76))!important;
+  border:1px solid rgba(255,255,255,.18)!important;
+  border-radius:24px!important;
+  box-shadow:0 30px 100px rgba(0,0,0,.55),0 0 70px rgba(240,198,106,.08)!important;
+  backdrop-filter:blur(22px) saturate(1.2)!important;
+}
+#customerLoginModal .crm-head,
+#partySignupModal .crm-head{
+  padding:18px 22px 12px!important;
+  background:linear-gradient(180deg,rgba(7,13,20,.88),rgba(7,13,20,.48))!important;
+  border-bottom:0!important;
+  backdrop-filter:none!important;
+}
+#customerLoginModal .crm-head h3,
+#partySignupModal .crm-head h3{
+  font-size:25px!important;
+  letter-spacing:.2px;
+  margin:4px 0 3px!important;
+}
+#customerLoginModal .crm-head .crm-auth-status,
+#partySignupModal .crm-head .crm-auth-status{
+  color:#8e9aa6!important;
+  font-size:9px!important;
+}
+#customerLoginModal .crm-close,
+#partySignupModal .crm-close{
+  width:38px!important;height:38px!important;
+  background:rgba(255,255,255,.06)!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+}
+#customerLoginModal .crm-login,
+#partySignupModal .party-signup-form{
+  max-width:none!important;
+  padding:8px 38px 30px!important;
+  margin:0 auto!important;
+}
+#customerLoginModal .crm-login::before,
+#partySignupModal .party-signup-form::before{
   content:"";
-  grid-column:1;
-  grid-row:1 / -1;
   display:block;
-  min-height:100%;
-  background:
-    linear-gradient(180deg,rgba(246,242,232,.74),rgba(246,242,232,.94)),
-    url('images/00-old-products/product-image-001-055cde1217d3c801.webp') center/cover no-repeat;
-  border-right:1px solid #ffffff18;
+  width:112px;height:112px;
+  margin:2px auto 20px;
+  border-radius:50%;
+  background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.11),rgba(255,255,255,.025) 62%,rgba(240,198,106,.10));
+  border:1px solid rgba(240,198,106,.32);
+  box-shadow:0 0 42px rgba(240,198,106,.10),inset 0 0 24px rgba(255,255,255,.06);
+  position:relative;
 }
-#customerLoginModal .customer-portal-panel::after,
-#partySignupModal .party-signup-panel::after{
-  content:"SEERVI TRADING\A QUALITY BEYOND STANDARDS\A\A GLOBAL SOURCING\A TRUSTED SUPPLY";
-  white-space:pre;
+#customerLoginModal .crm-login::after,
+#partySignupModal .party-signup-form::after{
+  content:"S";
   position:absolute;
-  left:30px;
-  bottom:34px;
-  width:calc(42% - 60px);
-  color:#171717;
-  font-size:11px;
-  line-height:1.65;
-  letter-spacing:1.4px;
-  font-weight:900;
-  pointer-events:none;
-  z-index:3;
+  left:50%;
+  transform:translateX(-50%);
+  margin-top:-113px;
+  width:70px;height:70px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:#f0c66a;
+  font-size:30px;font-weight:900;letter-spacing:-1px;
+  border:2px solid rgba(240,198,106,.7);
+  background:rgba(4,12,20,.45);
 }
-#customerLoginModal .customer-portal-panel>.crm-head,
-#partySignupModal .party-signup-panel>.crm-head{
-  grid-column:2;
-  grid-row:1;
-  position:relative !important;
-  top:auto !important;
-  margin:0 !important;
-  padding:25px 30px 18px !important;
-  background:#0c1117 !important;
-  border-bottom:1px solid #ffffff12 !important;
-  z-index:4;
+#customerLoginModal .crm-section-title,
+#partySignupModal .crm-section-title{
+  color:#f0c66a!important;
+  font-size:10px!important;
+  letter-spacing:1.8px!important;
+  margin-bottom:9px!important;
 }
-#customerLoginModal .customer-portal-panel>.crm-head h3,
-#partySignupModal .party-signup-panel>.crm-head h3{
-  margin:4px 0 0 !important;
-  font-size:26px !important;
-  letter-spacing:-.6px;
+#customerLoginModal .crm-login p,
+#partySignupModal .party-signup-form p{
+  color:#9ca8b3!important;
+  font-size:10px!important;
+  line-height:1.6!important;
+  margin-bottom:18px!important;
 }
-#customerLoginModal .customer-portal-panel>.crm-head .crm-kicker,
-#partySignupModal .party-signup-panel>.crm-head .crm-kicker{
-  color:#d8b45a !important;
-  font-size:9px !important;
-  letter-spacing:1.5px !important;
+#customerLoginModal .crm-login-grid,
+#partySignupModal .crm-login-grid{
+  grid-template-columns:1fr!important;
+  gap:12px!important;
+  margin-bottom:14px!important;
 }
-#customerLoginModal .customer-portal-panel>#customerLoginView,
-#customerLoginModal .customer-portal-panel>#customerDashboardView,
-#partySignupModal .party-signup-panel>.party-signup-form{
-  grid-column:2;
-  grid-row:2;
-  width:auto !important;
-  max-width:none !important;
-  min-width:0 !important;
-  margin:0 !important;
-  padding:30px !important;
-  box-sizing:border-box;
-  background:#0c1117 !important;
-  overflow:auto !important;
-  z-index:4;
+#customerLoginModal .crm-panel input,
+#partySignupModal .crm-panel input,
+#partySignupModal .party-signup-note{
+  min-height:48px!important;
+  padding:13px 14px!important;
+  border-radius:11px!important;
+  background:rgba(3,10,16,.58)!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  color:#fff!important;
+  font-size:11px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
 }
-#customerLoginModal .customer-portal-panel>#customerLoginView .crm-section-title,
-#partySignupModal .party-signup-panel>.party-signup-form .crm-section-title{
-  color:#fff !important;
-  font-size:12px !important;
-  letter-spacing:1.5px !important;
-  margin-bottom:10px !important;
+#partySignupModal .party-signup-note{min-height:96px!important}
+#customerLoginModal .crm-panel input:focus,
+#partySignupModal .crm-panel input:focus,
+#partySignupModal .party-signup-note:focus{
+  border-color:rgba(240,198,106,.65)!important;
+  box-shadow:0 0 0 3px rgba(240,198,106,.08),inset 0 1px 0 rgba(255,255,255,.03)!important;
 }
-#customerLoginModal .customer-portal-panel>#customerLoginView p,
-#partySignupModal .party-signup-panel>.party-signup-form p{
-  color:#7f8995 !important;
-  font-size:10px !important;
-  line-height:1.55 !important;
+#customerLoginModal #customerLoginView .crm-primary,
+#partySignupModal .party-signup-actions .crm-primary{
+  width:100%;
+  min-height:48px;
+  border-radius:11px!important;
+  background:linear-gradient(135deg,#f0c66a,#d9ad4f)!important;
+  color:#101419!important;
+  font-size:10px!important;
+  letter-spacing:1.3px!important;
+  box-shadow:0 10px 28px rgba(240,198,106,.13)!important;
 }
-#customerLoginModal .customer-portal-panel>#customerLoginView .crm-login-grid{
-  grid-template-columns:1fr !important;
-  gap:11px !important;
-  margin:20px 0 13px !important;
+#customerLoginModal .customer-login-actions{
+  display:flex!important;
+  justify-content:flex-end!important;
+  margin:4px 0 8px!important;
 }
-#customerLoginModal .customer-portal-panel input,
-#partySignupModal .party-signup-panel input,
-#partySignupModal .party-signup-panel textarea{
-  min-height:46px !important;
-  background:#080d12 !important;
-  border:1px solid #ffffff16 !important;
-  border-radius:10px !important;
-  padding:12px 13px !important;
-  font-size:11px !important;
-  color:#fff !important;
-  box-sizing:border-box !important;
+#customerLoginModal .customer-forgot{
+  background:none!important;
+  border:0!important;
+  color:#c8b477!important;
+  font-size:9px!important;
+  cursor:pointer;
 }
-#customerLoginModal .customer-portal-panel input:focus,
-#partySignupModal .party-signup-panel input:focus,
-#partySignupModal .party-signup-panel textarea:focus{
-  border-color:#d8b45a !important;
-  box-shadow:0 0 0 3px #d8b45a12 !important;
-  outline:none !important;
-}
-#customerLoginModal .customer-portal-panel .crm-primary,
-#partySignupModal .party-signup-panel .crm-primary{
-  min-height:46px !important;
-  border-radius:10px !important;
-  background:#d8b45a !important;
-  color:#111 !important;
-  font-weight:900 !important;
-  letter-spacing:.8px !important;
-}
-#customerLoginModal .customer-portal-panel .customer-login-help{
-  margin-top:14px !important;
+#customerLoginModal .customer-login-help{
   text-align:center;
-  font-size:9px !important;
+  margin-top:17px!important;
+  color:#7f8b97!important;
+  font-size:9px!important;
 }
-#customerLoginModal .customer-portal-panel .customer-login-actions{
-  justify-content:flex-end;
+#customerLoginModal .customer-login-help button{
+  color:#f0c66a!important;
+  font-weight:900;
 }
-#partySignupModal .party-signup-panel>.party-signup-form{
-  max-height:none !important;
-}
-#partySignupModal .party-signup-form .crm-login-grid{
-  grid-template-columns:1fr 1fr !important;
-  gap:10px !important;
-  margin:14px 0 !important;
-}
-#partySignupModal .party-signup-form .crm-login-grid input:first-child,
-#partySignupModal .party-signup-form .crm-login-grid input:nth-child(3){
-  grid-column:auto;
-}
-#partySignupModal .party-signup-form .party-signup-note{
-  min-height:82px !important;
+#customerLoginModal .crm-error,
+#partySignupModal .crm-auth-status{
+  font-size:9px!important;
+  line-height:1.5!important;
 }
 #partySignupModal .party-signup-actions{
-  display:flex;
-  gap:9px;
-  margin-top:14px;
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:9px!important;
+  margin-top:5px;
 }
-#partySignupModal .party-signup-actions button{flex:1;min-height:44px !important}
-@media(max-width:700px){
-  #customerLoginModal .customer-portal-panel,
-  #partySignupModal .party-signup-panel{
-    width:100vw !important;
-    max-width:none !important;
-    min-height:100dvh !important;
-    height:100dvh !important;
-    max-height:none !important;
-    display:flex !important;
-    flex-direction:column !important;
-    overflow-y:auto !important;
-    overflow-x:hidden !important;
-    border-radius:0 !important;
-    border-left:0 !important;
-    border-right:0 !important;
+#partySignupModal .party-signup-actions .crm-secondary{
+  min-height:48px!important;
+  border-radius:11px!important;
+  font-size:9px!important;
+}
+#partySignupModal #publicSignupStep2 .crm-section-title{
+  margin-top:4px!important;
+}
+@media(max-width:600px){
+  #customerLoginModal .crm-backdrop,
+  #partySignupModal .crm-backdrop{background:rgba(3,8,14,.42)!important}
+  #customerLoginModal .crm-panel,
+  #partySignupModal .crm-panel{
+    width:100vw!important;
+    height:100dvh!important;
+    max-height:none!important;
+    border-radius:0!important;
+    border-left:0!important;border-right:0!important;
+    background:linear-gradient(160deg,rgba(6,14,22,.93),rgba(8,24,31,.88))!important;
   }
-  #customerLoginModal .customer-portal-panel::before,
-  #partySignupModal .party-signup-panel::before{
-    order:1;
-    flex:0 0 205px;
-    min-height:205px;
-    width:100%;
-    border-right:0;
-    border-bottom:1px solid #ffffff18;
-    background:
-      linear-gradient(180deg,rgba(246,242,232,.56),rgba(246,242,232,.94)),
-      url('images/00-old-products/product-image-001-055cde1217d3c801.webp') center/cover no-repeat;
-  }
-  #customerLoginModal .customer-portal-panel::after,
-  #partySignupModal .party-signup-panel::after{
-    order:1;
-    left:20px;
-    top:126px;
-    bottom:auto;
-    width:auto;
-    color:#171717;
-    font-size:8px;
-    line-height:1.45;
-    letter-spacing:1px;
-  }
-  #customerLoginModal .customer-portal-panel>.crm-head,
-  #partySignupModal .party-signup-panel>.crm-head{
-    order:2;
-    flex:0 0 auto;
-    padding:19px 18px 14px !important;
-  }
-  #customerLoginModal .customer-portal-panel>.crm-head h3,
-  #partySignupModal .party-signup-panel>.crm-head h3{font-size:22px !important}
-  #customerLoginModal .customer-portal-panel>#customerLoginView,
-  #customerLoginModal .customer-portal-panel>#customerDashboardView,
-  #partySignupModal .party-signup-panel>.party-signup-form{
-    order:3;
-    flex:1 1 auto;
-    width:100% !important;
-    padding:20px 18px 28px !important;
-    overflow:visible !important;
-  }
-  #partySignupModal .party-signup-form .crm-login-grid{grid-template-columns:1fr !important}
+  #customerLoginModal .crm-head,
+  #partySignupModal .crm-head{padding:15px 16px 10px!important}
+  #customerLoginModal .crm-login,
+  #partySignupModal .party-signup-form{padding:10px 22px 28px!important}
+  #customerLoginModal .crm-login::before,
+  #partySignupModal .party-signup-form::before{width:92px;height:92px;margin-bottom:18px}
+  #customerLoginModal .crm-login::after,
+  #partySignupModal .party-signup-form::after{margin-top:-94px;width:58px;height:58px;font-size:25px}
+  #customerLoginModal .crm-head h3,
+  #partySignupModal .crm-head h3{font-size:22px!important}
 }
 </style>
