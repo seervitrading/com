@@ -10657,19 +10657,30 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const hasSignatory=profile.signatoryName||profile.businessName;
   const footerH=(hasBank||hasPayment||hasSignatory)?28:0;
 
-  // Keep the complete lower block at the A4 bottom only on the FIRST page.
-  // As item rows consume space, the block moves progressively downward. Once
-  // the items force the lower block onto a new page, do NOT apply the bottom
-  // anchor on that new page: continue naturally from the top after the item
-  // table. This keeps multi-page invoices flowing without a large blank area.
+  // FIRST PAGE RULE: keep the complete lower block (Notes + totals +
+  // Amount in Words + HSN/SAC + Bank/QR/Signatory) sitting at the bottom of
+  // A4 while the item table is short. As item rows are added, the lower block
+  // naturally moves downward. Once there is no room left for the COMPLETE
+  // lower block, move the whole block to page 2 and onward; pages 2+ are never
+  // bottom-anchored. This prevents the lower section from being split or
+  // leaving a large artificial blank area on continuation pages.
   const lowerSectionRequiredH=2 + summaryH + 3 + amountWordsH + hsnH + footerH + 3;
-  const lowerSectionAnchor=H-pdfLayout.bottomMargin-lowerSectionRequiredH;
   const availableBottom=H-pdfLayout.bottomMargin;
-  const lowerBlockNeedsNewPage=(y+lowerSectionRequiredH>availableBottom);
-  if(lowerBlockNeedsNewPage){
+  const lowerSectionAnchor=Math.max(pdfLayout.startY,availableBottom-lowerSectionRequiredH);
+
+  if(invoicePage===1){
+    if(y < lowerSectionAnchor){
+      // Short item table: push the entire lower block down to the A4 bottom.
+      y=lowerSectionAnchor;
+    }else if(y+lowerSectionRequiredH > availableBottom){
+      // Item table has consumed the first-page space. Start the complete lower
+      // block on the next page, with normal top-down flow only.
+      newInvoicePage();
+    }
+  }else if(y+lowerSectionRequiredH > availableBottom){
+    // Continuation pages are never bottom-anchored, but do keep the lower block
+    // together when the current page cannot contain it.
     newInvoicePage();
-  }else if(invoicePage===1 && y<lowerSectionAnchor){
-    y=lowerSectionAnchor;
   }
   y+=2;
   const summaryTop=y+1;
