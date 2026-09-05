@@ -10519,44 +10519,70 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const shipX=X(105);
   doc.setFont('helvetica','normal');doc.setFontSize(pdfLayout.bodyFont);doc.setTextColor(70,78,86);
 
-  // Keep the address value aligned with every other party value and wrap it
-  // to the actual available width. Never truncate a long address.
-  const detailAddressLines=(obj)=>{
+  // Bill To / Ship To uses a compact GST-invoice style block matching the
+  // reference layout: primary party name, wrapped address, GSTIN and
+  // contact/tax identifiers. Labels keep a fixed value gap and long text
+  // wraps instead of being truncated.
+  const detailPartyBlock=(obj,x,includeExtras=true)=>{
+    const blockWidth=Math.max(30,shipX-left-8);
+    const valueWidth=Math.max(24,blockWidth-22);
+    const primaryName=seerviInvoiceSafe(obj?.company||obj?.name||'—');
     const address=seerviInvoiceSafe(obj?.address||obj?.fullAddress||'—');
-    const valueStartOffset=24;
-    const valueWidth=Math.max(30,(shipX-left)-valueStartOffset-8);
-    return doc.splitTextToSize(address,valueWidth);
+    const gstin=includeExtras?seerviInvoiceSafe(obj?.gstin||obj?.gst||''):'';
+    const mobile=includeExtras?seerviInvoiceSafe(obj?.phone||obj?.whatsapp||''):'';
+    const pan=includeExtras?seerviInvoiceSafe(obj?.pan||''):'';
+    const addressLines=doc.splitTextToSize(address,valueWidth);
+    const primaryLines=doc.splitTextToSize(primaryName,blockWidth);
+    const top=billTop+8;
+    let yy=top;
+
+    // Match the compact GST-invoice reference: fixed label/value gap and
+    // natural wrapping for long addresses. Ship To intentionally contains
+    // only party/company name and address.
+    doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.bodyFont);doc.setTextColor(18,22,27);
+    doc.text(primaryLines.slice(0,3),x,yy,{lineHeightFactor:1.05});
+    yy+=Math.max(1,Math.min(3,primaryLines.length))*3.5+1;
+
+    doc.setFont('helvetica','normal');doc.setTextColor(70,78,86);
+    doc.text('Address:',x,yy);
+    doc.text(addressLines,x+22,yy,{lineHeightFactor:1.05});
+    yy+=Math.max(1,addressLines.length)*3.5+1.5;
+
+    if(gstin){
+      doc.text('GSTIN:',x,yy);
+      doc.text(gstin,x+22,yy);
+      yy+=3.5;
+    }
+    if(mobile||pan){
+      if(mobile){doc.text('Mobile:',x,yy);doc.text(mobile,x+22,yy);}
+      if(pan){
+        const panX=x+76;
+        doc.text('PAN:',panX,yy);doc.text(pan,panX+14,yy);
+      }
+      yy+=3.5;
+    }
+    return {lines:Math.max(1,Math.ceil((yy-(billTop+4))/3.5)),bottom:yy};
   };
-  const billAddressLines=detailAddressLines(c);
-  const shipAddressLines=detailAddressLines(st);
-  const maxAddressLines=Math.max(billAddressLines.length,shipAddressLines.length,1);
-  // Five fixed rows + wrapped address lines, with enough room below the last line.
-  const billH=Math.max(pdfLayout.billH,29.5+(maxAddressLines-1)*3.5);
+
+  // Bill To keeps GSTIN/contact/PAN. Ship To is intentionally name + address
+  // only, while the common box still expands for whichever side wraps more.
+  const estimatePartyHeight=(obj,includeExtras=true)=>{
+    const blockWidth=Math.max(30,shipX-left-8),valueWidth=Math.max(24,blockWidth-22);
+    const nameLines=Math.min(3,doc.splitTextToSize(seerviInvoiceSafe(obj?.company||obj?.name||'—'),blockWidth).length||1);
+    const addrLines=doc.splitTextToSize(seerviInvoiceSafe(obj?.address||obj?.fullAddress||'—'),valueWidth).length||1;
+    const hasGst=includeExtras&&!!seerviInvoiceSafe(obj?.gstin||obj?.gst||'');
+    const hasContact=includeExtras&&(!!seerviInvoiceSafe(obj?.phone||obj?.whatsapp||'')||!!seerviInvoiceSafe(obj?.pan||''));
+    return 4+nameLines*3.5+1+addrLines*3.5+1.5+(hasGst?3.5:0)+(hasContact?3.5:0);
+  };
+  const billH=Math.max(pdfLayout.billH,estimatePartyHeight(c,true)+4,estimatePartyHeight(st,false)+4);
 
   doc.setDrawColor(150,155,160);doc.rect(left,billTop-4,right-left,billH,'S');
   doc.line(shipX,billTop-4,shipX,billTop+billH-4);
   doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.totalFont);doc.setTextColor(18,22,27);
-  doc.text('BILL TO / CUSTOMER',left+4,billTop+3);
+  doc.text('BILL TO',left+4,billTop+3);
   doc.text('SHIP TO',shipX+4,billTop+3);
-  doc.setFont('helvetica','normal');doc.setFontSize(pdfLayout.bodyFont);doc.setTextColor(70,78,86);
-  const detailLines=(obj,x,addressLines)=>{
-    let yy=billTop+8;
-    const lines=[
-      ['Name: ',obj.name||'—'],['Company / Shop: ',obj.company||'—'],
-      ['Phone / WhatsApp: ',obj.phone||obj.whatsapp||'—'],['Email: ',obj.email||'—'],
-      ['City: ',obj.city||'—']
-    ];
-    for(const [label,val] of lines){
-      doc.text(label,x,yy);
-      doc.text(seerviInvoiceSafe(val).slice(0,39),x+24,yy);
-      yy+=3.5;
-    }
-    // Address uses the same fixed label/value gap as the rows above.
-    doc.text('Address: ',x,yy);
-    doc.text(addressLines,x+24,yy,{lineHeightFactor:1.05});
-  };
-  detailLines(c,left+4,billAddressLines);
-  detailLines(st,shipX+4,shipAddressLines);
+  detailPartyBlock(c,left+4,true);
+  detailPartyBlock(st,shipX+4,false);
   y=billTop+billH;
 
   const items=invoice.items||[];
