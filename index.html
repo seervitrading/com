@@ -10530,27 +10530,31 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     const address=seerviInvoiceSafe(obj?.address||obj?.fullAddress||'—');
     const gstin=includeExtras?seerviInvoiceSafe(obj?.gstin||obj?.gst||''):'';
     const mobile=includeExtras?seerviInvoiceSafe(obj?.phone||obj?.whatsapp||''):'';
+    const email=includeExtras?seerviInvoiceSafe(obj?.email||''):'';
     const pan=includeExtras?seerviInvoiceSafe(obj?.pan||''):'';
     const addressLines=doc.splitTextToSize(address,valueWidth);
     const primaryLines=doc.splitTextToSize(primaryName,blockWidth);
     const top=billTop+8;
     let yy=top;
 
-    // Match the compact GST-invoice reference: fixed label/value gap and
-    // natural wrapping for long addresses. Ship To intentionally contains
-    // only party/company name and address.
-    doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.bodyFont);doc.setTextColor(18,22,27);
+    // Compact reference format: firm/customer name is shown directly (no label),
+    // followed immediately by Address. The label/value gap stays fixed and
+    // long values wrap naturally without clipping.
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(pdfLayout.bodyFont);
+    doc.setTextColor(18,22,27);
     doc.text(primaryLines.slice(0,3),x,yy,{lineHeightFactor:1.05});
     yy+=Math.max(1,Math.min(3,primaryLines.length))*3.5+1;
 
-    doc.setFont('helvetica','normal');doc.setTextColor(70,78,86);
+    doc.setFont('helvetica','normal');
+    doc.setTextColor(70,78,86);
     doc.text('Address:',x,yy);
     doc.text(addressLines,x+14,yy,{lineHeightFactor:1.05});
     yy+=Math.max(1,addressLines.length)*3.5;
 
-    // Keep GSTIN immediately after the address with no extra vertical gap.
-    // Mobile stays on the same row, aligned to the right side of the party box.
-    if(gstin||mobile||pan){
+    // GSTIN starts immediately after the address. Mobile sits on the same row
+    // at the right; there is no extra blank row between Address and GSTIN.
+    if(gstin||mobile||email||pan){
       if(gstin){doc.text('GSTIN:',x,yy);doc.text(gstin,x+14,yy);}
       if(mobile){
         const mobileLabelX=x+Math.max(48,blockWidth-72);
@@ -10558,11 +10562,15 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
         doc.text('Mobile:',mobileLabelX,yy);
         doc.text(mobile,mobileValueX,yy);
       }
-      if(pan){
-        const panX=x+76;
-        doc.text('PAN:',panX,yy);doc.text(pan,panX+14,yy);
-      }
       yy+=3.5;
+      if(email||pan){
+        if(email){doc.text('Email:',x,yy);doc.text(email,x+14,yy);}
+        if(pan){
+          const panX=x+76;
+          doc.text('PAN:',panX,yy);doc.text(pan,panX+14,yy);
+        }
+        yy+=3.5;
+      }
     }
     return {lines:Math.max(1,Math.ceil((yy-(billTop+4))/3.5)),bottom:yy};
   };
@@ -10574,8 +10582,9 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     const nameLines=Math.min(3,doc.splitTextToSize(seerviInvoiceSafe(obj?.company||obj?.name||'—'),blockWidth).length||1);
     const addrLines=doc.splitTextToSize(seerviInvoiceSafe(obj?.address||obj?.fullAddress||'—'),valueWidth).length||1;
     const hasGst=includeExtras&&!!seerviInvoiceSafe(obj?.gstin||obj?.gst||'');
-    const hasContact=includeExtras&&(!!seerviInvoiceSafe(obj?.phone||obj?.whatsapp||'')||!!seerviInvoiceSafe(obj?.pan||''));
-    return 4+nameLines*3.5+1+addrLines*3.5+(hasGst?3.5:0)+(hasContact?3.5:0);
+    const hasMobile=includeExtras&&!!seerviInvoiceSafe(obj?.phone||obj?.whatsapp||'');
+    const hasEmailOrPan=includeExtras&&(!!seerviInvoiceSafe(obj?.email||'')||!!seerviInvoiceSafe(obj?.pan||''));
+    return 4+nameLines*3.5+1+addrLines*3.5+((hasGst||hasMobile||hasEmailOrPan)?3.5:0)+(hasEmailOrPan?3.5:0);
   };
   const billH=Math.max(pdfLayout.billH,estimatePartyHeight(c,true)+4,estimatePartyHeight(st,false)+4);
 
