@@ -10429,188 +10429,249 @@ function seerviInvoiceAmountInWords(amount){
 function seerviGenerateSaleInvoicePDF(invoice,profile){
   if(!window.jspdf || !window.jspdf.jsPDF)throw new Error('PDF engine is not available.');
   const {jsPDF}=window.jspdf;
-  const doc=new jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
+  const doc=new jsPDF({unit:'mm',format:'a4'});
   const W=210,H=297;
-  const L=14,R=196,T=13,B=284;
-  const CW=R-L;
-  const safe=v=>seerviInvoiceSafe(v??'').trim();
-  const money2=n=>Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
-  const inr=n=>'₹ '+money2(n);
-  const dateText=invoice.dateISO?new Date(invoice.dateISO).toLocaleDateString('en-GB'):new Date().toLocaleDateString('en-GB');
+  const margin=12;
+  const left=14,right=W-14,contentW=right-left;
+  const center=105;
+  const safe=seerviInvoiceSafe;
+  const money=n=>'₹ '+Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const dateText=invoice.dateISO?new Date(invoice.dateISO).toLocaleDateString('en-IN'):new Date().toLocaleDateString('en-IN');
   const c=invoice.customer||{};
   const st=invoice.shipTo||c;
-  const sellerState=safe(profile.state)||'';
-  const sellerPin=safe(profile.pincode)||'';
-  const sellerCity=safe(profile.city)||'';
-  const sellerAddr=[profile.address,sellerCity,sellerState,sellerPin].filter(Boolean).join(', ');
+  const items=Array.isArray(invoice.items)?invoice.items:[];
+  const sellerAddress=[profile.address,profile.city,profile.state,profile.pincode].filter(Boolean).join(', ');
+  const placeOfSupply=st.state||c.state||profile.state||'—';
+  const sellerState=String(profile.state||'').trim().toLowerCase();
+  const buyerState=String(st.state||c.state||'').trim().toLowerCase();
+  const intraState=invoice.gstType==='IGST'?false:(invoice.gstType==='CGST_SGST'?true:(sellerState&&buyerState?sellerState===buyerState:true));
+  const gstEnabled=!!invoice.gstEnabled;
+  const gstRate=Number(invoice.gstRate||0);
+  const subtotal=Number(invoice.subtotal||items.reduce((a,x)=>a+Number(x.amount??Number(x.qty||0)*Number(x.rate||0)),0));
+  const gst=Number(invoice.gst??(gstEnabled?subtotal*gstRate/100:0));
+  const grand=Number(invoice.grandTotal??subtotal+gst);
 
-  // Exact A4 master geometry based on the supplied reference invoice.
-  const line=(x1,y1,x2,y2,w=.28)=>{doc.setLineWidth(w);doc.setDrawColor(92,92,92);doc.line(x1,y1,x2,y2);};
-  const box=(x,y,w,h,fill=false)=>{doc.setLineWidth(.28);doc.setDrawColor(92,92,92);if(fill){doc.setFillColor(232,232,232);doc.rect(x,y,w,h,'FD');}else doc.rect(x,y,w,h,'S');};
-  const txt=(v,x,y,size=7,style='normal',align='left')=>{doc.setFont('helvetica',style);doc.setFontSize(size);doc.setTextColor(30,30,30);doc.text(safe(v)||'—',x,y,{align});};
-  const wrap=(v,x,y,w,size=6.2,max=4,lh=3.2,style='normal')=>{doc.setFont('helvetica',style);doc.setFontSize(size);doc.setTextColor(35,35,35);const ls=doc.splitTextToSize(safe(v)||'—',w).slice(0,max);doc.text(ls,x,y,{lineHeightFactor:lh/size});return ls;};
+  // Reference-style invoice: compact title, seller/invoice block, bill/ship block,
+  // tall item grid, HSN tax summary, amount in words and bank/QR/signature footer.
+  let y=10;
+  doc.setDrawColor(65,65,65);doc.setTextColor(25,25,25);
+  doc.setLineWidth(0.25);
 
-  // ===== TOP TITLE =====
-  txt('TAX INVOICE',L,T+1.5,8.5,'bold');
-  const originalX=L+33;
-  box(originalX,T-1,46,8,false);
-  txt('ORIGINAL FOR RECIPIENT',originalX+23,T+4.4,7,'normal','center');
+  // ===== TITLE =====
+  doc.setFont('helvetica','bold');doc.setFontSize(11);
+  doc.text('TAX INVOICE',left,y+4);
+  doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+  const originalLabel='ORIGINAL FOR RECIPIENT';
+  const labelW=doc.getTextWidth(originalLabel)+5;
+  doc.setDrawColor(145,145,145);doc.rect(left+24,y+0.5,labelW,7,'S');
+  doc.text(originalLabel,left+26.5,y+5.2);
+  y+=11;
 
-  // ===== SELLER / INVOICE HEADER =====
-  const sellerTop=21,sellerH=32,sellerSplit=105;
-  box(L,sellerTop,CW,sellerH,false);
-  line(sellerSplit,sellerTop,sellerSplit,sellerTop+sellerH);
+  // ===== SELLER + INVOICE DETAILS =====
+  const sellerTop=y, sellerH=30, split=105;
+  doc.setDrawColor(105,105,105);doc.rect(left,sellerTop,right-left,sellerH,'S');doc.line(split,sellerTop,split,sellerTop+sellerH);
 
-  // Logo intentionally omitted, per user's instruction. Seller text starts at the same visual area.
-  txt(profile.businessName||'SEERVI TRADING',L+28,sellerTop+5.5,10.5,'bold');
-  const sellerTextX=L+28;
-  wrap(sellerAddr,sellerTextX,sellerTop+11,68,7.0,3,3.7,'normal');
-  const sg=safe(profile.gstNumber||profile.gstin);
-  txt('GSTIN:',sellerTextX,sellerTop+22,7,'bold');txt(sg||'—',sellerTextX+12,sellerTop+22,7);
-  txt('Mobile:',sellerTextX+38,sellerTop+22,7,'bold');txt(profile.phone||profile.whatsapp||'—',sellerTextX+52,sellerTop+22,7);
-  txt('Email:',sellerTextX,sellerTop+26.5,7,'bold');txt(profile.email||'—',sellerTextX+12,sellerTop+26.5,7);
+  // Logo slot: use a stored logo if one is ever added to the GST profile.
+  const logo=profile.logoDataUrl||profile.logoUrl||profile.businessLogo||'';
+  if(logo){
+    try{doc.addImage(logo,'PNG',left+4,sellerTop+4,25,21,undefined,'FAST');}catch(e){/* ignore unavailable logo */}
+  }
+  const sellerX=logo?left+31:left+4;
+  doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(20,20,20);
+  doc.text(safe(profile.businessName||'SEERVI TRADING').slice(0,42),sellerX,sellerTop+6);
+  doc.setFont('helvetica','normal');doc.setFontSize(7.6);doc.setTextColor(55,55,55);
+  const addrLines=doc.splitTextToSize(safe(sellerAddress||'—'),logo?76:93).slice(0,3);
+  doc.text(addrLines,sellerX,sellerTop+11,{lineHeightFactor:1.05});
+  let sy=sellerTop+11+(addrLines.length*3.3)+2;
+  doc.setFont('helvetica','bold');doc.setFontSize(7.2);
+  doc.text('GSTIN:',sellerX,sy);doc.setFont('helvetica','normal');doc.text(safe(profile.gstNumber||'—').slice(0,18),sellerX+15,sy);
+  doc.setFont('helvetica','bold');doc.text('Mobile:',sellerX+49,sy);doc.setFont('helvetica','normal');doc.text(safe(profile.phone||'—').slice(0,14),sellerX+64,sy);
+  sy+=4;
+  doc.setFont('helvetica','bold');doc.text('Email:',sellerX,sy);doc.setFont('helvetica','normal');doc.text(safe(profile.email||'—').slice(0,34),sellerX+14,sy);
 
-  txt('Invoice No.',,sellerSplit+4,sellerTop+16,7,'normal');txt(invoice.invoiceNo||'—',R-4,sellerTop+16,7,'normal','right');
-  txt('Invoice Date',sellerSplit+4,sellerTop+23,7,'normal');txt(dateText,R-4,sellerTop+23,7,'normal','right');
-  txt('E-Way Bill No.',sellerSplit+4,sellerTop+29,7,'normal');txt(invoice.ewayBillNo||'—',R-4,sellerTop+29,7,'normal','right');
+  const invX=split+4, invR=right-4;
+  doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(25,25,25);
+  doc.text('Invoice No.',invX,sellerTop+8);doc.text('Invoice Date',invX+54,sellerTop+8);
+  doc.setFontSize(8.5);doc.setFont('helvetica','normal');
+  doc.text(safe(invoice.invoiceNo||'—'),invX,sellerTop+14);
+  doc.text(dateText,invX+54,sellerTop+14);
+  if(invoice.ewayBillNo){
+    doc.setFont('helvetica','bold');doc.setFontSize(7.3);doc.text('E-Way Bill No.',invX,sellerTop+21);
+    doc.setFont('helvetica','normal');doc.text(safe(invoice.ewayBillNo).slice(0,22),invX,sellerTop+25);
+  }
+  y=sellerTop+sellerH;
 
   // ===== BILL TO / SHIP TO =====
-  const bsTop=sellerTop+sellerH,bsH=35,bsSplit=105;
-  box(L,bsTop,CW,bsH,false);line(bsSplit,bsTop,bsSplit,bsTop+bsH);
-  txt('BILL TO',L+3,bsTop+5,7.3,'bold');txt('SHIP TO',bsSplit+3,bsTop+5,7.3,'bold');
-
-  const partyBlock=(obj,x0,x1)=>{
-    const valueX=x0+15;
-    const valueW=x1-valueX-3;
-    txt(obj.name||'—',x0,bsTop+10,7.2,'bold');
-    const rows=[
-      ['Company / Shop:',obj.company||'—'],
-      ['Phone / WhatsApp:',obj.phone||obj.whatsapp||'—'],
-      ['Email:',obj.email||'—'],
-      ['City:',obj.city||'—']
-    ];
-    let yy=bsTop+14;
-    for(const [lab,val] of rows){txt(lab,x0,yy,6.2,'normal');wrap(val,valueX,yy,valueW,6.2,1,3.0,'normal');yy+=4.1;}
-    txt('GSTIN:',x0,yy,6.2,'normal');wrap(obj.gstin||obj.gst||'—',valueX,yy,valueW,6.2,1,3.0,'normal');yy+=4.1;
-    txt('Address:',x0,yy,6.2,'normal');
-    wrap(obj.address||obj.fullAddress||'—',valueX,yy,valueW,6.0,3,3.0,'normal');
+  const partyTop=y, partyH=34;
+  doc.setDrawColor(105,105,105);doc.rect(left,partyTop,right-left,partyH,'S');doc.line(split,partyTop,split,partyTop+partyH);
+  const drawParty=(obj,x,title)=>{
+    doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(25,25,25);doc.text(title,x,partyTop+5);
+    doc.setFont('helvetica','bold');doc.setFontSize(8.2);doc.text(safe(obj.name||obj.company||'—').slice(0,52),x,partyTop+10);
+    doc.setFont('helvetica','normal');doc.setFontSize(7.1);doc.setTextColor(55,55,55);
+    const a=doc.splitTextToSize(safe(obj.address||obj.fullAddress||'—'),86).slice(0,2);
+    doc.setFont('helvetica','bold');doc.text('Address:',x,partyTop+15);
+    doc.setFont('helvetica','normal');doc.text(a,x+15,partyTop+15,{lineHeightFactor:1.08});
+    let py=partyTop+15+(Math.max(1,a.length)*3.4)+2;
+    doc.setFont('helvetica','bold');doc.text('GSTIN:',x,py);doc.setFont('helvetica','normal');doc.text(safe(obj.gstin||obj.gst||'—').slice(0,18),x+16,py);
+    doc.setFont('helvetica','bold');doc.text('Mobile:',x+54,py);doc.setFont('helvetica','normal');doc.text(safe(obj.phone||obj.whatsapp||'—').slice(0,14),x+69,py);
+    py+=4;
+    doc.setFont('helvetica','bold');doc.text('PAN:',x,py);doc.setFont('helvetica','normal');doc.text(safe(obj.pan||'—').slice(0,12),x+14,py);
+    doc.setFont('helvetica','bold');doc.text('Place of Supply:',x+35,py);doc.setFont('helvetica','normal');doc.text(safe(obj.state||placeOfSupply).slice(0,20),x+68,py);
   };
-  partyBlock(c,L+3,bsSplit-1);
-  partyBlock(st,bsSplit+3,R-1);
+  drawParty(c,left+4,'BILL TO');
+  drawParty(st,split+4,'SHIP TO');
+  y=partyTop+partyH;
 
-  // ===== ITEMS =====
-  const tableTop=bsTop+bsH;
-  const tableBottom=218;
+  // ===== MAIN ITEM GRID =====
+  const tableTop=y;
+  const cols=[left,31,142,157,174,191,right]; // S.No / Items / HSN / Qty / Rate / Amount
   const headerH=8;
-  const cols=[14,30,121,136,151,169,196];
-  box(L,tableTop,CW,tableBottom-tableTop,false);
-  doc.setFillColor(224,224,224);doc.rect(L,tableTop,CW,headerH,'F');
-  line(L,tableTop,R,tableTop);line(L,tableTop+headerH,R,tableTop+headerH);
-  for(const x of cols.slice(1,-1))line(x,tableTop,x,tableBottom);
-  txt('S.NO.',(cols[0]+cols[1])/2,tableTop+5.2,7,'bold','center');
-  txt('ITEMS',(cols[1]+cols[2])/2,tableTop+5.2,7,'bold','center');
-  txt('HSN',(cols[2]+cols[3])/2,tableTop+5.2,7,'bold','center');
-  txt('QTY.',(cols[3]+cols[4])/2,tableTop+5.2,7,'bold','center');
-  txt('RATE',(cols[4]+cols[5])/2,tableTop+5.2,7,'bold','center');
-  txt('AMOUNT',(cols[5]+cols[6])/2,tableTop+5.2,7,'bold','center');
+  const itemHeights=items.map(it=>Math.max(10,Math.min(22,Math.max(10,doc.splitTextToSize(safe(seerviQuotationItemLabel(it)||it.model||it.name||'Item'),106).length*3.6+3))));
+  const naturalRows=itemHeights.reduce((a,b)=>a+b,0);
+  const fixedBottomTarget=226;
+  const minBodyH=Math.max(92,fixedBottomTarget-(tableTop+headerH));
+  const bodyH=Math.max(naturalRows,minBodyH);
+  const tableH=headerH+bodyH+8; // includes total row
+  if(tableTop+tableH>H-42){
+    // Keep the reference layout on the first page for ordinary invoices. For very long invoices,
+    // allow the table to grow and the footer to follow rather than dropping content.
+  }
 
-  const items=invoice.items||[];
-  const itemAreaH=tableBottom-(tableTop+headerH);
-  const minRow=8;
-  const rowH=Math.max(minRow,items.length?itemAreaH/items.length:itemAreaH);
-  let rowY=tableTop+headerH;
-  const gstRate=Number(invoice.gstRate||0);
-  const halfRate=gstRate/2;
-  const gstEnabled=!!invoice.gstEnabled;
-  const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
+  doc.setFillColor(225,225,225);doc.rect(left,tableTop,right-left,headerH,'F');
+  doc.setDrawColor(95,95,95);doc.rect(left,tableTop,right-left,headerH,'S');
+  cols.slice(1,-1).forEach(x=>doc.line(x,tableTop,x,tableTop+headerH+bodyH+8));
+  doc.setFont('helvetica','bold');doc.setFontSize(7.1);doc.setTextColor(35,35,35);
+  doc.text('S.NO.',(cols[0]+cols[1])/2,tableTop+5.2,{align:'center'});
+  doc.text('ITEMS',(cols[1]+cols[2])/2,tableTop+5.2,{align:'center'});
+  doc.text('HSN',(cols[2]+cols[3])/2,tableTop+5.2,{align:'center'});
+  doc.text('QTY.',(cols[3]+cols[4])/2,tableTop+5.2,{align:'center'});
+  doc.text('RATE',(cols[4]+cols[5])/2,tableTop+5.2,{align:'center'});
+  doc.text('AMOUNT',(cols[5]+cols[6])/2,tableTop+5.2,{align:'center'});
 
+  const rowStart=tableTop+headerH;
+  let ry=rowStart;
+  doc.setFont('helvetica','normal');doc.setFontSize(7.1);doc.setTextColor(45,45,45);
   items.forEach((item,i)=>{
     const qty=Number(item.qty||0),rate=Number(item.rate||0),amount=Number(item.amount??qty*rate);
-    const product=seerviQuotationItemLabel(item)||item.model||item.name||'Item';
-    const pLines=doc.splitTextToSize(safe(product),cols[2]-cols[1]-6).slice(0,3);
-    const base=rowY+6;
-    txt(String(i+1),(cols[0]+cols[1])/2,base,6.7,'normal','center');
-    doc.setFont('helvetica','normal');doc.setFontSize(6.7);doc.setTextColor(30,30,30);doc.text(pLines,cols[1]+3,base,{lineHeightFactor:1.12});
-    txt(item.hsnCode||item.hsn||'—',(cols[2]+cols[3])/2,base,6.7,'normal','center');
-    txt(qty,(cols[3]+cols[4])/2,base,6.7,'normal','center');
-    txt(money2(rate),(cols[4]+cols[5])/2,base,6.7,'normal','center');
-    txt(money2(amount),cols[6]-3,base,6.7,'normal','right');
-    // CGST / SGST labels are anchored near the bottom of the final item row like the reference.
-    if(i===items.length-1 && gstEnabled){
-      const taxBase=rowY+rowH-10;
-      txt('CGST @ '+Number(halfRate).toFixed(2).replace(/\.00$/,'')+'%',cols[4]-2,taxBase,6.7,'italic','right');
-      txt(inr(gst/2),cols[6]-3,taxBase,6.7,'normal','right');
-      txt('SGST @ '+Number(halfRate).toFixed(2).replace(/\.00$/,'')+'%',cols[4]-2,taxBase+6,6.7,'italic','right');
-      txt(inr(gst-gst/2),cols[6]-3,taxBase+6,6.7,'normal','right');
-    }
-    rowY+=rowH;
-    if(i<items.length-1)line(L,rowY,R,rowY,.18);
+    const label=safe(seerviQuotationItemLabel(item)||item.model||item.name||'Item');
+    const lines=doc.splitTextToSize(label,106).slice(0,3);
+    const rh=itemHeights[i]||10;
+    doc.text(String(i+1),(cols[0]+cols[1])/2,ry+5,{align:'center'});
+    doc.text(lines,cols[1]+3,ry+4.5,{lineHeightFactor:1.08});
+    doc.text(safe(item.hsnCode||item.hsn||'—'),(cols[2]+cols[3])/2,ry+5,{align:'center'});
+    doc.text(String(qty),(cols[3]+cols[4])/2,ry+5,{align:'center'});
+    doc.text(money(rate),(cols[4]+cols[5])/2,ry+5,{align:'center'});
+    doc.text(money(amount),cols[6]-3,ry+5,{align:'right'});
+    doc.setDrawColor(205,205,205);doc.line(left,ry+rh,right,ry+rh);
+    ry+=rh;
   });
 
-  // TOTAL row fixed at bottom of item area.
-  const totalY=tableBottom-8;
-  doc.setFillColor(224,224,224);doc.rect(L,totalY,CW,8,'F');line(L,totalY,R,totalY);line(L,totalY+8,R,totalY+8);
-  txt('TOTAL',(cols[1]+cols[5])/2,totalY+5.2,7,'bold','center');
-  const totalQty=items.reduce((s,it)=>s+Number(it.qty||0),0);
-  txt(totalQty,(cols[3]+cols[4])/2,totalY+5.2,7,'bold','center');
-  txt(inr(Math.round(grand*100)/100),R-3,totalY+5.2,7,'bold','right');
-
-  // ===== HSN TAX SUMMARY =====
-  const hsnTop=226,hsnH=18;
-  const hx=[L,52,91,110,129,148,171,R];
-  box(L,hsnTop,CW,hsnH,false);
-  doc.setFillColor(224,224,224);doc.rect(L,hsnTop,CW,8,'F');
-  line(L,hsnTop,R,hsnTop);line(L,hsnTop+8,R,hsnTop+8);line(L,hsnTop+hsnH,R,hsnTop+hsnH);
-  for(const x of hx.slice(1,-1))line(x,hsnTop,x,hsnTop+hsnH);
-  txt('HSN/SAC',(hx[0]+hx[1])/2,hsnTop+5.1,6.6,'bold','center');
-  txt('Taxable Value',(hx[1]+hx[2])/2,hsnTop+5.1,6.6,'bold','center');
-  txt('CGST',(hx[2]+hx[4])/2,hsnTop+3.4,6.6,'bold','center');txt('Rate',(hx[2]+hx[3])/2,hsnTop+6.4,5.8,'bold','center');
-  txt('Amount',(hx[3]+hx[4])/2,hsnTop+6.4,5.8,'bold','center');
-  txt('SGST',(hx[4]+hx[6])/2,hsnTop+3.4,6.6,'bold','center');txt('Rate',(hx[4]+hx[5])/2,hsnTop+6.4,5.8,'bold','center');
-  txt('Amount',(hx[5]+hx[6])/2,hsnTop+6.4,5.8,'bold','center');
-  txt('Total Tax Amount',(hx[6]+hx[7])/2,hsnTop+5.1,6.2,'bold','center');
-  // Group dividers begin below the CGST/SGST headings, matching the reference.
-  line(hx[3],hsnTop+4,hx[3],hsnTop+hsnH,.18);line(hx[5],hsnTop+4,hx[5],hsnTop+hsnH,.18);
-  const hsnMap=new Map();
-  for(const item of items){const h=safe(item.hsnCode||item.hsn||'—')||'—';const a=Number(item.amount??Number(item.qty||0)*Number(item.rate||0));hsnMap.set(h,(hsnMap.get(h)||0)+a);}
-  const hsnRows=[...hsnMap.entries()];
-  let hy=hsnTop+12;
+  // Extend the last item cell vertically like the reference and place tax rows near its bottom.
+  const taxBase=rowStart+bodyH;
+  const taxRowH=6;
   if(gstEnabled){
-    for(const [hsn,taxable] of hsnRows.slice(0,1)){
-      const totalTax=Number(gstRate)?taxable*gstRate/100:0;
-      txt(hsn,(hx[0]+hx[1])/2,hy,6.4,'normal','center');txt(money2(taxable),(hx[1]+hx[2])/2,hy,6.4,'normal','center');txt(Number(halfRate).toFixed(2).replace(/\.00$/,'')+'%',(hx[2]+hx[3])/2,hy,6.4,'normal','center');txt(money2(totalTax/2),(hx[3]+hx[4])/2,hy,6.4,'normal','center');txt(Number(halfRate).toFixed(2).replace(/\.00$/,'')+'%',(hx[4]+hx[5])/2,hy,6.4,'normal','center');txt(money2(totalTax/2),(hx[5]+hx[6])/2,hy,6.4,'normal','center');txt(money2(totalTax),(hx[6]+hx[7])/2,hy,6.4,'normal','center');
+    doc.setFont('helvetica','italic');doc.setFontSize(7.2);doc.setTextColor(55,55,55);
+    if(intraState){
+      const half=gstRate/2;
+      doc.text('CGST @ '+half+'%',cols[4]-2,taxBase-8,{align:'right'});
+      doc.text(money(gst/2),right-3,taxBase-8,{align:'right'});
+      doc.text('SGST @ '+half+'%',cols[4]-2,taxBase-2,{align:'right'});
+      doc.text(money(gst/2),right-3,taxBase-2,{align:'right'});
+    }else{
+      doc.text('IGST @ '+gstRate+'%',cols[4]-2,taxBase-5,{align:'right'});
+      doc.text(money(gst),right-3,taxBase-5,{align:'right'});
     }
   }
-  const taxTotal=gstEnabled?gst:0;
-  txt('Total',(hx[0]+hx[1])/2,hsnTop+16.2,6.4,'bold','center');txt(money2(subtotal),(hx[1]+hx[2])/2,hsnTop+16.2,6.4,'bold','center');txt(money2(taxTotal/2),(hx[3]+hx[4])/2,hsnTop+16.2,6.4,'bold','center');txt(money2(taxTotal/2),(hx[5]+hx[6])/2,hsnTop+16.2,6.4,'bold','center');txt(money2(taxTotal),(hx[6]+hx[7])/2,hsnTop+16.2,6.4,'bold','center');
+
+  const totalTop=taxBase;
+  doc.setFillColor(220,220,220);doc.rect(left,totalTop,right-left,8,'F');
+  doc.setDrawColor(95,95,95);doc.rect(left,totalTop,right-left,8,'S');
+  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(25,25,25);
+  doc.text('TOTAL',(cols[1]+cols[2])/2,totalTop+5.2,{align:'center'});
+  doc.text(String(items.reduce((a,x)=>a+Number(x.qty||0),0)),(cols[3]+cols[4])/2,totalTop+5.2,{align:'center'});
+  doc.text(money(grand),right-3,totalTop+5.2,{align:'right'});
+  // Vertical lines for total row already exist, redraw its top for crispness.
+  doc.line(left,totalTop,right,totalTop);
+  y=totalTop+8;
+
+  // ===== HSN / TAX SUMMARY =====
+  if(gstEnabled && items.length){
+    const hsnMap=new Map();
+    for(const item of items){
+      const hsn=safe(item.hsnCode||item.hsn||'—')||'—';
+      const taxable=Number(item.amount??Number(item.qty||0)*Number(item.rate||0));
+      const e=hsnMap.get(hsn)||{taxable:0};e.taxable+=taxable;hsnMap.set(hsn,e);
+    }
+    const rows=[...hsnMap.entries()].map(([hsn,v])=>{
+      const taxable=Math.round(v.taxable*100)/100;
+      const totalTax=Math.round(taxable*gstRate)/100;
+      const half=totalTax/2;
+      return {hsn,taxable,cgst:intraState?half:0,sgst:intraState?half:0,igst:intraState?0:totalTax};
+    });
+    const hsnTop=y+3, h=8+rows.length*6+6;
+    const hx=[left,left+32,left+75,left+98,left+119,left+140,right];
+    doc.setFillColor(225,225,225);doc.rect(left,hsnTop,right-left,8,'F');
+    doc.setDrawColor(95,95,95);doc.rect(left,hsnTop,right-left,h,'S');
+    hx.slice(1,-1).forEach(x=>doc.line(x,hsnTop,x,hsnTop+h));
+    doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(30,30,30);
+    doc.text('HSN/SAC',(hx[0]+hx[1])/2,hsnTop+5.2,{align:'center'});
+    doc.text('Taxable Value',(hx[1]+hx[2])/2,hsnTop+5.2,{align:'center'});
+    doc.text('CGST',(hx[2]+hx[3])/2,hsnTop+3.2,{align:'center'});doc.text('Rate / Amount',(hx[2]+hx[3])/2,hsnTop+6.3,{align:'center'});
+    doc.text('SGST',(hx[3]+hx[4])/2,hsnTop+3.2,{align:'center'});doc.text('Rate / Amount',(hx[3]+hx[4])/2,hsnTop+6.3,{align:'center'});
+    doc.text('IGST',(hx[4]+hx[5])/2,hsnTop+3.2,{align:'center'});doc.text('Rate / Amount',(hx[4]+hx[5])/2,hsnTop+6.3,{align:'center'});
+    doc.text('Total Tax Amount',(hx[5]+hx[6])/2,hsnTop+5.2,{align:'center'});
+    let hy=hsnTop+12;
+    doc.setFont('helvetica','normal');doc.setFontSize(6.3);
+    rows.forEach(r=>{
+      doc.text(r.hsn,(hx[0]+hx[1])/2,hy,{align:'center'});
+      doc.text(money(r.taxable),hx[2]-2,hy,{align:'right'});
+      const rateIntra=(gstRate/2)+'%';
+      doc.text(intraState?rateIntra:'—',(hx[2]+hx[3])/2,hy-1,{align:'center'});
+      doc.text(money(r.cgst||r.igst),hx[3]-2,hy+2.2,{align:'right'});
+      doc.text(intraState?rateIntra:'—',(hx[3]+hx[4])/2,hy-1,{align:'center'});
+      doc.text(money(r.sgst),hx[4]-2,hy+2.2,{align:'right'});
+      doc.text(intraState?'—':gstRate+'%',(hx[4]+hx[5])/2,hy-1,{align:'center'});
+      doc.text(intraState?'—':money(r.igst),hx[5]-2,hy+2.2,{align:'right'});
+      doc.text(money((r.cgst||0)+(r.sgst||0)+(r.igst||0)),right-3,hy,{align:'right'});
+      doc.setDrawColor(190,190,190);doc.line(left,hy+3.5,right,hy+3.5);hy+=6;
+    });
+    const totalTaxable=rows.reduce((a,r)=>a+r.taxable,0),tc=rows.reduce((a,r)=>a+r.cgst,0),ts=rows.reduce((a,r)=>a+r.sgst,0),ti=rows.reduce((a,r)=>a+r.igst,0);
+    doc.setFillColor(235,235,235);doc.rect(left,hsnTop+h-6,right-left,6,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(6.4);
+    doc.text('Total',(hx[0]+hx[1])/2,hsnTop+h-2,{align:'center'});doc.text(money(totalTaxable),hx[2]-2,hsnTop+h-2,{align:'right'});
+    doc.text(money(tc),hx[3]-2,hsnTop+h-2,{align:'right'});doc.text(money(ts),hx[4]-2,hsnTop+h-2,{align:'right'});doc.text(money(ti),hx[5]-2,hsnTop+h-2,{align:'right'});doc.text(money(tc+ts+ti),right-3,hsnTop+h-2,{align:'right'});
+    y=hsnTop+h;
+  }
 
   // ===== AMOUNT IN WORDS =====
-  const wordsTop=246;
-  box(L,wordsTop,CW,12,false);
-  txt('Total Amount (in words)',L+3,wordsTop+5.2,6.8,'bold');
-  wrap(seerviInvoiceAmountInWords(grand),L+3,wordsTop+9.2,CW-6,6.7,2,3.2,'normal');
+  const wordsTop=y+3;
+  doc.setDrawColor(105,105,105);doc.rect(left,wordsTop,right-left,13,'S');
+  doc.setFont('helvetica','bold');doc.setFontSize(7.2);doc.setTextColor(40,40,40);doc.text('Total Amount (in words)',left+3,wordsTop+5);
+  doc.setFont('helvetica','normal');doc.setFontSize(7.2);doc.text(seerviInvoiceAmountInWords(grand),left+3,wordsTop+9.5);
+  y=wordsTop+13;
 
   // ===== BANK / QR / SIGNATORY =====
-  const footTop=258,footH=26;
-  box(L,footTop,CW,footH,false);
-  const bankX=78,qrX=145;
-  line(bankX,footTop,bankX,footTop+footH);line(qrX,footTop,qrX,footTop+footH);
-  txt('Bank Details',L+3,footTop+5.2,7,'bold');
-  let by=footTop+10;
-  const bankRow=(lab,val)=>{if(!val)return;txt(lab,L+3,by,6.3,'normal');txt(val,L+22,by,6.3,'normal');by+=3.7;};
-  bankRow('Name:',profile.bankAccountName||profile.businessName);bankRow('IFSC Code:',profile.bankIfsc);bankRow('Account No:',profile.bankAccountNumber);bankRow('Bank:',profile.bankName);bankRow('Branch:',profile.bankBranch);
-  txt('Payment QR Code',bankX+3,footTop+5.2,7,'bold');
-  if(profile.upiId){txt('UPI ID:',bankX+3,footTop+10,6.3,'normal');txt(profile.upiId,bankX+3,footTop+14,6.3,'normal');}
-  if(profile.upiId&&window.QRious){try{const qrCanvas=document.createElement('canvas');new QRious({element:qrCanvas,value:'upi://pay?pa='+encodeURIComponent(profile.upiId)+'&pn='+encodeURIComponent(profile.businessName||'Seervi Trading'),size:220,level:'M'});doc.addImage(qrCanvas.toDataURL('image/png'),'PNG',bankX+43,footTop+4,19,19);}catch(e){}}
-  const sigCenter=(qrX+R)/2;
-  txt('For '+(profile.businessName||'SEERVI TRADING'),sigCenter,footTop+13,6.4,'normal','center');
-  txt('Authorised Signatory',sigCenter,footTop+20,6.6,'bold','center');
-  if(profile.signatoryName)txt(profile.signatoryName,sigCenter,footTop+24,6.2,'normal','center');
+  const footerTop=y, footerH=25;
+  const bankW=66,qrW=66;
+  doc.setDrawColor(105,105,105);doc.rect(left,footerTop,right-left,footerH,'S');doc.line(left+bankW,footerTop,left+bankW,footerTop+footerH);doc.line(left+bankW+qrW,footerTop,left+bankW+qrW,footerTop+footerH);
+  doc.setFont('helvetica','bold');doc.setFontSize(7.2);doc.setTextColor(35,35,35);doc.text('Bank Details',left+3,footerTop+5);
+  doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(55,55,55);
+  const bankLine=(label,value,yy)=>{doc.setFont('helvetica','bold');doc.text(label,left+3,yy);doc.setFont('helvetica','normal');doc.text(safe(value||'—').slice(0,29),left+25,yy);};
+  bankLine('Name:',profile.bankAccountName,footerTop+9);bankLine('IFSC Code:',profile.bankIfsc,footerTop+13);bankLine('Account No:',profile.bankAccountNumber,footerTop+17);bankLine('Bank:',profile.bankName,footerTop+21);
+  doc.setFont('helvetica','bold');doc.setFontSize(7.2);doc.text('Payment QR Code',left+bankW+3,footerTop+5);
+  if(profile.upiId){
+    doc.setFont('helvetica','normal');doc.setFontSize(6.2);doc.text('UPI ID:',left+bankW+3,footerTop+9);doc.text(safe(profile.upiId).slice(0,32),left+bankW+3,footerTop+13);
+    if(window.QRious){try{const qrCanvas=document.createElement('canvas');new QRious({element:qrCanvas,value:'upi://pay?pa='+encodeURIComponent(profile.upiId)+'&pn='+encodeURIComponent(profile.businessName||'Seervi Trading'),size:220,level:'M'});doc.addImage(qrCanvas.toDataURL('image/png'),'PNG',left+bankW+qrW-25,footerTop+3,20,20);}catch(e){}}
+  }
+  const sigX=left+bankW+qrW+(right-left-bankW-qrW)/2;
+  doc.setFont('helvetica','normal');doc.setFontSize(6.3);doc.text('For '+safe(profile.businessName||'').slice(0,30),sigX,footerTop+15,{align:'center'});
+  doc.setFont('helvetica','bold');doc.setFontSize(7.1);doc.text('Authorised Signatory',sigX,footerTop+20,{align:'center'});
+  if(profile.signatoryName){doc.setFont('helvetica','normal');doc.setFontSize(6.3);doc.text(safe(profile.signatoryName).slice(0,28),sigX,footerTop+23,{align:'center'});}
 
+  // Outer page/content border is intentionally omitted: the reference uses section boxes only.
   const filename='Seervi_Sale_Invoice_'+safe(invoice.invoiceNo).replace(/[^a-zA-Z0-9_-]/g,'_')+'.pdf';
   doc.save(filename);
 }
-
 let seerviInvoiceInputResolver=null;
 let seerviInvoiceInputMode='create';
 function seerviInvoiceFieldHtml(field){
@@ -14155,7 +14216,7 @@ const SEERVI_SITE_SETTINGS_DEFAULTS={
   catalogue:{sectionTitle:'Our Products',showCatalogue:true,showSearch:true,showSort:true,showCategoryFilter:true,showSubcategoryFilter:true},
   customer:{loginEnabled:true,signupEnabled:true},
   notifications:{enabled:true,soundEnabled:true},
-  pdf:{quotationLayout:'standard',invoiceLayout:'standard',quotation:{marginTop:17,marginRight:15,marginBottom:10,marginLeft:15,headerFont:22,bodyFont:8.5,tableFont:8,totalFont:9,grandFont:12,footerFont:8,rowMin:8,rowLine:4.3,rowPad:3},invoice:{marginTop:12,marginRight:15,marginBottom:8,marginLeft:15,headerFont:12.5,bodyFont:6.7,tableFont:7.1,totalFont:7.8,grandFont:10.5,footerFont:7.4,rowMin:6,rowLine:3.1,rowPad:1.5,headerH:36,billH:56}},
+  pdf:{quotationLayout:'standard',invoiceLayout:'standard',quotation:{marginTop:17,marginRight:15,marginBottom:10,marginLeft:15,headerFont:22,bodyFont:8.5,tableFont:8,totalFont:9,grandFont:12,footerFont:8,rowMin:8,rowLine:4.3,rowPad:3},invoice:{marginTop:12,marginRight:15,marginBottom:8,marginLeft:15,headerFont:12.5,bodyFont:6.7,tableFont:7.1,totalFont:7.8,grandFont:10.5,footerFont:7.4,rowMin:6,rowLine:3.1,rowPad:1.5,headerH:36,billH:33}},
   order:{whatsappNumber:'917073741650'},
   advanced:{maintenanceMode:false,maintenanceMessage:'We are updating the website. Please check again shortly.'}
 };
@@ -14338,11 +14399,11 @@ function seerviPdfLayoutPreset(type){
     const c=seerviSiteSettings?.pdf?.[type]||SEERVI_SITE_SETTINGS_DEFAULTS.pdf[type];
     const left=Math.max(5,Math.min(50,Number(c.marginLeft)||15));
     const right=Math.max(left+80,210-Math.max(5,Math.min(50,Number(c.marginRight)||15)));
-    return {mode,left,right,width:right-left,topMargin:Number(c.marginTop)||17,bottomMargin:Number(c.marginBottom)||10,startY:Number(c.marginTop)||17,headerFont:Number(c.headerFont)||22,bodyFont:Number(c.bodyFont)||8.5,tableFont:Number(c.tableFont)||8,totalFont:Number(c.totalFont)||9,grandFont:Number(c.grandFont)||12,footerFont:Number(c.footerFont)||8,rowMin:Number(c.rowMin)||8,rowLine:Number(c.rowLine)||4.3,rowPad:Number(c.rowPad)||3,headerH:type==='invoice'?(Number(c.headerH)||36):0,billH:type==='invoice'?(Number(c.billH)||56):0};
+    return {mode,left,right,width:right-left,topMargin:Number(c.marginTop)||17,bottomMargin:Number(c.marginBottom)||10,startY:Number(c.marginTop)||17,headerFont:Number(c.headerFont)||22,bodyFont:Number(c.bodyFont)||8.5,tableFont:Number(c.tableFont)||8,totalFont:Number(c.totalFont)||9,grandFont:Number(c.grandFont)||12,footerFont:Number(c.footerFont)||8,rowMin:Number(c.rowMin)||8,rowLine:Number(c.rowLine)||4.3,rowPad:Number(c.rowPad)||3,headerH:type==='invoice'?(Number(c.headerH)||36):0,billH:type==='invoice'?(Number(c.billH)||33):0};
   }
-  if(mode==='compact')return {mode,left:15,right:195,width:180,topMargin:type==='invoice'?10:15,bottomMargin:10,startY:type==='invoice'?10:15,headerFont:type==='invoice'?12.5:20,bodyFont:type==='invoice'?6.7:8.5,tableFont:type==='invoice'?7.1:8,totalFont:type==='invoice'?7.8:9,grandFont:type==='invoice'?10.5:12,footerFont:type==='invoice'?7.4:8,rowMin:type==='invoice'?5:7,rowLine:type==='invoice'?2.7:3.8,rowPad:type==='invoice'?1:2.5,headerH:type==='invoice'?35:0,billH:type==='invoice'?52:0};
-  if(mode==='spacious')return {mode,left:15,right:195,width:180,topMargin:type==='invoice'?14:20,bottomMargin:10,startY:type==='invoice'?14:20,headerFont:type==='invoice'?14:24,bodyFont:type==='invoice'?7.2:9,tableFont:type==='invoice'?8:8.8,totalFont:type==='invoice'?8.5:10,grandFont:type==='invoice'?11.5:13,footerFont:type==='invoice'?8:8.5,rowMin:type==='invoice'?7:9,rowLine:type==='invoice'?3.5:4.8,rowPad:type==='invoice'?2:3.5,headerH:type==='invoice'?40:0,billH:type==='invoice'?60:0};
-  return {mode:'standard',left:15,right:195,width:180,topMargin:type==='invoice'?12:17,bottomMargin:10,startY:type==='invoice'?12:17,headerFont:type==='invoice'?12.5:22,bodyFont:type==='invoice'?6.7:8.5,tableFont:type==='invoice'?7.1:8,totalFont:type==='invoice'?7.8:9,grandFont:type==='invoice'?10.5:12,footerFont:type==='invoice'?7.4:8,rowMin:type==='invoice'?6:8,rowLine:type==='invoice'?3.1:4.3,rowPad:type==='invoice'?1.5:3,headerH:type==='invoice'?36:0,billH:type==='invoice'?56:0};
+  if(mode==='compact')return {mode,left:15,right:195,width:180,topMargin:type==='invoice'?10:15,bottomMargin:10,startY:type==='invoice'?10:15,headerFont:type==='invoice'?12.5:20,bodyFont:type==='invoice'?6.7:8.5,tableFont:type==='invoice'?7.1:8,totalFont:type==='invoice'?7.8:9,grandFont:type==='invoice'?10.5:12,footerFont:type==='invoice'?7.4:8,rowMin:type==='invoice'?5:7,rowLine:type==='invoice'?2.7:3.8,rowPad:type==='invoice'?1:2.5,headerH:type==='invoice'?33:0,billH:type==='invoice'?31:0};
+  if(mode==='spacious')return {mode,left:15,right:195,width:180,topMargin:type==='invoice'?14:20,bottomMargin:10,startY:type==='invoice'?14:20,headerFont:type==='invoice'?14:24,bodyFont:type==='invoice'?7.2:9,tableFont:type==='invoice'?8:8.8,totalFont:type==='invoice'?8.5:10,grandFont:type==='invoice'?11.5:13,footerFont:type==='invoice'?8:8.5,rowMin:type==='invoice'?7:9,rowLine:type==='invoice'?3.5:4.8,rowPad:type==='invoice'?2:3.5,headerH:type==='invoice'?40:0,billH:type==='invoice'?35:0};
+  return {mode:'standard',left:15,right:195,width:180,topMargin:type==='invoice'?12:17,bottomMargin:10,startY:type==='invoice'?12:17,headerFont:type==='invoice'?12.5:22,bodyFont:type==='invoice'?6.7:8.5,tableFont:type==='invoice'?7.1:8,totalFont:type==='invoice'?7.8:9,grandFont:type==='invoice'?10.5:12,footerFont:type==='invoice'?7.4:8,rowMin:type==='invoice'?6:8,rowLine:type==='invoice'?3.1:4.3,rowPad:type==='invoice'?1.5:3,headerH:type==='invoice'?36:0,billH:type==='invoice'?33:0};
 }
 window.seerviPdfLayoutSection=function(section){
   const selected=section==='invoice'?'invoice':'quotation';
