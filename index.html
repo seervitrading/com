@@ -10545,16 +10545,16 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
     doc.setFont('helvetica','normal');doc.setTextColor(70,78,86);
     doc.text('Address:',x,yy);
-    doc.text(addressLines,x+22,yy,{lineHeightFactor:1.05});
+    doc.text(addressLines,x+21,yy,{lineHeightFactor:1.05});
     yy+=Math.max(1,addressLines.length)*3.5+1.5;
 
     if(gstin){
       doc.text('GSTIN:',x,yy);
-      doc.text(gstin,x+22,yy);
+      doc.text(gstin,x+21,yy);
       yy+=3.5;
     }
     if(mobile||pan){
-      if(mobile){doc.text('Mobile:',x,yy);doc.text(mobile,x+22,yy);}
+      if(mobile){doc.text('Mobile:',x,yy);doc.text(mobile,x+21,yy);}
       if(pan){
         const panX=x+76;
         doc.text('PAN:',panX,yy);doc.text(pan,panX+14,yy);
@@ -10576,7 +10576,9 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   };
   const billH=Math.max(pdfLayout.billH,estimatePartyHeight(c,true)+4,estimatePartyHeight(st,false)+4);
 
-  doc.setDrawColor(150,155,160);doc.rect(left,billTop-4,right-left,billH,'S');
+  // Match the compact reference format: keep the central Bill/Ship divider,
+  // but do not draw an extra horizontal rule underneath the party details.
+  doc.setDrawColor(150,155,160);
   doc.line(shipX,billTop-4,shipX,billTop+billH-4);
   doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.totalFont);doc.setTextColor(18,22,27);
   doc.text('BILL TO',left+4,billTop+3);
