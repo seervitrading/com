@@ -10436,10 +10436,14 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const borderTop=Math.max(5,pdfLayout.startY-4);
   const contentBottom=H-pdfLayout.bottomMargin;
   let y=pdfLayout.startY;
+  let invoicePageNo=1;
 
-  // Border surrounds only the actual invoice content, never the unused page area.
-  const drawContentBorder=(endY,skipBottom=false)=>{
-    const bottom=Math.min(Math.max(endY+3,18),contentBottom);
+  // Page 1 is the reference-style A4 invoice page: its outer border always
+  // reaches the A4 bottom and the final bank/QR/signatory box is anchored there
+  // whenever the item content leaves enough room. Later pages remain normal
+  // flowing pages without the page-1 bottom anchoring rule.
+  const drawContentBorder=(endY,skipBottom=false,forceBottom=false)=>{
+    const bottom=forceBottom ? contentBottom : Math.min(Math.max(endY+3,18),contentBottom);
     doc.setDrawColor(85,90,95);
     if(skipBottom){
       doc.line(left,borderTop,left,bottom);
@@ -10450,8 +10454,9 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     }
   };
   const newInvoicePage=()=>{
-    drawContentBorder(y);
+    drawContentBorder(y,false,invoicePageNo===1);
     doc.addPage();
+    invoicePageNo++;
     doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
     y=pdfLayout.startY;
   };
@@ -10602,9 +10607,18 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
   const items=invoice.items||[];
 
+  // The page-1 footer box occupies the last 28mm of the printable area.
+  // Keep this zone reserved while the first-page item rows are being laid out;
+  // once the rows exceed it, the remaining invoice content naturally continues
+  // onto page 2+.
+  const firstPageFooterH=28;
+  const firstPageFooterGap=3;
+  const firstPageFlowBottom=contentBottom-firstPageFooterH-firstPageFooterGap;
+
   /* ===== ITEM TABLE ===== */
   const drawHeader=()=>{
-    if(y>270)newInvoicePage();
+    const pageFlowBottom=invoicePageNo===1 ? firstPageFlowBottom : contentBottom-17;
+    if(y>pageFlowBottom-7)newInvoicePage();
     const top=y;
     doc.setFillColor(242,244,246);doc.rect(left,top,right-left,7,'F');
     doc.setDrawColor(120,125,130);doc.rect(left,top,right-left,7,'S');
@@ -10626,7 +10640,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     const productLines=doc.splitTextToSize(seerviInvoiceSafe(productLabel||item.model||item.name||'Item'),Math.max(30,(right-left)*51/180));
     const rowLines=Math.min(productLines.length,2);
     const rowHeight=Math.max(pdfLayout.rowMin,rowLines*pdfLayout.rowLine+pdfLayout.rowPad);
-    if(y+rowHeight>H-pdfLayout.bottomMargin-17){newInvoicePage();drawHeader();}
+    const pageFlowBottom=invoicePageNo===1 ? firstPageFlowBottom : contentBottom-17;
+    if(y+rowHeight>pageFlowBottom){newInvoicePage();drawHeader();}
     doc.setFont('helvetica','normal');doc.setFontSize(pdfLayout.tableFont);doc.setTextColor(45,50,56);
     doc.text(String(i+1),X(18),y+3.7);
     doc.text(productLines.slice(0,2),X(30),y+3.7);
@@ -10702,7 +10717,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
     const x=[15,43,88,109,130,151,172,195].map(X);
     const drawHsnHeader=()=>{
-      if(y+12>H-pdfLayout.bottomMargin-11)newInvoicePage();
+      const pageFlowBottom=invoicePageNo===1 ? firstPageFlowBottom : contentBottom-11;
+      if(y+12>pageFlowBottom)newInvoicePage();
       const top=y;
       doc.setFillColor(232,234,236);doc.rect(left,top,right-left,11,'F');
       doc.setDrawColor(95,100,105);doc.line(left,top,right,top);
@@ -10732,7 +10748,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     };
     drawHsnHeader();
     for(const r of hsnRows){
-      if(y+5.5>H-pdfLayout.bottomMargin-11)drawHsnHeader();
+      const pageFlowBottom=invoicePageNo===1 ? firstPageFlowBottom : contentBottom-11;
+      if(y+5.5>pageFlowBottom)drawHsnHeader();
       doc.setFont('helvetica','normal');doc.setFontSize(6.4);doc.setTextColor(45,50,56);
       // Draw one shared boundary at each row junction.
       doc.setDrawColor(125,130,135);
@@ -10749,7 +10766,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
       doc.text(seerviInvoiceInr(r.sgst),x[6]-2,y,{align:'right'});
       doc.text(seerviInvoiceInr(r.totalTax),x[7]-2,y,{align:'right'});y+=5.5;
     }
-    if(y+5.5>H-pdfLayout.bottomMargin-11)drawHsnHeader();
+    const pageFlowBottom=invoicePageNo===1 ? firstPageFlowBottom : contentBottom-11;
+    if(y+5.5>pageFlowBottom)drawHsnHeader();
     /* Total row: keep the shaded fill exactly inside the row boundaries.
        The previous fill started at the text baseline, extending below the
        bottom border and creating a dark shadow under the Total line. */
@@ -10775,7 +10793,18 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   if(hasBank||hasPayment||hasSignatory){
     hasFooterBox=true;
     const boxH=28;
-    if(y+boxH>H-pdfLayout.bottomMargin-10)newInvoicePage();
+    // Page 1: keep the footer box fixed at the A4 bottom. If the invoice
+    // content has already consumed that area, move the lower content to page 2
+    // instead; page 2+ deliberately do not use the bottom-anchor rule.
+    if(invoicePageNo===1){
+      if(y+boxH>firstPageFlowBottom){
+        newInvoicePage();
+      }else{
+        y=contentBottom-boxH;
+      }
+    }else if(y+boxH>contentBottom-10){
+      newInvoicePage();
+    }
     const boxTop=y;
     const bankW=(right-left)*67/180,qrW=(right-left)*67/180,sigW=(right-left)*46/180;
     doc.setDrawColor(90,96,102);
@@ -10826,11 +10855,9 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     y=boxTop+boxH;
   }
 
-  // Use one final bottom edge. When the bank section exists, the outer
-  // border is aligned exactly with its bottom edge.
-  const borderBottom=hasFooterBox ? y : y+3;
-  doc.setDrawColor(85,90,95);
-  doc.rect(left,borderTop,right-left,borderBottom-borderTop,'S');
+  // Page 1 always closes its outer border at the A4 bottom. Later pages use
+  // the normal content-height border.
+  drawContentBorder(y,false,invoicePageNo===1);
 
   const filename='Seervi_Sale_Invoice_'+seerviInvoiceSafe(invoice.invoiceNo).replace(/[^a-zA-Z0-9_-]/g,'_')+'.pdf';
   doc.save(filename);
