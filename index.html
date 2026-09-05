@@ -7404,66 +7404,136 @@ function seerviParseCopiedGstinData(text,html){
   const lines=seerviGstinLines(source);
   const joined=lines.join('\n');
   const gstin=seerviFindGstin(joined);
-  const legalName=seerviValueAfterLabel(lines,[/^legal\s+name(?:\s+of\s+business)?\s*[:\-]?\s*/i]);
-  const tradeName=seerviValueAfterLabel(lines,[/^trade\s+name(?:,?\s*if\s*any)?\s*[:\-]?\s*/i]);
-  let state=seerviValueAfterLabel(lines,[/^state\s+jurisdiction\s*[:\-]?\s*/i,/^name\s+of\s+the\s+state\s*[:\-]?\s*/i,/^state\s*[:\-]?\s*/i]);
-  const stateJurisdictionMatch=String(state||'').match(/\bState\s*[-:]+\s*([^,|]+)/i);
-  if(stateJurisdictionMatch)state=stateJurisdictionMatch[1].trim();
-  const pincodeRaw=seerviValueAfterLabel(lines,[/^p(?:in)?\s*code\s*[:\-]?\s*/i,/^pincode\s*[:\-]?\s*/i]);
-  let pincode=(String(pincodeRaw||'').match(/\b\d{6}\b/)||[])[0]||'';
-  if(!pincode){const m=joined.match(/\b\d{6}\b/g)||[];pincode=m.find(x=>x!=='2017'&&x!=='000000')||'';}
+  const legalName=seerviValueAfterLabel(lines,[/^legal\s+name(?:\s+of\s+business)?\s*[:\-|]?\s*/i]);
+  const tradeName=seerviValueAfterLabel(lines,[/^trade\s+name(?:,?\s*if\s*any)?\s*[:\-|]?\s*/i]);
 
+  // GST Portal copy formats vary. Always derive State from an actual Indian
+  // state/UT name, never from State/Center Jurisdiction (e.g. CBIC).
+  const indianStates=[
+    'Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa',
+    'Gujarat','Haryana','Jharkhand','Karnataka','Kerala','Madhya Pradesh',
+    'Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab',
+    'Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh',
+    'Uttarakhand','West Bengal','Delhi','Jammu and Kashmir','Ladakh','Puducherry',
+    'Chandigarh','Andaman and Nicobar Islands','Dadra and Nagar Haveli and Daman and Diu',
+    'Lakshadweep'
+  ];
+  const stateRe=new RegExp('(?:^|[^A-Za-z])('+indianStates.map(x=>x.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\\\$&')).join('|')+')(?:$|[^A-Za-z])','i');
+  const canonicalState=(value)=>{
+    const m=String(value||'').match(stateRe);
+    return m?m[1].trim():'';
+  };
+  let state='';
+  // Prefer an explicit State/UT field if the copied result contains one.
+  const explicitState=seerviValueAfterLabel(lines,[
+    /^state\s*\/\s*ut\s*[:\-|]?\s*/i,
+    /^state\s+name\s*[:\-|]?\s*/i,
+    /^state\s*[:\-|]?\s*/i
+  ]);
+  state=canonicalState(explicitState);
+  if(!state){
+    // Otherwise search the complete copied result for a canonical state name,
+    // but ignore jurisdiction-only lines so CBIC/Central/State jurisdiction
+    // can never become the customer State.
+    for(const line of lines){
+      if(/jurisdiction/i.test(line))continue;
+      const m=line.match(stateRe);
+      if(m){state=m[1].trim();break;}
+    }
+  }
+
+  const pincodeFrom=(value)=>{
+    const m=String(value||'').match(/\b[1-9]\d{5}\b/);
+    return m?m[0]:'';
+  };
+  let pincode=pincodeFrom(seerviValueAfterLabel(lines,[
+    /^p(?:in)?\s*code\s*[:\-|]?\s*/i,
+    /^pincode\s*[:\-|]?\s*/i,
+    /^pin\s*[:\-|]?\s*/i
+  ]));
+  if(!pincode){
+    const allPins=joined.match(/\b[1-9]\d{5}\b/g)||[];
+    pincode=allPins.find(x=>x!=='2017')||'';
+  }
+
+  // Extract Principal Place of Business as the address only. Remove the
+  // separate State and Pincode components so those fields remain clean.
   let address='';
   const addressStart=lines.findIndex(x=>/principal\s+place\s+of\s+business/i.test(x));
   if(addressStart>=0){
     const collected=[];
     const headingLine=lines[addressStart];
     const inlineAddress=seerviGstinNorm(headingLine.replace(/^.*?principal\s+place\s+of\s+business\s*[:\-|]?\s*/i,''));
-    if(inlineAddress && !/^(state|pincode|pin\s*code)\b/i.test(inlineAddress))collected.push(inlineAddress);
-    for(let i=addressStart+1;i<Math.min(lines.length,addressStart+15);i++){
+    if(inlineAddress && !/^(state|state\s*\/\s*ut|pincode|pin\s*code|state\s+jurisdiction|center\s+jurisdiction|jurisdiction)\b/i.test(inlineAddress))collected.push(inlineAddress);
+    for(let i=addressStart+1;i<Math.min(lines.length,addressStart+25);i++){
       const line=seerviGstinNorm(lines[i]);
       if(!line)continue;
-      if(/^(state(?:\s+jurisdiction)?|pincode|pin\s*code|nature\s+of\s+business|verification(?:\s*&\s*compliance)?|goods?\s+and\s+services|gstin\s+breakdown|business\s+details|entity\s+type|registration\s+date|taxpayer\s+type)\b/i.test(line))break;
-      if(/^(state|pincode|pin\s*code)\s*[:\-]/i.test(line))break;
-      if(/\b\d{6}\b/.test(line)||collected.length>0)collected.push(line);
-      if(/\b\d{6}\b/.test(line))break;
+      if(/^(state\s+jurisdiction|center\s+jurisdiction|jurisdiction|date\s+of\s+registration|registration\s+date|nature\s+of\s+business|verification(?:\s*&\s*compliance)?|goods?\s+and\s+services|gstin\s+breakdown|business\s+details|entity\s+type|taxpayer\s+type)\b/i.test(line))break;
+      if(/^(legal\s+name|trade\s+name|constitution|taxpayer\s+type|gstin\s+status|date\s+of\s+cancellation)\b/i.test(line))break;
+      // Separate State / Pincode fields are not part of the address field.
+      if(/^(state|state\s*\/\s*ut|state\s+name|pincode|pin\s*code|pin)\s*[:\-|]/i.test(line))break;
+      collected.push(line);
+      // Once a line contains the 6-digit PIN, keep it for parsing but do not
+      // continue into the next portal section.
+      if(/\b[1-9]\d{5}\b/.test(line))break;
     }
     address=seerviGstinNorm(collected.join(', '));
   }
   if(!address){
-    const addressLine=lines.find(x=>/\b\d{6}\b/.test(x)&&!/^p(?:in)?\s*code/i.test(x)&&!/gstin/i.test(x));
-    if(addressLine)address=addressLine.replace(/^(principal\s+place\s+of\s+business|address)\s*[:\-]?\s*/i,'').trim();
+    const addressLine=lines.find(x=>/\b[1-9]\d{5}\b/.test(x)&&!/^p(?:in)?\s*code/i.test(x)&&!/gstin/i.test(x));
+    if(addressLine)address=addressLine.replace(/^(principal\s+place\s+of\s+business|address)\s*[:\-|]?\s*/i,'').trim();
   }
-  // Remove a trailing standalone state/pincode label/value that may have been
-  // copied into the address block, while preserving the exact address text.
-  address=address.replace(/\s*,?\s*(?:state|pincode|pin\s*code)\s*[:\-]\s*[^,\n]+$/i,'').trim();
 
-  let city=seerviValueAfterLabel(lines,[/^city(?:\/town\/locality\/village)?\s*[:\-]?\s*/i,/^city\s*[:\-]?\s*/i]);
+  // Remove State/Pincode from the address even when GST Portal returns them
+  // on the same line (e.g. "..., Bengaluru, Karnataka, 560072").
+  if(state){
+    const idx=address.toLowerCase().lastIndexOf(state.toLowerCase());
+    if(idx>=0)address=address.slice(0,idx).replace(/[\s,;\-–—]+$/,'').trim();
+  }
+  if(pincode){
+    address=address.replace(new RegExp('[,;\\s-]*'+pincode.replace(/\D/g,'')+'\\s*$',''),'').replace(/[\s,;\-–—]+$/,'').trim();
+  }
+
+  // City may be explicit, or may appear as the locality/town/district field.
+  // Prefer explicit city/locality. District is only a fallback; never use
+  // CBIC, jurisdiction, State, or PIN as a city.
+  let city=seerviValueAfterLabel(lines,[
+    /^city(?:\s*\/\s*town\s*\/\s*locality\s*\/\s*village)?\s*[:\-|]?\s*/i,
+    /^town\s*\/\s*city\s*[:\-|]?\s*/i,
+    /^locality\s*[:\-|]?\s*/i,
+    /^village\s*[:\-|]?\s*/i
+  ]);
   if(!city){
-    const district=seerviValueAfterLabel(lines,[/^district\s*[:\-]?\s*/i]);
-    if(district)city=district;
+    const district=seerviValueAfterLabel(lines,[/^district\s*[:\-|]?\s*/i]);
+    if(district && !/^(cbic|central board of indirect taxes and customs|state jurisdiction|center jurisdiction|central|state|karnataka jurisdiction)$/i.test(district))city=district;
   }
+  // If the portal only gives the address, derive the locality immediately
+  // before State/Pincode. This is deliberately conservative: do not guess a
+  // city from an arbitrary address token.
   if(!city && address){
-    const district=seerviValueAfterLabel(lines,[/^district\s*[:\-]?\s*/i]);
     const parts=address.split(',').map(x=>x.trim()).filter(Boolean);
-    if(district){
-      const idx=parts.findIndex(x=>x.toLowerCase()===district.toLowerCase());
-      if(idx>0)city=parts[idx-1];
-    }
-    // Common GST search copy format: Address, CITY, DISTRICT, STATE, PIN.
-    // When GST Portal exposes no separate City label, use the city token from
-    // the address tail instead of guessing from arbitrary text.
-    if(!city && parts.length>=3){
-      const stateName=seerviGstinNorm(state);
-      const stateIdx=stateName?parts.findIndex(x=>x.toLowerCase()===stateName.toLowerCase()):parts.length-2;
-      if(stateIdx>=2)city=parts[stateIdx-2]||'';
-      else if(stateIdx===1)city=parts[0]||'';
-    }
+    const cleanParts=parts.filter(x=>!stateRe.test(x)&&!/^\d{6}$/.test(x));
+    if(cleanParts.length)city=cleanParts[cleanParts.length-1];
   }
+  city=seerviGstinNorm(city).replace(/^(city|town|locality|village|district)\s*[:\-|]?\s*/i,'').trim();
+  if(/^(cbic|central board of indirect taxes and customs|state jurisdiction|center jurisdiction|jurisdiction|central|state)$/i.test(city))city='';
+  if(/^(cbic|central board of indirect taxes and customs|state jurisdiction|center jurisdiction|jurisdiction|central|state)$/i.test(state))state='';
+  // Keep the address field strictly as the street/premise address. If the
+  // copied GST result repeats the separately populated City at the end, remove
+  // only that trailing occurrence; do not rewrite the rest of the address.
+  if(city){
+    const cityTail=new RegExp('[,;\s-]+'+city.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\s*$','i');
+    address=address.replace(cityTail,'').replace(/[\s,;\-–—]+$/,'').trim();
+  }
+
   return {gstin,legalName,tradeName,address,city,state:seerviGstinNorm(state),pincode};
 }
 function seerviApplyGstinData(d){
-  const set=(id,value)=>{const el=$(id);if(el&&value!==undefined&&value!==null&&String(value).trim()!=='')el.value=String(value).trim();};
+  const set=(id,value)=>{const el=$(id);if(el&&value!==undefined&&value!==null)el.value=String(value).trim();};
+  // Clear previously imported GST values first. This prevents stale values such
+  // as "CBIC" from remaining when the new copied result has no jurisdiction
+  // field or when a field is absent from the current GST result.
+  ['publicPartyName','publicPartyCompany','publicPartyAddress','publicPartyCity','publicPartyState','publicPartyPincode','publicPartyGstin'].forEach(id=>{const el=$(id);if(el)el.value='';});
   if(d.gstin)set('publicPartyGstin',String(d.gstin).toUpperCase());
   const legal=seerviGstinNorm(d.legalName), trade=seerviGstinNorm(d.tradeName);
   set('publicPartyName',legal||trade);
