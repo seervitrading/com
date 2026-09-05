@@ -10436,6 +10436,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const borderTop=Math.max(5,pdfLayout.startY-4);
   const contentBottom=H-pdfLayout.bottomMargin;
   let y=pdfLayout.startY;
+  let invoicePage=1;
 
   // Border surrounds only the actual invoice content, never the unused page area.
   const drawContentBorder=(endY,skipBottom=false)=>{
@@ -10452,6 +10453,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const newInvoicePage=()=>{
     drawContentBorder(y);
     doc.addPage();
+    invoicePage++;
     doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
     y=pdfLayout.startY;
   };
@@ -10640,12 +10642,12 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   }
 
   /* ===== NOTES LEFT / TOTALS RIGHT ===== */
-  // Anchor the complete lower invoice section near the bottom of the current A4 page,
-  // but only after calculating enough room for the whole section. This keeps short
-  // invoices on ONE page and lets the lower section move down naturally as item
-  // rows increase. Once the item table reaches the calculated anchor, the lower
-  // section follows it; it is allowed to move to the next page only when the
-  // complete lower section genuinely cannot fit on the current page.
+  const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
+  const notesText=seerviInvoiceSafe(invoice.notes||invoice.customer?.notes||'').trim();
+  const noteLines=notesText ? doc.splitTextToSize(notesText,102).slice(0,5) : [];
+  const notesH=Math.max(16,noteLines.length*3.2+9);
+  const totalH=invoice.gstEnabled?24:19;
+  const summaryH=Math.max(notesH,totalH);
   const amountWordLines=doc.splitTextToSize('Amount in Words: '+seerviInvoiceAmountInWords(grand),right-left).slice(0,2);
   const amountWordsH=Math.max(5,amountWordLines.length*3.2)+3;
   const hsnRowCount=invoice.gstEnabled&&items.length ? new Set(items.map(item=>seerviInvoiceSafe(item.hsnCode||item.hsn||'—').trim()||'—')).size : 0;
@@ -10654,16 +10656,22 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const hasPayment=profile.upiId;
   const hasSignatory=profile.signatoryName||profile.businessName;
   const footerH=(hasBank||hasPayment||hasSignatory)?28:0;
+
+  // Keep the complete lower block at the A4 bottom only on the FIRST page.
+  // As item rows consume space, the block moves progressively downward. Once
+  // the items force the lower block onto a new page, do NOT apply the bottom
+  // anchor on that new page: continue naturally from the top after the item
+  // table. This keeps multi-page invoices flowing without a large blank area.
   const lowerSectionRequiredH=2 + summaryH + 3 + amountWordsH + hsnH + footerH + 3;
   const lowerSectionAnchor=H-pdfLayout.bottomMargin-lowerSectionRequiredH;
-  if(y<lowerSectionAnchor)y=lowerSectionAnchor;
+  const availableBottom=H-pdfLayout.bottomMargin;
+  const lowerBlockNeedsNewPage=(y+lowerSectionRequiredH>availableBottom);
+  if(lowerBlockNeedsNewPage){
+    newInvoicePage();
+  }else if(invoicePage===1 && y<lowerSectionAnchor){
+    y=lowerSectionAnchor;
+  }
   y+=2;
-  const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
-  const notesText=seerviInvoiceSafe(invoice.notes||invoice.customer?.notes||'').trim();
-  const noteLines=notesText ? doc.splitTextToSize(notesText,102).slice(0,5) : [];
-  const notesH=Math.max(16,noteLines.length*3.2+9);
-  const totalH=invoice.gstEnabled?24:19;
-  const summaryH=Math.max(notesH,totalH);
   const summaryTop=y+1;
 
   doc.setDrawColor(205,209,213);doc.rect(left,summaryTop,(right-left)*112/180,summaryH,'S');
