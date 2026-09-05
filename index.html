@@ -10525,7 +10525,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   // wraps instead of being truncated.
   const detailPartyBlock=(obj,x,includeExtras=true)=>{
     const blockWidth=Math.max(30,shipX-left-8);
-    const valueWidth=Math.max(24,blockWidth-22);
+    const valueGap=14;
+    const valueWidth=Math.max(24,blockWidth-valueGap-8);
     const primaryName=seerviInvoiceSafe(obj?.company||obj?.name||'—').toUpperCase();
     const address=seerviInvoiceSafe(obj?.address||obj?.fullAddress||'—').toUpperCase();
     const gstin=includeExtras?seerviInvoiceSafe(obj?.gstin||obj?.gst||'').toUpperCase():'';
@@ -10544,18 +10545,18 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     doc.setFontSize(pdfLayout.bodyFont);
     doc.setTextColor(18,22,27);
     doc.text(primaryLines.slice(0,3),x,yy,{lineHeightFactor:1.05});
-    yy+=Math.max(1,Math.min(3,primaryLines.length))*3.5+1;
+    yy+=Math.max(1,Math.min(3,primaryLines.length))*3.5;
 
     doc.setFont('helvetica','normal');
     doc.setTextColor(70,78,86);
     doc.text('ADDRESS:',x,yy);
-    doc.text(addressLines,x+14,yy,{lineHeightFactor:1.05});
+    doc.text(addressLines,x+valueGap,yy,{lineHeightFactor:1.05});
     yy+=Math.max(1,addressLines.length)*3.5;
 
     // GSTIN starts immediately after the address. Mobile sits on the same row
     // at the right; there is no extra blank row between Address and GSTIN.
     if(gstin||mobile||email||pan){
-      if(gstin){doc.text('GSTIN:',x,yy);doc.text(gstin,x+14,yy);}
+      if(gstin){doc.text('GSTIN:',x,yy);doc.text(gstin,x+valueGap,yy);}
       if(mobile){
         const mobileLabelX=x+Math.max(48,blockWidth-72);
         const mobileValueX=mobileLabelX+14;
@@ -10564,10 +10565,10 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
       }
       yy+=3.5;
       if(email||pan){
-        if(email){doc.text('Email:',x,yy);doc.text(email,x+14,yy);}
+        if(email){doc.text('Email:',x,yy);doc.text(email,x+valueGap,yy);}
         if(pan){
           const panX=x+76;
-          doc.text('PAN:',panX,yy);doc.text(pan,panX+14,yy);
+          doc.text('PAN:',panX,yy);doc.text(pan,panX+valueGap,yy);
         }
         yy+=3.5;
       }
@@ -10578,7 +10579,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   // Bill To keeps GSTIN/contact/PAN. Ship To is intentionally name + address
   // only, while the common box still expands for whichever side wraps more.
   const estimatePartyHeight=(obj,includeExtras=true)=>{
-    const blockWidth=Math.max(30,shipX-left-8),valueWidth=Math.max(24,blockWidth-22);
+    const blockWidth=Math.max(30,shipX-left-8),valueGap=14,valueWidth=Math.max(24,blockWidth-valueGap-8);
     const nameLines=Math.min(3,doc.splitTextToSize(seerviInvoiceSafe(obj?.company||obj?.name||'—'),blockWidth).length||1);
     const addrLines=doc.splitTextToSize(seerviInvoiceSafe(obj?.address||obj?.fullAddress||'—'),valueWidth).length||1;
     const hasGst=includeExtras&&!!seerviInvoiceSafe(obj?.gstin||obj?.gst||'');
