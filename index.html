@@ -10475,7 +10475,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   let ly=headerTop+9;
   const firmRows=[
     ['GSTIN: ',profile.gstNumber||'—','PAN: ',profile.pan||'—'],
-    ['Contact Person: ',profile.personName||'—','Phone / WhatsApp: ',profile.phone||'—'],
+    ['Contact: ',profile.personName||'—','Phone / WhatsApp: ',profile.phone||'—'],
     ['Email: ',profile.email||'—','State Code: ',profile.stateCode||'—']
   ];
   for(const [l1,v1,l2,v2] of firmRows){
@@ -10483,7 +10483,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     doc.text(seerviInvoiceSafe(v1).slice(0,19),fV,ly);
     doc.text(l2,fR,ly);
     doc.text(seerviInvoiceSafe(v2).slice(0,13),fRV,ly);
-    ly+=3.7;
+    ly+=3.2;
   }
   const sellerAddress=[profile.address,profile.city,profile.state,profile.pincode].filter(Boolean).join(', ');
   const addressText=seerviInvoiceSafe(sellerAddress||'—');
