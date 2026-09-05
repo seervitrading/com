@@ -10643,7 +10643,12 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   // Keep the complete lower invoice section visually lower on an A4 page.
   // This only adds space when the item table ends above the target position;
   // invoices with enough/many item rows keep their natural flow.
-  const lowerSectionMinTop=135;
+  // Keep the lower invoice section anchored toward the bottom of an A4 page
+  // when the item table is short. This lets roughly 10–15 normal item rows
+  // remain on the first page while the notes/totals/tax/bank section moves
+  // naturally downward as more item rows are added. Once the item table itself
+  // reaches this point, the lower section follows it instead of overlapping.
+  const lowerSectionMinTop=218;
   if(y<lowerSectionMinTop)y=lowerSectionMinTop;
   y+=2;
   const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
