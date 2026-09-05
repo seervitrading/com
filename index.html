@@ -10640,6 +10640,11 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   }
 
   /* ===== NOTES LEFT / TOTALS RIGHT ===== */
+  // Keep the complete lower invoice section visually lower on an A4 page.
+  // This only adds space when the item table ends above the target position;
+  // invoices with enough/many item rows keep their natural flow.
+  const lowerSectionMinTop=135;
+  if(y<lowerSectionMinTop)y=lowerSectionMinTop;
   y+=2;
   const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
   const notesText=seerviInvoiceSafe(invoice.notes||invoice.customer?.notes||'').trim();
