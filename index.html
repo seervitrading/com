@@ -10437,17 +10437,11 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const contentBottom=H-pdfLayout.bottomMargin;
   let y=pdfLayout.startY;
 
-  // Border surrounds only the actual invoice content, never the unused page area.
+  // Keep the sale invoice on a fixed A4 sheet even when there is only one item.
+  // Page border always runs to the A4 bottom; internal sections may occupy less space.
   const drawContentBorder=(endY,skipBottom=false)=>{
-    const bottom=Math.min(Math.max(endY+3,18),contentBottom);
     doc.setDrawColor(85,90,95);
-    if(skipBottom){
-      doc.line(left,borderTop,left,bottom);
-      doc.line(right,borderTop,right,bottom);
-      doc.line(left,borderTop,right,borderTop);
-    }else{
-      doc.rect(left,borderTop,right-left,bottom-borderTop,'S');
-    }
+    doc.rect(left,borderTop,right-left,contentBottom-borderTop,'S');
   };
   const newInvoicePage=()=>{
     drawContentBorder(y);
@@ -10525,6 +10519,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   doc.setFont('helvetica','normal');doc.setFontSize(pdfLayout.bodyFont);doc.setTextColor(70,78,86);
   const detailLines=(obj,x)=>{
     let yy=billTop+8;
+    const valueX=x+24;
+    const valueW=Math.max(55,shipX-x-29);
     const lines=[
       ['Name: ',obj.name||'—'],['Company / Shop: ',obj.company||'—'],
       ['Phone / WhatsApp: ',obj.phone||obj.whatsapp||'—'],['Email: ',obj.email||'—'],
@@ -10532,12 +10528,18 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     ];
     for(const [label,val] of lines){
       doc.text(label,x,yy);
-      doc.text(seerviInvoiceSafe(val).slice(0,39),x+24,yy);
+      const valueLines=doc.splitTextToSize(seerviInvoiceSafe(val)||'—',valueW).slice(0,1);
+      doc.text(valueLines[0]||'—',valueX,yy);
       yy+=3.5;
     }
-    const address=seerviInvoiceSafe(obj.address||obj.fullAddress||'—');
-    const al=doc.splitTextToSize('Address: '+address,80);
-    doc.text(al.slice(0,2),x,yy);
+    // Address gets its own label/value start and up to three clean lines.
+    // State and PIN are separate fields in the party record, so append them to
+    // the address only for the PDF's complete Bill To / Ship To presentation.
+    const addressParts=[obj.address||obj.fullAddress||'',obj.state||'',obj.pincode||''].filter(Boolean).map(seerviInvoiceSafe);
+    const address=addressParts.join(', ')||'—';
+    const al=doc.splitTextToSize(address,valueW).slice(0,3);
+    doc.text('Address: ',x,yy);
+    doc.text(al,valueX,yy,{lineHeightFactor:1.05});
   };
   detailLines(c,left+4);
   detailLines(st,shipX+4);
@@ -10764,11 +10766,9 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     y=boxTop+boxH;
   }
 
-  // Use one final bottom edge. When the bank section exists, the outer
-  // border is aligned exactly with its bottom edge.
-  const borderBottom=hasFooterBox ? y : y+3;
+  // Keep the outer invoice frame fixed to the full A4 sheet.
   doc.setDrawColor(85,90,95);
-  doc.rect(left,borderTop,right-left,borderBottom-borderTop,'S');
+  doc.rect(left,borderTop,right-left,contentBottom-borderTop,'S');
 
   const filename='Seervi_Sale_Invoice_'+seerviInvoiceSafe(invoice.invoiceNo).replace(/[^a-zA-Z0-9_-]/g,'_')+'.pdf';
   doc.save(filename);
@@ -14317,7 +14317,7 @@ const SEERVI_SITE_SETTINGS_DEFAULTS={
   catalogue:{sectionTitle:'Our Products',showCatalogue:true,showSearch:true,showSort:true,showCategoryFilter:true,showSubcategoryFilter:true},
   customer:{loginEnabled:true,signupEnabled:true},
   notifications:{enabled:true,soundEnabled:true},
-  pdf:{quotationLayout:'standard',invoiceLayout:'standard',quotation:{marginTop:17,marginRight:15,marginBottom:10,marginLeft:15,headerFont:22,bodyFont:8.5,tableFont:8,totalFont:9,grandFont:12,footerFont:8,rowMin:8,rowLine:4.3,rowPad:3},invoice:{marginTop:12,marginRight:15,marginBottom:8,marginLeft:15,headerFont:12.5,bodyFont:6.7,tableFont:7.1,totalFont:7.8,grandFont:10.5,footerFont:7.4,rowMin:6,rowLine:3.1,rowPad:1.5,headerH:36,billH:33}},
+  pdf:{quotationLayout:'standard',invoiceLayout:'standard',quotation:{marginTop:17,marginRight:15,marginBottom:10,marginLeft:15,headerFont:22,bodyFont:8.5,tableFont:8,totalFont:9,grandFont:12,footerFont:8,rowMin:8,rowLine:4.3,rowPad:3},invoice:{marginTop:12,marginRight:15,marginBottom:8,marginLeft:15,headerFont:12.5,bodyFont:6.7,tableFont:7.1,totalFont:7.8,grandFont:10.5,footerFont:7.4,rowMin:6,rowLine:3.1,rowPad:1.5,headerH:36,billH:42}},
   order:{whatsappNumber:'917073741650'},
   advanced:{maintenanceMode:false,maintenanceMessage:'We are updating the website. Please check again shortly.'}
 };
@@ -14502,8 +14502,8 @@ function seerviPdfLayoutPreset(type){
     const right=Math.max(left+80,210-Math.max(5,Math.min(50,Number(c.marginRight)||15)));
     return {mode,left,right,width:right-left,topMargin:Number(c.marginTop)||17,bottomMargin:Number(c.marginBottom)||10,startY:Number(c.marginTop)||17,headerFont:Number(c.headerFont)||22,bodyFont:Number(c.bodyFont)||8.5,tableFont:Number(c.tableFont)||8,totalFont:Number(c.totalFont)||9,grandFont:Number(c.grandFont)||12,footerFont:Number(c.footerFont)||8,rowMin:Number(c.rowMin)||8,rowLine:Number(c.rowLine)||4.3,rowPad:Number(c.rowPad)||3,headerH:type==='invoice'?(Number(c.headerH)||36):0,billH:type==='invoice'?(Number(c.billH)||33):0};
   }
-  if(mode==='compact')return {mode,left:15,right:195,width:180,topMargin:type==='invoice'?10:15,bottomMargin:10,startY:type==='invoice'?10:15,headerFont:type==='invoice'?12.5:20,bodyFont:type==='invoice'?6.7:8.5,tableFont:type==='invoice'?7.1:8,totalFont:type==='invoice'?7.8:9,grandFont:type==='invoice'?10.5:12,footerFont:type==='invoice'?7.4:8,rowMin:type==='invoice'?5:7,rowLine:type==='invoice'?2.7:3.8,rowPad:type==='invoice'?1:2.5,headerH:type==='invoice'?33:0,billH:type==='invoice'?31:0};
-  if(mode==='spacious')return {mode,left:15,right:195,width:180,topMargin:type==='invoice'?14:20,bottomMargin:10,startY:type==='invoice'?14:20,headerFont:type==='invoice'?14:24,bodyFont:type==='invoice'?7.2:9,tableFont:type==='invoice'?8:8.8,totalFont:type==='invoice'?8.5:10,grandFont:type==='invoice'?11.5:13,footerFont:type==='invoice'?8:8.5,rowMin:type==='invoice'?7:9,rowLine:type==='invoice'?3.5:4.8,rowPad:type==='invoice'?2:3.5,headerH:type==='invoice'?40:0,billH:type==='invoice'?35:0};
+  if(mode==='compact')return {mode,left:15,right:195,width:180,topMargin:type==='invoice'?10:15,bottomMargin:10,startY:type==='invoice'?10:15,headerFont:type==='invoice'?12.5:20,bodyFont:type==='invoice'?6.7:8.5,tableFont:type==='invoice'?7.1:8,totalFont:type==='invoice'?7.8:9,grandFont:type==='invoice'?10.5:12,footerFont:type==='invoice'?7.4:8,rowMin:type==='invoice'?5:7,rowLine:type==='invoice'?2.7:3.8,rowPad:type==='invoice'?1:2.5,headerH:type==='invoice'?33:0,billH:type==='invoice'?40:0};
+  if(mode==='spacious')return {mode,left:15,right:195,width:180,topMargin:type==='invoice'?14:20,bottomMargin:10,startY:type==='invoice'?14:20,headerFont:type==='invoice'?14:24,bodyFont:type==='invoice'?7.2:9,tableFont:type==='invoice'?8:8.8,totalFont:type==='invoice'?8.5:10,grandFont:type==='invoice'?11.5:13,footerFont:type==='invoice'?8:8.5,rowMin:type==='invoice'?7:9,rowLine:type==='invoice'?3.5:4.8,rowPad:type==='invoice'?2:3.5,headerH:type==='invoice'?40:0,billH:type==='invoice'?44:0};
   return {mode:'standard',left:15,right:195,width:180,topMargin:type==='invoice'?12:17,bottomMargin:10,startY:type==='invoice'?12:17,headerFont:type==='invoice'?12.5:22,bodyFont:type==='invoice'?6.7:8.5,tableFont:type==='invoice'?7.1:8,totalFont:type==='invoice'?7.8:9,grandFont:type==='invoice'?10.5:12,footerFont:type==='invoice'?7.4:8,rowMin:type==='invoice'?6:8,rowLine:type==='invoice'?3.1:4.3,rowPad:type==='invoice'?1.5:3,headerH:type==='invoice'?36:0,billH:type==='invoice'?33:0};
 }
 window.seerviPdfLayoutSection=function(section){
