@@ -10436,6 +10436,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const borderTop=Math.max(5,pdfLayout.startY-4);
   const contentBottom=H-pdfLayout.bottomMargin;
   let y=pdfLayout.startY;
+  let invoicePage=1;
 
   // Border surrounds only the actual invoice content, never the unused page area.
   const drawContentBorder=(endY,skipBottom=false)=>{
@@ -10452,6 +10453,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const newInvoicePage=()=>{
     drawContentBorder(y);
     doc.addPage();
+    invoicePage++;
     doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
     y=pdfLayout.startY;
   };
@@ -10640,13 +10642,47 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   }
 
   /* ===== NOTES LEFT / TOTALS RIGHT ===== */
-  y+=2;
   const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
   const notesText=seerviInvoiceSafe(invoice.notes||invoice.customer?.notes||'').trim();
   const noteLines=notesText ? doc.splitTextToSize(notesText,102).slice(0,5) : [];
   const notesH=Math.max(16,noteLines.length*3.2+9);
   const totalH=invoice.gstEnabled?24:19;
   const summaryH=Math.max(notesH,totalH);
+  const amountWordLines=doc.splitTextToSize('Amount in Words: '+seerviInvoiceAmountInWords(grand),right-left).slice(0,2);
+  const amountWordsH=Math.max(5,amountWordLines.length*3.2)+3;
+  const hsnRowCount=invoice.gstEnabled&&items.length ? new Set(items.map(item=>seerviInvoiceSafe(item.hsnCode||item.hsn||'—').trim()||'—')).size : 0;
+  const hsnH=invoice.gstEnabled&&items.length ? 14.5 + (hsnRowCount*5.5) + 2 : 0;
+  const hasBank=profile.bankAccountName||profile.bankName||profile.bankAccountNumber||profile.bankIfsc||profile.bankBranch;
+  const hasPayment=profile.upiId;
+  const hasSignatory=profile.signatoryName||profile.businessName;
+  const footerH=(hasBank||hasPayment||hasSignatory)?28:0;
+
+  // FIRST PAGE RULE: keep the complete lower block (Notes + totals +
+  // Amount in Words + HSN/SAC + Bank/QR/Signatory) sitting at the bottom of
+  // A4 while the item table is short. As item rows are added, the lower block
+  // naturally moves downward. Once there is no room left for the COMPLETE
+  // lower block, move the whole block to page 2 and onward; pages 2+ are never
+  // bottom-anchored. This prevents the lower section from being split or
+  // leaving a large artificial blank area on continuation pages.
+  const lowerSectionRequiredH=2 + summaryH + 3 + amountWordsH + hsnH + footerH + 3;
+  const availableBottom=H-pdfLayout.bottomMargin;
+  const lowerSectionAnchor=Math.max(pdfLayout.startY,availableBottom-lowerSectionRequiredH);
+
+  if(invoicePage===1){
+    if(y < lowerSectionAnchor){
+      // Short item table: push the entire lower block down to the A4 bottom.
+      y=lowerSectionAnchor;
+    }else if(y+lowerSectionRequiredH > availableBottom){
+      // Item table has consumed the first-page space. Start the complete lower
+      // block on the next page, with normal top-down flow only.
+      newInvoicePage();
+    }
+  }else if(y+lowerSectionRequiredH > availableBottom){
+    // Continuation pages are never bottom-anchored, but do keep the lower block
+    // together when the current page cannot contain it.
+    newInvoicePage();
+  }
+  y+=2;
   const summaryTop=y+1;
 
   doc.setDrawColor(205,209,213);doc.rect(left,summaryTop,(right-left)*112/180,summaryH,'S');
