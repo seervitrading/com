@@ -7370,23 +7370,59 @@ window.togglePublicGstinImport=function(show){
 };
 
 function seerviGstinFindValue(text,labels){
-  const lines=String(text||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const raw=String(text||'');
+  const lines=raw.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
   const clean=s=>String(s||'').replace(/[\u00a0\t ]+/g,' ').trim();
   const lower=lines.map(x=>clean(x).toLowerCase());
+  const labelSet=labels.map(l=>clean(l).toLowerCase());
+  const isLabel=v=>labelSet.some(l=>v===l);
   for(const label of labels){
     const needle=clean(label).toLowerCase();
     for(let i=0;i<lines.length;i++){
       const line=clean(lines[i]), low=lower[i];
       if(low===needle){
-        for(let j=i+1;j<Math.min(lines.length,i+4);j++){
-          const v=clean(lines[j]);
-          if(v && !labels.some(l=>v.toLowerCase()===clean(l).toLowerCase()))return v;
+        for(let j=i+1;j<Math.min(lines.length,i+5);j++){
+          const v=clean(lines[j]), vl=v.toLowerCase();
+          if(v && !isLabel(vl))return v;
         }
       }
-      if(low.startsWith(needle+':'))return clean(line.slice(needle.length+1));
+      if(low.startsWith(needle+':')){
+        const v=clean(line.slice(needle.length+1));
+        if(v)return v;
+      }
+      // GST Portal copy can put the label and value on the same line
+      // without a colon (for example: "State Jurisdiction Karnataka").
+      if(low.startsWith(needle+' ')){
+        const v=clean(line.slice(needle.length));
+        if(v && !isLabel(v.toLowerCase()))return v;
+      }
+    }
+  }
+  // Last fallback: search the complete pasted text for label/value pairs.
+  const compact=clean(raw);
+  for(const label of labels){
+    const re=new RegExp(clean(label).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*[:\-]?\\s*([^\n|;]+)','i');
+    const m=compact.match(re);
+    if(m){
+      const v=clean(m[1]);
+      if(v && !isLabel(v.toLowerCase()))return v;
     }
   }
   return '';
+}
+
+function seerviGstinStateFromCode(gstin){
+  const code=String(gstin||'').slice(0,2);
+  const states={
+    '01':'Jammu and Kashmir','02':'Himachal Pradesh','03':'Punjab','04':'Chandigarh','05':'Uttarakhand','06':'Haryana','07':'Delhi','08':'Rajasthan','09':'Uttar Pradesh','10':'Bihar','11':'Sikkim','12':'Arunachal Pradesh','13':'Nagaland','14':'Manipur','15':'Mizoram','16':'Tripura','17':'Meghalaya','18':'Assam','19':'West Bengal','20':'Jharkhand','21':'Odisha','22':'Chhattisgarh','23':'Madhya Pradesh','24':'Gujarat','26':'Dadra and Nagar Haveli and Daman and Diu','27':'Maharashtra','28':'Andhra Pradesh','29':'Karnataka','30':'Goa','31':'Lakshadweep','32':'Kerala','33':'Tamil Nadu','34':'Puducherry','35':'Andaman and Nicobar Islands','36':'Telangana','37':'Andhra Pradesh','38':'Ladakh','97':'Other Territory'
+  };
+  return states[code]||'';
+}
+
+function seerviGstinFindPincode(text,address){
+  const source=String(address||'')+'\n'+String(text||'');
+  const matches=source.match(/\b[1-9]\d{5}\b/g)||[];
+  return matches[0]||'';
 }
 
 function seerviGstinFindAddress(text){
@@ -7414,13 +7450,23 @@ window.importPublicGstinDetails=function(){
   const status=$('publicGstinLookupStatus');
   const text=String(paste?.value||'').trim();
   if(!text){if(status){status.className='gstin-lookup-status error';status.textContent='Paste the GST Portal taxpayer details first.';}return;}
+  const gstin=String($('publicPartyGstin')?.value||'').trim().toUpperCase().replace(/\s+/g,'');
   const legal=seerviGstinFindValue(text,['Legal Name of Business','Legal Name of the Business','Legal Name']);
   const trade=seerviGstinFindValue(text,['Trade Name']);
   const address=seerviGstinFindAddress(text) || seerviGstinFindValue(text,['Principal Place of Business','Principal Place of Business Address','Address']);
-  const city=seerviGstinFindValue(text,['City','District']);
-  const state=seerviGstinFindValue(text,['State','State Name','State Jurisdiction']);
-  const pincode=seerviGstinFindValue(text,['Pincode','Pin Code','PIN Code','PIN']);
+  let city=seerviGstinFindValue(text,['City / Town / Village','City/Town/Village','City']);
+  if(!city)city=seerviGstinFindValue(text,['District']);
+  let state=seerviGstinFindValue(text,['State Name','State','State Jurisdiction']);
+  const pincode=seerviGstinFindPincode(text,address) || seerviGstinFindValue(text,['Pincode','Pin Code','PIN Code','PIN']);
   const statusValue=seerviGstinFindValue(text,['GSTIN / UIN Status','GSTIN/UIN Status','GST Status','Status']);
+  // If the portal copy does not expose the state field cleanly, GSTIN's
+  // first two digits provide the state/UT code as a reliable fallback.
+  if(!state)state=seerviGstinStateFromCode(gstin);
+  // Some GST Portal copies expose the city only inside the principal address.
+  if(!city && address){
+    const cityMatch=address.match(/(?:city\s*\/?\s*town\s*\/?\s*village|district)\s*[:\-]?\s*([^,;|\n]+)/i);
+    if(cityMatch)city=cityMatch[1].trim();
+  }
   const set=(id,value)=>{const el=$(id);if(el && value && String(value).trim())el.value=String(value).trim();};
   set('publicPartyName',legal||trade);
   set('publicPartyCompany',trade);
