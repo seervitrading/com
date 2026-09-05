@@ -10812,6 +10812,10 @@ function seerviSubmitInvoiceInputModal(){
   if(modal){modal.classList.remove('show');modal.setAttribute('aria-hidden','true');}
   if(seerviInvoiceInputResolver){const r=seerviInvoiceInputResolver;seerviInvoiceInputResolver=null;r(data);}
 }
+// These handlers are used by inline HTML onclick attributes inside the module.
+// Expose them on window so Continue / Cancel / Close work reliably.
+window.seerviSubmitInvoiceInputModal=seerviSubmitInvoiceInputModal;
+window.seerviCloseInvoiceInputModal=seerviCloseInvoiceInputModal;
 
 window.crmConvertQuoteToInvoice=async function(id){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
