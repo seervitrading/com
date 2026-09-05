@@ -10740,10 +10740,15 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
       doc.text(seerviInvoiceInr(r.totalTax),x[7]-2,y,{align:'right'});y+=5.5;
     }
     if(y+5.5>H-pdfLayout.bottomMargin-11)drawHsnHeader();
-    doc.setFillColor(232,234,236);doc.rect(left,y,right-left,5.5,'F');
+    /* Total row: keep the shaded fill exactly inside the row boundaries.
+       The previous fill started at the text baseline, extending below the
+       bottom border and creating a dark shadow under the Total line. */
+    const totalTop=y-3.5, totalH=5.5;
+    doc.setFillColor(232,234,236);doc.rect(left,totalTop,right-left,totalH,'F');
     doc.setDrawColor(95,100,105);
-    doc.line(left,y-3.5,right,y-3.5);
-    for(let i=1;i<x.length-1;i++)doc.line(x[i],y-3.5,x[i],y+2);
+    doc.line(left,totalTop,right,totalTop);
+    doc.line(left,totalTop+totalH,right,totalTop+totalH);
+    for(let i=1;i<x.length-1;i++)doc.line(x[i],totalTop,x[i],totalTop+totalH);
     doc.setFont('helvetica','bold');doc.setFontSize(6.4);doc.setTextColor(25,30,35);
     doc.text('Total',(x[0]+x[1])/2,y,{align:'center'});
     doc.text(seerviInvoiceInr(totalTaxable),x[2]-2,y,{align:'right'});
