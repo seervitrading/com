@@ -10587,6 +10587,15 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   }
 
   /* ===== NOTES LEFT / TOTALS RIGHT ===== */
+  // Keep the complete lower invoice section anchored toward the A4 bottom on
+  // short invoices. This leaves the item table compact while the Notes,
+  // totals, tax summary and bank/QR/signatory block form one professional
+  // lower section instead of stopping immediately below the last item.
+  {
+    const lowerReserve=invoice.gstEnabled&&items.length ? 118 : 86;
+    const targetTop=contentBottom-lowerReserve;
+    if(y+2<targetTop)y=targetTop;
+  }
   y+=2;
   const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
   const notesText=seerviInvoiceSafe(invoice.notes||invoice.customer?.notes||'').trim();
