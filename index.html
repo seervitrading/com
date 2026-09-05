@@ -9635,7 +9635,7 @@ window.crmDownloadPartyLedger=async function(){
     doc.text('Customer: '+partyName,left,y);
     doc.text('Shop / Company: '+partyCompany,105,y);
     y+=5;
-    doc.text('Phone / WhatsApp: '+partyPhone,left,y);
+    doc.text('Phone: '+partyPhone,left,y);
     doc.text('Email: '+partyEmail.slice(0,55),105,y);
     y+=5;
     doc.text('City: '+partyCity,left,y);
@@ -9885,7 +9885,7 @@ window.crmDownloadQuote=async function(id){
     doc.text('Customer: '+safeText(partyName),left,y);
     doc.text('Company / Shop: '+safeText(company).slice(0,48),X(105),y);
     y+=5;
-    doc.text('Phone / WhatsApp: '+safeText(phone),left,y);
+    doc.text('Phone: '+safeText(phone),left,y);
     doc.text('Email: '+safeText(email).slice(0,48),X(105),y);
     y+=5;
     doc.text('City: '+safeText(city),left,y);
@@ -10114,7 +10114,7 @@ window.customerDownloadQuote=async function(id){
     doc.text('Customer: '+safeText(partyName),left,y);
     doc.text('Company / Shop: '+safeText(company).slice(0,48),X(105),y);
     y+=5;
-    doc.text('Phone / WhatsApp: '+safeText(phone),left,y);
+    doc.text('Phone: '+safeText(phone),left,y);
     doc.text('Email: '+safeText(email).slice(0,48),X(105),y);
     y+=5;
     doc.text('City: '+safeText(city),left,y);
@@ -10475,8 +10475,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   let ly=headerTop+9;
   const firmRows=[
     ['GSTIN: ',profile.gstNumber||'—','PAN: ',profile.pan||'—'],
-    ['Contact: ',profile.personName||'—','Phone / WhatsApp: ',profile.phone||'—'],
-    ['Email: ',profile.email||'—','State Code: ',profile.stateCode||'—']
+    ['Contact: ',profile.personName||'—','Phone: ',profile.phone||'—'],
+    ['Email: ',profile.email||'—','SC: ',profile.stateCode||'—']
   ];
   for(const [l1,v1,l2,v2] of firmRows){
     doc.text(String(l1||'').toUpperCase(),fL,ly);
