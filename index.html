@@ -10640,16 +10640,23 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   }
 
   /* ===== NOTES LEFT / TOTALS RIGHT ===== */
-  // Keep the complete lower invoice section visually lower on an A4 page.
-  // This only adds space when the item table ends above the target position;
-  // invoices with enough/many item rows keep their natural flow.
-  // Keep the lower invoice section anchored toward the bottom of an A4 page
-  // when the item table is short. This lets roughly 10–15 normal item rows
-  // remain on the first page while the notes/totals/tax/bank section moves
-  // naturally downward as more item rows are added. Once the item table itself
-  // reaches this point, the lower section follows it instead of overlapping.
-  const lowerSectionMinTop=218;
-  if(y<lowerSectionMinTop)y=lowerSectionMinTop;
+  // Anchor the complete lower invoice section near the bottom of the current A4 page,
+  // but only after calculating enough room for the whole section. This keeps short
+  // invoices on ONE page and lets the lower section move down naturally as item
+  // rows increase. Once the item table reaches the calculated anchor, the lower
+  // section follows it; it is allowed to move to the next page only when the
+  // complete lower section genuinely cannot fit on the current page.
+  const amountWordLines=doc.splitTextToSize('Amount in Words: '+seerviInvoiceAmountInWords(grand),right-left).slice(0,2);
+  const amountWordsH=Math.max(5,amountWordLines.length*3.2)+3;
+  const hsnRowCount=invoice.gstEnabled&&items.length ? new Set(items.map(item=>seerviInvoiceSafe(item.hsnCode||item.hsn||'—').trim()||'—')).size : 0;
+  const hsnH=invoice.gstEnabled&&items.length ? 14.5 + (hsnRowCount*5.5) + 2 : 0;
+  const hasBank=profile.bankAccountName||profile.bankName||profile.bankAccountNumber||profile.bankIfsc||profile.bankBranch;
+  const hasPayment=profile.upiId;
+  const hasSignatory=profile.signatoryName||profile.businessName;
+  const footerH=(hasBank||hasPayment||hasSignatory)?28:0;
+  const lowerSectionRequiredH=2 + summaryH + 3 + amountWordsH + hsnH + footerH + 3;
+  const lowerSectionAnchor=H-pdfLayout.bottomMargin-lowerSectionRequiredH;
+  if(y<lowerSectionAnchor)y=lowerSectionAnchor;
   y+=2;
   const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
   const notesText=seerviInvoiceSafe(invoice.notes||invoice.customer?.notes||'').trim();
