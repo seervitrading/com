@@ -4981,117 +4981,104 @@ body.seervi-ai-open .float-wa{display:none!important}
   }
 }
 </style>
-
-<style id="seervi-dashboard-font-standard-final">
-/* Dashboard typography: one standard body size, larger hierarchy for headings only. */
+<style id="seervi-admin-universal-font-final">
+/* Keep the quotation panel's readable typography consistent across all admin dashboard panels. */
 #crmModal .crm-panel,
-#crmModal .crm-workspace,
-#crmModal .crm-login,
-#crmModal .crm-quote-view-body,
-#crmModal .crm-panel * ,
-#crmPartyLedgerViewModal .crm-quote-view-card,
-#crmQuoteViewModal .crm-quote-view-card,
+#adminSettingsModal .crm-panel,
+#adminBackupOptionsModal .crm-panel,
+#crmPartyLedgerViewModal .crm-panel,
+#crmQuoteViewModal .crm-panel,
+#gstProfileModal .crm-panel,
+#notificationModal .crm-panel,
+#notificationPostModal .crm-panel,
 #seerviActivityModal .crm-panel,
-#adminNewPartyModal .crm-panel,
-#adminStockModal .crm-panel,
-#customerLoginModal .customer-dashboard,
-#customerLoginModal .customer-dashboard *{
-  font-size:13px;
+#seerviInvoiceInputModal .crm-panel,
+#seerviItemsModal .crm-panel,
+#accountDashboardModal .crm-panel{
+  font-size:14px;
+  line-height:1.45;
 }
-
-/* Standard text */
-#crmModal .crm-panel p,
 #crmModal .crm-panel label,
+#adminSettingsModal .crm-panel label,
+#adminBackupOptionsModal .crm-panel label,
+#crmPartyLedgerViewModal .crm-panel label,
+#crmQuoteViewModal .crm-panel label,
+#gstProfileModal .crm-panel label,
+#notificationModal .crm-panel label,
+#notificationPostModal .crm-panel label,
+#seerviActivityModal .crm-panel label,
+#seerviInvoiceInputModal .crm-panel label,
+#seerviItemsModal .crm-panel label,
+#accountDashboardModal .crm-panel label{
+  font-size:13px !important;
+  line-height:1.3;
+}
 #crmModal .crm-panel input,
 #crmModal .crm-panel select,
 #crmModal .crm-panel textarea,
-#crmModal .crm-panel td,
-#crmModal .crm-panel th,
-#crmModal .crm-panel span,
-#crmModal .crm-panel small,
+#adminSettingsModal .crm-panel input,
+#adminSettingsModal .crm-panel select,
+#adminSettingsModal .crm-panel textarea,
+#adminBackupOptionsModal .crm-panel input,
+#adminBackupOptionsModal .crm-panel select,
+#adminBackupOptionsModal .crm-panel textarea,
+#crmPartyLedgerViewModal .crm-panel input,
+#crmPartyLedgerViewModal .crm-panel select,
+#crmPartyLedgerViewModal .crm-panel textarea,
+#crmQuoteViewModal .crm-panel input,
+#crmQuoteViewModal .crm-panel select,
+#crmQuoteViewModal .crm-panel textarea,
+#gstProfileModal .crm-panel input,
+#gstProfileModal .crm-panel select,
+#gstProfileModal .crm-panel textarea,
+#notificationModal .crm-panel input,
+#notificationModal .crm-panel select,
+#notificationModal .crm-panel textarea,
+#notificationPostModal .crm-panel input,
+#notificationPostModal .crm-panel select,
+#notificationPostModal .crm-panel textarea,
+#seerviActivityModal .crm-panel input,
+#seerviActivityModal .crm-panel select,
+#seerviActivityModal .crm-panel textarea,
+#seerviInvoiceInputModal .crm-panel input,
+#seerviInvoiceInputModal .crm-panel select,
+#seerviInvoiceInputModal .crm-panel textarea,
+#seerviItemsModal .crm-panel input,
+#seerviItemsModal .crm-panel select,
+#seerviItemsModal .crm-panel textarea,
+#accountDashboardModal .crm-panel input,
+#accountDashboardModal .crm-panel select,
+#accountDashboardModal .crm-panel textarea{
+  font-size:14px !important;
+  line-height:1.35;
+}
 #crmModal .crm-panel button,
-#crmPartyLedgerViewModal .crm-quote-view-card p,
-#crmPartyLedgerViewModal .crm-quote-view-card span,
-#crmPartyLedgerViewModal .crm-quote-view-card td,
-#crmPartyLedgerViewModal .crm-quote-view-card th,
-#crmPartyLedgerViewModal .crm-quote-view-card button,
-#crmQuoteViewModal .crm-quote-view-card p,
-#crmQuoteViewModal .crm-quote-view-card span,
-#crmQuoteViewModal .crm-quote-view-card td,
-#crmQuoteViewModal .crm-quote-view-card th,
-#crmQuoteViewModal .crm-quote-view-card button,
-#seerviActivityModal .crm-panel p,
-#seerviActivityModal .crm-panel span,
+#adminSettingsModal .crm-panel button,
+#adminBackupOptionsModal .crm-panel button,
+#crmPartyLedgerViewModal .crm-panel button,
+#crmQuoteViewModal .crm-panel button,
+#gstProfileModal .crm-panel button,
+#notificationModal .crm-panel button,
+#notificationPostModal .crm-panel button,
 #seerviActivityModal .crm-panel button,
-#customerLoginModal .customer-dashboard p,
-#customerLoginModal .customer-dashboard span,
-#customerLoginModal .customer-dashboard small,
-#customerLoginModal .customer-dashboard td,
-#customerLoginModal .customer-dashboard th,
-#customerLoginModal .customer-dashboard button{
+#seerviInvoiceInputModal .crm-panel button,
+#seerviItemsModal .crm-panel button,
+#accountDashboardModal .crm-panel button{
   font-size:13px !important;
-  line-height:1.45;
 }
-
-/* Form labels / metadata: slightly smaller but still standard readable UI text. */
-#crmModal .crm-panel label,
-#crmModal .crm-party-select-wrap label,
-#crmModal .admin-section-title,
-#crmModal .crm-section-title,
-#crmModal .admin-global-tab,
-#crmModal .admin-settings-subnav button,
-#crmModal .admin-items-tab,
-#crmModal .crm-tab,
-#crmPartyLedgerViewModal .crm-ledger-filter,
-#crmQuoteViewModal .crm-quote-status-bar > span,
-#customerLoginModal .customer-tab{
-  font-size:12px !important;
-}
-
-/* Main panel headings */
-#crmModal .crm-head h3,
-#crmPartyLedgerViewModal .crm-quote-view-head h3,
-#crmQuoteViewModal .crm-quote-view-head h3,
-#seerviActivityModal .crm-head h3,
-#adminNewPartyModal .crm-head h3,
-#adminStockModal .crm-head h3,
-#customerLoginModal .customer-dashboard-head h4{
-  font-size:24px !important;
-  line-height:1.2 !important;
-}
-
-/* Section headings */
-#crmModal .admin-mode-panel h4,
-#crmModal .admin-items-title,
-#crmModal .crm-delete-confirm-card h3,
-#crmModal .admin-global-row strong,
-#crmPartyLedgerViewModal .crm-qv-grand,
-#crmQuoteViewModal .crm-qv-grand,
-#customerLoginModal .customer-dashboard-summary-card strong,
-#customerLoginModal .customer-profile-card strong{
-  font-size:16px !important;
-}
-
-/* Keep prominent dashboard values clearly above standard text. */
-#crmModal .admin-kpi strong,
-#crmModal .crm-stat-grid strong,
-#customerLoginModal .customer-dashboard-summary-card strong,
-#customerLoginModal .customer-rate-history-latest{
-  font-size:20px !important;
-}
-
-#crmModal .crm-kicker,
-#crmModal .admin-mode-badge,
-#crmModal .admin-nav-btn,
-#crmModal .crm-primary,
-#crmModal .crm-secondary,
-#crmModal .admin-global-delete,
-#crmModal .cart-crm-btn,
-#crmPartyLedgerViewModal .crm-primary,
-#crmPartyLedgerViewModal .crm-secondary,
-#crmQuoteViewModal .crm-primary,
-#crmQuoteViewModal .crm-secondary{
-  font-size:12px !important;
+#crmModal .crm-panel .crm-row,
+#adminSettingsModal .crm-panel .crm-row,
+#adminBackupOptionsModal .crm-panel .crm-row,
+#crmPartyLedgerViewModal .crm-panel .crm-row,
+#crmQuoteViewModal .crm-panel .crm-row,
+#gstProfileModal .crm-panel .crm-row,
+#notificationModal .crm-panel .crm-row,
+#notificationPostModal .crm-panel .crm-row,
+#seerviActivityModal .crm-panel .crm-row,
+#seerviInvoiceInputModal .crm-panel .crm-row,
+#seerviItemsModal .crm-panel .crm-row,
+#accountDashboardModal .crm-panel .crm-row{
+  font-size:14px !important;
 }
 </style>
 </head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
