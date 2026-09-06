@@ -10619,10 +10619,13 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const hasSignatory=profile.signatoryName||profile.businessName;
   const hasFooterBox=!!(hasBank||hasPayment||hasSignatory);
   const bankBlockH=hasFooterBox?28:0;
+  // The entire Page-1 lower section (Notes/Totals + Amount in Words + HSN/SAC + Bank/QR/Signatory)
+  // is one anchored block. Item rows are allowed to fill all remaining space above it.
   const page1BottomBlockH=hasFooterBox
     ? 2+1+summaryH+3+amountWordsH+hsnBlockH+bankBlockH
     : 0;
-  const page1ItemsBottom=contentBottom-page1BottomBlockH;
+  const page1BottomBlockTop=hasFooterBox ? contentBottom-page1BottomBlockH : null;
+  const page1ItemsBottom=hasFooterBox ? page1BottomBlockTop-3 : contentBottom-3;
 
   /* ===== ITEM TABLE ===== */
   const drawHeader=()=>{
@@ -10665,7 +10668,14 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   }
 
   /* ===== NOTES LEFT / TOTALS RIGHT ===== */
-  y+=2;
+  // On Page 1 this complete lower section starts at the pre-calculated bottom
+  // anchor. It must not follow the last item row, otherwise a large blank gap
+  // appears between HSN/SAC and the Bank/QR/Signatory block.
+  if(invoicePage===1 && hasFooterBox){
+    y=page1BottomBlockTop;
+  }else{
+    y+=2;
+  }
   const summaryTop=y+1;
 
   doc.setDrawColor(205,209,213);doc.rect(left,summaryTop,(right-left)*112/180,summaryH,'S');
@@ -10719,7 +10729,9 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
     const x=[15,43,88,109,130,151,172,195].map(X);
     const drawHsnHeader=()=>{
-      if(y+12>H-pdfLayout.bottomMargin-11)newInvoicePage();
+      // Page 1 HSN/SAC is part of the anchored lower block; do not paginate it
+      // independently. On later pages it follows normal flow.
+      if(!(invoicePage===1 && hasFooterBox) && y+12>H-pdfLayout.bottomMargin-11)newInvoicePage();
       const top=y;
       doc.setFillColor(232,234,236);doc.rect(left,top,right-left,11,'F');
       doc.setDrawColor(95,100,105);doc.line(left,top,right,top);
@@ -10749,7 +10761,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     };
     drawHsnHeader();
     for(const r of hsnRows){
-      if(y+5.5>H-pdfLayout.bottomMargin-11)drawHsnHeader();
+      if(!(invoicePage===1 && hasFooterBox) && y+5.5>H-pdfLayout.bottomMargin-11)drawHsnHeader();
       doc.setFont('helvetica','normal');doc.setFontSize(6.4);doc.setTextColor(45,50,56);
       // Draw one shared boundary at each row junction.
       doc.setDrawColor(125,130,135);
@@ -10766,7 +10778,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
       doc.text(seerviInvoiceInr(r.sgst),x[6]-2,y,{align:'right'});
       doc.text(seerviInvoiceInr(r.totalTax),x[7]-2,y,{align:'right'});y+=5.5;
     }
-    if(y+5.5>H-pdfLayout.bottomMargin-11)drawHsnHeader();
+    if(!(invoicePage===1 && hasFooterBox) && y+5.5>H-pdfLayout.bottomMargin-11)drawHsnHeader();
     /* Total row: keep the shaded fill exactly inside the row boundaries.
        The previous fill started at the text baseline, extending below the
        bottom border and creating a dark shadow under the Total line. */
@@ -10787,7 +10799,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   /* ===== BANK / QR / SIGNATORY — COMPACT ===== */
   if(hasFooterBox){
     const boxH=28;
-    // Page 1 is anchored to A4 bottom; later pages follow normal content flow.
+    // Page 1 is anchored at the end of the same lower block as Notes/Totals,
+    // Amount in Words and HSN/SAC. Later pages follow normal content flow.
     const boxTop=invoicePage===1 ? contentBottom-boxH : y;
     const bankW=(right-left)*67/180,qrW=(right-left)*67/180,sigW=(right-left)*46/180;
     doc.setDrawColor(90,96,102);
