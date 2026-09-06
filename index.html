@@ -5158,7 +5158,7 @@ body.seervi-ai-open .float-wa{display:none!important}
       <section id="adminSettingsSectionNotifications" class="admin-settings-section" hidden><div class="crm-section-title">NOTIFICATIONS</div><div class="admin-settings-grid">
         <label class="admin-settings-check"><input id="settingNotifications" type="checkbox"> Notifications Enabled</label><label class="admin-settings-check"><input id="settingSound" type="checkbox"> Notification Sound Enabled</label>
       </div></section>
-      <section id="adminSettingsSectionPdf" class="admin-settings-section" hidden><div class="crm-section-title">PDF LAYOUT</div><p class="admin-settings-help">Choose the document first. Then only that document's PDF layout settings are shown.</p>
+      <section id="adminSettingsSectionPdf" class="admin-settings-section" hidden><div class="crm-section-title">PDF LAYOUT</div><p class="admin-settings-help">Choose the document first. STANDARD is the current final PDF format. Quotation and Invoice keep their existing design, sizing and pagination behavior unless CUSTOM is selected.</p>
         <div class="pdf-layout-subnav" role="tablist" aria-label="PDF layout options">
           <button type="button" class="active" data-pdf-layout-section="quotation" onclick="seerviPdfLayoutSection('quotation')">QUOTATION</button>
           <button type="button" data-pdf-layout-section="invoice" onclick="seerviPdfLayoutSection('invoice')">INVOICE</button>
@@ -5213,7 +5213,7 @@ body.seervi-ai-open .float-wa{display:none!important}
             </div>
           </div>
         </div>
-        <div class="admin-settings-readonly">Custom values are used only when that document is set to CUSTOM. Changes apply to new quotation/invoice PDFs; existing PDF files are not modified.</div>
+        <div class="admin-settings-readonly"><strong>STANDARD = CURRENT FINAL FORMAT</strong><br>Quotation: current quotation layout with Round Off. Invoice: current natural item-flow layout — Page 1 items continue as far as the A4 page allows, then Notes + Totals + Round Off + Amount in Words + HSN/SAC + Bank / QR / Authorised Signatory follow immediately below; Page 2 onward uses normal flow. Custom values are used only when that document is set to CUSTOM. Changes apply to new quotation/invoice PDFs; existing PDF files are not modified.</div>
       </section>
 <section id="adminSettingsSectionAdvanced" class="admin-settings-section" hidden><div class="crm-section-title">ADVANCED</div><div class="admin-settings-grid">
         <label class="admin-settings-check"><input id="settingMaintenance" type="checkbox"> Maintenance Mode</label><label class="full">Maintenance Message<textarea id="settingMaintenanceMessage"></textarea></label>
@@ -14328,7 +14328,7 @@ window.seerviCloseItemsPanel=function(){
    devices receive the same site configuration. Existing product/Firebase
    catalogue logic is intentionally untouched. */
 const SEERVI_SITE_SETTINGS_DEFAULTS={
-  vanta:{color:'#ff3f81',backgroundColor:'#23153c',points:10,maxDistance:20,spacing:15,showDots:true},
+  vanta:{color:'#ff99c5',backgroundColor:'#000000',points:10,maxDistance:15,spacing:15,showDots:true},
   branding:{companyName:'Seervi Trading',tagline:'Sourced Globally. Supplied by Seervi.',email:'info@seervitrading.com',whatsapp:'917073741650'},
   homepage:{heroKicker:'SEERVI TRADING / GLOBAL SOURCING',heroTitle:'Sourced Globally.',heroHighlight:'Supplied by Seervi.',heroDescription:'Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.',heroCta:'Explore Our Solutions',heroImage:'images/00-old-products/product-image-001-055cde1217d3c801.webp',showSupplyFlow:true,showAbout:true,showWhy:true,showContact:true},
   catalogue:{sectionTitle:'Our Products',showCatalogue:true,showSearch:true,showSort:true,showCategoryFilter:true,showSubcategoryFilter:true},
@@ -14521,6 +14521,8 @@ function seerviPdfLayoutPreset(type){
   }
   if(mode==='compact')return {mode,left:15,right:195,width:180,topMargin:type==='invoice'?10:15,bottomMargin:10,startY:type==='invoice'?10:15,headerFont:type==='invoice'?12.5:20,bodyFont:type==='invoice'?6.7:8.5,tableFont:type==='invoice'?7.1:8,totalFont:type==='invoice'?7.8:9,grandFont:type==='invoice'?10.5:12,footerFont:type==='invoice'?7.4:8,rowMin:type==='invoice'?5:7,rowLine:type==='invoice'?2.7:3.8,rowPad:type==='invoice'?1:2.5,headerH:type==='invoice'?33:0,billH:type==='invoice'?31:0};
   if(mode==='spacious')return {mode,left:15,right:195,width:180,topMargin:type==='invoice'?14:20,bottomMargin:10,startY:type==='invoice'?14:20,headerFont:type==='invoice'?14:24,bodyFont:type==='invoice'?7.2:9,tableFont:type==='invoice'?8:8.8,totalFont:type==='invoice'?8.5:10,grandFont:type==='invoice'?11.5:13,footerFont:type==='invoice'?8:8.5,rowMin:type==='invoice'?7:9,rowLine:type==='invoice'?3.5:4.8,rowPad:type==='invoice'?2:3.5,headerH:type==='invoice'?40:0,billH:type==='invoice'?35:0};
+  // STANDARD is intentionally the current final production format.
+  // Invoice pagination/bottom-section behavior is handled by the invoice PDF flow itself.
   return {mode:'standard',left:15,right:195,width:180,topMargin:type==='invoice'?12:17,bottomMargin:10,startY:type==='invoice'?12:17,headerFont:type==='invoice'?12.5:22,bodyFont:type==='invoice'?6.7:8.5,tableFont:type==='invoice'?7.1:8,totalFont:type==='invoice'?7.8:9,grandFont:type==='invoice'?10.5:12,footerFont:type==='invoice'?7.4:8,rowMin:type==='invoice'?6:8,rowLine:type==='invoice'?3.1:4.3,rowPad:type==='invoice'?1.5:3,headerH:type==='invoice'?36:0,billH:type==='invoice'?33:0};
 }
 window.seerviPdfLayoutSection=function(section){
