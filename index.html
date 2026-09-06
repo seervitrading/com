@@ -4981,106 +4981,193 @@ body.seervi-ai-open .float-wa{display:none!important}
   }
 }
 </style>
-<style id="seervi-admin-universal-font-final">
-/* Keep the quotation panel's readable typography consistent across all admin dashboard panels. */
-#crmModal .crm-panel,
+
+<style id="seervi-admin-all-panels-font-size">
+/* Admin panel typography: match the established quotation-panel desktop scale. */
 #adminSettingsModal .crm-panel,
 #adminBackupOptionsModal .crm-panel,
-#crmPartyLedgerViewModal .crm-panel,
-#crmQuoteViewModal .crm-panel,
-#gstProfileModal .crm-panel,
 #notificationModal .crm-panel,
 #notificationPostModal .crm-panel,
 #seerviActivityModal .crm-panel,
-#seerviInvoiceInputModal .crm-panel,
-#seerviItemsModal .crm-panel,
-#accountDashboardModal .crm-panel{
+#gstProfileModal .crm-panel,
+#seerviInvoiceInputModal .seervi-invoice-input-card,
+#crmQuoteViewModal .crm-quote-view-card,
+#crmPartyLedgerViewModal .crm-party-ledger-view-card{
   font-size:14px;
   line-height:1.45;
 }
-#crmModal .crm-panel label,
-#adminSettingsModal .crm-panel label,
-#adminBackupOptionsModal .crm-panel label,
-#crmPartyLedgerViewModal .crm-panel label,
-#crmQuoteViewModal .crm-panel label,
-#gstProfileModal .crm-panel label,
-#notificationModal .crm-panel label,
-#notificationPostModal .crm-panel label,
-#seerviActivityModal .crm-panel label,
-#seerviInvoiceInputModal .crm-panel label,
-#seerviItemsModal .crm-panel label,
-#accountDashboardModal .crm-panel label{
-  font-size:13px !important;
-  line-height:1.3;
+
+#adminSettingsModal .crm-head h3,
+#adminBackupOptionsModal .crm-head h3,
+#notificationModal .crm-head h3,
+#notificationPostModal .crm-head h3,
+#seerviActivityModal .crm-head h3,
+#gstProfileModal .crm-head h3{
+  font-size:26px;
+  line-height:1.15;
 }
-#crmModal .crm-panel input,
-#crmModal .crm-panel select,
-#crmModal .crm-panel textarea,
-#adminSettingsModal .crm-panel input,
-#adminSettingsModal .crm-panel select,
-#adminSettingsModal .crm-panel textarea,
-#adminBackupOptionsModal .crm-panel input,
-#adminBackupOptionsModal .crm-panel select,
-#adminBackupOptionsModal .crm-panel textarea,
-#crmPartyLedgerViewModal .crm-panel input,
-#crmPartyLedgerViewModal .crm-panel select,
-#crmPartyLedgerViewModal .crm-panel textarea,
-#crmQuoteViewModal .crm-panel input,
-#crmQuoteViewModal .crm-panel select,
-#crmQuoteViewModal .crm-panel textarea,
-#gstProfileModal .crm-panel input,
-#gstProfileModal .crm-panel select,
-#gstProfileModal .crm-panel textarea,
-#notificationModal .crm-panel input,
-#notificationModal .crm-panel select,
-#notificationModal .crm-panel textarea,
-#notificationPostModal .crm-panel input,
-#notificationPostModal .crm-panel select,
-#notificationPostModal .crm-panel textarea,
-#seerviActivityModal .crm-panel input,
-#seerviActivityModal .crm-panel select,
-#seerviActivityModal .crm-panel textarea,
-#seerviInvoiceInputModal .crm-panel input,
-#seerviInvoiceInputModal .crm-panel select,
-#seerviInvoiceInputModal .crm-panel textarea,
-#seerviItemsModal .crm-panel input,
-#seerviItemsModal .crm-panel select,
-#seerviItemsModal .crm-panel textarea,
-#accountDashboardModal .crm-panel input,
-#accountDashboardModal .crm-panel select,
-#accountDashboardModal .crm-panel textarea{
-  font-size:14px !important;
+
+#adminSettingsModal .crm-kicker,
+#adminSettingsModal .crm-section-title,
+#adminBackupOptionsModal .crm-kicker,
+#adminBackupOptionsModal .crm-section-title,
+#notificationModal .crm-kicker,
+#notificationModal .crm-section-title,
+#notificationPostModal .crm-kicker,
+#notificationPostModal .crm-section-title,
+#seerviActivityModal .crm-kicker,
+#seerviActivityModal .crm-section-title,
+#gstProfileModal .crm-kicker,
+#gstProfileModal .crm-section-title,
+#seerviInvoiceInputModal .seervi-invoice-input-field label{
+  font-size:13px;
+  line-height:1.25;
+}
+
+#adminSettingsModal .crm-auth-status,
+#adminSettingsModal .admin-settings-help,
+#adminSettingsModal .admin-settings-readonly,
+#adminBackupOptionsModal .crm-auth-status,
+#adminBackupOptionsModal .account-dashboard-option small,
+#notificationModal .crm-auth-status,
+#notificationPostModal .crm-auth-status,
+#seerviActivityModal .crm-auth-status,
+#seerviActivityModal .crm-muted,
+#gstProfileModal .crm-auth-status,
+#gstProfileModal .admin-settings-help,
+#seerviInvoiceInputModal .seervi-invoice-input-note{
+  font-size:13px;
+  line-height:1.45;
+}
+
+#adminSettingsModal input,
+#adminSettingsModal select,
+#adminSettingsModal textarea,
+#adminBackupOptionsModal input,
+#adminBackupOptionsModal select,
+#adminBackupOptionsModal textarea,
+#notificationModal input,
+#notificationModal select,
+#notificationModal textarea,
+#notificationPostModal input,
+#notificationPostModal select,
+#notificationPostModal textarea,
+#seerviActivityModal input,
+#seerviActivityModal select,
+#seerviActivityModal textarea,
+#gstProfileModal input,
+#gstProfileModal select,
+#gstProfileModal textarea,
+#seerviInvoiceInputModal input,
+#seerviInvoiceInputModal textarea{
+  font-size:14px;
   line-height:1.35;
 }
-#crmModal .crm-panel button,
-#adminSettingsModal .crm-panel button,
-#adminBackupOptionsModal .crm-panel button,
-#crmPartyLedgerViewModal .crm-panel button,
-#crmQuoteViewModal .crm-panel button,
-#gstProfileModal .crm-panel button,
-#notificationModal .crm-panel button,
-#notificationPostModal .crm-panel button,
-#seerviActivityModal .crm-panel button,
-#seerviInvoiceInputModal .crm-panel button,
-#seerviItemsModal .crm-panel button,
-#accountDashboardModal .crm-panel button{
-  font-size:13px !important;
+
+#adminSettingsModal .crm-primary,
+#adminSettingsModal .crm-secondary,
+#adminBackupOptionsModal .crm-primary,
+#adminBackupOptionsModal .crm-secondary,
+#notificationModal .crm-primary,
+#notificationModal .crm-secondary,
+#notificationPostModal .crm-primary,
+#notificationPostModal .crm-secondary,
+#seerviActivityModal .crm-primary,
+#seerviActivityModal .crm-secondary,
+#gstProfileModal .crm-primary,
+#gstProfileModal .crm-secondary,
+#seerviInvoiceInputModal button{
+  font-size:13px;
+  line-height:1.25;
 }
-#crmModal .crm-panel .crm-row,
-#adminSettingsModal .crm-panel .crm-row,
-#adminBackupOptionsModal .crm-panel .crm-row,
-#crmPartyLedgerViewModal .crm-panel .crm-row,
-#crmQuoteViewModal .crm-panel .crm-row,
-#gstProfileModal .crm-panel .crm-row,
-#notificationModal .crm-panel .crm-row,
-#notificationPostModal .crm-panel .crm-row,
-#seerviActivityModal .crm-panel .crm-row,
-#seerviInvoiceInputModal .crm-panel .crm-row,
-#seerviItemsModal .crm-panel .crm-row,
-#accountDashboardModal .crm-panel .crm-row{
-  font-size:14px !important;
+
+#adminBackupOptionsModal .account-dashboard-option strong{font-size:14px;}
+#adminBackupOptionsModal .account-dashboard-option small{margin-top:7px;}
+
+#notificationModal .notification-toolbar,
+#notificationPostModal .notification-toolbar{font-size:13px;}
+#notificationModal .notification-card-title,
+#notificationPostModal .notification-card-title{font-size:14px;}
+#notificationModal .notification-card-date,
+#notificationPostModal .notification-card-date{font-size:13px;}
+#notificationModal .notification-card-message,
+#notificationPostModal .notification-card-message{font-size:14px;line-height:1.55;}
+#notificationModal .notification-read-btn,
+#notificationPostModal .notification-read-btn{font-size:13px;}
+#notificationModal .notification-empty,
+#notificationPostModal .notification-empty{font-size:13px;}
+
+#seerviActivityModal .seervi-activity-filter{font-size:13px;}
+#seerviActivityModal .seervi-activity-badge{font-size:13px;}
+#seerviActivityModal .seervi-activity-main strong{font-size:14px;}
+#seerviActivityModal .seervi-activity-main span{font-size:13px;}
+#seerviActivityModal .seervi-activity-time{font-size:13px;}
+#seerviActivityModal .seervi-activity-empty{font-size:13px;}
+
+#gstProfileModal .admin-settings-grid label{font-size:13px;}
+#gstProfileModal .gst-profile-footer{font-size:14px;}
+
+#crmQuoteViewModal .crm-quote-view-head h3,
+#crmPartyLedgerViewModal .crm-quote-view-head h3{font-size:26px;line-height:1.15;}
+#crmQuoteViewModal .crm-quote-view-meta,
+#crmPartyLedgerViewModal .crm-quote-view-meta{font-size:13px;}
+#crmQuoteViewModal .crm-qv-box small,
+#crmPartyLedgerViewModal .crm-qv-box small{font-size:13px;}
+#crmQuoteViewModal .crm-qv-box strong,
+#crmPartyLedgerViewModal .crm-qv-box strong{font-size:14px;}
+#crmQuoteViewModal .crm-qv-table,
+#crmPartyLedgerViewModal .crm-qv-table{font-size:14px;}
+#crmQuoteViewModal .crm-qv-table th,
+#crmPartyLedgerViewModal .crm-qv-table th{font-size:13px;}
+#crmQuoteViewModal .crm-qv-grand,
+#crmPartyLedgerViewModal .crm-qv-grand{font-size:18px;}
+#crmQuoteViewModal .crm-quote-status-bar>span{font-size:13px;}
+#crmQuoteViewModal .crm-quote-status-bar select{font-size:14px;}
+
+#seerviInvoiceInputModal .seervi-invoice-input-head h3{font-size:26px;line-height:1.15;}
+
+/* Full-screen Items panel: use the same readable scale without changing its layout. */
+#seerviItemsModal .seervi-items-modal-card{font-size:14px;line-height:1.45;}
+#seerviItemsModal .admin-items-subtitle{font-size:13px;}
+#seerviItemsModal .admin-items-tab{font-size:13px;}
+#seerviItemsModal .admin-items-toolbar label,
+#seerviItemsModal .seervi-item-form label,
+#seerviItemsModal .seervi-category-form label{font-size:13px;}
+#seerviItemsModal .admin-items-toolbar input,
+#seerviItemsModal .admin-items-toolbar select,
+#seerviItemsModal .seervi-item-form input,
+#seerviItemsModal .seervi-item-form select,
+#seerviItemsModal .seervi-item-form textarea,
+#seerviItemsModal .seervi-category-form input,
+#seerviItemsModal .seervi-category-form select{font-size:14px;}
+#seerviItemsModal .seervi-item-name{font-size:14px;}
+#seerviItemsModal .seervi-item-meta,
+#seerviItemsModal .seervi-item-category,
+#seerviItemsModal .seervi-item-status{font-size:13px;}
+#seerviItemsModal .seervi-item-actions button{font-size:13px!important;}
+#seerviItemsModal .seervi-item-form-section-title{font-size:13px;}
+#seerviItemsModal .seervi-category-type,
+#seerviItemsModal .seervi-category-parent,
+#seerviItemsModal .seervi-category-active{font-size:13px;}
+#seerviItemsModal .seervi-category-name{font-size:14px;}
+
+/* Admin dashboard's option cards use the quotation-panel readable scale. */
+#adminDashboardOptions .account-dashboard-option strong{font-size:14px;}
+#adminDashboardOptions .account-dashboard-option small{font-size:13px;line-height:1.45;}
+
+@media(max-width:600px){
+  #adminSettingsModal .crm-head h3,
+  #adminBackupOptionsModal .crm-head h3,
+  #notificationModal .crm-head h3,
+  #notificationPostModal .crm-head h3,
+  #seerviActivityModal .crm-head h3,
+  #gstProfileModal .crm-head h3,
+  #crmQuoteViewModal .crm-quote-view-head h3,
+  #crmPartyLedgerViewModal .crm-quote-view-head h3,
+  #seerviInvoiceInputModal .seervi-invoice-input-head h3{font-size:24px;}
 }
 </style>
+
 </head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -7892,16 +7979,17 @@ window.submitPartySignup=async function(e){
 
     if(status){status.textContent='Account created successfully! Your complete party profile is saved.';status.style.color='#7ee2a4';}
     window.publicSignupAccountPassword='';
-    customerUser=user;
-    crmUser=null;
-    updateAuthNav();
-    closePartySignup();
-    goHomeAfterAuth();
-    closeCustomerLogin();
-    goHomeAfterAuth();
-    window.Seervi?.notify?.play('signup');
-    Promise.resolve(window.seerviLogActivity('customer_signed_up','auth','Customer completed sign up',publicSignupAuth.currentUser))
-      .catch(err=>console.warn('Signup activity log failed:',err));
+    setTimeout(async ()=>{
+      customerUser=user;
+      crmUser=null;
+      updateAuthNav();
+      closePartySignup();
+      goHomeAfterAuth();
+      await window.seerviLogActivity('customer_signed_up','auth','Customer completed sign up',publicSignupAuth.currentUser);
+      closeCustomerLogin();
+      goHomeAfterAuth();
+      window.Seervi?.notify?.play('signup');
+    },700);
   }catch(err){
     console.error('Customer signup failed:',err);
     const code=err?.code||'';
@@ -11552,11 +11640,9 @@ window.crmSaveCurrentQuote = async function(){
       const invoiceNo=editInvoiceMeta.invoiceNo || oldInv.invoiceNo || '';
       crmEditingInvoiceId='';
       window.crmEditingInvoiceMeta=null;
-      await Promise.all([
-        crmRefreshParties(),
-        crmLoadPartyData(crmPartyId),
-        crmLoadGlobalAdmin()
-      ]);
+      await crmRefreshParties();
+      await crmLoadPartyData(crmPartyId);
+      await crmLoadGlobalAdmin();
       clearCart(); renderCart(); closeCart(); crmShowWorkspace();
 
       const crmModal=document.getElementById('crmModal');
@@ -11681,11 +11767,9 @@ window.crmSaveCurrentQuote = async function(){
       await editBatch.commit();
       crmEditingQuoteId='';
       crmEditingInvoiceId='';
-      await Promise.all([
-        crmRefreshParties(),
-        crmLoadPartyData(crmPartyId),
-        crmLoadGlobalAdmin()
-      ]);
+      await crmRefreshParties();
+      await crmLoadPartyData(crmPartyId);
+      await crmLoadGlobalAdmin();
       /* Firebase save is complete at this point. Now and only now clear the
          local cart so an interrupted save never destroys the working quote. */
       clearCart();
@@ -11775,7 +11859,8 @@ window.crmSaveCurrentQuote = async function(){
 
     createBatch.set(doc(db,'parties',crmPartyId),{updatedAt:serverTimestamp()},{merge:true});
     await createBatch.commit();
-    await Promise.all([crmLoadPartyData(crmPartyId),crmLoadGlobalAdmin()]);
+    await crmLoadPartyData(crmPartyId);
+    await crmLoadGlobalAdmin();
     /* New quotation is fully persisted in Firebase. Clear the cart only after
        all required cloud writes and refreshes have succeeded. */
     clearCart();
@@ -14819,7 +14904,7 @@ window.seerviActivityFilter=function(filter){seerviActivityFilterValue=['all','a
 window.loadAdminActivity=async function(){if(!crmUser||!isAuthorisedAdmin(crmUser)){closeAdminActivity();openAdminPanel();return;}const status=$('seerviActivityStatus'),list=$('seerviActivityList');if(status)status.textContent='Loading activity…';if(list)list.innerHTML='';try{const snap=await getDocs(query(collection(db,SEERVI_ACTIVITY_COLLECTION),limit(250)));seerviActivityCache=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.toMillis?b.createdAt.toMillis():0)-(a.createdAt?.toMillis?a.createdAt.toMillis():0));if(status)status.textContent=`Showing ${seerviActivityCache.length} recent activities.`;seerviActivityRender();}catch(error){console.error('Activity load failed:',error);if(status)status.textContent='Activity load failed: '+(error?.message||'Check Firebase rules.');if(list)list.innerHTML='<div class="seervi-activity-empty">Could not load activity log.</div>';}};
 window.openAdminActivity=function(){if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const m=$('seerviActivityModal');if(!m)return;m.classList.add('show');m.setAttribute('aria-hidden','false');seerviActivityFilter('all');loadAdminActivity();};
 window.closeAdminActivity=function(){const m=$('seerviActivityModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');};
-function seerviWrapActivity(name,module,action,description){const original=window[name];if(typeof original!=='function'||original.__seerviActivityWrapped)return;const wrapped=async function(...args){let actor=crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser;const result=await original.apply(this,args);actor=crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser||actor;if(actor){const desc=typeof description==='function'?description(result,args):description;Promise.resolve(window.seerviLogActivity(action,module,desc,actor)).catch(e=>console.warn('Activity log failed:',e));}return result;};wrapped.__seerviActivityWrapped=true;wrapped.__seerviActivityOriginal=original;window[name]=wrapped;}
+function seerviWrapActivity(name,module,action,description){const original=window[name];if(typeof original!=='function'||original.__seerviActivityWrapped)return;const wrapped=async function(...args){let actor=crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser;const result=await original.apply(this,args);actor=crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser||actor;if(actor){const desc=typeof description==='function'?description(result,args):description;await window.seerviLogActivity(action,module,desc,actor);}return result;};wrapped.__seerviActivityWrapped=true;wrapped.__seerviActivityOriginal=original;window[name]=wrapped;}
 seerviWrapActivity('seerviCreateItem','items','item_created',r=>`Added product: ${r?.name||'New item'}`);seerviWrapActivity('seerviUpdateItem','items','item_updated',r=>`Updated product: ${r?.name||r?.id||'Item'}`);seerviWrapActivity('seerviDeleteItem','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviCreateItemCategory','categories','category_created',r=>`Added ${r?.type||'category'}: ${r?.name||'Category'}`);seerviWrapActivity('seerviUpdateItemCategory','categories','category_updated',r=>`Updated ${r?.type||'category'}: ${r?.name||r?.id||'Category'}`);seerviWrapActivity('seerviDeleteItemCategory','categories','category_deleted',(_,a)=>`Deleted category/subcategory: ${a?.[0]||'Category'}`);seerviWrapActivity('crmSaveParty','parties','party_saved',()=>`Saved party/customer: ${document.getElementById('crmPartyName')?.value||'Party'}`);seerviWrapActivity('crmSaveCurrentQuote','quotations','quotation_saved',()=>`Saved quotation`);seerviWrapActivity('crmSaveQuoteStatus','quotations','quotation_status_updated',()=>`Updated quotation status`);seerviWrapActivity('crmDeleteParty','parties','party_deleted',(_,a)=>`Deleted party/customer: ${a?.[0]||'Party'}`);seerviWrapActivity('crmEditInvoice','invoices','invoice_edit_opened',(_,a)=>`Editing invoice: ${a?.[0]||'Invoice'}`);seerviWrapActivity('crmDeleteInvoice','invoices','invoice_deleted',(_,a)=>`Deleted invoice: ${a?.[0]||'Invoice'}`);seerviWrapActivity('crmDeleteQuote','quotations','quotation_deleted',(_,a)=>`Deleted quotation: ${a?.[0]||'Quotation'}`);seerviWrapActivity('crmDeleteLedgerEntry','ledger','ledger_entry_deleted',(_,a)=>`Deleted ledger entry: ${a?.[0]||'Entry'}`);seerviWrapActivity('crmAddLedgerEntry','ledger','ledger_entry_added',()=>`Added payment/ledger entry`);seerviWrapActivity('submitNotificationPost','notifications','notification_posted',()=>`Posted notification`);seerviWrapActivity('seerviToggleItemActive','items','item_status_changed',(_,a)=>`Changed item active status: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviDuplicateItem','items','item_duplicated',(_,a)=>`Duplicated product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveItemForm','items','item_saved',()=>`Saved product from Items panel`);seerviWrapActivity('seerviDeleteItemConfirm','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveAdminSettings','settings','settings_updated',()=>`Updated global website settings`);seerviWrapActivity('seerviBackupItems','backup','items_backup',()=>`Created items backup`);seerviWrapActivity('seerviBackupCategories','backup','categories_backup',()=>`Created categories backup`);seerviWrapActivity('seerviBackupQuotationsWithParty','backup','quotations_backup',()=>`Created quotations backup`);seerviWrapActivity('setInventorySubcategoryStock','inventory','subcategory_stock_updated',(_,a)=>`Updated subcategory stock: ${a?.[1]||a?.[0]||'Subcategory'}`);seerviWrapActivity('setInventoryCategoryStock','inventory','category_stock_updated',(_,a)=>`Updated category stock: ${a?.[0]||'Category'}`);seerviWrapActivity('setInventoryQuantity','inventory','inventory_quantity_updated',(_,a)=>`Updated inventory quantity: ${a?.[0]||'Item'}`);seerviWrapActivity('setInventoryStock','inventory','inventory_stock_updated',(_,a)=>`Updated stock status: ${a?.[0]||'Item'}`);seerviWrapActivity('toggleInventoryStock','inventory','inventory_stock_toggled',()=>`Toggled inventory stock status`);seerviWrapActivity('seerviBulkImport','items','bulk_items_imported',()=>`Imported products in bulk`);seerviWrapActivity('seerviCategoryBulkImport','categories','bulk_categories_imported',()=>`Imported categories/subcategories in bulk`);
 seerviWrapActivity('saveCustomerCartRequest','quotations','quotation_requested',()=>`Requested a quotation`);seerviWrapActivity('customerSaveProfile','profile','profile_updated',()=>`Updated customer profile`);seerviWrapActivity('crmSignIn','auth','admin_signed_in',()=>`Admin signed in`);seerviWrapActivity('customerSignIn','auth','customer_signed_in',()=>`Customer signed in`);
 
@@ -14838,7 +14923,7 @@ seerviWrapActivity('saveCustomerCartRequest','quotations','quotation_requested',
     sub.textContent=detail||'Processing securely…';
     showTimer=setTimeout(()=>{
       if(active>0 && loader){loader.classList.add('show');loader.setAttribute('aria-busy','true');}
-    },60);
+    },180);
   }
   function hide(){
     active=Math.max(0,active-1);
@@ -14846,7 +14931,7 @@ seerviWrapActivity('saveCustomerCartRequest','quotations','quotation_requested',
     if(showTimer){clearTimeout(showTimer);showTimer=null;}
     hideTimer=setTimeout(()=>{
       if(loader){loader.classList.remove('show');loader.setAttribute('aria-busy','false');}
-    },0);
+    },120);
   }
   window.seerviLoadingStart=show;
   window.seerviLoadingStop=hide;
@@ -14855,15 +14940,20 @@ seerviWrapActivity('saveCustomerCartRequest','quotations','quotation_requested',
   // Only wrap operations that can genuinely wait on Firebase/PDF/cloud work.
   // The existing button-level loading labels remain untouched.
   const labels={
+    customerSignIn:['SIGNING IN','Checking your account…'],
     customerSignOut:['SIGNING OUT','Closing your secure session…'],
+    submitPartySignup:['CREATING ACCOUNT','Saving your profile securely…'],
+    createPublicCustomerAccount:['CREATING ACCOUNT','Setting up your secure account…'],
     sendSeerviPasswordReset:['SENDING RESET','Sending password reset email…'],
     saveCustomerCartRequest:['SAVING REQUEST','Saving your enquiry to the cloud…'],
     customerSaveProfile:['SAVING PROFILE','Updating your profile…'],
+    crmSignIn:['SIGNING IN','Checking admin access…'],
     crmSignOut:['SIGNING OUT','Closing admin session…'],
     crmRefresh:['REFRESHING','Loading latest cloud data…'],
     crmRefreshAdminData:['REFRESHING','Loading latest cloud data…'],
     crmLoadGlobalAdmin:['LOADING DASHBOARD','Loading secure admin data…'],
     crmSaveParty:['SAVING PARTY','Saving party details…'],
+    crmSaveCurrentQuote:['SAVING QUOTATION','Saving quotation to the cloud…'],
     crmSaveQuoteStatus:['SAVING STATUS','Updating quotation status…'],
     crmDownloadPartyLedger:['PREPARING LEDGER','Generating your ledger…'],
     crmDownloadQuote:['PREPARING PDF','Generating quotation PDF…'],
