@@ -7892,17 +7892,16 @@ window.submitPartySignup=async function(e){
 
     if(status){status.textContent='Account created successfully! Your complete party profile is saved.';status.style.color='#7ee2a4';}
     window.publicSignupAccountPassword='';
-    setTimeout(async ()=>{
-      customerUser=user;
-      crmUser=null;
-      updateAuthNav();
-      closePartySignup();
-      goHomeAfterAuth();
-      await window.seerviLogActivity('customer_signed_up','auth','Customer completed sign up',publicSignupAuth.currentUser);
-      closeCustomerLogin();
-      goHomeAfterAuth();
-      window.Seervi?.notify?.play('signup');
-    },700);
+    customerUser=user;
+    crmUser=null;
+    updateAuthNav();
+    closePartySignup();
+    goHomeAfterAuth();
+    closeCustomerLogin();
+    goHomeAfterAuth();
+    window.Seervi?.notify?.play('signup');
+    Promise.resolve(window.seerviLogActivity('customer_signed_up','auth','Customer completed sign up',publicSignupAuth.currentUser))
+      .catch(err=>console.warn('Signup activity log failed:',err));
   }catch(err){
     console.error('Customer signup failed:',err);
     const code=err?.code||'';
@@ -11553,9 +11552,11 @@ window.crmSaveCurrentQuote = async function(){
       const invoiceNo=editInvoiceMeta.invoiceNo || oldInv.invoiceNo || '';
       crmEditingInvoiceId='';
       window.crmEditingInvoiceMeta=null;
-      await crmRefreshParties();
-      await crmLoadPartyData(crmPartyId);
-      await crmLoadGlobalAdmin();
+      await Promise.all([
+        crmRefreshParties(),
+        crmLoadPartyData(crmPartyId),
+        crmLoadGlobalAdmin()
+      ]);
       clearCart(); renderCart(); closeCart(); crmShowWorkspace();
 
       const crmModal=document.getElementById('crmModal');
@@ -11680,9 +11681,11 @@ window.crmSaveCurrentQuote = async function(){
       await editBatch.commit();
       crmEditingQuoteId='';
       crmEditingInvoiceId='';
-      await crmRefreshParties();
-      await crmLoadPartyData(crmPartyId);
-      await crmLoadGlobalAdmin();
+      await Promise.all([
+        crmRefreshParties(),
+        crmLoadPartyData(crmPartyId),
+        crmLoadGlobalAdmin()
+      ]);
       /* Firebase save is complete at this point. Now and only now clear the
          local cart so an interrupted save never destroys the working quote. */
       clearCart();
@@ -11772,8 +11775,7 @@ window.crmSaveCurrentQuote = async function(){
 
     createBatch.set(doc(db,'parties',crmPartyId),{updatedAt:serverTimestamp()},{merge:true});
     await createBatch.commit();
-    await crmLoadPartyData(crmPartyId);
-    await crmLoadGlobalAdmin();
+    await Promise.all([crmLoadPartyData(crmPartyId),crmLoadGlobalAdmin()]);
     /* New quotation is fully persisted in Firebase. Clear the cart only after
        all required cloud writes and refreshes have succeeded. */
     clearCart();
@@ -14817,7 +14819,7 @@ window.seerviActivityFilter=function(filter){seerviActivityFilterValue=['all','a
 window.loadAdminActivity=async function(){if(!crmUser||!isAuthorisedAdmin(crmUser)){closeAdminActivity();openAdminPanel();return;}const status=$('seerviActivityStatus'),list=$('seerviActivityList');if(status)status.textContent='Loading activity…';if(list)list.innerHTML='';try{const snap=await getDocs(query(collection(db,SEERVI_ACTIVITY_COLLECTION),limit(250)));seerviActivityCache=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.toMillis?b.createdAt.toMillis():0)-(a.createdAt?.toMillis?a.createdAt.toMillis():0));if(status)status.textContent=`Showing ${seerviActivityCache.length} recent activities.`;seerviActivityRender();}catch(error){console.error('Activity load failed:',error);if(status)status.textContent='Activity load failed: '+(error?.message||'Check Firebase rules.');if(list)list.innerHTML='<div class="seervi-activity-empty">Could not load activity log.</div>';}};
 window.openAdminActivity=function(){if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const m=$('seerviActivityModal');if(!m)return;m.classList.add('show');m.setAttribute('aria-hidden','false');seerviActivityFilter('all');loadAdminActivity();};
 window.closeAdminActivity=function(){const m=$('seerviActivityModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');};
-function seerviWrapActivity(name,module,action,description){const original=window[name];if(typeof original!=='function'||original.__seerviActivityWrapped)return;const wrapped=async function(...args){let actor=crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser;const result=await original.apply(this,args);actor=crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser||actor;if(actor){const desc=typeof description==='function'?description(result,args):description;await window.seerviLogActivity(action,module,desc,actor);}return result;};wrapped.__seerviActivityWrapped=true;wrapped.__seerviActivityOriginal=original;window[name]=wrapped;}
+function seerviWrapActivity(name,module,action,description){const original=window[name];if(typeof original!=='function'||original.__seerviActivityWrapped)return;const wrapped=async function(...args){let actor=crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser;const result=await original.apply(this,args);actor=crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser||actor;if(actor){const desc=typeof description==='function'?description(result,args):description;Promise.resolve(window.seerviLogActivity(action,module,desc,actor)).catch(e=>console.warn('Activity log failed:',e));}return result;};wrapped.__seerviActivityWrapped=true;wrapped.__seerviActivityOriginal=original;window[name]=wrapped;}
 seerviWrapActivity('seerviCreateItem','items','item_created',r=>`Added product: ${r?.name||'New item'}`);seerviWrapActivity('seerviUpdateItem','items','item_updated',r=>`Updated product: ${r?.name||r?.id||'Item'}`);seerviWrapActivity('seerviDeleteItem','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviCreateItemCategory','categories','category_created',r=>`Added ${r?.type||'category'}: ${r?.name||'Category'}`);seerviWrapActivity('seerviUpdateItemCategory','categories','category_updated',r=>`Updated ${r?.type||'category'}: ${r?.name||r?.id||'Category'}`);seerviWrapActivity('seerviDeleteItemCategory','categories','category_deleted',(_,a)=>`Deleted category/subcategory: ${a?.[0]||'Category'}`);seerviWrapActivity('crmSaveParty','parties','party_saved',()=>`Saved party/customer: ${document.getElementById('crmPartyName')?.value||'Party'}`);seerviWrapActivity('crmSaveCurrentQuote','quotations','quotation_saved',()=>`Saved quotation`);seerviWrapActivity('crmSaveQuoteStatus','quotations','quotation_status_updated',()=>`Updated quotation status`);seerviWrapActivity('crmDeleteParty','parties','party_deleted',(_,a)=>`Deleted party/customer: ${a?.[0]||'Party'}`);seerviWrapActivity('crmEditInvoice','invoices','invoice_edit_opened',(_,a)=>`Editing invoice: ${a?.[0]||'Invoice'}`);seerviWrapActivity('crmDeleteInvoice','invoices','invoice_deleted',(_,a)=>`Deleted invoice: ${a?.[0]||'Invoice'}`);seerviWrapActivity('crmDeleteQuote','quotations','quotation_deleted',(_,a)=>`Deleted quotation: ${a?.[0]||'Quotation'}`);seerviWrapActivity('crmDeleteLedgerEntry','ledger','ledger_entry_deleted',(_,a)=>`Deleted ledger entry: ${a?.[0]||'Entry'}`);seerviWrapActivity('crmAddLedgerEntry','ledger','ledger_entry_added',()=>`Added payment/ledger entry`);seerviWrapActivity('submitNotificationPost','notifications','notification_posted',()=>`Posted notification`);seerviWrapActivity('seerviToggleItemActive','items','item_status_changed',(_,a)=>`Changed item active status: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviDuplicateItem','items','item_duplicated',(_,a)=>`Duplicated product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveItemForm','items','item_saved',()=>`Saved product from Items panel`);seerviWrapActivity('seerviDeleteItemConfirm','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveAdminSettings','settings','settings_updated',()=>`Updated global website settings`);seerviWrapActivity('seerviBackupItems','backup','items_backup',()=>`Created items backup`);seerviWrapActivity('seerviBackupCategories','backup','categories_backup',()=>`Created categories backup`);seerviWrapActivity('seerviBackupQuotationsWithParty','backup','quotations_backup',()=>`Created quotations backup`);seerviWrapActivity('setInventorySubcategoryStock','inventory','subcategory_stock_updated',(_,a)=>`Updated subcategory stock: ${a?.[1]||a?.[0]||'Subcategory'}`);seerviWrapActivity('setInventoryCategoryStock','inventory','category_stock_updated',(_,a)=>`Updated category stock: ${a?.[0]||'Category'}`);seerviWrapActivity('setInventoryQuantity','inventory','inventory_quantity_updated',(_,a)=>`Updated inventory quantity: ${a?.[0]||'Item'}`);seerviWrapActivity('setInventoryStock','inventory','inventory_stock_updated',(_,a)=>`Updated stock status: ${a?.[0]||'Item'}`);seerviWrapActivity('toggleInventoryStock','inventory','inventory_stock_toggled',()=>`Toggled inventory stock status`);seerviWrapActivity('seerviBulkImport','items','bulk_items_imported',()=>`Imported products in bulk`);seerviWrapActivity('seerviCategoryBulkImport','categories','bulk_categories_imported',()=>`Imported categories/subcategories in bulk`);
 seerviWrapActivity('saveCustomerCartRequest','quotations','quotation_requested',()=>`Requested a quotation`);seerviWrapActivity('customerSaveProfile','profile','profile_updated',()=>`Updated customer profile`);seerviWrapActivity('crmSignIn','auth','admin_signed_in',()=>`Admin signed in`);seerviWrapActivity('customerSignIn','auth','customer_signed_in',()=>`Customer signed in`);
 
@@ -14836,7 +14838,7 @@ seerviWrapActivity('saveCustomerCartRequest','quotations','quotation_requested',
     sub.textContent=detail||'Processing securely…';
     showTimer=setTimeout(()=>{
       if(active>0 && loader){loader.classList.add('show');loader.setAttribute('aria-busy','true');}
-    },180);
+    },60);
   }
   function hide(){
     active=Math.max(0,active-1);
@@ -14844,7 +14846,7 @@ seerviWrapActivity('saveCustomerCartRequest','quotations','quotation_requested',
     if(showTimer){clearTimeout(showTimer);showTimer=null;}
     hideTimer=setTimeout(()=>{
       if(loader){loader.classList.remove('show');loader.setAttribute('aria-busy','false');}
-    },120);
+    },0);
   }
   window.seerviLoadingStart=show;
   window.seerviLoadingStop=hide;
@@ -14853,20 +14855,15 @@ seerviWrapActivity('saveCustomerCartRequest','quotations','quotation_requested',
   // Only wrap operations that can genuinely wait on Firebase/PDF/cloud work.
   // The existing button-level loading labels remain untouched.
   const labels={
-    customerSignIn:['SIGNING IN','Checking your account…'],
     customerSignOut:['SIGNING OUT','Closing your secure session…'],
-    submitPartySignup:['CREATING ACCOUNT','Saving your profile securely…'],
-    createPublicCustomerAccount:['CREATING ACCOUNT','Setting up your secure account…'],
     sendSeerviPasswordReset:['SENDING RESET','Sending password reset email…'],
     saveCustomerCartRequest:['SAVING REQUEST','Saving your enquiry to the cloud…'],
     customerSaveProfile:['SAVING PROFILE','Updating your profile…'],
-    crmSignIn:['SIGNING IN','Checking admin access…'],
     crmSignOut:['SIGNING OUT','Closing admin session…'],
     crmRefresh:['REFRESHING','Loading latest cloud data…'],
     crmRefreshAdminData:['REFRESHING','Loading latest cloud data…'],
     crmLoadGlobalAdmin:['LOADING DASHBOARD','Loading secure admin data…'],
     crmSaveParty:['SAVING PARTY','Saving party details…'],
-    crmSaveCurrentQuote:['SAVING QUOTATION','Saving quotation to the cloud…'],
     crmSaveQuoteStatus:['SAVING STATUS','Updating quotation status…'],
     crmDownloadPartyLedger:['PREPARING LEDGER','Generating your ledger…'],
     crmDownloadQuote:['PREPARING PDF','Generating quotation PDF…'],
