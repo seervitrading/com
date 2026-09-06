@@ -10438,14 +10438,12 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   let y=pdfLayout.startY;
   let invoicePage=1;
 
-  // Page 1 uses the full A4-bottom frame. Later pages use normal content height.
-  const drawContentBorder=(endY,forcePageBottom=false)=>{
-    const bottom=forcePageBottom ? contentBottom : Math.min(Math.max(endY+3,18),contentBottom);
+  const drawPageBorder=(pageNo,endY)=>{
+    const bottom=pageNo===1 ? contentBottom : Math.min(Math.max(endY+3,18),contentBottom);
     doc.setDrawColor(85,90,95);
     doc.rect(left,borderTop,right-left,bottom-borderTop,'S');
   };
-  const newInvoicePage=()=>{
-    drawContentBorder(y,invoicePage===1);
+  const addInvoicePage=()=>{
     doc.addPage();
     invoicePage++;
     doc.setFillColor(255,255,255);doc.rect(0,0,W,H,'F');
@@ -10465,7 +10463,6 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.headerFont);
   doc.text(seerviInvoiceSafe(profile.businessName||'SEERVI TRADING').slice(0,43),left+4,headerTop+4);
 
-  // Keep every firm-detail value inside the LEFT half so nothing crosses the divider.
   doc.setFont('helvetica','normal');doc.setFontSize(pdfLayout.bodyFont);doc.setTextColor(75,83,92);
   const fL=X(19), fV=fL+14, fR=X(63), fRV=fR+14;
   let ly=headerTop+9;
@@ -10490,21 +10487,16 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const rx=right-4;
   doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.headerFont);doc.setTextColor(18,22,27);
   doc.text('SALE INVOICE',headerSplit+4,headerTop+4);
-
   doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(55,62,70);
   doc.text('Invoice No:',headerSplit+4,headerTop+12);
   doc.setFont('helvetica','normal');
   doc.text(seerviInvoiceSafe(invoice.invoiceNo||'—'),rx,headerTop+12,{align:'right'});
-
   doc.setFont('helvetica','bold');doc.text('Date:',headerSplit+4,headerTop+18);
   doc.setFont('helvetica','normal');
   doc.text(invoice.dateISO?new Date(invoice.dateISO).toLocaleDateString('en-IN'):new Date().toLocaleDateString('en-IN'),rx,headerTop+18,{align:'right'});
-
   doc.setFont('helvetica','bold');doc.text('E-Way Bill No:',headerSplit+4,headerTop+24);
   doc.setFont('helvetica','normal');
   doc.text(seerviInvoiceSafe(invoice.ewayBillNo||'—').slice(0,20),rx,headerTop+24,{align:'right'});
-
-  // Single bottom edge of the header; do not draw another overlapping horizontal line.
   y=headerTop+headerH;
 
   /* ===== BILL TO LEFT / SHIP TO RIGHT ===== */
@@ -10515,10 +10507,6 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const shipX=X(105);
   doc.setFont('helvetica','normal');doc.setFontSize(pdfLayout.bodyFont);doc.setTextColor(70,78,86);
 
-  // Bill To / Ship To uses a compact GST-invoice style block matching the
-  // reference layout: primary party name, wrapped address, GSTIN and
-  // contact/tax identifiers. Labels keep a fixed value gap and long text
-  // wraps instead of being truncated.
   const detailPartyBlock=(obj,x,includeExtras=true)=>{
     const blockWidth=Math.max(30,shipX-left-8);
     const valueGap=14;
@@ -10533,47 +10521,28 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     const primaryLines=doc.splitTextToSize(primaryName,blockWidth);
     const top=billTop+8;
     let yy=top;
-
-    // Compact reference format: firm/customer name is shown directly (no label),
-    // followed immediately by Address. The label/value gap stays fixed and
-    // long values wrap naturally without clipping.
-    doc.setFont('helvetica','bold');
-    doc.setFontSize(pdfLayout.bodyFont);
-    doc.setTextColor(18,22,27);
+    doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.bodyFont);doc.setTextColor(18,22,27);
     doc.text(primaryLines.slice(0,3),x,yy,{lineHeightFactor:1.05});
     yy+=Math.max(1,Math.min(3,primaryLines.length))*3.5;
-
-    doc.setFont('helvetica','normal');
-    doc.setTextColor(70,78,86);
+    doc.setFont('helvetica','normal');doc.setTextColor(70,78,86);
     doc.text('ADDRESS:',x,yy);
     doc.text(addressLines,x+valueGap,yy,{lineHeightFactor:1.05});
     yy+=Math.max(1,addressLines.length)*3.5;
-
-    // GSTIN starts immediately after the address. Mobile sits on the same row
-    // at the right; there is no extra blank row between Address and GSTIN.
     if(gstin||mobile||email||pan){
       if(gstin){doc.text('GSTIN:',x,yy);doc.text(gstin,x+valueGap,yy);}
       if(mobile){
-        const mobileLabelX=x+Math.max(48,blockWidth-72);
-        const mobileValueX=mobileLabelX+14;
-        doc.text('Mobile:',mobileLabelX,yy);
-        doc.text(mobile,mobileValueX,yy);
+        const mobileLabelX=x+Math.max(48,blockWidth-72),mobileValueX=mobileLabelX+14;
+        doc.text('Mobile:',mobileLabelX,yy);doc.text(mobile,mobileValueX,yy);
       }
       yy+=3.5;
       if(email||pan){
         if(email){doc.text('Email:',x,yy);doc.text(email,x+valueGap,yy);}
-        if(pan){
-          const panX=x+76;
-          doc.text('PAN:',panX,yy);doc.text(pan,panX+valueGap,yy);
-        }
+        if(pan){const panX=x+76;doc.text('PAN:',panX,yy);doc.text(pan,panX+valueGap,yy);}
         yy+=3.5;
       }
     }
     return {lines:Math.max(1,Math.ceil((yy-(billTop+4))/3.5)),bottom:yy};
   };
-
-  // Bill To keeps GSTIN/contact/PAN. Ship To is intentionally name + address
-  // only, while the common box still expands for whichever side wraps more.
   const estimatePartyHeight=(obj,includeExtras=true)=>{
     const blockWidth=Math.max(30,shipX-left-8),valueGap=14,valueWidth=Math.max(24,blockWidth-valueGap-8);
     const nameLines=Math.min(3,doc.splitTextToSize(seerviInvoiceSafe(obj?.company||obj?.name||'—'),blockWidth).length||1);
@@ -10584,9 +10553,6 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     return 4+nameLines*3.5+1+addrLines*3.5+((hasGst||hasMobile||hasEmailOrPan)?3.5:0)+(hasEmailOrPan?3.5:0);
   };
   const billH=Math.max(pdfLayout.billH,estimatePartyHeight(c,true)+4,estimatePartyHeight(st,false)+4);
-
-  // Match the compact reference format: keep the central Bill/Ship divider,
-  // but do not draw an extra horizontal rule underneath the party details.
   doc.setDrawColor(150,155,160);
   doc.line(shipX,billTop-4,shipX,billTop+billH-4);
   doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.totalFont);doc.setTextColor(18,22,27);
@@ -10598,10 +10564,10 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
   const items=invoice.items||[];
 
-  // Reserve the complete Page-1 bottom block so item rows never enter it.
+  /* ===== PRE-CALCULATE THE COMPLETE PAGE-1 BOTTOM BLOCK ===== */
   const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0),grand=Number(invoice.grandTotal??subtotal+gst);
   const notesText=seerviInvoiceSafe(invoice.notes||invoice.customer?.notes||'').trim();
-  const noteLines=notesText ? doc.splitTextToSize(notesText,102).slice(0,5) : [];
+  const noteLines=notesText?doc.splitTextToSize(notesText,102).slice(0,5):[];
   const notesH=Math.max(16,noteLines.length*3.2+9);
   const totalH=invoice.gstEnabled?24:19;
   const summaryH=Math.max(notesH,totalH);
@@ -10609,27 +10575,41 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   const amountWordLines=doc.splitTextToSize(amountWords,right-left).slice(0,2);
   const amountWordsH=Math.max(5,amountWordLines.length*3.2)+3;
 
-  const hsnCount=invoice.gstEnabled&&items.length
-    ? new Set(items.map(item=>seerviInvoiceSafe(item.hsnCode||item.hsn||'—').trim()||'—')).size
-    : 0;
-  const hsnBlockH=hsnCount ? 14.5+(hsnCount*5.5)+5.5+2 : 0;
+  const hsnMap=new Map();
+  if(invoice.gstEnabled&&items.length){
+    for(const item of items){
+      const hsn=seerviInvoiceSafe(item.hsnCode||item.hsn||'—').trim()||'—';
+      const taxable=Number(item.amount??Number(item.qty||0)*Number(item.rate||0));
+      const entry=hsnMap.get(hsn)||{taxable:0};
+      entry.taxable+=Number.isFinite(taxable)?taxable:0;
+      hsnMap.set(hsn,entry);
+    }
+  }
+  const hsnRows=[...hsnMap.entries()].map(([hsn,v])=>{
+    const taxable=Math.round(v.taxable*100)/100;
+    const totalTax=Math.round(taxable*(Number(invoice.gstRate||0)/100)*100)/100;
+    const halfRate=Number(invoice.gstRate||0)/2;
+    const cgst=Math.round((totalTax/2)*100)/100;
+    const sgst=Math.round((totalTax-cgst)*100)/100;
+    return {hsn,taxable,cgstRate:halfRate,cgst,sgstRate:halfRate,sgst,totalTax};
+  });
+  const hsnBlockH=hsnRows.length ? 22+(hsnRows.length*5.5) : 0;
 
   const hasBank=profile.bankAccountName||profile.bankName||profile.bankAccountNumber||profile.bankIfsc||profile.bankBranch;
   const hasPayment=profile.upiId;
   const hasSignatory=profile.signatoryName||profile.businessName;
   const hasFooterBox=!!(hasBank||hasPayment||hasSignatory);
   const bankBlockH=hasFooterBox?28:0;
-  // The entire Page-1 lower section (Notes/Totals + Amount in Words + HSN/SAC + Bank/QR/Signatory)
-  // is one anchored block. Item rows are allowed to fill all remaining space above it.
-  const page1BottomBlockH=hasFooterBox
-    ? 2+1+summaryH+3+amountWordsH+hsnBlockH+bankBlockH
-    : 0;
-  const page1BottomBlockTop=hasFooterBox ? contentBottom-page1BottomBlockH : null;
-  const page1ItemsBottom=hasFooterBox ? page1BottomBlockTop-3 : contentBottom-3;
+
+  // This is ONE continuous Page-1 lower block. Nothing inside it is independently
+  // anchored or allowed to trigger a new page.
+  const lowerGapBefore=3;
+  const page1BottomBlockH=1+summaryH+lowerGapBefore+amountWordsH+hsnBlockH+bankBlockH;
+  const page1BottomBlockTop=contentBottom-page1BottomBlockH;
+  const page1ItemsBottom=page1BottomBlockTop-2;
 
   /* ===== ITEM TABLE ===== */
   const drawHeader=()=>{
-    if(y>270)newInvoicePage();
     const top=y;
     doc.setFillColor(242,244,246);doc.rect(left,top,right-left,7,'F');
     doc.setDrawColor(120,125,130);doc.rect(left,top,right-left,7,'S');
@@ -10643,18 +10623,25 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     doc.text('AMOUNT',X(174),top+4.6);
     y=top+7;
   };
-  drawHeader();
 
-  for(let i=0;i<items.length;i++){
-    const item=items[i],qty=Number(item.qty||0),rate=Number(item.rate||0),amount=Number(item.amount??qty*rate);
+  // Build row metrics once so the Page-1 limit is based on actual item heights.
+  const itemRows=items.map((item,i)=>{
+    const qty=Number(item.qty||0),rate=Number(item.rate||0),amount=Number(item.amount??qty*rate);
     const productLabel=seerviQuotationItemLabel(item);
     const productLines=doc.splitTextToSize(seerviInvoiceSafe(productLabel||item.model||item.name||'Item'),Math.max(30,(right-left)*51/180));
     const rowLines=Math.min(productLines.length,2);
     const rowHeight=Math.max(pdfLayout.rowMin,rowLines*pdfLayout.rowLine+pdfLayout.rowPad);
-    const itemBottomLimit=invoicePage===1
-      ? page1ItemsBottom
-      : H-pdfLayout.bottomMargin-17;
-    if(y+rowHeight>itemBottomLimit){newInvoicePage();drawHeader();}
+    return {item,i,qty,rate,amount,productLines,rowHeight};
+  });
+
+  drawHeader();
+  for(const row of itemRows){
+    const itemBottomLimit=invoicePage===1?page1ItemsBottom:H-pdfLayout.bottomMargin-17;
+    if(y+row.rowHeight>itemBottomLimit){
+      addInvoicePage();
+      drawHeader();
+    }
+    const {i,qty,rate,amount,productLines,rowHeight,item}=row;
     doc.setFont('helvetica','normal');doc.setFontSize(pdfLayout.tableFont);doc.setTextColor(45,50,56);
     doc.text(String(i+1),X(18),y+3.7);
     doc.text(productLines.slice(0,2),X(30),y+3.7);
@@ -10667,198 +10654,124 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     y+=rowHeight;
   }
 
-  /* ===== NOTES LEFT / TOTALS RIGHT ===== */
-  // On Page 1 this complete lower section starts at the pre-calculated bottom
-  // anchor. It must not follow the last item row, otherwise a large blank gap
-  // appears between HSN/SAC and the Bank/QR/Signatory block.
-  if(invoicePage===1 && hasFooterBox){
+  /* ===== DRAW THE COMPLETE PAGE-1 LOWER BLOCK ===== */
+  if(hasFooterBox){
+    // Always return to Page 1: the lower block belongs to Page 1 even when items overflow.
+    const activePage=doc.internal.getCurrentPageInfo().pageNumber;
+    if(activePage!==1)doc.setPage(1);
+    invoicePage=1;
     y=page1BottomBlockTop;
-  }else{
-    y+=2;
-  }
-  const summaryTop=y+1;
 
-  doc.setDrawColor(205,209,213);doc.rect(left,summaryTop,(right-left)*112/180,summaryH,'S');
-  doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.totalFont);doc.setTextColor(35,40,45);
-  doc.text('NOTES',left+4,summaryTop+6);
-  doc.setFont('helvetica','normal');doc.setFontSize(pdfLayout.tableFont);doc.setTextColor(85,92,99);
-  if(noteLines.length)doc.text(noteLines,left+4,summaryTop+11);
-  else doc.text('—',left+4,summaryTop+11);
+    const summaryTop=y+1;
+    doc.setDrawColor(205,209,213);doc.rect(left,summaryTop,(right-left)*112/180,summaryH,'S');
+    doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.totalFont);doc.setTextColor(35,40,45);
+    doc.text('NOTES',left+4,summaryTop+6);
+    doc.setFont('helvetica','normal');doc.setFontSize(pdfLayout.tableFont);doc.setTextColor(85,92,99);
+    if(noteLines.length)doc.text(noteLines,left+4,summaryTop+11);else doc.text('—',left+4,summaryTop+11);
 
-  const totalX=X(145);
-  let ty=summaryTop+6;
-  doc.setFontSize(pdfLayout.totalFont);doc.setTextColor(105,113,122);
-  doc.text('Subtotal',totalX,ty);
-  doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(subtotal),right-3,ty,{align:'right'});ty+=5;
-  if(invoice.gstEnabled){
-    doc.setTextColor(105,113,122);doc.text('GST ('+Number(invoice.gstRate||0)+'%)',totalX,ty);
-    doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(gst),right-3,ty,{align:'right'});ty+=5;
-  }
-  doc.setDrawColor(40,45,50);doc.line(X(135),ty-1.5,right-3,ty-1.5);
-  doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.grandFont);doc.setTextColor(18,22,27);
-  doc.text('GRAND TOTAL',X(128),ty+4);
-  doc.text(seerviInvoiceInr(grand),right-3,ty+4,{align:'right'});
-  y=summaryTop+summaryH+3;
-
-  doc.setFont('helvetica','italic');doc.setFontSize(pdfLayout.footerFont);doc.setTextColor(80,88,97);
-  doc.text(amountWordLines,left,y);
-  y+=Math.max(5,amountWordLines.length*3.2)+3;
-
-  /* ===== HSN / SAC TAX SUMMARY ===== */
-  if(invoice.gstEnabled && items.length){
-    const hsnMap=new Map();
-    for(const item of items){
-      const hsn=seerviInvoiceSafe(item.hsnCode||item.hsn||'—').trim()||'—';
-      const qty=Number(item.qty||0),rate=Number(item.rate||0);
-      const taxable=Number(item.amount??qty*rate);
-      const entry=hsnMap.get(hsn)||{taxable:0};
-      entry.taxable+=Number.isFinite(taxable)?taxable:0;hsnMap.set(hsn,entry);
+    const totalX=X(145);
+    let ty=summaryTop+6;
+    doc.setFontSize(pdfLayout.totalFont);doc.setTextColor(105,113,122);
+    doc.text('Subtotal',totalX,ty);
+    doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(subtotal),right-3,ty,{align:'right'});ty+=5;
+    if(invoice.gstEnabled){
+      doc.setTextColor(105,113,122);doc.text('GST ('+Number(invoice.gstRate||0)+'%)',totalX,ty);
+      doc.setTextColor(25,30,35);doc.text(seerviInvoiceInr(gst),right-3,ty,{align:'right'});ty+=5;
     }
-    const hsnRows=[...hsnMap.entries()].map(([hsn,v])=>{
-      const taxable=Math.round(v.taxable*100)/100;
-      const totalTax=Math.round(taxable*(Number(invoice.gstRate||0)/100)*100)/100;
-      const halfRate=Number(invoice.gstRate||0)/2;
-      const cgst=Math.round((totalTax/2)*100)/100;
-      const sgst=Math.round((totalTax-cgst)*100)/100;
-      return {hsn,taxable,cgstRate:halfRate,cgst,sgstRate:halfRate,sgst,totalTax};
-    });
-    const totalTaxable=hsnRows.reduce((s,r)=>s+r.taxable,0);
-    const totalCgst=hsnRows.reduce((s,r)=>s+r.cgst,0);
-    const totalSgst=hsnRows.reduce((s,r)=>s+r.sgst,0);
-    const totalHsnTax=hsnRows.reduce((s,r)=>s+r.totalTax,0);
+    doc.setDrawColor(40,45,50);doc.line(X(135),ty-1.5,right-3,ty-1.5);
+    doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.grandFont);doc.setTextColor(18,22,27);
+    doc.text('GRAND TOTAL',X(128),ty+4);
+    doc.text(seerviInvoiceInr(grand),right-3,ty+4,{align:'right'});
+    y=summaryTop+summaryH+3;
 
-    const x=[15,43,88,109,130,151,172,195].map(X);
-    const drawHsnHeader=()=>{
-      // Page 1 HSN/SAC is part of the anchored lower block; do not paginate it
-      // independently. On later pages it follows normal flow.
-      if(!(invoicePage===1 && hasFooterBox) && y+12>H-pdfLayout.bottomMargin-11)newInvoicePage();
+    doc.setFont('helvetica','italic');doc.setFontSize(pdfLayout.footerFont);doc.setTextColor(80,88,97);
+    doc.text(amountWordLines,left,y);
+    y+=amountWordsH;
+
+    if(hsnRows.length){
+      const x=[15,43,88,109,130,151,172,195].map(X);
       const top=y;
       doc.setFillColor(232,234,236);doc.rect(left,top,right-left,11,'F');
       doc.setDrawColor(95,100,105);doc.line(left,top,right,top);
-      /* Outer column boundaries span the full header. */
-      doc.line(x[1],top,x[1],top+11);
-      doc.line(x[2],top,x[2],top+11);
-      doc.line(x[4],top,x[4],top+11);
-      doc.line(x[6],top,x[6],top+11);
-      doc.line(x[7],top,x[7],top+11);
-      /* Rate/Amount dividers begin only below the CGST/SGST group headings. */
-      doc.line(x[3],top+5,x[3],top+11);
-      doc.line(x[5],top+5,x[5],top+11);
+      doc.line(x[1],top,x[1],top+11);doc.line(x[2],top,x[2],top+11);doc.line(x[4],top,x[4],top+11);doc.line(x[6],top,x[6],top+11);doc.line(x[7],top,x[7],top+11);
+      doc.line(x[3],top+5,x[3],top+11);doc.line(x[5],top+5,x[5],top+11);
       doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(30,35,40);
       doc.text('HSN/SAC',(x[0]+x[1])/2,top+7,{align:'center'});
       doc.text('Taxable Value',(x[1]+x[2])/2,top+7,{align:'center'});
-      /* CGST grouped header: Rate + Amount */
-      doc.text('CGST',(x[2]+x[4])/2,top+3.7,{align:'center'});
-      doc.text('Rate',(x[2]+x[3])/2,top+8.5,{align:'center'});
-      doc.text('Amount',(x[3]+x[4])/2,top+8.5,{align:'center'});
-      /* SGST grouped header: Rate + Amount */
-      doc.text('SGST',(x[4]+x[6])/2,top+3.7,{align:'center'});
-      doc.text('Rate',(x[4]+x[5])/2,top+8.5,{align:'center'});
-      doc.text('Amount',(x[5]+x[6])/2,top+8.5,{align:'center'});
-      doc.text('Total Tax',(x[6]+x[7])/2,top+4.8,{align:'center'});
-      doc.text('Amount',(x[6]+x[7])/2,top+8.5,{align:'center'});
+      doc.text('CGST',(x[2]+x[4])/2,top+3.7,{align:'center'});doc.text('Rate',(x[2]+x[3])/2,top+8.5,{align:'center'});doc.text('Amount',(x[3]+x[4])/2,top+8.5,{align:'center'});
+      doc.text('SGST',(x[4]+x[6])/2,top+3.7,{align:'center'});doc.text('Rate',(x[4]+x[5])/2,top+8.5,{align:'center'});doc.text('Amount',(x[5]+x[6])/2,top+8.5,{align:'center'});
+      doc.text('Total Tax',(x[6]+x[7])/2,top+4.8,{align:'center'});doc.text('Amount',(x[6]+x[7])/2,top+8.5,{align:'center'});
       y=top+14.5;
-    };
-    drawHsnHeader();
-    for(const r of hsnRows){
-      if(!(invoicePage===1 && hasFooterBox) && y+5.5>H-pdfLayout.bottomMargin-11)drawHsnHeader();
-      doc.setFont('helvetica','normal');doc.setFontSize(6.4);doc.setTextColor(45,50,56);
-      // Draw one shared boundary at each row junction.
-      doc.setDrawColor(125,130,135);
-      doc.line(left,y-3.5,right,y-3.5);
-      doc.setDrawColor(225,228,231);
-      doc.line(left,y+2,right,y+2);
-      doc.setDrawColor(125,130,135);
-      for(let i=1;i<x.length-1;i++)doc.line(x[i],y-3.5,x[i],y+2);
-      doc.text(r.hsn,(x[0]+x[1])/2,y,{align:'center'});
-      doc.text(seerviInvoiceInr(r.taxable),x[2]-2,y,{align:'right'});
-      doc.text(Number(r.cgstRate).toFixed(2).replace(/\.00$/,'')+'%',(x[2]+x[3])/2,y,{align:'center'});
-      doc.text(seerviInvoiceInr(r.cgst),x[4]-2,y,{align:'right'});
-      doc.text(Number(r.sgstRate).toFixed(2).replace(/\.00$/,'')+'%',(x[4]+x[5])/2,y,{align:'center'});
-      doc.text(seerviInvoiceInr(r.sgst),x[6]-2,y,{align:'right'});
-      doc.text(seerviInvoiceInr(r.totalTax),x[7]-2,y,{align:'right'});y+=5.5;
+      for(const r of hsnRows){
+        doc.setFont('helvetica','normal');doc.setFontSize(6.4);doc.setTextColor(45,50,56);
+        doc.setDrawColor(125,130,135);doc.line(left,y-3.5,right,y-3.5);
+        doc.setDrawColor(225,228,231);doc.line(left,y+2,right,y+2);
+        doc.setDrawColor(125,130,135);for(let i=1;i<x.length-1;i++)doc.line(x[i],y-3.5,x[i],y+2);
+        doc.text(r.hsn,(x[0]+x[1])/2,y,{align:'center'});doc.text(seerviInvoiceInr(r.taxable),x[2]-2,y,{align:'right'});
+        doc.text(Number(r.cgstRate).toFixed(2).replace(/\.00$/,'')+'%',(x[2]+x[3])/2,y,{align:'center'});doc.text(seerviInvoiceInr(r.cgst),x[4]-2,y,{align:'right'});
+        doc.text(Number(r.sgstRate).toFixed(2).replace(/\.00$/,'')+'%',(x[4]+x[5])/2,y,{align:'center'});doc.text(seerviInvoiceInr(r.sgst),x[6]-2,y,{align:'right'});
+        doc.text(seerviInvoiceInr(r.totalTax),x[7]-2,y,{align:'right'});y+=5.5;
+      }
+      const totalTaxable=hsnRows.reduce((s,r)=>s+r.taxable,0),totalCgst=hsnRows.reduce((s,r)=>s+r.cgst,0),totalSgst=hsnRows.reduce((s,r)=>s+r.sgst,0),totalHsnTax=hsnRows.reduce((s,r)=>s+r.totalTax,0);
+      const totalTop=y-3.5,totalH=5.5;
+      doc.setFillColor(232,234,236);doc.rect(left,totalTop,right-left,totalH,'F');
+      doc.setDrawColor(95,100,105);doc.line(left,totalTop,right,totalTop);doc.line(left,totalTop+totalH,right,totalTop+totalH);
+      for(let i=1;i<x.length-1;i++)doc.line(x[i],totalTop,x[i],totalTop+totalH);
+      doc.setFont('helvetica','bold');doc.setFontSize(6.4);doc.setTextColor(25,30,35);
+      doc.text('Total',(x[0]+x[1])/2,y,{align:'center'});doc.text(seerviInvoiceInr(totalTaxable),x[2]-2,y,{align:'right'});doc.text(seerviInvoiceInr(totalCgst),x[4]-2,y,{align:'right'});doc.text(seerviInvoiceInr(totalSgst),x[6]-2,y,{align:'right'});doc.text(seerviInvoiceInr(totalHsnTax),x[7]-2,y,{align:'right'});
+      y+=2;
     }
-    if(!(invoicePage===1 && hasFooterBox) && y+5.5>H-pdfLayout.bottomMargin-11)drawHsnHeader();
-    /* Total row: keep the shaded fill exactly inside the row boundaries.
-       The previous fill started at the text baseline, extending below the
-       bottom border and creating a dark shadow under the Total line. */
-    const totalTop=y-3.5, totalH=5.5;
-    doc.setFillColor(232,234,236);doc.rect(left,totalTop,right-left,totalH,'F');
-    doc.setDrawColor(95,100,105);
-    doc.line(left,totalTop,right,totalTop);
-    doc.line(left,totalTop+totalH,right,totalTop+totalH);
-    for(let i=1;i<x.length-1;i++)doc.line(x[i],totalTop,x[i],totalTop+totalH);
-    doc.setFont('helvetica','bold');doc.setFontSize(6.4);doc.setTextColor(25,30,35);
-    doc.text('Total',(x[0]+x[1])/2,y,{align:'center'});
-    doc.text(seerviInvoiceInr(totalTaxable),x[2]-2,y,{align:'right'});
-    doc.text(seerviInvoiceInr(totalCgst),x[4]-2,y,{align:'right'});
-    doc.text(seerviInvoiceInr(totalSgst),x[6]-2,y,{align:'right'});
-    doc.text(seerviInvoiceInr(totalHsnTax),x[7]-2,y,{align:'right'});y+=2;
-  }
 
-  /* ===== BANK / QR / SIGNATORY — COMPACT ===== */
-  if(hasFooterBox){
     const boxH=28;
-    // Page 1 is anchored at the end of the same lower block as Notes/Totals,
-    // Amount in Words and HSN/SAC. Later pages follow normal content flow.
-    const boxTop=invoicePage===1 ? contentBottom-boxH : y;
+    const boxTop=contentBottom-boxH;
     const bankW=(right-left)*67/180,qrW=(right-left)*67/180,sigW=(right-left)*46/180;
-    doc.setDrawColor(90,96,102);
-    doc.line(left,boxTop,right,boxTop);
-    doc.line(left+bankW,boxTop,left+bankW,boxTop+boxH);
-    doc.line(left+bankW+qrW,boxTop,left+bankW+qrW,boxTop+boxH);
-
-    doc.setFont('helvetica','bold');doc.setFontSize(7.2);doc.setTextColor(30,35,40);
-    doc.text('Bank Details',left+3,boxTop+5);
+    doc.setDrawColor(90,96,102);doc.line(left,boxTop,right,boxTop);doc.line(left+bankW,boxTop,left+bankW,boxTop+boxH);doc.line(left+bankW+qrW,boxTop,left+bankW+qrW,boxTop+boxH);
+    doc.setFont('helvetica','bold');doc.setFontSize(7.2);doc.setTextColor(30,35,40);doc.text('Bank Details',left+3,boxTop+5);
     doc.setFont('helvetica','normal');doc.setFontSize(6.3);doc.setTextColor(55,62,70);
     let by=boxTop+10;
-    const bankLine=(label,value)=>{
-      if(value){doc.text(label,left+3,by);doc.text(seerviInvoiceSafe(value).slice(0,28),left+24,by);by+=3.7;}
-    };
-    bankLine('Name:',profile.bankAccountName);
-    bankLine('IFSC Code:',profile.bankIfsc);
-    bankLine('Account No:',profile.bankAccountNumber);
-    bankLine('Bank:',profile.bankName);
-    bankLine('Branch:',profile.bankBranch);
-
+    const bankLine=(label,value)=>{if(value){doc.text(label,left+3,by);doc.text(seerviInvoiceSafe(value).slice(0,28),left+24,by);by+=3.7;}};
+    bankLine('Name:',profile.bankAccountName);bankLine('IFSC Code:',profile.bankIfsc);bankLine('Account No:',profile.bankAccountNumber);bankLine('Bank:',profile.bankName);bankLine('Branch:',profile.bankBranch);
     const qrCenterX=left+bankW+qrW/2;
-    doc.setFont('helvetica','bold');doc.setFontSize(7.2);
-    doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.totalFont);
-    doc.setTextColor(18,22,27);
-    doc.text('Payment QR Code',left+bankW+3,boxTop+5);
+    doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.totalFont);doc.setTextColor(18,22,27);doc.text('Payment QR Code',left+bankW+3,boxTop+5);
     if(profile.upiId){
-      doc.setFont('helvetica','normal');doc.setFontSize(6.3);
-      doc.setTextColor(70,78,86);
-      doc.text(seerviInvoiceSafe(profile.upiId).slice(0,32),left+bankW+39,boxTop+5);
-      if(window.QRious){
-        try{
-          const qrCanvas=document.createElement('canvas');
-          new QRious({element:qrCanvas,value:'upi://pay?pa='+encodeURIComponent(profile.upiId)+'&pn='+encodeURIComponent(profile.businessName||'Seervi Trading'),size:220,level:'M'});
-          doc.addImage(qrCanvas.toDataURL('image/png'),'PNG',qrCenterX-10,boxTop+6.5,20,20);
-        }catch(qrErr){console.warn('QR generation failed:',qrErr);}
-      }
+      doc.setFont('helvetica','normal');doc.setFontSize(6.3);doc.setTextColor(70,78,86);doc.text(seerviInvoiceSafe(profile.upiId).slice(0,32),left+bankW+39,boxTop+5);
+      if(window.QRious){try{const qrCanvas=document.createElement('canvas');new QRious({element:qrCanvas,value:'upi://pay?pa='+encodeURIComponent(profile.upiId)+'&pn='+encodeURIComponent(profile.businessName||'Seervi Trading'),size:220,level:'M'});doc.addImage(qrCanvas.toDataURL('image/png'),'PNG',qrCenterX-10,boxTop+6.5,20,20);}catch(qrErr){console.warn('QR generation failed:',qrErr);}}
     }
-
     const sigCenter=left+bankW+qrW+sigW/2;
-    doc.setFont('helvetica','normal');doc.setFontSize(6.3);doc.setTextColor(90,96,102);
-    doc.text('For '+seerviInvoiceSafe(profile.businessName||'').slice(0,28),sigCenter,boxTop+17,{align:'center'});
-    doc.setFont('helvetica','bold');doc.setFontSize(7);
-    doc.text('Authorised Signatory',sigCenter,boxTop+23,{align:'center'});
-    if(profile.signatoryName){
-      doc.setFont('helvetica','normal');doc.setFontSize(6.3);
-      doc.text(seerviInvoiceSafe(profile.signatoryName).slice(0,28),sigCenter,boxTop+27,{align:'center'});
-    }
-    y=boxTop+boxH;
+    doc.setFont('helvetica','normal');doc.setFontSize(6.3);doc.setTextColor(90,96,102);doc.text('For '+seerviInvoiceSafe(profile.businessName||'').slice(0,28),sigCenter,boxTop+17,{align:'center'});
+    doc.setFont('helvetica','bold');doc.setFontSize(7);doc.text('Authorised Signatory',sigCenter,boxTop+23,{align:'center'});
+    if(profile.signatoryName){doc.setFont('helvetica','normal');doc.setFontSize(6.3);doc.text(seerviInvoiceSafe(profile.signatoryName).slice(0,28),sigCenter,boxTop+27,{align:'center'});}
+
+    // Page-1 outer frame always reaches the A4 bottom.
+    drawPageBorder(1,contentBottom);
   }
 
-  // Page 1 always reaches the A4 bottom. Page 2+ has no Page-1 bottom rule.
-  const borderBottom=invoicePage===1 ? contentBottom : (hasFooterBox ? y : y+3);
-  doc.setDrawColor(85,90,95);
-  doc.rect(left,borderTop,right-left,borderBottom-borderTop,'S');
+  // If there is no footer block, keep the existing normal-flow ending.
+  if(!hasFooterBox){
+    if(invoicePage!==1)doc.setPage(invoicePage);
+    drawPageBorder(invoicePage,y);
+  }else{
+    // Page 2+ borders are based only on their own content and have no bottom anchoring.
+    const totalPages=doc.internal.getNumberOfPages();
+    for(let p=2;p<=totalPages;p++){
+      doc.setPage(p);
+      // The last page's content end is approximated by the current generated page state.
+      // Reconstructing page-specific y is unnecessary for the border: use normal content bottom.
+      drawPageBorder(p,contentBottom-3);
+    }
+    doc.setPage(totalPages);
+  }
+
+  // Small tax-invoice label outside the top-right corner of the Page-1 outer frame.
+  doc.setPage(1);
+  doc.setFont('helvetica','bold');doc.setFontSize(5.8);doc.setTextColor(70,75,80);
+  doc.text('TAX INVOICE  ORIGINAL FOR RECIPIENT',right,borderTop-1.8,{align:'right'});
+  doc.setPage(doc.internal.getNumberOfPages());
 
   const filename='Seervi_Sale_Invoice_'+seerviInvoiceSafe(invoice.invoiceNo).replace(/[^a-zA-Z0-9_-]/g,'_')+'.pdf';
   doc.save(filename);
 }
+
 let seerviInvoiceInputResolver=null;
 let seerviInvoiceInputMode='create';
 function seerviInvoiceFieldHtml(field){
