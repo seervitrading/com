@@ -7048,9 +7048,9 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// Single authorised administrator account. Only this Firebase account may
-// enter the private Admin Panel / quotation workspace.
-// UI gate only. Real protection must also be enforced in Firestore Security Rules.
+// Master Admin + Delegated Admin role gate. The Master Admin can grant/revoke
+// delegated Admin Permission on a party. Real protection is enforced in
+// Firestore Security Rules as well; this client-side gate controls the UI/session.
 const ADMIN_EMAIL = 'seervitrading@gmail.com';
 let seerviDelegatedAdminUser=null;
 let seerviPermissionUnsubscribe=null;
@@ -7870,7 +7870,6 @@ window.customerSignIn=async function(){
   const email=$('customerLoginEmail')?.value.trim().toLowerCase()||'',pass=$('customerLoginPassword')?.value||'';
   if(!email||!pass){customerErr('Enter your email and password.');return;}
   customerErr('');
-  window.__seerviCustomerLoginInProgress=true;
   const btn=document.querySelector('#customerLoginView .crm-primary');
   if(btn){btn.disabled=true;btn.textContent='LOGGING IN...';}
   try{
@@ -7922,6 +7921,10 @@ window.customerSignIn=async function(){
     // session, while the Master Admin remains the only account allowed to
     // grant/revoke permissions.
     if(customerParty?.adminPermissionGranted){
+      // The Master Admin has granted this exact account Admin Permission.
+      // End the customer-auth session and create the protected admin-auth
+      // session. The Firestore listener will force logout again if the
+      // permission is later revoked while this session is active.
       // Set the delegation marker before the main-auth sign-in resolves so
       // onAuthStateChanged cannot mistake this permitted user for an unknown
       // non-admin and sign them back out during the auth-state transition.
@@ -7960,7 +7963,7 @@ window.customerSignIn=async function(){
     }else if(c.includes('invalid-credential')||c.includes('wrong-password')||c.includes('user-not-found')){
       customerErr('Incorrect email or password.');
     }else if(c.includes('permission-denied')){
-      customerErr('Login successful, but Firestore denied access to your customer profile. Please publish the updated Firestore rules.');
+      customerErr('Login successful, but your profile data cannot be read. Please check the customer Firebase rules.');
     }else if((e?.message||'').includes('No party profile')){
       customerErr('Account found, but no party profile is linked. Please complete Sign Up first.');
     }else if(c==='admin-not-authorised'){
@@ -8019,10 +8022,6 @@ async function customerLoadDashboard(){
   if(!customerUser)return;
   const partySnap=await getDoc(doc(publicSignupDb,'parties',customerUser.uid));
   customerParty=partySnap.exists()?{id:partySnap.id,...partySnap.data()}:null;
-  // Check account status before loading quotations/rates/ledger.
-  if(customerParty?.accountDisabled){
-    throw Object.assign(new Error('This account has been disabled by the Master Admin. Login permission is denied.'),{code:'account-disabled'});
-  }
   if(!customerParty){
     const snap=await getDocs(query(collection(publicSignupDb,'parties'),where('customerUid','==',customerUser.uid),limit(1)));
     customerParty=snap.docs.map(d=>({id:d.id,...d.data()}))[0]||null;
@@ -8631,12 +8630,8 @@ window.accountDashboardCustomerSignOut=function(){closeAccountDashboard();custom
 onAuthStateChanged(publicSignupAuth,user=>{
   customerUser=(user&&!user.isAnonymous)?user:null;
   updateAuthNav();
-  // customerSignIn() owns the login/load sequence. Avoid a second concurrent
-  // dashboard read from the auth observer during an explicit login.
-  if(customerUser){
-    if(window.__seerviCustomerLoginInProgress) return;
-    customerLoadDashboard().then(renderCustomerHomeProfile).catch(()=>{});
-  }else hideCustomerHomeProfile();
+  if(customerUser) customerLoadDashboard().then(renderCustomerHomeProfile).catch(()=>{});
+  else hideCustomerHomeProfile();
 });
 
 
