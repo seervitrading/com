@@ -4944,7 +4944,7 @@ body.seervi-ai-open .float-support{display:none!important}
 </div>
 <div id="crmModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closeCRM()"></div><div class="crm-panel" role="dialog" aria-modal="true" aria-labelledby="crmTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / CLOUD</div><h3 id="crmTitle">Panel</h3><div id="crmAuthStatus" class="crm-auth-status">Cloud not connected</div></div><button class="crm-secondary admin-universal-back" type="button" onclick="seerviAdminBackToPrevious()">← BACK</button></div><div id="crmLogin" class="crm-login"><div class="crm-section-title">PRIVATE ADMIN LOGIN</div><p>Only the authorised Seervi admin account can access parties, quotations, rates and ledger data.</p><div class="crm-login-grid"><input id="crmEmail" type="email" placeholder="Admin email" autocomplete="username"><input id="crmPassword" type="password" placeholder="Password" autocomplete="current-password"></div><button class="crm-primary" type="button" onclick="crmSignIn()">CONNECT CLOUD</button><div class="customer-login-actions"><button class="customer-forgot" type="button" onclick="sendSeerviPasswordReset('admin')">FORGOT PASSWORD?</button></div><div id="crmLoginError" class="crm-error"></div></div><div id="crmWorkspace" class="crm-workspace" hidden><div class="crm-toolbar"><div class="crm-party-select-wrap"><label>PARTY</label><select id="crmPartySelect" onchange="crmSelectParty(this.value)"><option value="">Select Party</option></select></div><button class="crm-secondary" type="button" onclick="crmRefresh()">↻ REFRESH</button></div>
 <div id="adminGlobalArea" class="admin-global-area">
-<div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, quotations or invoices and complete payment ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin()">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span id="adminKpiBillLabel">QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="invoices" onclick="adminGlobalTab('invoices')">ALL INVOICES</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalInvoices" class="admin-global-panel" hidden><div id="adminInvoicesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div>
+<div class="admin-global-head"><div><div class="crm-section-title">CLOUD CONTROL CENTER</div><p>All parties, quotations or invoices and complete payment ledger in one place.</p></div><button class="crm-secondary" type="button" onclick="crmLoadGlobalAdmin(true)">↻ REFRESH DATA</button></div><div class="admin-kpi-grid"><div class="admin-kpi"><span>PARTIES</span><strong id="adminKpiParties">0</strong></div><div class="admin-kpi"><span id="adminKpiBillLabel">QUOTATIONS</span><strong id="adminKpiQuotes">0</strong></div><div class="admin-kpi"><span>TOTAL BILLED</span><strong id="adminKpiBilled">₹0.00</strong></div><div class="admin-kpi"><span>RECEIVED</span><strong id="adminKpiReceived">₹0.00</strong></div><div class="admin-kpi"><span>OUTSTANDING</span><strong id="adminKpiOutstanding">₹0.00</strong></div></div><div class="admin-global-search"><input id="adminGlobalSearch" type="search" placeholder="Search party, company, phone, quote number..." oninput="crmAdminSearch(this.value)"><button class="crm-secondary" type="button" onclick="crmAdminSearch('');$('adminGlobalSearch').value=''">CLEAR</button><button class="crm-secondary" type="button" onclick="crmRefreshAdminData()">REFRESH CLOUD</button></div><div class="admin-global-tabs"><button class="admin-global-tab active" data-admin-tab="parties" onclick="adminGlobalTab('parties')">ALL PARTIES</button><button class="admin-global-tab" data-admin-tab="quotes" onclick="adminGlobalTab('quotes')">ALL QUOTATIONS</button><button class="admin-global-tab" data-admin-tab="invoices" onclick="adminGlobalTab('invoices')">ALL INVOICES</button><button class="admin-global-tab" data-admin-tab="ledger" onclick="adminGlobalTab('ledger')">PARTY LEDGER</button></div><div id="adminGlobalParties" class="admin-global-panel"><div id="adminPartiesList" class="admin-global-list"></div></div><div id="adminGlobalQuotes" class="admin-global-panel" hidden><div id="adminQuotesList" class="admin-global-list"></div></div><div id="adminGlobalInvoices" class="admin-global-panel" hidden><div id="adminInvoicesList" class="admin-global-list"></div></div><div id="adminGlobalLedger" class="admin-global-panel" hidden><div id="adminLedgerList" class="admin-global-list"></div></div></div>
 </div><div id="inventoryStockPanel" class="inventory-stock-panel" hidden>
   <div class="inventory-stock-head">
     <div class="inventory-stock-head-copy">
@@ -6880,6 +6880,7 @@ window.seerviCreateItem=async function(input={}){
   payload.updatedBy=crmUser.uid;
   const ref=await addDoc(collection(db,SEERVI_ITEMS_COLLECTION),payload);
   seerviInvalidateCache('items:');
+  seerviInvalidateCache('public:items:');
   return {id:ref.id,...payload};
 };
 
@@ -6906,6 +6907,7 @@ window.seerviUpdateItem=async function(itemId,input={}){
   payload.updatedBy=crmUser.uid;
   await updateDoc(doc(db,SEERVI_ITEMS_COLLECTION,id),payload);
   seerviInvalidateCache('items:');
+  seerviInvalidateCache('public:items:');
   return {id,...payload};
 };
 
@@ -6915,6 +6917,7 @@ window.seerviDeleteItem=async function(itemId){
   if(!id) throw new Error('Item ID is required.');
   await deleteDoc(doc(db,SEERVI_ITEMS_COLLECTION,id));
   seerviInvalidateCache('items:');
+  seerviInvalidateCache('public:items:');
   return true;
 };
 
@@ -6948,6 +6951,7 @@ window.seerviCreateItemCategory=async function(input={}){
   payload.updatedBy=crmUser.uid;
   const ref=await addDoc(collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),payload);
   seerviInvalidateCache('itemCategories:');
+  seerviInvalidateCache('public:itemCategories:');
   return {id:ref.id,...payload};
 };
 
@@ -6966,6 +6970,7 @@ window.seerviUpdateItemCategory=async function(categoryId,input={}){
   payload.updatedBy=crmUser.uid;
   await updateDoc(doc(db,SEERVI_ITEM_CATEGORIES_COLLECTION,id),payload);
   seerviInvalidateCache('itemCategories:');
+  seerviInvalidateCache('public:itemCategories:');
   return {id,...payload};
 };
 
@@ -6975,6 +6980,7 @@ window.seerviDeleteItemCategory=async function(categoryId){
   if(!id) throw new Error('Category ID is required.');
   await deleteDoc(doc(db,SEERVI_ITEM_CATEGORIES_COLLECTION,id));
   seerviInvalidateCache('itemCategories:');
+  seerviInvalidateCache('public:itemCategories:');
   return true;
 };
 /* ===== END FIREBASE ITEMS DATA LAYER / STEP 2 ===== */
@@ -7629,9 +7635,9 @@ async function customerLoadDashboard(){
   }
   if(!customerParty)throw new Error('No party profile is linked to this account yet. Please complete your party details.');
   const [qs,rs,ls]=await Promise.all([
-    seerviCachedRead('customer:'+customerParty.id+':quotes:200',()=>getDocs(query(collection(publicSignupDb,'quotations'),where('partyId','==',customerParty.id),limit(200))),8000),
-    seerviCachedRead('customer:'+customerParty.id+':rates:500',()=>getDocs(query(collection(publicSignupDb,'rateHistory'),where('partyId','==',customerParty.id),limit(500))),8000),
-    seerviCachedRead('customer:'+customerParty.id+':ledger:1000',()=>getDocs(query(collection(publicSignupDb,'ledger'),where('partyId','==',customerParty.id),limit(1000))),8000)
+    seerviCachedRead('customer:'+customerParty.id+':quotes:200',()=>getDocs(query(collection(publicSignupDb,'quotations'),where('partyId','==',customerParty.id),limit(200))),60000),
+    seerviCachedRead('customer:'+customerParty.id+':rates:500',()=>getDocs(query(collection(publicSignupDb,'rateHistory'),where('partyId','==',customerParty.id),limit(500))),60000),
+    seerviCachedRead('customer:'+customerParty.id+':ledger:1000',()=>getDocs(query(collection(publicSignupDb,'ledger'),where('partyId','==',customerParty.id),limit(1000))),60000)
   ]);
   customerQuotes=qs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   // Customer RATE HISTORY must show quotation rates only.
@@ -8310,16 +8316,17 @@ function crmShowLogin(){
   $('cloudConnectedBadge')?.classList.remove('show');
 }
 
-function crmShowWorkspace(){
+function crmShowWorkspace(refresh=true){
   $('crmLogin').hidden=true;
   $('crmWorkspace').hidden=false;
   crmSetStatus('Cloud connected: '+(crmUser.email||'Admin'), true);
   $('cloudConnectedBadge')?.classList.add('show');
   // Party Master is an action screen, not a permanent workspace tab.
   if($('crmPartyMaster')) $('crmPartyMaster').hidden=true;
-  crmRefresh();
-  crmLoadGlobalAdmin();
+  if(refresh){crmRefresh().then(()=>crmLoadGlobalAdmin(false)).catch(()=>crmLoadGlobalAdmin(false));}
+  else {crmRenderAll();crmRenderGlobalAdmin();renderCartPartySelector();}
 }
+
 
 window.crmSignIn = async function(){
   const email=$('crmEmail')?.value.trim();
@@ -8426,7 +8433,7 @@ onAuthStateChanged(auth,user=>{
 });
 
 async function crmRefreshParties(){
-  const snap=await seerviCachedRead('admin:parties:500',()=>getDocs(query(collection(db,'parties'),limit(500))),10000);
+  const snap=await seerviCachedRead('admin:parties:500',()=>getDocs(query(collection(db,'parties'),limit(500))),60000);
   crmParties=snap.docs
     .map(d=>({id:d.id,...d.data()}))
     .sort((a,b)=>String(b.updatedAt?.seconds||b.createdAt?.seconds||0).localeCompare(String(a.updatedAt?.seconds||a.createdAt?.seconds||0)));
@@ -8542,10 +8549,10 @@ window.crmSaveParty = async function(){
 async function crmLoadPartyData(id){
   if(!id)return;
   const [qs,is,rs,ls]=await Promise.all([
-    seerviCachedRead('party:'+id+':quotes:200',()=>getDocs(query(collection(db,'quotations'),where('partyId','==',id),limit(200))),8000),
-    seerviCachedRead('party:'+id+':invoices:200',()=>getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),where('partyId','==',id),limit(200))),8000),
-    seerviCachedRead('party:'+id+':rates:500',()=>getDocs(query(collection(db,'rateHistory'),where('partyId','==',id),limit(500))),8000),
-    seerviCachedRead('party:'+id+':ledger:500',()=>getDocs(query(collection(db,'ledger'),where('partyId','==',id),limit(500))),8000)
+    seerviCachedRead('party:'+id+':quotes:200',()=>getDocs(query(collection(db,'quotations'),where('partyId','==',id),limit(200))),60000),
+    seerviCachedRead('party:'+id+':invoices:200',()=>getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),where('partyId','==',id),limit(200))),60000),
+    seerviCachedRead('party:'+id+':rates:500',()=>getDocs(query(collection(db,'rateHistory'),where('partyId','==',id),limit(500))),60000),
+    seerviCachedRead('party:'+id+':ledger:500',()=>getDocs(query(collection(db,'ledger'),where('partyId','==',id),limit(500))),60000)
   ]);
   crmQuotes=qs.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
   crmInvoices=is.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.dateISO||'').localeCompare(String(a.dateISO||'')));
@@ -8807,7 +8814,7 @@ function adminPartyLabel(p){
 
 window.crmRefreshAdminData=async function(){
   if(!crmUser){crmShowLogin();return;}
-  await crmLoadGlobalAdmin();
+  await crmLoadGlobalAdmin(true);
 };
 
 function crmBackupSafeValue(value){
@@ -8856,14 +8863,25 @@ window.crmDownloadBusinessBackup=function(){
   crmSetStatus('Backup exported successfully.',true);
 };
 
-window.crmLoadGlobalAdmin=async function(){
+let seerviAdminGlobalLoadedAt=0;
+window.crmLoadGlobalAdmin=async function(force=false){
   if(!crmUser){openAdminPanel();return;}
+  // Re-render recent in-memory data without re-reading Firestore. Explicit
+  // REFRESH CLOUD / REFRESH DATA passes force=true and bypasses this cache.
+  if(!force && seerviAdminGlobalLoadedAt && (Date.now()-seerviAdminGlobalLoadedAt)<60000){
+    crmRenderGlobalAdmin();
+    renderCartPartySelector();
+    return;
+  }
   try{
+    const partyRead = (!force && Array.isArray(crmParties) && crmParties.length)
+      ? Promise.resolve({docs:crmParties.map(p=>({id:p.id,data:()=>{const x={...p};delete x.id;return x;}}))})
+      : seerviCachedRead('admin:parties:1000',()=>getDocs(query(collection(db,'parties'),limit(1000))),60000);
     const [ps,qs,is,ls]=await Promise.all([
-      seerviCachedRead('admin:parties:1000',()=>getDocs(query(collection(db,'parties'),limit(1000))),10000),
-      seerviCachedRead('admin:quotations:1000',()=>getDocs(query(collection(db,'quotations'),limit(1000))),10000),
-      seerviCachedRead('admin:invoices:1000',()=>getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),limit(1000))),10000),
-      seerviCachedRead('admin:ledger:1000',()=>getDocs(query(collection(db,'ledger'),limit(1000))),10000)
+      partyRead,
+      seerviCachedRead('admin:quotations:1000',()=>getDocs(query(collection(db,'quotations'),limit(1000))),60000),
+      seerviCachedRead('admin:invoices:1000',()=>getDocs(query(collection(db,SEERVI_INVOICE_COLLECTION),limit(1000))),60000),
+      seerviCachedRead('admin:ledger:1000',()=>getDocs(query(collection(db,'ledger'),limit(1000))),60000)
     ]);
     adminGlobalParties=ps.docs.map(d=>({id:d.id,...d.data()}))
       .sort((a,b)=>String(b.updatedAt?.seconds||b.createdAt?.seconds||0).localeCompare(String(a.updatedAt?.seconds||a.createdAt?.seconds||0)));
@@ -8874,6 +8892,7 @@ window.crmLoadGlobalAdmin=async function(){
     adminGlobalLedger=ls.docs.map(d=>({id:d.id,...d.data()}))
       .sort((a,b)=>String(b.createdAt?.seconds||0).localeCompare(String(a.createdAt?.seconds||0)));
     crmParties=adminGlobalParties;
+    seerviAdminGlobalLoadedAt=Date.now();
     crmRenderGlobalAdmin();
     renderCartPartySelector();
   }catch(e){
@@ -11079,10 +11098,14 @@ window.crmSaveCurrentQuote = async function(){
       const invoiceNo=editInvoiceMeta.invoiceNo || oldInv.invoiceNo || '';
       crmEditingInvoiceId='';
       window.crmEditingInvoiceMeta=null;
-      await crmRefreshParties();
-      await crmLoadPartyData(crmPartyId);
-      await crmLoadGlobalAdmin();
-      clearCart(); renderCart(); closeCart(); crmShowWorkspace();
+      // Firebase save is complete. The invoice object was already updated above,
+      // so do not re-read the party, invoice, rate-history and ledger collections.
+      const localInvoice=adminGlobalInvoices.find(x=>x.id===oldInv.id);
+      if(localInvoice)Object.assign(localInvoice,{partyId:crmPartyId,customer,items,invoiceNo:editInvoiceMeta.invoiceNo || oldInv.invoiceNo || '',ewayBillNo:editInvoiceMeta.ewayBillNo || '',notes:editInvoiceMeta.notes || '',shipTo:editInvoiceMeta.shipTo || oldInv.shipTo || customer,subtotal:pricing.subtotal,gstEnabled:pricing.gstEnabled,gstRate:pricing.gstRate,gst:pricing.gst,grandTotal:pricing.grandTotal,updatedAt:now});
+      seerviAdminGlobalLoadedAt=Date.now();
+      crmRenderAll();
+      crmRenderGlobalAdmin();
+      clearCart(); renderCart(); closeCart(); crmShowWorkspace(false);
 
       const crmModal=document.getElementById('crmModal');
       if(crmModal){crmModal.classList.add('show');crmModal.setAttribute('aria-hidden','false');}
@@ -11204,11 +11227,22 @@ window.crmSaveCurrentQuote = async function(){
 
       editBatch.set(doc(db,'parties',crmPartyId),{updatedAt:serverTimestamp()},{merge:true});
       await editBatch.commit();
+      const savedEditQuoteId=crmEditingQuoteId;
+      const quoteLocalPatch={partyId:crmPartyId,customer,customerUid:selectedParty.customerUid||'',items,subtotal:pricing.subtotal,gstEnabled:pricing.gstEnabled,gstRate:pricing.gstRate,gst:pricing.gst,grandTotal:pricing.grandTotal,updatedAt:now};
       crmEditingQuoteId='';
       crmEditingInvoiceId='';
-      await crmRefreshParties();
-      await crmLoadPartyData(crmPartyId);
-      await crmLoadGlobalAdmin();
+      // Firebase save is complete. Update the already-loaded local state instead
+      // of re-reading four admin collections plus the selected party.
+      const editedQuote=adminGlobalQuotes.find(x=>x.id===savedEditQuoteId);
+      const partyQuote=crmQuotes.find(x=>x.id===savedEditQuoteId);
+      if(editedQuote)Object.assign(editedQuote,quoteLocalPatch);
+      if(partyQuote)Object.assign(partyQuote,quoteLocalPatch);
+      if(oldQ.invoiceId){
+        const linkedInv=adminGlobalInvoices.find(x=>x.id===oldQ.invoiceId);
+        if(linkedInv)Object.assign(linkedInv,quoteLocalPatch,{quotationId:savedEditQuoteId,quoteNo:oldQ.quoteNo||''});
+      }
+      crmRenderAll();
+      crmRenderGlobalAdmin();
       /* Firebase save is complete at this point. Now and only now clear the
          local cart so an interrupted save never destroys the working quote. */
       clearCart();
@@ -11216,7 +11250,7 @@ window.crmSaveCurrentQuote = async function(){
       crmTab('quotes');
       if(typeof seerviClearAdminQuoteReturnState==='function') seerviClearAdminQuoteReturnState();
       closeCart();
-      crmShowWorkspace();
+      crmShowWorkspace(false);
       const crmModal=document.getElementById('crmModal');
       if(crmModal){
         crmModal.classList.add('show');
@@ -11257,8 +11291,10 @@ window.crmSaveCurrentQuote = async function(){
       updatedAt:serverTimestamp()
     });
 
+    let newLedgerRef=null;
     if(Number(pricing.grandTotal)>0){
       const ledgerRef=doc(collection(db,'ledger'));
+      newLedgerRef=ledgerRef;
       createBatch.set(ledgerRef,{
         partyId:crmPartyId,
         type:'debit',
@@ -11273,9 +11309,11 @@ window.crmSaveCurrentQuote = async function(){
       });
     }
 
+    const newRateRefs=[];
     for(const item of items){
       if(Number(item.rate)>0){
         const rateRef=doc(collection(db,'rateHistory'));
+        newRateRefs.push({ref:rateRef,item});
         createBatch.set(rateRef,{
           partyId:crmPartyId,
           quoteId:qRef.id,
@@ -11298,10 +11336,32 @@ window.crmSaveCurrentQuote = async function(){
 
     createBatch.set(doc(db,'parties',crmPartyId),{updatedAt:serverTimestamp()},{merge:true});
     await createBatch.commit();
-    await crmLoadPartyData(crmPartyId);
-    await crmLoadGlobalAdmin();
+
+    // Firebase save is complete. Update the existing in-memory CRM/admin state
+    // instead of re-reading quotations, parties, invoices and ledger.
+    const savedQuote={
+      id:qRef.id,partyId:crmPartyId,quoteNo:qNo,dateISO:now.toISOString(),customer,
+      customerUid:selectedParty.customerUid||'',items,subtotal:pricing.subtotal,
+      gstEnabled:pricing.gstEnabled,gstRate:pricing.gstRate,gst:pricing.gst,
+      grandTotal:pricing.grandTotal,status:'saved',createdBy:crmUser.uid,updatedAt:now
+    };
+    adminGlobalQuotes=[savedQuote,...adminGlobalQuotes.filter(x=>x.id!==savedQuote.id)];
+    if(crmPartyId){crmQuotes=[savedQuote,...crmQuotes.filter(x=>x.id!==savedQuote.id)];}
+    if(newLedgerRef){
+      const ledgerLocal={id:newLedgerRef.id,partyId:crmPartyId,type:'debit',amount:Number(pricing.grandTotal),note:`Quotation ${qNo}`,quoteId:qRef.id,quoteNo:qNo,source:'quotation',dateISO:now.toISOString().slice(0,10),createdBy:crmUser.uid,createdAt:now};
+      adminGlobalLedger=[ledgerLocal,...adminGlobalLedger.filter(x=>x.id!==ledgerLocal.id)];
+      crmLedger=[ledgerLocal,...crmLedger.filter(x=>x.id!==ledgerLocal.id)];
+    }
+    for(const entry of newRateRefs){
+      const item=entry.item;
+      const rateLocal={id:entry.ref.id,partyId:crmPartyId,quoteId:qRef.id,quoteNo:qNo,productType:item.type,productName:item.name||item.model||'',productModel:item.model,categoryId:item.categoryId||'',category:item.category||'',subcategoryId:item.subcategoryId||'',subcategory:item.subcategory||'',spec:item.spec||'',rate:item.rate,dateISO:now.toISOString().slice(0,10),createdBy:crmUser.uid,createdAt:now};
+      crmRates=[rateLocal,...crmRates.filter(x=>x.id!==rateLocal.id)];
+    }
+    seerviAdminGlobalLoadedAt=Date.now();
+    crmRenderAll();
+    crmRenderGlobalAdmin();
     /* New quotation is fully persisted in Firebase. Clear the cart only after
-       all required cloud writes and refreshes have succeeded. */
+       the required cloud write has succeeded. */
     clearCart();
     renderCart();
     crmTab('quotes');
@@ -11410,7 +11470,7 @@ function inventoryApplyToHome(){
 
 async function inventoryLoadPublic(){
   try{
-    const snap=await getDocs(query(collection(db,'inventory'),where('public','==',true),limit(2000)));
+    const snap=await seerviCachedRead('public:inventory:2000',()=>getDocs(query(collection(db,'inventory'),where('public','==',true),limit(2000))),60000);
     const next=Object.create(null);
     const qty=Object.create(null);
     snap.forEach(d=>{
@@ -11740,7 +11800,7 @@ async function seerviLoadNotificationReads(){
   if(!(customerUser||crmUser)) return;
   try{
     const uid=(customerUser||crmUser).uid;
-    const snap=await getDocs(query(collection(db,'notificationReads'),where('uid','==',uid),limit(500)));
+    const snap=await seerviCachedRead('notificationReads:'+uid,()=>getDocs(query(collection(db,'notificationReads'),where('uid','==',uid),limit(500))),60000);
     snap.forEach(d=>{const x=d.data();if(x.notificationId)seerviNotificationReads.add(String(x.notificationId));});
   }catch(e){}
 }
@@ -11846,6 +11906,7 @@ window.markNotificationRead=async function(id){
       await setDoc(doc(db,'notificationReads',`${uid}__${id}`),{
         uid,notificationId:id,readAt:serverTimestamp()
       });
+      seerviInvalidateCache('notificationReads:'+uid);
     }catch(e){}
   }
   seerviRenderNotificationList();
@@ -13235,8 +13296,8 @@ async function seerviPublicLoadCatalogue(){
     if(status)status.textContent='Loading products…';
 
     const [catSnap,itemSnap]=await Promise.all([
-      getDocs(query(collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),where('active','==',true),limit(500))),
-      getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000)))
+      seerviCachedRead('public:itemCategories:500',()=>getDocs(query(collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),where('active','==',true),limit(500))),60000),
+      seerviCachedRead('public:items:1000',()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000))),60000)
     ]);
 
     seerviPublicCategories=catSnap.docs.map(d=>({id:d.id,...d.data()}))
@@ -14479,7 +14540,7 @@ function hideGlobalActionLoader(){
 </script><script id="seervi-v108-data-cache">
 /* V108 — short-lived Firestore read cache. Writes invalidate the affected keys. */
 window.seerviReadCache = window.seerviReadCache || new Map();
-window.seerviCachedRead = async function(key, loader, ttl=12000){
+window.seerviCachedRead = async function(key, loader, ttl=60000){
   const now=Date.now();
   const hit=window.seerviReadCache.get(key);
 
@@ -14505,6 +14566,7 @@ window.seerviInvalidateCache=function(prefix){
   for(const key of window.seerviReadCache.keys()){
     if(!prefix || String(key).startsWith(prefix)) window.seerviReadCache.delete(key);
   }
+  if(!prefix || String(prefix).startsWith('admin:') || String(prefix).startsWith('party:')) seerviAdminGlobalLoadedAt=0;
 };
 </script><script id="seervi-v108-image-optimization">
 /* V108 — defer below-the-fold image decoding/loading without touching hero media. */
@@ -15219,7 +15281,7 @@ function seerviShowSaveSuccess(message){
     if(gstEnabled){const ge=$id('gstEnabled'),gr=$id('gstRate');if(ge)ge.checked=true;if(gr){gr.value=gstRate;gr.disabled=false;}}else{const ge=$id('gstEnabled'),gr=$id('gstRate');if(ge)ge.checked=false;if(gr)gr.disabled=true;}
     crmEditingQuoteId=S.mode==='quote'?S.id:'';crmEditingInvoiceId=S.mode==='invoice'?S.id:'';window.crmEditingInvoiceMeta=meta;
   }
-  window.seerviSaveDocumentEditor=async function(){const status=$id('seerviDocEditorStatus');const err=$id('seerviDocEditorError');if(status)status.textContent='SAVING…';if(err){err.style.display='none';err.textContent='';}try{await prepareSave();const meta=window.__seerviEditorMeta||{};const mode=S.mode,id=S.id;if(mode==='invoice' && meta.invoiceNo && meta.invoiceNo!==String(S.record.invoiceNo||'').trim() && await seerviInvoiceNumberExistsExcept(meta.invoiceNo,id)){throw new Error('Invoice number '+meta.invoiceNo+' already exists. Please use another number.');}if(!S.originalSave)S.originalSave=window.__seerviOriginalCrmSave;await S.originalSave();if(mode==='quote'){await updateDoc(doc(db,'quotations',id),{quoteNo:meta.quoteNo||S.record.quoteNo||'',dateISO:meta.dateISO||S.record.dateISO||'',status:meta.status||S.record.status||'saved',updatedAt:serverTimestamp()});const linkedInvoiceId=S.record.invoiceId||'';if(linkedInvoiceId){await updateDoc(doc(db,SEERVI_INVOICE_COLLECTION,linkedInvoiceId),{quoteNo:meta.quoteNo||S.record.quoteNo||'',updatedAt:serverTimestamp()});}await crmLoadGlobalAdmin();}else if(mode==='invoice'){await updateDoc(doc(db,SEERVI_INVOICE_COLLECTION,id),{dateISO:meta.dateISO||S.record.dateISO||'',invoiceNo:meta.invoiceNo||S.record.invoiceNo||'',updatedAt:serverTimestamp()});await crmLoadGlobalAdmin();}if(status)status.textContent='SAVED';seerviCloseDocumentEditor();}catch(e){console.error('Document editor save failed:',e);if(err){err.textContent=e?.message||'Save failed.';err.style.display='block';}if(status)status.textContent='';alert('Could not save changes: '+(e?.message||'Check Firebase rules.'));}};
+  window.seerviSaveDocumentEditor=async function(){const status=$id('seerviDocEditorStatus');const err=$id('seerviDocEditorError');if(status)status.textContent='SAVING…';if(err){err.style.display='none';err.textContent='';}try{await prepareSave();const meta=window.__seerviEditorMeta||{};const mode=S.mode,id=S.id;if(mode==='invoice' && meta.invoiceNo && meta.invoiceNo!==String(S.record.invoiceNo||'').trim() && await seerviInvoiceNumberExistsExcept(meta.invoiceNo,id)){throw new Error('Invoice number '+meta.invoiceNo+' already exists. Please use another number.');}if(!S.originalSave)S.originalSave=window.__seerviOriginalCrmSave;await S.originalSave();if(mode==='quote'){await updateDoc(doc(db,'quotations',id),{quoteNo:meta.quoteNo||S.record.quoteNo||'',dateISO:meta.dateISO||S.record.dateISO||'',status:meta.status||S.record.status||'saved',updatedAt:serverTimestamp()});const linkedInvoiceId=S.record.invoiceId||'';if(linkedInvoiceId){await updateDoc(doc(db,SEERVI_INVOICE_COLLECTION,linkedInvoiceId),{quoteNo:meta.quoteNo||S.record.quoteNo||'',updatedAt:serverTimestamp()});}crmLoadGlobalAdmin(false);}else if(mode==='invoice'){await updateDoc(doc(db,SEERVI_INVOICE_COLLECTION,id),{dateISO:meta.dateISO||S.record.dateISO||'',invoiceNo:meta.invoiceNo||S.record.invoiceNo||'',updatedAt:serverTimestamp()});crmLoadGlobalAdmin(false);}if(status)status.textContent='SAVED';seerviCloseDocumentEditor();}catch(e){console.error('Document editor save failed:',e);if(err){err.textContent=e?.message||'Save failed.';err.style.display='block';}if(status)status.textContent='';alert('Could not save changes: '+(e?.message||'Check Firebase rules.'));}};
   function open(mode,id){if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const rec=(mode==='quote'?adminGlobalQuotes:adminGlobalInvoices).find(x=>x.id===id);if(!rec){alert((mode==='quote'?'Quotation':'Invoice')+' not found. Refresh the Admin Panel.');return;}const party=(adminGlobalParties||[]).find(p=>p.id===rec.partyId)||(crmParties||[]).find(p=>p.id===rec.partyId)||rec.customer||{};if(!party?.id){alert('The document party could not be found. Refresh the Admin Panel.');return;}S.mode=mode;S.id=id;S.record=rec;S.party=party;S.items=(rec.items||[]).map(x=>({...x,model:x.model||x.name||'',name:x.name||x.model||'',spec:x.spec||x.thickness||'',thickness:x.spec||x.thickness||'',hsnCode:x.hsnCode||x.hsn||'',qty:Number(x.qty||0),rate:Number(x.rate||0)}));
     $id('seerviDocEditorTitle').textContent=mode==='quote'?'EDIT QUOTATION':'EDIT SALE INVOICE';$id('seerviDocTypeLabel').textContent=mode==='quote'?'WHOLESALE PRODUCT QUOTATION':'SALE INVOICE';$id('seerviDocNumberLabel').textContent=mode==='quote'?'Quotation No.':'Invoice No.';$id('seerviDocStatusWrap').style.display=mode==='quote'?'block':'none';$id('seerviDocEwayWrap').style.display=mode==='invoice'?'block':'none';$id('seerviDocShipSection').style.display=mode==='invoice'?'block':'none';
     setv('seerviDocNumber',mode==='quote'?(rec.quoteNo||''):(rec.invoiceNo||''));setv('seerviDocDate',rec.dateISO?String(rec.dateISO).slice(0,10):new Date().toISOString().slice(0,10));setv('seerviDocStatus',rec.status||'saved');setv('seerviDocEway',rec.ewayBillNo||'');fillCommon(party);fillShip(rec.shipTo||rec.customer||party);setv('seerviDocNotes',rec.notes||'');const ge=$id('seerviDocGstEnabled'),gr=$id('seerviDocGstRate');if(ge)ge.checked=!!rec.gstEnabled;if(gr)gr.value=Number(rec.gstRate||18);renderItems();showEditor();
