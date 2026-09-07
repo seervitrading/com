@@ -7991,8 +7991,12 @@ window.saveCustomerCartRequest=async function(){
   if(!customerUser || customerUser.isAnonymous) throw new Error('Please login to your Seervi Trading account before placing an enquiry.');
   if(!seerviCart.length) throw new Error('Your cart is empty. Add products first.');
 
-  const partySnap=await getDoc(doc(publicSignupDb,'parties',customerUser.uid));
-  const party=partySnap.exists()?{id:partySnap.id,...partySnap.data()}:null;
+  const partySnap=await getDocs(query(
+    collection(publicSignupDb,'parties'),
+    where('customerUid','==',customerUser.uid),
+    limit(1)
+  ));
+  const party=partySnap.docs.map(d=>({id:d.id,...d.data()}))[0]||null;
   if(!party) throw new Error('Your party profile is not linked yet. Please complete your signup/profile first.');
 
   const now=new Date();
@@ -8018,9 +8022,14 @@ window.saveCustomerCartRequest=async function(){
 
 async function customerLoadDashboard(){
   if(!customerUser)return;
-  // Resolve the party by the immutable customerUid field first. This supports
-  // both new UID-based party documents and older/generated party IDs.
-  const snap=await getDocs(query(collection(publicSignupDb,'parties'),where('customerUid','==',customerUser.uid),limit(1)));
+  // Resolve the party ONLY through the immutable customerUid field.
+  // This works for both UID-based and older/generated party document IDs and
+  // avoids a permission-denied read when /parties/{uid} does not exist.
+  const snap=await getDocs(query(
+    collection(publicSignupDb,'parties'),
+    where('customerUid','==',customerUser.uid),
+    limit(1)
+  ));
   customerParty=snap.docs.map(d=>({id:d.id,...d.data()}))[0]||null;
   if(!customerParty)throw new Error('No party profile is linked to this account yet. Please complete your party details.');
   const [qs,rs,ls]=await Promise.all([
