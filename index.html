@@ -8191,11 +8191,13 @@ window.accountDashboardAdminPanel=function(){
 };
 
 window.accountDashboardQuotationPanel=function(){
-  seerviOpenAdminDataPanel('quotes');
+  closeAccountDashboard();
+  requestAnimationFrame(()=>seerviOpenAdminDataPanel('quotes'));
 };
 
 window.accountDashboardInvoicePanel=function(){
-  seerviOpenAdminDataPanel('invoices');
+  closeAccountDashboard();
+  requestAnimationFrame(()=>seerviOpenAdminDataPanel('invoices'));
 };
 
 window.accountDashboardStock=function(){
@@ -8219,6 +8221,7 @@ window.accountDashboardNewParty=function(){
   });
 };
 window.accountDashboardBackup=function(){
+  closeAccountDashboard();
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
   const modal=$('adminBackupOptionsModal');
   if(!modal)return;
@@ -8428,6 +8431,7 @@ window.seerviBackupQuotationsWithParty=async function(){
 };
 ;
 window.accountDashboardNotificationPost=function(){
+  closeAccountDashboard();
   seerviAdminReturnTarget='dashboard';
   seerviAdminOpenedFromDashboard=true;
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
@@ -8443,12 +8447,14 @@ window.accountDashboardSignOut=function(){
   alert('Sign out is temporarily unavailable. Please refresh once and try again.');
 };
 window.accountDashboardEditProfile=function(){
+  closeAccountDashboard();
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
   customerDashboardRequestedView='profile';
   customerShowDashboard();
 };
 window.accountDashboardMyOrder=function(){
+  closeAccountDashboard();
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
   customerDashboardRequestedView='orders';
@@ -10256,6 +10262,7 @@ function seerviGstFillForm(){
   Object.entries(map).forEach(([id,v])=>{const el=seerviGstField(id);if(el)el.value=v||'';});
 }
 window.openGstProfile=function(){
+  closeAccountDashboard();
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
   const m=document.getElementById('gstProfileModal');if(!m)return;
   seerviGstFillForm();
@@ -14482,6 +14489,7 @@ function seerviRequireSettingsAdmin(){
 }
 
 window.openAdminSettings=function(){
+  closeAccountDashboard();
   try{seerviRequireSettingsAdmin();}catch(e){alert(e.message||'Admin access required.');return;}
   const modal=document.getElementById('adminSettingsModal');
   if(!modal)return;
@@ -14687,7 +14695,7 @@ function seerviActivityTimestamp(value){if(!value)return 'Just now';const d=valu
 function seerviActivityRender(){const list=$('seerviActivityList');if(!list)return;const rows=seerviActivityCache.filter(x=>seerviActivityFilterValue==='all'||x.actorType===seerviActivityFilterValue);if(!rows.length){list.innerHTML='<div class="seervi-activity-empty">No activity found.</div>';return;}list.innerHTML=rows.map(x=>{const actor=x.actorType==='admin'?'ADMIN':'CUSTOMER',who=seerviEscHtml(x.actorEmail||actor),desc=seerviEscHtml(x.description||x.action||'Activity'),module=seerviEscHtml(x.module||''),time=seerviEscHtml(seerviActivityTimestamp(x.createdAt)),device=seerviEscHtml(x.deviceInfo||'Unknown device'),ip=seerviEscHtml(x.ipAddress||'Unavailable'),loc=x.latitude!=null?` · <a href="https://www.google.com/maps?q=${encodeURIComponent(x.latitude+','+x.longitude)}" target="_blank" rel="noopener noreferrer">LOCATION</a>`:(x.locationPermission==='denied'?' · LOCATION DENIED':'');return `<article class="seervi-activity-item"><div class="seervi-activity-badge ${actor.toLowerCase()}">${actor}</div><div class="seervi-activity-main"><strong>${desc}</strong><span>${who}${module?' · '+module:''}${loc} · DEVICE ${device} · IP ${ip}</span></div><div class="seervi-activity-time">${time}</div></article>`;}).join('');}
 window.seerviActivityFilter=function(filter){seerviActivityFilterValue=['all','admin','customer'].includes(filter)?filter:'all';document.querySelectorAll('[data-activity-filter]').forEach(btn=>btn.classList.toggle('active',btn.dataset.activityFilter===seerviActivityFilterValue));seerviActivityRender();};
 window.loadAdminActivity=async function(){if(!crmUser||!isAuthorisedAdmin(crmUser)){closeAdminActivity();openAdminPanel();return;}const status=$('seerviActivityStatus'),list=$('seerviActivityList');if(status)status.textContent='Loading activity…';if(list)list.innerHTML='';try{const snap=await getDocs(query(collection(db,SEERVI_ACTIVITY_COLLECTION),limit(250)));seerviActivityCache=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.toMillis?b.createdAt.toMillis():0)-(a.createdAt?.toMillis?a.createdAt.toMillis():0));if(status)status.textContent=`Showing ${seerviActivityCache.length} recent activities.`;seerviActivityRender();}catch(error){console.error('Activity load failed:',error);if(status)status.textContent='Activity load failed: '+(error?.message||'Check Firebase rules.');if(list)list.innerHTML='<div class="seervi-activity-empty">Could not load activity log.</div>';}};
-window.openAdminActivity=function(){if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const m=$('seerviActivityModal');if(!m)return;m.classList.add('show');m.setAttribute('aria-hidden','false');seerviActivityFilter('all');loadAdminActivity();};
+window.openAdminActivity=function(){closeAccountDashboard();if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const m=$('seerviActivityModal');if(!m)return;m.classList.add('show');m.setAttribute('aria-hidden','false');seerviActivityFilter('all');loadAdminActivity();};
 window.closeAdminActivity=function(){const m=$('seerviActivityModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true');};
 function seerviWrapActivity(name,module,action,description){const original=window[name];if(typeof original!=='function'||original.__seerviActivityWrapped)return;const wrapped=async function(...args){let actor=crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser;const result=await original.apply(this,args);actor=crmUser||customerUser||auth.currentUser||publicSignupAuth.currentUser||actor;if(actor){const desc=typeof description==='function'?description(result,args):description;await window.seerviLogActivity(action,module,desc,actor);}return result;};wrapped.__seerviActivityWrapped=true;wrapped.__seerviActivityOriginal=original;window[name]=wrapped;}
 seerviWrapActivity('seerviCreateItem','items','item_created',r=>`Added product: ${r?.name||'New item'}`);seerviWrapActivity('seerviUpdateItem','items','item_updated',r=>`Updated product: ${r?.name||r?.id||'Item'}`);seerviWrapActivity('seerviDeleteItem','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviCreateItemCategory','categories','category_created',r=>`Added ${r?.type||'category'}: ${r?.name||'Category'}`);seerviWrapActivity('seerviUpdateItemCategory','categories','category_updated',r=>`Updated ${r?.type||'category'}: ${r?.name||r?.id||'Category'}`);seerviWrapActivity('seerviDeleteItemCategory','categories','category_deleted',(_,a)=>`Deleted category/subcategory: ${a?.[0]||'Category'}`);seerviWrapActivity('crmSaveParty','parties','party_saved',()=>`Saved party/customer: ${document.getElementById('crmPartyName')?.value||'Party'}`);seerviWrapActivity('crmSaveCurrentQuote','quotations','quotation_saved',()=>`Saved quotation`);seerviWrapActivity('crmSaveQuoteStatus','quotations','quotation_status_updated',()=>`Updated quotation status`);seerviWrapActivity('crmDeleteParty','parties','party_deleted',(_,a)=>`Deleted party/customer: ${a?.[0]||'Party'}`);seerviWrapActivity('crmEditInvoice','invoices','invoice_edit_opened',(_,a)=>`Editing invoice: ${a?.[0]||'Invoice'}`);seerviWrapActivity('crmDeleteInvoice','invoices','invoice_deleted',(_,a)=>`Deleted invoice: ${a?.[0]||'Invoice'}`);seerviWrapActivity('crmDeleteQuote','quotations','quotation_deleted',(_,a)=>`Deleted quotation: ${a?.[0]||'Quotation'}`);seerviWrapActivity('crmDeleteLedgerEntry','ledger','ledger_entry_deleted',(_,a)=>`Deleted ledger entry: ${a?.[0]||'Entry'}`);seerviWrapActivity('crmAddLedgerEntry','ledger','ledger_entry_added',()=>`Added payment/ledger entry`);seerviWrapActivity('submitNotificationPost','notifications','notification_posted',()=>`Posted notification`);seerviWrapActivity('seerviToggleItemActive','items','item_status_changed',(_,a)=>`Changed item active status: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviDuplicateItem','items','item_duplicated',(_,a)=>`Duplicated product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveItemForm','items','item_saved',()=>`Saved product from Items panel`);seerviWrapActivity('seerviDeleteItemConfirm','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveAdminSettings','settings','settings_updated',()=>`Updated global website settings`);seerviWrapActivity('seerviBackupItems','backup','items_backup',()=>`Created items backup`);seerviWrapActivity('seerviBackupCategories','backup','categories_backup',()=>`Created categories backup`);seerviWrapActivity('seerviBackupQuotationsWithParty','backup','quotations_backup',()=>`Created quotations backup`);seerviWrapActivity('setInventorySubcategoryStock','inventory','subcategory_stock_updated',(_,a)=>`Updated subcategory stock: ${a?.[1]||a?.[0]||'Subcategory'}`);seerviWrapActivity('setInventoryCategoryStock','inventory','category_stock_updated',(_,a)=>`Updated category stock: ${a?.[0]||'Category'}`);seerviWrapActivity('setInventoryQuantity','inventory','inventory_quantity_updated',(_,a)=>`Updated inventory quantity: ${a?.[0]||'Item'}`);seerviWrapActivity('setInventoryStock','inventory','inventory_stock_updated',(_,a)=>`Updated stock status: ${a?.[0]||'Item'}`);seerviWrapActivity('toggleInventoryStock','inventory','inventory_stock_toggled',()=>`Toggled inventory stock status`);seerviWrapActivity('seerviBulkImport','items','bulk_items_imported',()=>`Imported products in bulk`);seerviWrapActivity('seerviCategoryBulkImport','categories','bulk_categories_imported',()=>`Imported categories/subcategories in bulk`);
