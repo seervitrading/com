@@ -429,7 +429,7 @@ nav{border-bottom:1px solid #ffffff40;box-shadow:0 8px 30px #0007}
 
 
 .bw-hero{position:relative;min-height:780px;height:100vh;max-height:900px;overflow:hidden;background:#0a0a0a;color:#fff}
-.bw-hero-image{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;filter:none;transform:scale(1.02)}
+.bw-hero-image{position:absolute;inset:0;background-image:url("images/00-old-products/product-image-001-055cde1217d3c801.webp");background-size:cover;background-position:center;background-repeat:no-repeat;filter:none;transform:scale(1.02)}
 .bw-hero-wash{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,.10) 45%,rgba(0,0,0,.08) 100%);z-index:1}
 .bw-hero-vignette{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.12) 0%,transparent 24%,transparent 67%,rgba(0,0,0,.20) 100%);z-index:1}
 .bw-nav-overlay{position:absolute;z-index:5;top:28px;left:50%;transform:translateX(-50%);width:min(1120px,calc(100% - 72px));height:58px;background:#f7f7f5;color:#111;border-radius:4px;display:grid;grid-template-columns:190px 1fr 112px;align-items:center;padding:0 8px 0 22px;box-shadow:0 12px 35px #0005}
@@ -460,9 +460,10 @@ nav{border-bottom:1px solid #ffffff40;box-shadow:0 8px 30px #0007}
 .bw-bottom-bar{font-size:7.5px;letter-spacing:1.45px}
 
 
-.bw-hero .bw-hero-image{background-size:cover !important;background-position:center center !important;background-repeat:no-repeat !important;opacity:1 !important}
+.bw-hero .bw-hero-image{background-image:url("images/00-old-products/product-image-001-055cde1217d3c801.webp") !important;background-size:cover !important;background-position:center center !important;background-repeat:no-repeat !important;opacity:1 !important}
 
 
+#home .bw-hero-media-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;z-index:0;background:#0a0a0a;}#home .bw-hero-media-video.is-active{display:block;}#home .bw-hero-image.is-hidden{display:none;}
 .float-wa{position:fixed;right:20px;bottom:22px;z-index:180;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#25d366;color:#061108;box-shadow:0 12px 35px #000b,0 0 0 4px #25d36622;font-size:27px;font-weight:900;transition:.2s;text-decoration:none}
 .float-wa:hover{transform:translateY(-3px) scale(1.03);filter:brightness(1.06)}
 .float-wa-label{position:absolute;right:70px;white-space:nowrap;background:#10151b;color:#fff;border:1px solid #ffffff18;border-radius:8px;padding:8px 10px;font-size:10px;letter-spacing:.5px;opacity:0;transform:translateX(5px);pointer-events:none;transition:.2s}
@@ -670,7 +671,7 @@ body.seervi-items-open{
   display:block !important;
   opacity:1 !important;
   visibility:visible !important;
-  
+  background-image:url("images/00-old-products/product-image-001-055cde1217d3c801.webp") !important;
   background-size:cover !important;
   background-position:center center !important;
   background-repeat:no-repeat !important;
@@ -4641,9 +4642,6 @@ body.seervi-ai-open .float-wa{display:none!important}
 .admin-settings-grid textarea{min-height:82px;resize:vertical}
 .admin-settings-check{display:flex!important;flex-direction:row!important;align-items:center;justify-content:flex-start;gap:8px!important;min-height:42px;padding:10px;border:1px solid #ffffff10;border-radius:8px;background:#ffffff04;color:#dce1e6!important}
 .admin-settings-check input{accent-color:#fff}
-.admin-settings-hero-upload{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.admin-settings-upload-status{color:#69737d;font-size:9px;line-height:1.45;flex:1;min-width:220px}
-@media(max-width:700px){.admin-settings-hero-upload{align-items:stretch;flex-direction:column}.admin-settings-hero-upload .crm-secondary{width:100%;min-height:42px}.admin-settings-upload-status{min-width:0}}
 .admin-settings-readonly{margin-top:12px;padding:10px;border:1px dashed #ffffff16;border-radius:8px;color:#69737d;font-size:9px;line-height:1.5}
 .admin-settings-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 22px;border-top:1px solid #ffffff12;background:#0b0f14}
 .admin-settings-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
@@ -5187,7 +5185,7 @@ body.seervi-ai-open .float-wa{display:none!important}
 </head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
-</button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" aria-hidden="true"></div><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
+</button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" aria-hidden="true"></div><video class="bw-hero-media-video" id="bwHeroVideo" aria-hidden="true" autoplay muted loop playsinline preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
 
 
 <section id="profiles" class="firebase-public-catalog">
@@ -5349,9 +5347,9 @@ body.seervi-ai-open .float-wa{display:none!important}
         <label>Company Name<input id="settingCompany" type="text"></label><label>Tagline<input id="settingTagline" type="text"></label><label>Email<input id="settingEmail" type="email"></label><label>WhatsApp Number<input id="settingWhatsapp" type="text" inputmode="numeric"></label>
       </div></section>
       <section id="adminSettingsSectionHomepage" class="admin-settings-section" hidden><div class="crm-section-title">HOMEPAGE</div><div class="admin-settings-grid">
-        <label>Hero Kicker<input id="settingHeroKicker" type="text"></label><label>Hero Title<input id="settingHeroTitle" type="text"></label><label>Hero Highlight<input id="settingHeroHighlight" type="text"></label><label>Hero CTA<input id="settingHeroCta" type="text"></label><label class="full">Hero Description<textarea id="settingHeroDescription"></textarea></label><label class="full">Hero Image URL / Firebase Storage Path<input id="settingHeroImage" type="text" placeholder="https://firebasestorage.googleapis.com/... or images/hero.webp" autocomplete="off"></label><div class="admin-settings-hero-upload full"><input id="settingHeroImageFile" type="file" accept="image/*" hidden><button class="crm-secondary" type="button" onclick="document.getElementById('settingHeroImageFile')?.click()">UPLOAD HERO IMAGE TO FIREBASE</button><span id="settingHeroImageUploadStatus" class="admin-settings-upload-status">Optional: upload an image here and its Firebase Storage URL will be placed in the field above.</span></div>
+        <label>Hero Kicker<input id="settingHeroKicker" type="text"></label><label>Hero Title<input id="settingHeroTitle" type="text"></label><label>Hero Highlight<input id="settingHeroHighlight" type="text"></label><label>Hero CTA<input id="settingHeroCta" type="text"></label><label>Hero Media Type<select id="settingHeroMediaType"><option value="image">IMAGE</option><option value="video">VIDEO</option></select></label><label class="full">Hero Description<textarea id="settingHeroDescription"></textarea></label><label class="full">Hero Image Path<input id="settingHeroImage" type="text" placeholder="GitHub project path, e.g. images/hero.webp"></label><label class="full">Hero Video Path<input id="settingHeroVideo" type="text" placeholder="GitHub project path, e.g. videos/hero.mp4"></label>
         <label class="admin-settings-check"><input id="settingShowSupply" type="checkbox"> Show Supply Flow</label><label class="admin-settings-check"><input id="settingShowAbout" type="checkbox"> Show About</label><label class="admin-settings-check"><input id="settingShowWhy" type="checkbox"> Show Why Seervi</label><label class="admin-settings-check"><input id="settingShowContact" type="checkbox"> Show Contact</label>
-      </div><div class="admin-settings-readonly">Hero image is controlled globally from Firebase <strong>siteSettings/global → homepage.heroImage</strong>. Enter a public Firebase Storage download URL or a relative project path. Saving here updates the homepage for all visitors/devices.</div></section>
+      </div></section>
       <section id="adminSettingsSectionCatalogue" class="admin-settings-section" hidden><div class="crm-section-title">CATALOGUE</div><div class="admin-settings-grid">
         <label>Products Section Title<input id="settingCatalogueTitle" type="text"></label><label class="admin-settings-check"><input id="settingShowCatalogue" type="checkbox"> Show Catalogue</label><label class="admin-settings-check"><input id="settingShowSearch" type="checkbox"> Show Search</label><label class="admin-settings-check"><input id="settingShowSort" type="checkbox"> Show Sort</label><label class="admin-settings-check"><input id="settingShowCategory" type="checkbox"> Show Category Filter</label><label class="admin-settings-check"><input id="settingShowSubcategory" type="checkbox"> Show Subcategory Filter</label>
       </div></section>
@@ -14549,7 +14547,7 @@ window.seerviCloseItemsPanel=function(){
 const SEERVI_SITE_SETTINGS_DEFAULTS={
   vanta:{color:'#ff99c5',backgroundColor:'#000000',points:10,maxDistance:15,spacing:15,showDots:true},
   branding:{companyName:'Seervi Trading',tagline:'Sourced Globally. Supplied by Seervi.',email:'info@seervitrading.com',whatsapp:'917073741650'},
-  homepage:{heroKicker:'SEERVI TRADING / GLOBAL SOURCING',heroTitle:'Sourced Globally.',heroHighlight:'Supplied by Seervi.',heroDescription:'Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.',heroCta:'Explore Our Solutions',heroImage:'images/00-old-products/product-image-001-055cde1217d3c801.webp',showSupplyFlow:true,showAbout:true,showWhy:true,showContact:true},
+  homepage:{heroKicker:'SEERVI TRADING / GLOBAL SOURCING',heroTitle:'Sourced Globally.',heroHighlight:'Supplied by Seervi.',heroDescription:'Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.',heroCta:'Explore Our Solutions',heroMediaType:'image',heroImage:'images/00-old-products/product-image-001-055cde1217d3c801.webp',heroVideo:'',showSupplyFlow:true,showAbout:true,showWhy:true,showContact:true},
   catalogue:{sectionTitle:'Our Products',showCatalogue:true,showSearch:true,showSort:true,showCategoryFilter:true,showSubcategoryFilter:true},
   customer:{loginEnabled:true,signupEnabled:true},
   notifications:{enabled:true,soundEnabled:true},
@@ -14594,7 +14592,9 @@ function seerviNormaliseSettings(raw){
   s.homepage.heroHighlight=String(s.homepage.heroHighlight||SEERVI_SITE_SETTINGS_DEFAULTS.homepage.heroHighlight).slice(0,100);
   s.homepage.heroDescription=String(s.homepage.heroDescription||SEERVI_SITE_SETTINGS_DEFAULTS.homepage.heroDescription).slice(0,400);
   s.homepage.heroCta=String(s.homepage.heroCta||SEERVI_SITE_SETTINGS_DEFAULTS.homepage.heroCta).slice(0,80);
+  s.homepage.heroMediaType=['image','video'].includes(String(s.homepage.heroMediaType||'').toLowerCase())?String(s.homepage.heroMediaType).toLowerCase():SEERVI_SITE_SETTINGS_DEFAULTS.homepage.heroMediaType;
   s.homepage.heroImage=String(s.homepage.heroImage||SEERVI_SITE_SETTINGS_DEFAULTS.homepage.heroImage).slice(0,500);
+  s.homepage.heroVideo=String(s.homepage.heroVideo||'').slice(0,500);
   ['showSupplyFlow','showAbout','showWhy','showContact'].forEach(k=>s.homepage[k]=!!s.homepage[k]);
   s.catalogue.sectionTitle=String(s.catalogue.sectionTitle||SEERVI_SITE_SETTINGS_DEFAULTS.catalogue.sectionTitle).slice(0,100);
   ['showCatalogue','showSearch','showSort','showCategoryFilter','showSubcategoryFilter'].forEach(k=>s.catalogue[k]=!!s.catalogue[k]);
@@ -14619,12 +14619,31 @@ function seerviApplySiteSettings(raw){
   const v=seerviSiteSettings.vanta;
   const root=document.documentElement;
   const hero=document.querySelector('#home .bw-hero-image');
+  const heroVideo=document.getElementById('bwHeroVideo');
+  const heroMediaType=seerviSiteSettings.homepage.heroMediaType;
+  if(hero){
+    const imagePath=seerviSettingsEscapeCssUrl(seerviSiteSettings.homepage.heroImage);
+    const videoPath=seerviSettingsEscapeCssUrl(seerviSiteSettings.homepage.heroVideo);
+    hero.style.backgroundImage=imagePath?`url('${imagePath}')`:'';
+    hero.classList.toggle('is-hidden',heroMediaType==='video' && !!videoPath);
+  }
+  if(heroVideo){
+    const videoPath=seerviSettingsEscapeCssUrl(seerviSiteSettings.homepage.heroVideo);
+    const videoActive=heroMediaType==='video' && !!videoPath;
+    if(videoActive){
+      if(heroVideo.getAttribute('src')!==videoPath) heroVideo.src=videoPath;
+      heroVideo.classList.add('is-active'); heroVideo.hidden=false;
+      const playPromise=heroVideo.play(); if(playPromise?.catch) playPromise.catch(()=>{});
+    }else{
+      heroVideo.pause(); heroVideo.removeAttribute('src'); heroVideo.load();
+      heroVideo.classList.remove('is-active'); heroVideo.hidden=true;
+    }
+  }
   const kicker=document.querySelector('#home .bw-kicker');
   const h1=document.querySelector('#home h1');
   const desc=document.querySelector('#home .bw-hero-copy > p');
   const cta=document.querySelector('#home .bw-cta');
   const productTitle=document.querySelector('#profiles .catalog-title h2');
-  if(hero && v){const heroImage=seerviSettingsEscapeCssUrl(seerviSiteSettings.homepage.heroImage);hero.style.backgroundImage=heroImage?`url("${heroImage}")`:'';}
   if(kicker) kicker.textContent=seerviSiteSettings.homepage.heroKicker;
   if(h1) h1.innerHTML=`${seerviEscHtml(seerviSiteSettings.homepage.heroTitle)}<br><span>${seerviEscHtml(seerviSiteSettings.homepage.heroHighlight)}</span>`;
   if(desc) desc.textContent=seerviSiteSettings.homepage.heroDescription;
@@ -14729,27 +14748,6 @@ window.closeAdminSettings=function(){
 };
 
 function seerviSettingsField(id){return document.getElementById(id);}
-window.seerviUploadHeroImage=async function(file){
-  try{seerviRequireSettingsAdmin();}catch(e){alert(e.message||'Admin access required.');return;}
-  const status=seerviSettingsField('settingHeroImageUploadStatus');
-  const input=seerviSettingsField('settingHeroImage');
-  if(!file){return;}
-  if(!file.type || !file.type.startsWith('image/')){if(status)status.textContent='Please select a valid image file.';return;}
-  const maxBytes=10*1024*1024;
-  if(file.size>maxBytes){if(status)status.textContent='Image is too large. Maximum allowed size is 10 MB.';return;}
-  try{
-    if(status)status.textContent='Uploading image to Firebase Storage…';
-    const safeName=(file.name||'hero-image').replace(/[^a-zA-Z0-9._-]/g,'_').slice(-160);
-    const heroRef=storageRef(storage,`siteAssets/homepage/hero/${Date.now()}_${safeName}`);
-    await uploadBytes(heroRef,file,{contentType:file.type,cacheControl:'public,max-age=31536000,immutable'});
-    const url=await getDownloadURL(heroRef);
-    if(input)input.value=url;
-    if(status)status.textContent='Uploaded to Firebase Storage. Click SAVE ALL SETTINGS to publish it globally.';
-  }catch(error){
-    console.error('Hero image upload failed:',error);
-    if(status)status.textContent='Upload failed: '+(error?.message||'Check Firebase Storage Rules and connection.');
-  }
-};
 function seerviPdfLayoutPreset(type){
   const key=type==='invoice'?'invoiceLayout':'quotationLayout';
   const mode=seerviSiteSettings?.pdf?.[key]||'standard';
@@ -14786,7 +14784,7 @@ function seerviSettingsFillForm(){
   const vals={
     settingVantaColor:s.vanta.color,settingVantaBg:s.vanta.backgroundColor,settingVantaPoints:s.vanta.points,settingVantaMax:s.vanta.maxDistance,settingVantaSpacing:s.vanta.spacing,settingVantaDots:s.vanta.showDots,
     settingCompany:s.branding.companyName,settingTagline:s.branding.tagline,settingEmail:s.branding.email,settingWhatsapp:s.branding.whatsapp,
-    settingHeroKicker:s.homepage.heroKicker,settingHeroTitle:s.homepage.heroTitle,settingHeroHighlight:s.homepage.heroHighlight,settingHeroDescription:s.homepage.heroDescription,settingHeroCta:s.homepage.heroCta,settingHeroImage:s.homepage.heroImage,settingShowSupply:s.homepage.showSupplyFlow,settingShowAbout:s.homepage.showAbout,settingShowWhy:s.homepage.showWhy,settingShowContact:s.homepage.showContact,
+    settingHeroKicker:s.homepage.heroKicker,settingHeroTitle:s.homepage.heroTitle,settingHeroHighlight:s.homepage.heroHighlight,settingHeroDescription:s.homepage.heroDescription,settingHeroCta:s.homepage.heroCta,settingHeroMediaType:s.homepage.heroMediaType,settingHeroImage:s.homepage.heroImage,settingHeroVideo:s.homepage.heroVideo,settingShowSupply:s.homepage.showSupplyFlow,settingShowAbout:s.homepage.showAbout,settingShowWhy:s.homepage.showWhy,settingShowContact:s.homepage.showContact,
     settingCatalogueTitle:s.catalogue.sectionTitle,settingShowCatalogue:s.catalogue.showCatalogue,settingShowSearch:s.catalogue.showSearch,settingShowSort:s.catalogue.showSort,settingShowCategory:s.catalogue.showCategoryFilter,settingShowSubcategory:s.catalogue.showSubcategoryFilter,
     settingLogin:s.customer.loginEnabled,settingSignup:s.customer.signupEnabled,settingNotifications:s.notifications.enabled,settingSound:s.notifications.soundEnabled,settingQuotationPdfLayout:s.pdf.quotationLayout,settingInvoicePdfLayout:s.pdf.invoiceLayout,
     settingQuoteMarginTop:s.pdf.quotation.marginTop,settingQuoteMarginRight:s.pdf.quotation.marginRight,settingQuoteMarginBottom:s.pdf.quotation.marginBottom,settingQuoteMarginLeft:s.pdf.quotation.marginLeft,settingQuoteHeaderFont:s.pdf.quotation.headerFont,settingQuoteBodyFont:s.pdf.quotation.bodyFont,settingQuoteTableFont:s.pdf.quotation.tableFont,settingQuoteTotalFont:s.pdf.quotation.totalFont,settingQuoteGrandFont:s.pdf.quotation.grandFont,settingQuoteFooterFont:s.pdf.quotation.footerFont,settingQuoteRowMin:s.pdf.quotation.rowMin,settingQuoteRowLine:s.pdf.quotation.rowLine,settingQuoteRowPad:s.pdf.quotation.rowPad,
@@ -14810,7 +14808,7 @@ window.seerviSaveAdminSettings=async function(){
   },branding:{
     companyName:seerviSettingsField('settingCompany')?.value,tagline:seerviSettingsField('settingTagline')?.value,email:seerviSettingsField('settingEmail')?.value,whatsapp:seerviSettingsField('settingWhatsapp')?.value
   },homepage:{
-    heroKicker:seerviSettingsField('settingHeroKicker')?.value,heroTitle:seerviSettingsField('settingHeroTitle')?.value,heroHighlight:seerviSettingsField('settingHeroHighlight')?.value,heroDescription:seerviSettingsField('settingHeroDescription')?.value,heroCta:seerviSettingsField('settingHeroCta')?.value,heroImage:seerviSettingsField('settingHeroImage')?.value,showSupplyFlow:!!seerviSettingsField('settingShowSupply')?.checked,showAbout:!!seerviSettingsField('settingShowAbout')?.checked,showWhy:!!seerviSettingsField('settingShowWhy')?.checked,showContact:!!seerviSettingsField('settingShowContact')?.checked
+    heroKicker:seerviSettingsField('settingHeroKicker')?.value,heroTitle:seerviSettingsField('settingHeroTitle')?.value,heroHighlight:seerviSettingsField('settingHeroHighlight')?.value,heroDescription:seerviSettingsField('settingHeroDescription')?.value,heroCta:seerviSettingsField('settingHeroCta')?.value,heroMediaType:seerviSettingsField('settingHeroMediaType')?.value,heroImage:seerviSettingsField('settingHeroImage')?.value,heroVideo:seerviSettingsField('settingHeroVideo')?.value,showSupplyFlow:!!seerviSettingsField('settingShowSupply')?.checked,showAbout:!!seerviSettingsField('settingShowAbout')?.checked,showWhy:!!seerviSettingsField('settingShowWhy')?.checked,showContact:!!seerviSettingsField('settingShowContact')?.checked
   },catalogue:{
     sectionTitle:seerviSettingsField('settingCatalogueTitle')?.value,showCatalogue:!!seerviSettingsField('settingShowCatalogue')?.checked,showSearch:!!seerviSettingsField('settingShowSearch')?.checked,showSort:!!seerviSettingsField('settingShowSort')?.checked,showCategoryFilter:!!seerviSettingsField('settingShowCategory')?.checked,showSubcategoryFilter:!!seerviSettingsField('settingShowSubcategory')?.checked
   },customer:{loginEnabled:!!seerviSettingsField('settingLogin')?.checked,signupEnabled:!!seerviSettingsField('settingSignup')?.checked},notifications:{enabled:!!seerviSettingsField('settingNotifications')?.checked,soundEnabled:!!seerviSettingsField('settingSound')?.checked},pdf:{quotationLayout:seerviSettingsField('settingQuotationPdfLayout')?.value,invoiceLayout:seerviSettingsField('settingInvoicePdfLayout')?.value,quotation:{marginTop:Number(seerviSettingsField('settingQuoteMarginTop')?.value),marginRight:Number(seerviSettingsField('settingQuoteMarginRight')?.value),marginBottom:Number(seerviSettingsField('settingQuoteMarginBottom')?.value),marginLeft:Number(seerviSettingsField('settingQuoteMarginLeft')?.value),headerFont:Number(seerviSettingsField('settingQuoteHeaderFont')?.value),bodyFont:Number(seerviSettingsField('settingQuoteBodyFont')?.value),tableFont:Number(seerviSettingsField('settingQuoteTableFont')?.value),totalFont:Number(seerviSettingsField('settingQuoteTotalFont')?.value),grandFont:Number(seerviSettingsField('settingQuoteGrandFont')?.value),footerFont:Number(seerviSettingsField('settingQuoteFooterFont')?.value),rowMin:Number(seerviSettingsField('settingQuoteRowMin')?.value),rowLine:Number(seerviSettingsField('settingQuoteRowLine')?.value),rowPad:Number(seerviSettingsField('settingQuoteRowPad')?.value)},invoice:{marginTop:Number(seerviSettingsField('settingInvoiceMarginTop')?.value),marginRight:Number(seerviSettingsField('settingInvoiceMarginRight')?.value),marginBottom:Number(seerviSettingsField('settingInvoiceMarginBottom')?.value),marginLeft:Number(seerviSettingsField('settingInvoiceMarginLeft')?.value),headerFont:Number(seerviSettingsField('settingInvoiceHeaderFont')?.value),bodyFont:Number(seerviSettingsField('settingInvoiceBodyFont')?.value),tableFont:Number(seerviSettingsField('settingInvoiceTableFont')?.value),totalFont:Number(seerviSettingsField('settingInvoiceTotalFont')?.value),grandFont:Number(seerviSettingsField('settingInvoiceGrandFont')?.value),footerFont:Number(seerviSettingsField('settingInvoiceFooterFont')?.value),rowMin:Number(seerviSettingsField('settingInvoiceRowMin')?.value),rowLine:Number(seerviSettingsField('settingInvoiceRowLine')?.value),rowPad:Number(seerviSettingsField('settingInvoiceRowPad')?.value),headerH:Number(seerviSettingsField('settingInvoiceHeaderH')?.value),billH:Number(seerviSettingsField('settingInvoiceBillH')?.value)}},order:{whatsappNumber:seerviSettingsField('settingOrderWhatsapp')?.value},advanced:{maintenanceMode:!!seerviSettingsField('settingMaintenance')?.checked,maintenanceMessage:seerviSettingsField('settingMaintenanceMessage')?.value}});
@@ -14841,15 +14839,6 @@ window.seerviSettingsLoadFresh=async function(){
     seerviSettingsFillForm();
   }catch(error){if(status)status.textContent='Load failed: '+(error?.message||'Check connection.');}
 };
-
-const seerviHeroImageFileInput=document.getElementById('settingHeroImageFile');
-if(seerviHeroImageFileInput){
-  seerviHeroImageFileInput.addEventListener('change',function(){
-    const file=this.files?.[0];
-    if(file)window.seerviUploadHeroImage(file);
-    this.value='';
-  });
-}
 
 /* ===== GLOBAL ACTIVITY LOG ===== */
 const SEERVI_ACTIVITY_COLLECTION='activityLogs';
