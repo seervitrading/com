@@ -10796,6 +10796,50 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
   const items=invoice.items||[];
 
+  /* ===== PAGE 1 LOWER BLOCK HEIGHT / ITEM AREA =====
+     The complete closing block (Notes + Totals + Round Off + Amount in Words
+     + HSN/SAC + Bank/QR/Signatory) is treated as ONE unit on Page 1.
+     Page 1 item rows use only the space above this complete block.
+     Page 2+ has no bottom-anchor rule. */
+  const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0);
+  const rawGrand=Number(invoice.grandTotal??subtotal+gst);
+  const roundOff=seerviRoundOff(rawGrand);
+  const grand=seerviRoundedTotal(rawGrand);
+  const notesText=seerviInvoiceSafe(invoice.notes||invoice.customer?.notes||'').trim();
+  const noteLines=notesText?doc.splitTextToSize(notesText,102).slice(0,5):[];
+  const totalH=invoice.gstEnabled?29:24;
+  const notesH=Math.max(16,noteLines.length*3.2+9);
+  const summaryH=Math.max(notesH,totalH);
+  const amountWords='Amount in Words: '+seerviInvoiceAmountInWords(grand);
+  const amountWordLines=doc.splitTextToSize(amountWords,right-left).slice(0,2);
+  const amountWordsH=Math.max(5,amountWordLines.length*3.2)+3;
+
+  const hsnMap=new Map();
+  if(invoice.gstEnabled&&items.length){
+    for(const item of items){
+      const hsn=seerviInvoiceSafe(item.hsnCode||item.hsn||'—').trim()||'—';
+      const taxable=Number(item.amount??Number(item.qty||0)*Number(item.rate||0));
+      const entry=hsnMap.get(hsn)||{taxable:0};
+      entry.taxable+=Number.isFinite(taxable)?taxable:0;
+      hsnMap.set(hsn,entry);
+    }
+  }
+  const hsnRows=[...hsnMap.entries()].map(([hsn,v])=>{
+    const taxable=Math.round(v.taxable*100)/100;
+    const totalTax=Math.round(taxable*(Number(invoice.gstRate||0)/100)*100)/100;
+    const halfRate=Number(invoice.gstRate||0)/2;
+    const cgst=Math.round((totalTax/2)*100)/100;
+    const sgst=Math.round((totalTax-cgst)*100)/100;
+    return {hsn,taxable,cgstRate:halfRate,cgst,sgstRate:halfRate,sgst,totalTax};
+  });
+
+  const hasBank=profile.bankAccountName||profile.bankName||profile.bankAccountNumber||profile.bankIfsc||profile.bankBranch;
+  const hasPayment=profile.upiId;
+  const hasSignatory=profile.signatoryName||profile.businessName;
+  const hasFooterBox=!!(hasBank||hasPayment||hasSignatory);
+  const lowerBlockH=1+summaryH+3+amountWordsH+(hsnRows.length?(14.5+hsnRows.length*5.5+2):0)+(hasFooterBox?28:0);
+  const page1ItemsBottom=contentBottom-lowerBlockH-1;
+
   /* ===== ITEM TABLE ===== */
   const pageEnds=[];
   const addInvoicePage=()=>{
@@ -10828,7 +10872,8 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     const productLines=doc.splitTextToSize(seerviInvoiceSafe(productLabel||item.model||item.name||'Item'),Math.max(30,(right-left)*51/180));
     const rowLines=Math.min(productLines.length,2);
     const rowHeight=Math.max(pdfLayout.rowMin,rowLines*pdfLayout.rowLine+pdfLayout.rowPad);
-    if(y+rowHeight>contentBottom-2){
+    const rowBottomLimit=invoicePage===1?page1ItemsBottom:contentBottom-2;
+    if(y+rowHeight>rowBottomLimit){
       addInvoicePage();
       drawHeader();
     }
@@ -10845,52 +10890,11 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   }
 
   /* ===== NOTES / TOTALS / WORDS / HSN / BANK — NATURAL FLOW ===== */
-  const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0);
-  const rawGrand=Number(invoice.grandTotal??subtotal+gst);
-  const roundOff=seerviRoundOff(rawGrand);
-  const grand=seerviRoundedTotal(rawGrand);
-  const notesText=seerviInvoiceSafe(invoice.notes||invoice.customer?.notes||'').trim();
-  const noteLines=notesText?doc.splitTextToSize(notesText,102).slice(0,5):[];
-  const notesH=Math.max(16,noteLines.length*3.2+9);
-  const totalH=invoice.gstEnabled?29:24;
-  const summaryH=Math.max(notesH,totalH);
-  const amountWords='Amount in Words: '+seerviInvoiceAmountInWords(grand);
-  const amountWordLines=doc.splitTextToSize(amountWords,right-left).slice(0,2);
-  const amountWordsH=Math.max(5,amountWordLines.length*3.2)+3;
+  /* ===== COMPLETE LOWER BLOCK ===== */
+  // On Page 1 the whole closing block is bottom-anchored as one unit.
+  // On Page 2+ it remains normal flow with no bottom-anchor rule.
 
-  const hsnMap=new Map();
-  if(invoice.gstEnabled&&items.length){
-    for(const item of items){
-      const hsn=seerviInvoiceSafe(item.hsnCode||item.hsn||'—').trim()||'—';
-      const taxable=Number(item.amount??Number(item.qty||0)*Number(item.rate||0));
-      const entry=hsnMap.get(hsn)||{taxable:0};
-      entry.taxable+=Number.isFinite(taxable)?taxable:0;
-      hsnMap.set(hsn,entry);
-    }
-  }
-  const hsnRows=[...hsnMap.entries()].map(([hsn,v])=>{
-    const taxable=Math.round(v.taxable*100)/100;
-    const totalTax=Math.round(taxable*(Number(invoice.gstRate||0)/100)*100)/100;
-    const halfRate=Number(invoice.gstRate||0)/2;
-    const cgst=Math.round((totalTax/2)*100)/100;
-    const sgst=Math.round((totalTax-cgst)*100)/100;
-    return {hsn,taxable,cgstRate:halfRate,cgst,sgstRate:halfRate,sgst,totalTax};
-  });
-
-  const hasBank=profile.bankAccountName||profile.bankName||profile.bankAccountNumber||profile.bankIfsc||profile.bankBranch;
-  const hasPayment=profile.upiId;
-  const hasSignatory=profile.signatoryName||profile.businessName;
-  const hasFooterBox=!!(hasBank||hasPayment||hasSignatory);
-
-  // Estimate the complete lower block. It follows the last item instead of
-  // reserving a large blank area above it. If it cannot fit on the current
-  // page, move the complete block to the next page.
-  const lowerBlockH=1+summaryH+3+amountWordsH+(hsnRows.length?(14.5+hsnRows.length*5.5+2):0)+(hasFooterBox?28:0);
-  if(hasFooterBox && y+lowerBlockH>contentBottom-1){
-    addInvoicePage();
-  }
-
-  const summaryTop=y+1;
+  const summaryTop=invoicePage===1 ? contentBottom-lowerBlockH+1 : y+1;
   doc.setDrawColor(205,209,213);doc.rect(left,summaryTop,(right-left)*112/180,summaryH,'S');
   doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.totalFont);doc.setTextColor(35,40,45);
   doc.text('NOTES',left+4,summaryTop+6);
@@ -10954,23 +10958,10 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
   if(hasFooterBox){
     const boxH=28;
-    // PAGE 1 ONLY: keep the complete lower block at the A4 bottom.
-    // PAGE 2+: no bottom-anchor rule; the complete block follows naturally
-    // after the remaining item/tax content on that page.
-    let boxTop;
-    if(invoicePage===1){
-      const footerTop=contentBottom-boxH;
-      if(y>footerTop-1){
-        addInvoicePage();
-      }
-      if(invoicePage===1){
-        boxTop=contentBottom-boxH;
-      }else{
-        boxTop=y;
-      }
-    }else{
-      boxTop=y;
-    }
+    // Page 1: bank/QR/signatory is the final part of the SAME bottom-anchored
+    // block as Notes, Totals, Amount in Words and HSN/SAC.
+    // Page 2+: normal document flow only.
+    const boxTop=invoicePage===1 ? contentBottom-boxH : y;
     const bankW=(right-left)*67/180,qrW=(right-left)*67/180,sigW=(right-left)*46/180;
     doc.setDrawColor(90,96,102);doc.line(left,boxTop,right,boxTop);doc.line(left+bankW,boxTop,left+bankW,boxTop+boxH);doc.line(left+bankW+qrW,boxTop,left+bankW+qrW,boxTop+boxH);
     doc.setFont('helvetica','bold');doc.setFontSize(7.2);doc.setTextColor(30,35,40);doc.text('Bank Details',left+3,boxTop+5);
