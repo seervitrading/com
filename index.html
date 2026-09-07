@@ -786,7 +786,7 @@ body.admin-quote-mode .quote-actions{display:grid!important}
 .crm-save-btn:hover{background:#fff;color:#090b0e}
 .cart-party-admin-note{color:#7f8995;font-size:8px;letter-spacing:.4px;white-space:nowrap}
 .admin-global-area{margin:0 0 12px;padding:13px;border:1px solid #f0c66a22;border-radius:11px;background:linear-gradient(145deg,#11161c,#0b0f14)}
-.admin-global-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}.admin-global-head p{margin:0;color:#69747f;font-size:8px;line-height:1.4}.admin-global-tabs{display:flex;gap:5px;overflow:auto;border-bottom:1px solid #ffffff10;margin-bottom:10px}.admin-global-tab{border:0;background:none;color:#68737e;padding:9px 10px;font-size:8px;font-weight:900;letter-spacing:.7px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}.admin-global-tab.active{color:#fff;border-bottom-color:#f0c66a}.admin-global-list{display:flex;flex-direction:column;gap:7px;max-height:320px;overflow:auto}.admin-global-row{display:grid;grid-template-columns:1.2fr 1fr .9fr auto;gap:8px;align-items:center;padding:10px;border:1px solid #ffffff10;border-radius:8px;background:#ffffff03}.admin-global-row strong{font-size:9px}.admin-global-row span{font-size:8px;color:#7d8792}.admin-global-delete{border:1px solid #ff7f7566;background:#ff7f7510;color:#ffaaa2;border-radius:7px;padding:7px 9px;font-size:8px;font-weight:900;cursor:pointer}.admin-global-delete:hover{background:#ff7f7520}.admin-global-empty{padding:20px;text-align:center;color:#69747f;font-size:9px;border:1px dashed #ffffff12;border-radius:8px}
+.admin-global-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}.admin-global-head p{margin:0;color:#69747f;font-size:8px;line-height:1.4}.admin-global-tabs{display:flex;gap:5px;overflow:auto;border-bottom:1px solid #ffffff10;margin-bottom:10px}.admin-global-tab{border:0;background:none;color:#68737e;padding:9px 10px;font-size:8px;font-weight:900;letter-spacing:.7px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}.admin-global-tab.active{color:#fff;border-bottom-color:#f0c66a}.admin-global-list{display:flex;flex-direction:column;gap:7px;max-height:320px;overflow:auto}.admin-global-row{display:grid;grid-template-columns:1.2fr 1fr .9fr auto;gap:8px;align-items:center;padding:10px;border:1px solid #ffffff10;border-radius:8px;background:#ffffff03}.admin-global-row strong{font-size:9px}.admin-global-row span{font-size:8px;color:#7d8792}.crm-party-admin-actions{display:flex;gap:6px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.crm-admin-permission-btn{border-color:#d8b45a55!important;color:#d8b45a!important}.crm-admin-permission-btn.granted{border-color:#7ee2a466!important;color:#7ee2a4!important;background:#7ee2a40d!important}.crm-admin-permission-btn.granted:hover{background:#7ee2a418!important}.admin-global-delete{border:1px solid #ff7f7566;background:#ff7f7510;color:#ffaaa2;border-radius:7px;padding:7px 9px;font-size:8px;font-weight:900;cursor:pointer}.admin-global-delete:hover{background:#ff7f7520}.admin-global-empty{padding:20px;text-align:center;color:#69747f;font-size:9px;border:1px dashed #ffffff12;border-radius:8px}
 @media(max-width:600px){.cart-party-admin-note{display:none}.admin-global-head{align-items:flex-start}.admin-global-row{grid-template-columns:1fr auto}.admin-global-row span:nth-child(2),.admin-global-row span:nth-child(3){grid-column:1/-1}}
 
 .seervi-invoice-input-modal{position:fixed;inset:0;z-index:100700;display:none;align-items:center;justify-content:center;padding:16px;background:#000b;backdrop-filter:blur(10px)}
@@ -3923,6 +3923,10 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 
 
 .notification-floating-toast{position:fixed;right:18px;bottom:18px;width:min(380px,calc(100vw - 24px));z-index:1200;display:none;background:#10141a;border:1px solid #3a414b;border-radius:16px;box-shadow:0 18px 50px #000b;color:#f4f6f8;padding:14px;cursor:pointer;animation:seerviNotifToastIn .28s ease-out}.notification-floating-toast.show{display:block}.notification-floating-toast .notification-toast-kicker{font-size:9px;letter-spacing:1.4px;color:#f0c66a;font-weight:800;margin-bottom:6px}.notification-floating-toast .notification-toast-title{font-size:15px;font-weight:800;margin-bottom:6px}.notification-floating-toast .notification-toast-message{font-size:12px;line-height:1.45;color:#cbd2da;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.notification-floating-toast img,.notification-floating-toast video{display:block;width:100%;max-height:210px;object-fit:contain;border-radius:10px;margin-top:10px;background:#080a0d}.notification-floating-toast .notification-toast-close{position:absolute;right:8px;top:7px;width:26px;height:26px;border:1px solid #ffffff22;border-radius:50%;background:#ffffff0d;color:#fff;cursor:pointer}@keyframes seerviNotifToastIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}@media(max-width:520px){.notification-floating-toast{right:12px;bottom:12px;width:calc(100vw - 24px)}}
+
+.crm-account-disable-btn.disabled{opacity:.8;border-color:#6f8b7b;}
+.crm-party-admin-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
+@media(max-width:700px){.crm-party-admin-actions{justify-content:flex-start;}.crm-party-admin-row{grid-template-columns:1fr!important;gap:6px;}}
 </style><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script type="application/ld+json">
 {
@@ -7048,10 +7052,89 @@ const storage = getStorage(app);
 // enter the private Admin Panel / quotation workspace.
 // UI gate only. Real protection must also be enforced in Firestore Security Rules.
 const ADMIN_EMAIL = 'seervitrading@gmail.com';
-const isAuthorisedAdmin = (userOrEmail) => {
+let seerviDelegatedAdminUser=null;
+let seerviPermissionUnsubscribe=null;
+let seerviPermissionWatchMode='';
+const isMasterAdmin = (userOrEmail) => {
   const email = typeof userOrEmail === 'string' ? userOrEmail : (userOrEmail?.email || '');
   return email.trim().toLowerCase() === ADMIN_EMAIL;
 };
+const isAuthorisedAdmin = (userOrEmail) => {
+  if(isMasterAdmin(userOrEmail)) return true;
+  const uid=typeof userOrEmail === 'string' ? '' : (userOrEmail?.uid || '');
+  return !!uid && !!seerviDelegatedAdminUser?.uid && uid===seerviDelegatedAdminUser.uid;
+};
+
+function seerviStopPermissionWatch(){
+  try{if(typeof seerviPermissionUnsubscribe==='function')seerviPermissionUnsubscribe();}catch(e){console.warn('Permission listener cleanup failed:',e);}
+  seerviPermissionUnsubscribe=null;
+  seerviPermissionWatchMode='';
+}
+
+function seerviStartPermissionWatch(user, mode){
+  seerviStopPermissionWatch();
+  if(!user?.uid || isMasterAdmin(user) || !['customer','admin'].includes(mode)) return;
+  seerviPermissionWatchMode=mode;
+  const targetDb=mode==='admin' ? db : publicSignupDb;
+  const targetAuth=mode==='admin' ? auth : publicSignupAuth;
+  seerviPermissionUnsubscribe=onSnapshot(doc(targetDb,'parties',user.uid),async snap=>{
+    const data=snap.exists()?snap.data():{};
+    const granted=!!data.adminPermissionGranted;
+    const disabled=!!data.accountDisabled;
+    const shouldRemain=mode==='admin' ? (granted && !disabled) : (!granted && !disabled);
+    if(shouldRemain) return;
+
+    // Account permission/status changed remotely. Force the active session out
+    // so the next login is evaluated again from Firebase, never from stale state.
+    seerviStopPermissionWatch();
+    try{await signOut(targetAuth);}catch(e){console.warn('Permission-change sign-out failed:',e);}
+    if(mode==='admin'){
+      await signOut(publicSignupAuth).catch(()=>{});
+      crmUser=null;
+      seerviDelegatedAdminUser=null;
+      crmPartyId='';
+      closeCRM?.();closeAccountDashboard?.();
+      if(typeof closeAdminNewParty==='function')closeAdminNewParty();
+      if(typeof closeAdminStock==='function')closeAdminStock();
+      updateAuthNav();
+      goHomeAfterAuth();
+    }else{
+      await signOut(auth).catch(()=>{});
+      customerUser=null;customerParty=null;
+      customerQuotes=[];customerRates=[];customerLedger=[];
+      crmUser=null;seerviDelegatedAdminUser=null;
+      hideCustomerHomeProfile();
+      closeCustomerLogin?.();
+      closeAccountDashboard?.();
+      customerShowLogin?.();
+      updateAuthNav();
+      goHomeAfterAuth();
+    }
+    window.Seervi?.notify?.play('signout');
+    alert(disabled
+      ? 'Your account has been disabled by the Master Admin. You have been logged out.'
+      : (mode==='admin'
+        ? 'Your Admin Permission was revoked. You have been logged out. Please login again for normal User access.'
+        : 'Admin Permission was granted to this account. You have been logged out. Please login again to open the Admin Dashboard.'));
+  },error=>{
+    // If Firestore revokes this listener because the account permission/status
+    // no longer satisfies the rules, force both auth sessions out as well.
+    console.error('Admin/account permission listener failed:',error);
+    seerviStopPermissionWatch();
+    Promise.allSettled([
+      signOut(targetAuth),
+      signOut(auth),
+      signOut(publicSignupAuth)
+    ]).finally(()=>{
+      crmUser=null;seerviDelegatedAdminUser=null;customerUser=null;customerParty=null;
+      customerQuotes=[];customerRates=[];customerLedger=[];crmPartyId='';
+      closeCRM?.();closeAccountDashboard?.();closeCustomerLogin?.();
+      if(typeof closeAdminNewParty==='function')closeAdminNewParty();
+      if(typeof closeAdminStock==='function')closeAdminStock();
+      hideCustomerHomeProfile?.();updateAuthNav();goHomeAfterAuth();
+    });
+  });
+}
 
 // Public party signup uses a separate anonymous-auth session.
 // It never replaces the protected admin email/password session.
@@ -7668,6 +7751,8 @@ window.submitPartySignup=async function(e){
       city,address,state,pincode,gstin,notes:note,
       publicSignup:true,source:'customer-signup',
       customerUid:user.uid,accountType:'customer',
+      adminPermissionGranted:false,
+      accountDisabled:false,
       createdBy:user.uid,updatedAt:serverTimestamp(),createdAt:serverTimestamp()
     };
 
@@ -7821,6 +7906,46 @@ window.customerSignIn=async function(){
 
     customerUser=(await signInWithEmailAndPassword(publicSignupAuth,email,pass)).user;
     await customerLoadDashboard();
+
+    if(customerParty?.accountDisabled){
+      await signOut(publicSignupAuth).catch(()=>{});
+      customerUser=null;customerParty=null;customerQuotes=[];customerRates=[];customerLedger=[];
+      seerviStopPermissionWatch();
+      throw Object.assign(new Error('This account has been disabled by the Master Admin. Login permission is denied.'),{code:'account-disabled'});
+    }
+
+    seerviStartPermissionWatch(customerUser,'customer');
+
+    // A Master Admin can grant Admin Permission to a party. Once granted,
+    // that customer's normal login is upgraded to the same Admin Dashboard
+    // session, while the Master Admin remains the only account allowed to
+    // grant/revoke permissions.
+    if(customerParty?.adminPermissionGranted){
+      // Set the delegation marker before the main-auth sign-in resolves so
+      // onAuthStateChanged cannot mistake this permitted user for an unknown
+      // non-admin and sign them back out during the auth-state transition.
+      seerviDelegatedAdminUser=customerUser;
+      seerviStopPermissionWatch();
+      const delegatedCred=await signInWithEmailAndPassword(auth,email,pass);
+      if(!delegatedCred?.user){throw new Error('Could not start the delegated admin session.');}
+      seerviDelegatedAdminUser=delegatedCred.user;
+      crmUser=delegatedCred.user;
+      await signOut(publicSignupAuth).catch(()=>{});
+      customerUser=null;
+      customerParty=null;
+      customerQuotes=[];customerRates=[];customerLedger=[];
+      crmShowWorkspace();
+      updateAuthNav();
+      closeCustomerLogin();
+      closePartySignup?.();
+      closeCRM?.();
+      goHomeAfterAuth();
+      window.Seervi?.notify?.play('login');
+      if(typeof consumePendingQuoteMode==='function') consumePendingQuoteMode();
+      return;
+    }
+
+    seerviDelegatedAdminUser=null;
     updateAuthNav();
     closeCustomerLogin();
     closePartySignup?.();
@@ -7829,7 +7954,9 @@ window.customerSignIn=async function(){
     window.Seervi?.notify?.play('login');
   }catch(e){
     const c=e?.code||'';
-    if(c.includes('invalid-credential')||c.includes('wrong-password')||c.includes('user-not-found')){
+    if(c==='account-disabled'){
+      customerErr('This account is disabled. Login permission denied. Contact the Master Admin.');
+    }else if(c.includes('invalid-credential')||c.includes('wrong-password')||c.includes('user-not-found')){
       customerErr('Incorrect email or password.');
     }else if(c.includes('permission-denied')){
       customerErr('Login successful, but your profile data cannot be read. Please check the customer Firebase rules.');
@@ -7846,10 +7973,12 @@ window.customerSignIn=async function(){
 };
 window.customerSignOut=async function(){
   try{
+    seerviStopPermissionWatch();
     await signOut(publicSignupAuth).catch(()=>{});
     await signOut(auth).catch(()=>{});
   }finally{
     crmUser=null;
+    seerviDelegatedAdminUser=null;
     customerUser=null;customerParty=null;customerQuotes=[];customerRates=[];customerLedger=[];
     hideCustomerHomeProfile();customerShowLogin();updateAuthNav();closeCustomerLogin();goHomeAfterAuth();
     window.Seervi?.notify?.play('signout');
@@ -8041,7 +8170,7 @@ window.customerSaveProfile=async function(){
   if(!customerUser||!customerParty)return;
   const gstin=String($('custEditGstin')?.value||'').trim().toUpperCase().replace(/\s+/g,'');
   if(gstin && !/^[0-9A-Z]{15}$/.test(gstin)){alert('Please enter a valid 15-character GSTIN or leave it blank.');return;}
-  const payload={name:$('custEditName').value.trim(),company:$('custEditCompany').value.trim(),phone:$('custEditPhone').value.trim(),city:$('custEditCity').value.trim(),address:$('custEditAddress').value.trim(),gstin,customerUid:customerUser.uid,accountType:'customer',publicSignup:true,updatedAt:serverTimestamp()};
+  const payload={name:$('custEditName').value.trim(),company:$('custEditCompany').value.trim(),phone:$('custEditPhone').value.trim(),city:$('custEditCity').value.trim(),address:$('custEditAddress').value.trim(),gstin,customerUid:customerUser.uid,accountType:'customer',publicSignup:true,adminPermissionGranted:!!customerParty.adminPermissionGranted,adminPermissionGrantedAt:customerParty.adminPermissionGrantedAt||null,adminPermissionGrantedBy:customerParty.adminPermissionGrantedBy||null,accountDisabled:!!customerParty.accountDisabled,updatedAt:serverTimestamp()};
   if(!payload.name||!payload.phone||!payload.city){alert('Party name, phone and city are required.');return;}
   try{await updateDoc(doc(publicSignupDb,'parties',customerParty.id),payload);await customerLoadDashboard();$('customerProfileEdit').hidden=true;seerviShowSaveSuccess('Profile updated successfully.');}catch(e){alert('Profile update failed: '+(e?.message||'Check Firebase rules.'));}
 };
@@ -8665,11 +8794,13 @@ window.crmSignOut = async function(){
     // Keep the UI cleanup in finally so a transient Firebase/network error
     // can never leave the Admin Dashboard visually stuck as logged in.
     await signOut(auth);
+    await signOut(publicSignupAuth).catch(()=>{});
   }catch(e){
     logoutError=e;
     console.error('Admin sign-out failed:',e);
   }finally{
     crmUser=null;
+    seerviDelegatedAdminUser=null;
     crmPartyId='';
     if(typeof closeAdminNewParty==='function') closeAdminNewParty();
     if(typeof closeAdminStock==='function') closeAdminStock();
@@ -8687,18 +8818,50 @@ window.crmSignOut = async function(){
 };
 
 onAuthStateChanged(auth,user=>{
-  // Never allow a non-admin Firebase account to become crmUser, even if it
-  // was authenticated directly or an old browser session is restored.
-  if(user && !isAuthorisedAdmin(user)){
-    crmUser=null;
-    updateAuthNav();
-    if(typeof syncQuotationModeWithAuth==='function') syncQuotationModeWithAuth(false);
-    crmShowLogin();
-    if(typeof renderCartPartySelector==='function') renderCartPartySelector();
-    signOut(auth).catch(()=>{});
+  // Master Admin is always authorised. A delegated admin is authorised only
+  // when the party record explicitly carries adminPermissionGranted:true.
+  // This async check also lets delegated-admin sessions survive a page reload.
+  if(user && !isMasterAdmin(user)){
+    getDoc(doc(db,'parties',user.uid)).then(snap=>{
+      const granted=!!snap.exists() && !!snap.data()?.adminPermissionGranted;
+      if(!granted){
+        seerviStopPermissionWatch();
+        crmUser=null;
+        seerviDelegatedAdminUser=null;
+        updateAuthNav();
+        if(typeof syncQuotationModeWithAuth==='function') syncQuotationModeWithAuth(false);
+        crmShowLogin();
+        if(typeof renderCartPartySelector==='function') renderCartPartySelector();
+        signOut(auth).catch(()=>{});
+        return;
+      }
+      seerviDelegatedAdminUser=user;
+      crmUser=user;
+      seerviStartPermissionWatch(user,'admin');
+      if(typeof window.SeerviRefreshMaintenance==='function') window.SeerviRefreshMaintenance();
+      updateAuthNav();
+      if(typeof syncQuotationModeWithAuth==='function') syncQuotationModeWithAuth(true);
+      const crmModal=document.getElementById('crmModal');
+      const crmModalOpen=!!(crmModal && crmModal.classList.contains('show'));
+      if(crmModalOpen){
+        crmShowWorkspace();
+      }else if(typeof crmRefreshParties==='function'){
+        crmRefreshParties().catch(()=>{});
+      }
+      if(typeof consumePendingQuoteMode==='function') setTimeout(consumePendingQuoteMode,0);
+    }).catch(error=>{
+      console.error('Delegated admin permission check failed:',error);
+      seerviStopPermissionWatch();
+      crmUser=null;
+      seerviDelegatedAdminUser=null;
+      updateAuthNav();
+      signOut(auth).catch(()=>{});
+    });
     return;
   }
 
+  if(!user) seerviStopPermissionWatch();
+  seerviDelegatedAdminUser=null;
   crmUser=user||null;
   if(typeof window.SeerviRefreshMaintenance==='function') window.SeerviRefreshMaintenance();
   updateAuthNav();
@@ -8744,7 +8907,7 @@ async function crmRefreshParties(){
     ).join('');
   }
   if(newPartyList){
-    newPartyList.innerHTML=crmParties.length ? crmParties.map(p=>`<div class="crm-row" style="grid-template-columns:1.2fr 1fr auto"><strong>${esc(p.company||p.name||'Unnamed Party')}</strong><span>${esc(p.phone||p.email||p.city||'')}</span><button class="crm-mini-btn" type="button" onclick="crmEditParty('${esc(p.id)}')">EDIT</button></div>`).join('') : '<div class="crm-list-empty">No parties saved yet.</div>';
+    newPartyList.innerHTML=crmParties.length ? crmParties.map(p=>{const granted=!!p.adminPermissionGranted;const disabled=!!p.accountDisabled;return `<div class="crm-row crm-party-admin-row" style="grid-template-columns:1.2fr 1fr auto"><strong>${esc(p.company||p.name||'Unnamed Party')}</strong><span>${esc(p.phone||p.email||p.city||'')}</span><span class="crm-row-actions crm-party-admin-actions"><button class="crm-mini-btn" type="button" onclick="crmEditParty('${esc(p.id)}')">EDIT</button>${isMasterAdmin(crmUser)?`<button class="crm-mini-btn crm-admin-permission-btn ${granted?'granted':''}" type="button" onclick="crmToggleAdminPermission('${esc(p.id)}')">${granted?'REMOVE ADMIN ACCESS':'MAKE ADMIN'}</button><button class="crm-mini-btn crm-account-disable-btn ${disabled?'disabled':''}" type="button" onclick="crmToggleAccountDisabled('${esc(p.id)}')">${disabled?'ENABLE ACCOUNT':'DISABLE ACCOUNT'}</button>`:''}</span></div>`;}).join('') : '<div class="crm-list-empty">No parties saved yet.</div>';
   }
   if(!sel) return;
   const current=crmPartyId;
@@ -8758,6 +8921,58 @@ async function crmRefreshParties(){
 window.crmLoadSavedPartyForEdit=function(id){
   if(!id)return;
   crmEditParty(id);
+};
+
+window.crmToggleAdminPermission=async function(id){
+  if(!crmUser || !isMasterAdmin(crmUser)){alert('Only the Master Admin can grant or revoke Admin Permission.');return;}
+  const party=crmParties.find(p=>p.id===id);
+  if(!party)return;
+  const grant=!party.adminPermissionGranted;
+  const label=party.company||party.name||'this party';
+  if(!confirm(`${grant?'Grant':'Revoke'} Admin Permission for ${label}?\n\n${grant?'This customer will be logged out automatically. Their next login will open the Admin Dashboard.':'This customer will be logged out automatically. Their next login will open the normal Customer Dashboard.'}`))return;
+  try{
+    await updateDoc(doc(db,'parties',id),{
+      adminPermissionGranted:grant,
+      adminPermissionGrantedAt:grant?serverTimestamp():null,
+      adminPermissionGrantedBy:grant?(crmUser.email||crmUser.uid):null,
+      updatedAt:serverTimestamp()
+    });
+    seerviInvalidateCache('admin:parties:');
+    seerviInvalidateCache('customer:'+id+':');
+    const local=crmParties.find(p=>p.id===id);
+    if(local){local.adminPermissionGranted=grant;local.adminPermissionGrantedAt=grant?{seconds:Math.floor(Date.now()/1000)}:null;local.adminPermissionGrantedBy=grant?(crmUser.email||crmUser.uid):null;}
+    crmRenderGlobalAdmin();
+    seerviShowSaveSuccess(grant?'Admin Permission granted successfully.':'Admin Permission revoked successfully.');
+  }catch(e){
+    console.error('Admin permission update failed:',e);
+    alert('Could not update Admin Permission: '+(e?.message||'Check Firebase rules.'));
+  }
+};
+
+window.crmToggleAccountDisabled=async function(id){
+  if(!crmUser || !isMasterAdmin(crmUser)){alert('Only the Master Admin can disable or enable accounts.');return;}
+  const party=crmParties.find(p=>p.id===id);
+  if(!party)return;
+  const disable=!party.accountDisabled;
+  const label=party.company||party.name||'this account';
+  if(!confirm(`${disable?'Disable':'Enable'} account for ${label}?\n\n${disable?'This user will be logged out automatically and login permission will be denied until the account is enabled again.':'This user will be allowed to login again. Admin Permission status will remain unchanged.'}`))return;
+  try{
+    await updateDoc(doc(db,'parties',id),{
+      accountDisabled:disable,
+      accountDisabledAt:disable?serverTimestamp():null,
+      accountDisabledBy:disable?(crmUser.email||crmUser.uid):null,
+      updatedAt:serverTimestamp()
+    });
+    seerviInvalidateCache('admin:parties:');
+    seerviInvalidateCache('customer:'+id+':');
+    const local=crmParties.find(p=>p.id===id);
+    if(local){local.accountDisabled=disable;local.accountDisabledAt=disable?{seconds:Math.floor(Date.now()/1000)}:null;local.accountDisabledBy=disable?(crmUser.email||crmUser.uid):null;}
+    crmRenderGlobalAdmin();
+    seerviShowSaveSuccess(disable?'Account disabled successfully.':'Account enabled successfully.');
+  }catch(e){
+    console.error('Account disable/enable failed:',e);
+    alert('Could not update account status: '+(e?.message||'Check Firebase rules.'));
+  }
 };
 
 window.crmRefresh = async function(){
