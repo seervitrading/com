@@ -677,7 +677,7 @@ body.admin-quote-mode .quote-actions{display:grid!important}
   body.mobile-products-view #bladeSearch{outline:none}
 
   
-  body.mobile-products-view #profiles{scroll-margin-top:8px}
+  
 }
 
 
@@ -880,7 +880,7 @@ body.admin-quote-mode .quote-actions{display:grid!important}
 }
 
 
-@media(max-width:600px){.quote-actions{grid-template-columns:1fr}.crm-save-btn{width:100%}}
+@media(max-width:600px){.crm-save-btn{width:100%}}
 
 
 .cart-party-selector{margin:0 0 14px;padding:13px;border:1px solid #ffffff16;border-radius:10px;background:#ffffff03}
@@ -1914,10 +1914,10 @@ img{content-visibility:auto}
 }
 
 
-html{scroll-behavior:auto!important}
+
 button,a,input,select,textarea{touch-action:manipulation}
 .cart-drawer .cart-panel{overscroll-behavior:contain}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+@media(prefers-reduced-motion:reduce){}
 
 
 body:not(.admin-quote-mode) .cart-item-price-cell,
@@ -3022,7 +3022,7 @@ body.nav-is-scrolled{padding-top:76px;}
 
 .admin-items-toolbar{grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(145px,.55fr))}
 @media(max-width:900px){.admin-items-toolbar{grid-template-columns:1fr 1fr}}
-@media(max-width:620px){.admin-items-toolbar{grid-template-columns:1fr}}
+@media(max-width:620px){}
 
 .seervi-category-row{grid-template-columns:90px minmax(0,1fr) 80px 100px auto}
 .seervi-category-row .seervi-item-actions{justify-content:flex-end}
@@ -3519,7 +3519,7 @@ body.nav-is-scrolled{padding-top:76px;}
 .customer-tab{border:0;background:transparent;color:#8b95a0;padding:10px 12px;font:inherit;font-size:9px;font-weight:900;letter-spacing:.8px;cursor:pointer;border-bottom:2px solid transparent}
 .customer-tab.active{color:#fff;border-bottom-color:#f0c66a}
 .customer-quote-row{display:grid;grid-template-columns:1.2fr 1fr .8fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #ffffff0d;font-size:10px}
-.customer-quote-row:last-child{border-bottom:0}
+
 .customer-quote-row strong{color:#fff}
 .customer-portal-btn{border:1px solid #ffffff18;background:#11171e;color:#fff;border-radius:6px;padding:7px 9px;font-size:8px;font-weight:900;cursor:pointer}
 .customer-portal-btn:hover{border-color:#f0c66a}
@@ -3810,13 +3810,7 @@ body.seervi-non-home-view nav{display:none !important;}
     flex:0 0 auto !important;
     white-space:nowrap !important;
   }
-  nav .bw-account-identity-top #topLoginEmail{
-    flex:1 1 auto !important;
-    min-width:0 !important;
-    overflow:hidden !important;
-    text-overflow:ellipsis !important;
-    white-space:nowrap !important;
-  }
+  
 
   
   nav > .wrap > .navlinks.mobile-open{
@@ -3834,9 +3828,7 @@ body.seervi-non-home-view nav{display:none !important;}
     padding:18px 16px !important;
     align-items:center !important;
   }
-  nav.nav-scrolled > .wrap > .nav-left-group{
-    display:none !important;
-  }
+  
   nav.nav-scrolled > .wrap > .navlinks.mobile-open{
     top:76px !important;
   }
