@@ -7913,7 +7913,10 @@ async function customerLoadDashboard(){
   renderCustomerHomeProfile();
   customerRenderDashboardSummary();customerRenderQuotes();customerRenderRates();customerRenderLedger();
   if(customerDashboardRequestedView==='profile') customerEditProfile();
-  else customerPortalTab('quotes');
+  else {
+    customerDashboardView('orders');
+    customerPortalTab('quotes');
+  }
 }
 
 function customerProfileFieldsHtml(p){
@@ -7998,8 +8001,22 @@ window.customerDashboardView=function(view){
   // EDIT PROFILE = welcome identity + edit form only.
   // MY ORDER = orders / ledger / rate history only.
   // Nothing from one view is allowed to leak into the other.
-  if(head) head.hidden=!isProfile;
+  if(head) head.hidden=false;
   if(signOut) signOut.hidden=true;
+  let portalBack=document.getElementById('customerPortalBackToDashboard');
+  if(!portalBack && head){
+    const actions=head.querySelector('div[style*="display:flex"]') || head.lastElementChild;
+    if(actions){
+      portalBack=document.createElement('button');
+      portalBack.id='customerPortalBackToDashboard';
+      portalBack.className='crm-secondary customer-dashboard-back';
+      portalBack.type='button';
+      portalBack.textContent='← DASHBOARD';
+      portalBack.onclick=function(){closeCustomerLogin();openAccountDashboard('customer');};
+      actions.insertBefore(portalBack,actions.firstChild);
+    }
+  }
+  if(portalBack) portalBack.hidden=false;
   if(profile) profile.hidden=true;
   if(tabs) tabs.hidden=isProfile;
   if(edit) edit.hidden=!isProfile;
@@ -8018,7 +8035,7 @@ window.customerEditProfile=function(){
   const el=$('customerProfileEdit');if(!el)return;
   customerDashboardView('profile');
   el.hidden=false;
-  el.innerHTML=`<div class="crm-section-title">EDIT MY PROFILE</div><div class="customer-profile-edit-grid"><input id="custEditName" value="${esc(customerParty.name||'')}" placeholder="Party / Customer Name"><input id="custEditCompany" value="${esc(customerParty.company||'')}" placeholder="Shop / Company"><input id="custEditPhone" value="${esc(customerParty.phone||'')}" placeholder="Phone / WhatsApp"><input id="custEditCity" value="${esc(customerParty.city||'')}" placeholder="City"><input id="custEditGstin" value="${esc(customerParty.gstin||customerParty.gst||'')}" placeholder="GSTIN (Optional)" maxlength="15" style="text-transform:uppercase"><input id="custEditEmail" value="${esc(customerParty.email||customerUser?.email||'')}" placeholder="Email" disabled><textarea id="custEditAddress" placeholder="Address">${esc(customerParty.address||'')}</textarea></div><div class="customer-profile-edit-actions"><button class="crm-primary" type="button" onclick="customerSaveProfile()">SAVE PROFILE</button><button class="crm-secondary" type="button" onclick="customerPortalTab('quotes')">CANCEL</button></div>`;
+  el.innerHTML=`<div class="crm-section-title">EDIT MY PROFILE</div><div class="customer-profile-edit-grid"><input id="custEditName" value="${esc(customerParty.name||'')}" placeholder="Party / Customer Name"><input id="custEditCompany" value="${esc(customerParty.company||'')}" placeholder="Shop / Company"><input id="custEditPhone" value="${esc(customerParty.phone||'')}" placeholder="Phone / WhatsApp"><input id="custEditCity" value="${esc(customerParty.city||'')}" placeholder="City"><input id="custEditGstin" value="${esc(customerParty.gstin||customerParty.gst||'')}" placeholder="GSTIN (Optional)" maxlength="15" style="text-transform:uppercase"><input id="custEditEmail" value="${esc(customerParty.email||customerUser?.email||'')}" placeholder="Email" disabled><textarea id="custEditAddress" placeholder="Address">${esc(customerParty.address||'')}</textarea></div><div class="customer-profile-edit-actions"><button class="crm-primary" type="button" onclick="customerSaveProfile()">SAVE PROFILE</button><button class="crm-secondary" type="button" onclick="closeCustomerLogin();openAccountDashboard('customer');">CANCEL</button></div>`;
 };
 window.customerSaveProfile=async function(){
   if(!customerUser||!customerParty)return;
