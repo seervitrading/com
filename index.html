@@ -12417,10 +12417,19 @@ async function seerviStartNotificationListener(){
   if(seerviNotificationUnsubscribe){seerviNotificationUnsubscribe();seerviNotificationUnsubscribe=null;}
   await seerviLoadNotificationReads();
   try{
+    // The first Firestore snapshot is the EXISTING notification history, not a
+    // newly posted notification. Never show a floating toast/browser alert for
+    // that initial snapshot (especially on a brand-new device/browser).
+    let seerviNotificationInitialSnapshot=true;
     seerviNotificationUnsubscribe=onSnapshot(collection(db,'notifications'),snap=>{
       const next=snap.docs.map(d=>({id:d.id,...d.data()})).filter(n=>seerviNotificationMillis(n.expiresAt)>seerviNotificationNow());
       const previousIds=new Set(seerviNotificationsCache.map(n=>String(n.id)));
       seerviNotificationsCache=next;
+      if(seerviNotificationInitialSnapshot){
+        seerviNotificationInitialSnapshot=false;
+        seerviRenderNotificationList();
+        return;
+      }
       const newest=next.filter(n=>!previousIds.has(String(n.id))).sort((a,b)=>seerviNotificationMillis(b.createdAt)-seerviNotificationMillis(a.createdAt))[0];
       if(newest && !seerviNotificationIsRead(newest) && newest.createdByUid!==auth.currentUser?.uid){seerviShowFloatingNotification(newest);seerviBrowserNotify(newest);}
       seerviRenderNotificationList();
