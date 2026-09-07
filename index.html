@@ -1442,8 +1442,8 @@ body.admin-quote-mode .quote-actions{display:grid!important}
 .gstin-lookup-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:stretch}
 .gstin-get-btn{min-width:112px!important;padding-left:12px!important;padding-right:12px!important;white-space:nowrap}
 .gstin-import-row{grid-column:1/-1;display:flex;align-items:center;gap:8px;min-height:24px;margin-top:-2px}
-.gstin-import-btn{font-size:8px!important;padding:7px 9px!important;white-space:nowrap}
-.gstin-import-row span{font-size:8px;color:#7f8a99;line-height:1.35}
+.gstin-import-btn{font-size:13px!important;padding:7px 9px!important;white-space:nowrap}
+.gstin-import-row span{font-size:12px;color:#7f8a99;line-height:1.35}
 @media(max-width:800px){.gstin-import-row{align-items:flex-start;flex-direction:column;gap:4px}.gstin-import-row span{font-size:8px}}
 
 .gstin-lookup-status{grid-column:1/-1;min-height:16px;margin:-5px 0 5px;color:#9aa4b2;font-size:9px;line-height:1.4}
@@ -4762,10 +4762,10 @@ body.seervi-ai-open .float-wa{display:none!important}
 #customerLoginModal #customerLoginView .crm-section-title, #partySignupModal .crm-section-title{
   color:#111 !important;font-size:13px;letter-spacing:.14em;
 }
-#customerLoginModal #customerLoginView p, #partySignupModal form p{color:#777 !important;font-size:11px;line-height:1.6}
+#customerLoginModal #customerLoginView p, #partySignupModal form p{color:#777 !important;font-size:13px !important;line-height:1.55}
 #customerLoginModal .crm-login-grid input, #partySignupModal .crm-login-grid input, #partySignupModal textarea{
   background:#e5e8ec !important;color:#20242a !important;border:1px solid #d1d5da !important;border-bottom:2px solid #b9bec5 !important;
-  border-radius:5px !important;padding:10px 10px !important;font-size:12px !important;
+  border-radius:5px !important;padding:10px 10px !important;font-size:14px !important;
   min-height:42px !important;box-sizing:border-box !important;
   box-shadow:inset 0 1px 2px rgba(0,0,0,.04) !important;transition:background .15s ease,border-color .15s ease,box-shadow .15s ease;
 }
@@ -4840,7 +4840,7 @@ body.seervi-ai-open .float-wa{display:none!important}
     grid-column:auto;grid-row:auto;flex:1;margin-top:0;padding:12px 20px 28px !important;overflow:visible;background:#f5f5f2 !important;
   }
   #customerLoginModal .crm-login-grid, #partySignupModal .crm-login-grid{gap:8px !important;margin-bottom:10px !important;}
-  #customerLoginModal .crm-login-grid input, #partySignupModal .crm-login-grid input{height:42px !important;min-height:42px !important;padding:9px 2px !important;font-size:12px !important;}
+  #customerLoginModal .crm-login-grid input, #partySignupModal .crm-login-grid input{height:42px !important;min-height:42px !important;padding:9px 10px !important;font-size:14px !important;}
   #partySignupModal .party-signup-actions{grid-template-columns:1fr 1fr}
 }
 @media(min-width:761px){
@@ -4983,6 +4983,19 @@ body.seervi-ai-open .float-wa{display:none!important}
 </style>
 
 <style id="seervi-admin-all-panels-font-size">
+/* Admin + customer party panel typography: match the established quotation-panel readable scale. */
+#partySignupModal .crm-panel{font-size:14px;line-height:1.45}
+#partySignupModal .crm-head h3{font-size:26px;line-height:1.15}
+#partySignupModal .crm-kicker,
+#partySignupModal .crm-section-title{font-size:13px;line-height:1.25}
+#partySignupModal .crm-auth-status,
+#partySignupModal form p{font-size:13px;line-height:1.45}
+#partySignupModal input,
+#partySignupModal select,
+#partySignupModal textarea{font-size:14px;line-height:1.35}
+#partySignupModal .crm-primary,
+#partySignupModal .crm-secondary{font-size:13px;line-height:1.25}
+
 /* Admin panel typography: match the established quotation-panel desktop scale. */
 #adminSettingsModal .crm-panel,
 #adminBackupOptionsModal .crm-panel,
@@ -10796,50 +10809,6 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
   const items=invoice.items||[];
 
-  /* ===== PAGE 1 LOWER BLOCK HEIGHT / ITEM AREA =====
-     The complete closing block (Notes + Totals + Round Off + Amount in Words
-     + HSN/SAC + Bank/QR/Signatory) is treated as ONE unit on Page 1.
-     Page 1 item rows use only the space above this complete block.
-     Page 2+ has no bottom-anchor rule. */
-  const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0);
-  const rawGrand=Number(invoice.grandTotal??subtotal+gst);
-  const roundOff=seerviRoundOff(rawGrand);
-  const grand=seerviRoundedTotal(rawGrand);
-  const notesText=seerviInvoiceSafe(invoice.notes||invoice.customer?.notes||'').trim();
-  const noteLines=notesText?doc.splitTextToSize(notesText,102).slice(0,5):[];
-  const totalH=invoice.gstEnabled?29:24;
-  const notesH=Math.max(16,noteLines.length*3.2+9);
-  const summaryH=Math.max(notesH,totalH);
-  const amountWords='Amount in Words: '+seerviInvoiceAmountInWords(grand);
-  const amountWordLines=doc.splitTextToSize(amountWords,right-left).slice(0,2);
-  const amountWordsH=Math.max(5,amountWordLines.length*3.2)+3;
-
-  const hsnMap=new Map();
-  if(invoice.gstEnabled&&items.length){
-    for(const item of items){
-      const hsn=seerviInvoiceSafe(item.hsnCode||item.hsn||'—').trim()||'—';
-      const taxable=Number(item.amount??Number(item.qty||0)*Number(item.rate||0));
-      const entry=hsnMap.get(hsn)||{taxable:0};
-      entry.taxable+=Number.isFinite(taxable)?taxable:0;
-      hsnMap.set(hsn,entry);
-    }
-  }
-  const hsnRows=[...hsnMap.entries()].map(([hsn,v])=>{
-    const taxable=Math.round(v.taxable*100)/100;
-    const totalTax=Math.round(taxable*(Number(invoice.gstRate||0)/100)*100)/100;
-    const halfRate=Number(invoice.gstRate||0)/2;
-    const cgst=Math.round((totalTax/2)*100)/100;
-    const sgst=Math.round((totalTax-cgst)*100)/100;
-    return {hsn,taxable,cgstRate:halfRate,cgst,sgstRate:halfRate,sgst,totalTax};
-  });
-
-  const hasBank=profile.bankAccountName||profile.bankName||profile.bankAccountNumber||profile.bankIfsc||profile.bankBranch;
-  const hasPayment=profile.upiId;
-  const hasSignatory=profile.signatoryName||profile.businessName;
-  const hasFooterBox=!!(hasBank||hasPayment||hasSignatory);
-  const lowerBlockH=1+summaryH+3+amountWordsH+(hsnRows.length?(14.5+hsnRows.length*5.5+2):0)+(hasFooterBox?28:0);
-  const page1ItemsBottom=contentBottom-lowerBlockH-1;
-
   /* ===== ITEM TABLE ===== */
   const pageEnds=[];
   const addInvoicePage=()=>{
@@ -10872,8 +10841,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     const productLines=doc.splitTextToSize(seerviInvoiceSafe(productLabel||item.model||item.name||'Item'),Math.max(30,(right-left)*51/180));
     const rowLines=Math.min(productLines.length,2);
     const rowHeight=Math.max(pdfLayout.rowMin,rowLines*pdfLayout.rowLine+pdfLayout.rowPad);
-    const rowBottomLimit=invoicePage===1?page1ItemsBottom:contentBottom-2;
-    if(y+rowHeight>rowBottomLimit){
+    if(y+rowHeight>contentBottom-2){
       addInvoicePage();
       drawHeader();
     }
@@ -10890,11 +10858,52 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
   }
 
   /* ===== NOTES / TOTALS / WORDS / HSN / BANK — NATURAL FLOW ===== */
-  /* ===== COMPLETE LOWER BLOCK ===== */
-  // On Page 1 the whole closing block is bottom-anchored as one unit.
-  // On Page 2+ it remains normal flow with no bottom-anchor rule.
+  const subtotal=Number(invoice.subtotal||0),gst=Number(invoice.gst||0);
+  const rawGrand=Number(invoice.grandTotal??subtotal+gst);
+  const roundOff=seerviRoundOff(rawGrand);
+  const grand=seerviRoundedTotal(rawGrand);
+  const notesText=seerviInvoiceSafe(invoice.notes||invoice.customer?.notes||'').trim();
+  const noteLines=notesText?doc.splitTextToSize(notesText,102).slice(0,5):[];
+  const notesH=Math.max(16,noteLines.length*3.2+9);
+  const totalH=invoice.gstEnabled?29:24;
+  const summaryH=Math.max(notesH,totalH);
+  const amountWords='Amount in Words: '+seerviInvoiceAmountInWords(grand);
+  const amountWordLines=doc.splitTextToSize(amountWords,right-left).slice(0,2);
+  const amountWordsH=Math.max(5,amountWordLines.length*3.2)+3;
 
-  const summaryTop=invoicePage===1 ? contentBottom-lowerBlockH+1 : y+1;
+  const hsnMap=new Map();
+  if(invoice.gstEnabled&&items.length){
+    for(const item of items){
+      const hsn=seerviInvoiceSafe(item.hsnCode||item.hsn||'—').trim()||'—';
+      const taxable=Number(item.amount??Number(item.qty||0)*Number(item.rate||0));
+      const entry=hsnMap.get(hsn)||{taxable:0};
+      entry.taxable+=Number.isFinite(taxable)?taxable:0;
+      hsnMap.set(hsn,entry);
+    }
+  }
+  const hsnRows=[...hsnMap.entries()].map(([hsn,v])=>{
+    const taxable=Math.round(v.taxable*100)/100;
+    const totalTax=Math.round(taxable*(Number(invoice.gstRate||0)/100)*100)/100;
+    const halfRate=Number(invoice.gstRate||0)/2;
+    const cgst=Math.round((totalTax/2)*100)/100;
+    const sgst=Math.round((totalTax-cgst)*100)/100;
+    return {hsn,taxable,cgstRate:halfRate,cgst,sgstRate:halfRate,sgst,totalTax};
+  });
+
+  const hasBank=profile.bankAccountName||profile.bankName||profile.bankAccountNumber||profile.bankIfsc||profile.bankBranch;
+  const hasPayment=profile.upiId;
+  const hasSignatory=profile.signatoryName||profile.businessName;
+  const hasFooterBox=!!(hasBank||hasPayment||hasSignatory);
+
+  // Estimate the complete lower block. It follows the last item instead of
+  // reserving a large blank area above it. If it cannot fit on the current
+  // page, move the complete block to the next page.
+  const lowerBlockH=1+summaryH+3+amountWordsH+(hsnRows.length?(14.5+hsnRows.length*5.5+2):0)+(hasFooterBox?28:0);
+  if(hasFooterBox && y+lowerBlockH>contentBottom-1){
+    addInvoicePage();
+  }
+
+  const summaryTop=y+1;
   doc.setDrawColor(205,209,213);doc.rect(left,summaryTop,(right-left)*112/180,summaryH,'S');
   doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.totalFont);doc.setTextColor(35,40,45);
   doc.text('NOTES',left+4,summaryTop+6);
@@ -10958,10 +10967,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
   if(hasFooterBox){
     const boxH=28;
-    // Page 1: bank/QR/signatory is the final part of the SAME bottom-anchored
-    // block as Notes, Totals, Amount in Words and HSN/SAC.
-    // Page 2+: normal document flow only.
-    const boxTop=invoicePage===1 ? contentBottom-boxH : y;
+    const boxTop=y;
     const bankW=(right-left)*67/180,qrW=(right-left)*67/180,sigW=(right-left)*46/180;
     doc.setDrawColor(90,96,102);doc.line(left,boxTop,right,boxTop);doc.line(left+bankW,boxTop,left+bankW,boxTop+boxH);doc.line(left+bankW+qrW,boxTop,left+bankW+qrW,boxTop+boxH);
     doc.setFont('helvetica','bold');doc.setFontSize(7.2);doc.setTextColor(30,35,40);doc.text('Bank Details',left+3,boxTop+5);
@@ -10984,8 +10990,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
 
   pageEnds[invoicePage]=y;
   // Page 1 always uses the full A4 outer frame. Other pages wrap only their
-  // generated content. The complete lower block is bottom-anchored on Page 1
-  // only; Page 2+ uses normal document flow.
+  // generated content; there is deliberately no bottom-anchor rule on them.
   for(let p=1;p<=doc.internal.getNumberOfPages();p++){
     doc.setPage(p);
     const bottom=p===1?contentBottom:Math.min(Math.max((pageEnds[p]||pdfLayout.startY)+3,18),contentBottom);
