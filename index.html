@@ -7048,9 +7048,9 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// Master Admin + Delegated Admin role gate. The Master Admin can grant/revoke
-// delegated Admin Permission on a party. Real protection is enforced in
-// Firestore Security Rules as well; this client-side gate controls the UI/session.
+// Single authorised administrator account. Only this Firebase account may
+// enter the private Admin Panel / quotation workspace.
+// UI gate only. Real protection must also be enforced in Firestore Security Rules.
 const ADMIN_EMAIL = 'seervitrading@gmail.com';
 let seerviDelegatedAdminUser=null;
 let seerviPermissionUnsubscribe=null;
@@ -7071,13 +7071,15 @@ function seerviStopPermissionWatch(){
   seerviPermissionWatchMode='';
 }
 
-function seerviStartPermissionWatch(user, mode){
+function seerviStartPermissionWatch(user, mode, partyId=''){
   seerviStopPermissionWatch();
   if(!user?.uid || isMasterAdmin(user) || !['customer','admin'].includes(mode)) return;
   seerviPermissionWatchMode=mode;
   const targetDb=mode==='admin' ? db : publicSignupDb;
   const targetAuth=mode==='admin' ? auth : publicSignupAuth;
-  seerviPermissionUnsubscribe=onSnapshot(doc(targetDb,'parties',user.uid),async snap=>{
+  const watchRef=mode==='admin' ? doc(targetDb,'adminPermissions',user.uid) : (partyId ? doc(targetDb,'parties',partyId) : null);
+  if(!watchRef) return;
+  seerviPermissionUnsubscribe=onSnapshot(watchRef,async snap=>{
     const data=snap.exists()?snap.data():{};
     const granted=!!data.adminPermissionGranted;
     const disabled=!!data.accountDisabled;
@@ -7914,17 +7916,13 @@ window.customerSignIn=async function(){
       throw Object.assign(new Error('This account has been disabled by the Master Admin. Login permission is denied.'),{code:'account-disabled'});
     }
 
-    seerviStartPermissionWatch(customerUser,'customer');
+    seerviStartPermissionWatch(customerUser,'customer',customerParty.id);
 
     // A Master Admin can grant Admin Permission to a party. Once granted,
     // that customer's normal login is upgraded to the same Admin Dashboard
     // session, while the Master Admin remains the only account allowed to
     // grant/revoke permissions.
     if(customerParty?.adminPermissionGranted){
-      // The Master Admin has granted this exact account Admin Permission.
-      // End the customer-auth session and create the protected admin-auth
-      // session. The Firestore listener will force logout again if the
-      // permission is later revoked while this session is active.
       // Set the delegation marker before the main-auth sign-in resolves so
       // onAuthStateChanged cannot mistake this permitted user for an unknown
       // non-admin and sign them back out during the auth-state transition.
@@ -8020,12 +8018,10 @@ window.saveCustomerCartRequest=async function(){
 
 async function customerLoadDashboard(){
   if(!customerUser)return;
-  const partySnap=await getDoc(doc(publicSignupDb,'parties',customerUser.uid));
-  customerParty=partySnap.exists()?{id:partySnap.id,...partySnap.data()}:null;
-  if(!customerParty){
-    const snap=await getDocs(query(collection(publicSignupDb,'parties'),where('customerUid','==',customerUser.uid),limit(1)));
-    customerParty=snap.docs.map(d=>({id:d.id,...d.data()}))[0]||null;
-  }
+  // Resolve the party by the immutable customerUid field first. This supports
+  // both new UID-based party documents and older/generated party IDs.
+  const snap=await getDocs(query(collection(publicSignupDb,'parties'),where('customerUid','==',customerUser.uid),limit(1)));
+  customerParty=snap.docs.map(d=>({id:d.id,...d.data()}))[0]||null;
   if(!customerParty)throw new Error('No party profile is linked to this account yet. Please complete your party details.');
   const [qs,rs,ls]=await Promise.all([
     seerviCachedRead('customer:'+customerParty.id+':quotes:200',()=>getDocs(query(collection(publicSignupDb,'quotations'),where('partyId','==',customerParty.id),limit(200))),60000),
@@ -8826,8 +8822,8 @@ onAuthStateChanged(auth,user=>{
   // when the party record explicitly carries adminPermissionGranted:true.
   // This async check also lets delegated-admin sessions survive a page reload.
   if(user && !isMasterAdmin(user)){
-    getDoc(doc(db,'parties',user.uid)).then(snap=>{
-      const granted=!!snap.exists() && !!snap.data()?.adminPermissionGranted;
+    getDoc(doc(db,'adminPermissions',user.uid)).then(snap=>{
+      const granted=!!snap.exists() && !!snap.data()?.adminPermissionGranted && snap.data()?.accountDisabled !== true;
       if(!granted){
         seerviStopPermissionWatch();
         crmUser=null;
@@ -8941,6 +8937,22 @@ window.crmToggleAdminPermission=async function(id){
       adminPermissionGrantedBy:grant?(crmUser.email||crmUser.uid):null,
       updatedAt:serverTimestamp()
     });
+    const targetUid=String(party.customerUid||'').trim();
+    if(!targetUid) throw new Error('This party has no linked customer account UID.');
+    const permissionRef=doc(db,'adminPermissions',targetUid);
+    if(grant){
+      await setDoc(permissionRef,{
+        uid:targetUid,
+        partyId:id,
+        adminPermissionGranted:true,
+        accountDisabled:!!party.accountDisabled,
+        grantedAt:serverTimestamp(),
+        grantedBy:crmUser.email||crmUser.uid,
+        updatedAt:serverTimestamp()
+      });
+    }else{
+      await deleteDoc(permissionRef).catch(()=>{});
+    }
     seerviInvalidateCache('admin:parties:');
     seerviInvalidateCache('customer:'+id+':');
     const local=crmParties.find(p=>p.id===id);
@@ -8967,6 +8979,16 @@ window.crmToggleAccountDisabled=async function(id){
       accountDisabledBy:disable?(crmUser.email||crmUser.uid):null,
       updatedAt:serverTimestamp()
     });
+    const targetUid=String(party.customerUid||'').trim();
+    if(targetUid && party.adminPermissionGranted){
+      await setDoc(doc(db,'adminPermissions',targetUid),{
+        uid:targetUid,
+        partyId:id,
+        adminPermissionGranted:true,
+        accountDisabled:disable,
+        updatedAt:serverTimestamp()
+      },{merge:true});
+    }
     seerviInvalidateCache('admin:parties:');
     seerviInvalidateCache('customer:'+id+':');
     const local=crmParties.find(p=>p.id===id);
