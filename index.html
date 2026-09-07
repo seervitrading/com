@@ -8451,14 +8451,29 @@ window.accountDashboardEditProfile=function(){
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
   customerDashboardRequestedView='profile';
-  customerShowDashboard();
+  // Do not start another dashboard load here if customer data is already
+  // available. A second async load could finish later and switch the view
+  // back to MY ORDER. Render the requested view directly instead.
+  if(customerParty){
+    if($('customerLoginView'))$('customerLoginView').hidden=true;
+    if($('customerDashboardView'))$('customerDashboardView').hidden=false;
+    customerEditProfile();
+  }else{
+    customerShowDashboard();
+  }
 };
 window.accountDashboardMyOrder=function(){
   closeAccountDashboard();
   const m=$('customerLoginModal');if(!m)return;
   m.classList.add('show');m.setAttribute('aria-hidden','false');
   customerDashboardRequestedView='orders';
-  customerShowDashboard();
+  if(customerParty){
+    if($('customerLoginView'))$('customerLoginView').hidden=true;
+    if($('customerDashboardView'))$('customerDashboardView').hidden=false;
+    customerPortalTab('quotes');
+  }else{
+    customerShowDashboard();
+  }
 };
 window.accountDashboardCustomerSignOut=function(){closeAccountDashboard();customerSignOut();};
 
