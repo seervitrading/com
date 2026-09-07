@@ -7961,7 +7961,8 @@ window.customerSignIn=async function(){
     }else if(c.includes('invalid-credential')||c.includes('wrong-password')||c.includes('user-not-found')){
       customerErr('Incorrect email or password.');
     }else if(c.includes('permission-denied')){
-      customerErr('Login successful, but your profile data cannot be read. Please check the customer Firebase rules.');
+      console.error('CUSTOMER FIRESTORE PERMISSION DENIED:',e);
+      customerErr('Login successful, but Firebase denied the customer profile/data read. Please publish the updated Firestore Rules.');
     }else if((e?.message||'').includes('No party profile')){
       customerErr('Account found, but no party profile is linked. Please complete Sign Up first.');
     }else if(c==='admin-not-authorised'){
