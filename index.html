@@ -4871,6 +4871,30 @@ body.seervi-ai-open .float-support{display:none!important}
   #home.bw-hero .bw-bottom-bar{display:none!important;}
 }
 </style>
+
+<style id="seervi-item-variants-style">
+.seervi-variants-rows{display:flex;flex-direction:column;gap:12px}
+.seervi-variant-card{border:1px solid #ffffff14;background:#0d1217;border-radius:12px;padding:12px}
+.seervi-variant-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.seervi-variant-head input,.seervi-variant-option input{width:100%;background:#11171d;color:#eef1f4;border:1px solid #ffffff18;border-radius:8px;padding:9px 10px;font-size:12px;outline:none}
+.seervi-variant-options{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.seervi-variant-option{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr) auto;gap:7px;align-items:center}
+.seervi-variant-option button,.seervi-variant-head button{white-space:nowrap}
+.seervi-variant-tools{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:9px;flex-wrap:wrap}
+.seervi-variant-empty{font-size:10px;color:#6f7882;padding:4px 0}
+.seervi-variant-picker{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.78);padding:18px}
+.seervi-variant-picker.show{display:flex}
+.seervi-variant-picker-box{width:min(560px,100%);max-height:min(760px,calc(100dvh - 36px));overflow:auto;background:#0d1217;border:1px solid #ffffff22;border-radius:16px;box-shadow:0 30px 100px #000;color:#fff;padding:18px}
+.seervi-variant-picker-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.seervi-variant-picker-head h3{margin:0;font-size:20px}
+.seervi-variant-picker-head p{margin:5px 0 0;color:#8f99a4;font-size:11px}
+.seervi-variant-choice{border:1px solid #ffffff12;background:#11171d;border-radius:11px;padding:12px;margin-bottom:9px}
+.seervi-variant-choice strong{display:block;font-size:13px;margin-bottom:7px}
+.seervi-variant-choice-meta{display:flex;flex-wrap:wrap;gap:6px}
+.seervi-variant-choice-meta span{border:1px solid #ffffff18;border-radius:999px;padding:5px 8px;color:#c7cdd3;font-size:10px}
+.seervi-variant-picker-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+@media(max-width:600px){.seervi-variant-option{grid-template-columns:1fr 1fr auto}.seervi-variant-picker{padding:10px}.seervi-variant-picker-box{max-height:calc(100dvh - 20px);border-radius:12px;padding:14px}}
+</style>
 </head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -5348,18 +5372,21 @@ body.seervi-ai-open .float-support{display:none!important}
             <div class="crm-muted">Add as many additional WEBP images as required. There is no fixed image-count limit.</div>
           </div>
           <div class="seervi-item-form-full">
-            <div class="seervi-item-form-section-title-row" style="margin-top:2px">
-              <div class="seervi-item-form-section-title">SUB MODEL / VARIANTS <span style="font-size:9px;color:#7f8995;font-weight:700">OPTIONAL</span></div>
-              <button class="crm-secondary small" type="button" onclick="seerviAddVariantRow()">＋ ADD OPTION</button>
-            </div>
-            <div id="seerviItemVariantRows" class="seervi-specifications-rows"></div>
-            <div class="crm-muted">No options = item adds directly. Add options only when the item has different sub-models, sizes, colours or other selectable variants. Variants use the same main item image and gallery; variant images are not required.</div>
-          </div>
-          <div class="seervi-item-form-full">
             <label for="seerviItemDescription">DESCRIPTION</label>
             <textarea id="seerviItemDescription" rows="4" maxlength="5000" placeholder="Item description"></textarea>
           </div>
         </div>
+      </div>
+
+      <div class="seervi-item-form-section">
+        <div class="seervi-item-form-section-title-row">
+          <div>
+            <div class="seervi-item-form-section-title">SUB-MODELS / VARIANTS <span style="color:#6f7882;font-weight:500">OPTIONAL</span></div>
+            <div class="crm-muted">If this item has no sub-model, leave this empty. If it has sub-models, add them and define any options such as Size, Color, Finish, Length, etc. No price, discount or variant image is stored here.</div>
+          </div>
+          <button class="crm-secondary small" type="button" onclick="seerviAddVariantRow()">＋ ADD SUB-MODEL</button>
+        </div>
+        <div id="seerviItemVariantsRows" class="seervi-variants-rows"></div>
       </div>
 
       <div class="seervi-item-form-section">
@@ -5466,8 +5493,6 @@ body.seervi-ai-open .float-support{display:none!important}
           <div class="crm-section-title">1. PREPARE ITEM EXCEL</div>
           <div class="crm-muted" style="margin:8px 0 12px;line-height:1.6">
             Required: <b>Category</b>, <b>Subcategory</b>, <b>Item Name</b>, <b>WEBP Image URL / Path</b>. <b>HSN Code</b> is optional.<br>
-            Variants are optional. If no Variant columns are filled, the item adds directly. For variant items use repeating columns:
-            <b>Variant 1 Sub Model / Size / Color</b>, <b>Variant 2 ...</b> and so on.<br>
             Specifications use paired columns:
             <b>Spec 1 Name / Spec 1 Value</b>, <b>Spec 2 Name / Spec 2 Value</b>…
           </div>
@@ -5563,7 +5588,7 @@ function saveCart(){
 function cartKey(item){
   // Firebase items use their immutable document ID so two different items
   // with the same model/name can never collide in the cart.
-  if(item && item.firebaseItemId) return 'firebase|' + String(item.firebaseItemId) + '|variant|' + String(item.variantId||'');
+  if(item && item.firebaseItemId) return 'firebase|' + String(item.firebaseItemId) + '|variant|' + String(item.variantKey||'');
   // Legacy cart entries remain compatible with the existing quotation/cart flow.
   return item.type + '|' + item.model + '|' + (item.thickness || '') + '|' + (item.subcategory || '');
 }
@@ -5949,8 +5974,8 @@ function seerviQuotationItemLabel(item){
   if(!subcategory && item?.subcategoryId && typeof seerviPublicCategoryName==='function'){
     subcategory=String(seerviPublicCategoryName(item.subcategoryId)||'').trim();
   }
-  const variant=String(item?.variantLabel||'').trim() || [item?.size,item?.color].filter(Boolean).join(' / ');
   const base=subcategory ? `${model} — ${subcategory}` : model;
+  const variant=seerviVariantLabel(item?.variant);
   return variant ? `${base} — ${variant}` : base;
 }
 
@@ -6017,6 +6042,7 @@ function renderCart(){
         <span class="cart-item-type">${escapeHtml(item.type||'PRODUCT')}</span>
         <strong>${escapeHtml(seerviQuotationItemLabel(item))}</strong>
         ${item.thickness ? `<span class="cart-item-spec">Thickness: ${escapeHtml(item.thickness)}</span>` : ''}
+        ${item.variant ? `<span class="cart-item-spec">${escapeHtml(seerviVariantLabel(item.variant))}</span>` : ''}
       </div>
 
       <div class="cart-item-price-cell admin-only">
@@ -6139,6 +6165,7 @@ async function sendCartToWhatsApp(){
     seerviCart.forEach((item,i)=>{
       msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent(seerviQuotationItemLabel(item))}`;
       if(item.thickness) msg+=` | Thickness: ${encodeURIComponent(item.thickness)}`;
+      if(item.variant) msg+=` | ${encodeURIComponent(seerviVariantLabel(item.variant))}`;
       msg+=` | Qty: ${item.qty}`;
       if(Number(item.rate)>0) msg+=` | Rate: ₹${encodeURIComponent(formatINR(item.rate))} | Amount: ₹${encodeURIComponent(formatINR(getLineTotal(item)))}`;
       msg+=`%0A`;
@@ -6157,6 +6184,7 @@ async function sendCartToWhatsApp(){
     seerviCart.forEach((item,i)=>{
       msg+=`${i+1}. ${encodeURIComponent(item.type)} - ${encodeURIComponent(seerviQuotationItemLabel(item))}`;
       if(item.thickness) msg+=` | Thickness: ${encodeURIComponent(item.thickness)}`;
+      if(item.variant) msg+=` | ${encodeURIComponent(seerviVariantLabel(item.variant))}`;
       msg+=` | Qty: ${item.qty}%0A`;
     });
     msg+=`%0APlease share your best rate, availability, packing details and delivery options.`;
@@ -7208,25 +7236,6 @@ function seerviNormaliseItemGalleryImages(value){
   return output;
 }
 
-function seerviNormaliseItemVariants(value){
-  if(!Array.isArray(value)) return [];
-  const output=[];
-  value.forEach((entry,index)=>{
-    if(!entry || typeof entry!=='object') return;
-    const subModel=seerviCleanItemValue(entry.subModel||entry.name||entry.model,200);
-    const size=seerviCleanItemValue(entry.size,120);
-    const color=seerviCleanItemValue(entry.color,120);
-    // Variants intentionally have NO separate image. They always use the
-    // parent item's main image + gallery images.
-    if(!(subModel||size||color)) return;
-    output.push({
-      id:seerviCleanItemValue(entry.id||('v'+(index+1)),80),
-      subModel,size,color
-    });
-  });
-  return output;
-}
-
 function seerviBuildItemPayload(input={}){
   const nowFields={updatedAt:serverTimestamp()};
   const payload={
@@ -7238,7 +7247,7 @@ function seerviBuildItemPayload(input={}){
     description:seerviCleanItemValue(input.description,5000),
     imageWebpUrl:seerviValidateWebpPath(input.imageWebpUrl),
     galleryImages:seerviNormaliseItemGalleryImages(input.galleryImages),
-    variants:seerviNormaliseItemVariants(input.variants),
+    variants:seerviNormaliseVariants(input.variants),
     specifications:seerviCleanSpecifications(input.specifications),
     active:input.active!==false,
     ...nowFields
@@ -8039,6 +8048,7 @@ window.saveCustomerCartRequest=async function(){
     categoryId:item.categoryId||'', category:item.category||'',
     subcategoryId:item.subcategoryId||'', subcategory:item.subcategory||'',
     spec:item.spec||'', thickness:item.thickness||'', hsnCode:item.hsnCode||item.hsn||'',
+    variant:item.variant||null, variantKey:item.variantKey||'',
     qty:Number(item.qty)||1, rate:0, source:'customer-request'
   }));
   const qRef=await addDoc(collection(publicSignupDb,'quotations'),{
@@ -8489,11 +8499,7 @@ function seerviBackupItemRows(items,categories){
   });
 
   let maxSpecs=0;
-  let maxVariants=0;
-  baseRows.forEach(x=>{
-    maxSpecs=Math.max(maxSpecs,Object.keys(x.specs).length);
-    maxVariants=Math.max(maxVariants,Array.isArray(x.item.variants)?x.item.variants.length:0);
-  });
+  baseRows.forEach(x=>{maxSpecs=Math.max(maxSpecs,Object.keys(x.specs).length);});
 
   return baseRows.map(x=>{
     const row={
@@ -8501,19 +8507,12 @@ function seerviBackupItemRows(items,categories){
       'Subcategory':x.subcategoryName,
       'Item Name':x.item.name||'',
       'Model':x.item.model||'',
-      'HSN Code':x.item.hsnCode||x.item.hsn||'',
       'WEBP Image URL / Path':x.item.imageWebpUrl||'',
       'Gallery Images':Array.isArray(x.item.galleryImages)?x.item.galleryImages.join('|'):String(x.item.galleryImages||''),
+      'Variants JSON':JSON.stringify(seerviNormaliseVariants(x.item.variants)),
       'Description':x.item.description||'',
       'Active':seerviBackupBool(x.item.active)
     };
-    const variants=Array.isArray(x.item.variants)?x.item.variants:[];
-    for(let i=0;i<maxVariants;i++){
-      const v=variants[i]||{};
-      row[`Variant ${i+1} Sub Model`]=v.subModel||v.name||v.model||'';
-      row[`Variant ${i+1} Size`]=v.size||'';
-      row[`Variant ${i+1} Color`]=v.color||'';
-    }
     const entries=Object.entries(x.specs);
     for(let i=0;i<maxSpecs;i++){
       row[`Spec ${i+1} Name`]=entries[i]?.[0]||'';
@@ -8534,17 +8533,17 @@ window.seerviBackupItems=async function(){
     const rows=seerviBackupItemRows(items,categories);
     const ws=XLSX.utils.json_to_sheet(rows);
     ws['!cols']=[
-      {wch:24},{wch:24},{wch:30},{wch:18},{wch:18},{wch:48},{wch:72},{wch:45},{wch:12}
+      {wch:24},{wch:24},{wch:30},{wch:18},{wch:48},{wch:72},{wch:45},{wch:12}
     ];
     const headerCount=Object.keys(rows[0]||{}).length;
-    for(let i=9;i<headerCount;i++)ws['!cols'].push({wch:i%4===0?60:(i%2===0?20:24)});
+    for(let i=8;i<headerCount;i++)ws['!cols'].push({wch:i%2===0?20:24});
 
     const notes=[
       ['SEERVI ITEM BACKUP — IMPORT-READY FORMAT'],
       ['This workbook uses the same column format as SEERVI ITEM BULK ADD.'],
       ['Category and Subcategory are exported by name so the file can be used again with Item Bulk Add.'],
       ['Gallery Images are separated with the | character, exactly like the Item Bulk Add template.'],
-      ['Variants are exported using repeating Variant N Sub Model / Size / Color columns. Variant images are not used; the parent item main image and gallery are used.'],
+      ['Variants JSON contains sub-models and their optional Size / Color / Finish / Length options. No variant price, discount or image is stored.'],
       ['Specifications are exported as Spec 1 Name / Spec 1 Value, Spec 2 Name / Spec 2 Value, etc.'],
       ['No Firebase document IDs are required for re-import; the import flow creates new document IDs.']
     ];
@@ -11618,6 +11617,7 @@ window.crmSaveCurrentQuote = async function(){
     subcategoryId:x.subcategoryId||'',
     subcategory:x.subcategory||'',
     spec:x.thickness||'',
+    variant:x.variant||null, variantKey:x.variantKey||'',
     hsnCode:x.hsnCode||x.hsn||'',
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
@@ -12750,7 +12750,7 @@ function seerviItemsFilter(search=''){
       </div>
       <div class="seervi-item-category">${seerviItemsEsc(seerviItemCategoryLabel(item))}</div>
       <div class="seervi-item-status ${active?'active':'inactive'}">${active?'ACTIVE':'INACTIVE'}</div>
-      <div class="seervi-item-meta">${Object.keys(item.specifications||{}).length} specs</div>
+      <div class="seervi-item-meta">${Object.keys(item.specifications||{}).length} specs · ${seerviNormaliseVariants(item.variants).length} sub-model${seerviNormaliseVariants(item.variants).length===1?'':'s'}</div>
       <div class="seervi-item-actions">
         <button class="crm-secondary small" type="button" onclick="seerviEditItem('${seerviItemsEsc(item.id)}')">EDIT</button>
         <button class="crm-secondary small" type="button" onclick="seerviDuplicateItem('${seerviItemsEsc(item.id)}')">DUPLICATE</button>
@@ -13042,27 +13042,6 @@ function seerviBulkFindSubcategory(name,parentId){
 function seerviBulkItemKey(categoryId,subcategoryId,name,model){
   return [categoryId,subcategoryId,String(name||'').trim().toLowerCase(),String(model||'').trim().toLowerCase()].join('|');
 }
-function seerviBulkVariantColumns(row){
-  const groups=new Map();
-  Object.keys(row||{}).forEach(key=>{
-    const h=seerviBulkNormaliseHeader(key);
-    const m=h.match(/^variant\s*(\d+)\s*(sub\s*model|option|size|color|colour)$/i);
-    if(!m)return;
-    const n=Number(m[1]);
-    let kind=m[2].toLowerCase().replace(/\s+/g,' ');
-    if(kind==='option'||kind==='sub model')kind='submodel';
-    else if(kind==='colour')kind='color';
-    if(!groups.has(n))groups.set(n,{});
-    groups.get(n)[kind]=String(row[key]??'').trim();
-  });
-  const variants=[];
-  [...groups.keys()].sort((a,b)=>a-b).forEach(n=>{
-    const g=groups.get(n)||{};
-    if(!g.submodel&&!g.size&&!g.color)return;
-    variants.push({id:'v'+n,subModel:g.submodel||'',size:g.size||'',color:g.color||''});
-  });
-  return seerviNormaliseItemVariants(variants);
-}
 
 async function seerviBulkPrepare(){
   seerviItemsAdminGuard();
@@ -13079,6 +13058,7 @@ async function seerviBulkPrepare(){
      const hsnCode=seerviBulkCell(row,'HSN Code','HSN','HSNCode');
     const image=seerviBulkCell(row,'WEBP Image URL / Path','Main WEBP Image URL / Path','WEBP URL','Image WebP URL','Image URL');
     const galleryRaw=seerviBulkCell(row,'Gallery Images','Gallery Image URLs / Paths','Additional WEBP Images','Additional Images');
+    const variantsRaw=seerviBulkCell(row,'Variants JSON','Sub-Models JSON','Variants');
     const description=seerviBulkCell(row,'Description');
     const category=seerviBulkFindCategory(categoryName);
     const subcategory=subcategoryName ? (category ? seerviBulkFindSubcategory(subcategoryName,category.id) : null) : null;
@@ -13097,9 +13077,13 @@ async function seerviBulkPrepare(){
     catch(e){ errors.push(e?.message||'Invalid Gallery Images'); }
 
     let variants=[];
-    try{
-      variants=seerviBulkVariantColumns(row);
-    }catch(e){ errors.push(e?.message||'Invalid Variant data'); }
+    if(variantsRaw){
+      try{
+        const parsed=JSON.parse(variantsRaw);
+        variants=seerviNormaliseVariants(parsed);
+        if(!Array.isArray(parsed))throw new Error('Variants JSON must be an array.');
+      }catch(e){errors.push(e?.message||'Invalid Variants JSON');}
+    }
 
     const key=seerviBulkItemKey(category?.id||'',subcategory?.id||'',name,model);
     const duplicateInFile=fileKeys.has(key);
@@ -13141,7 +13125,7 @@ function seerviBulkRenderPreview(){
     ? `${valid.length} valid row(s). ${errorRows.length} row(s) require correction.`
     : `${valid.length} row(s) ready to import.`;
   table.innerHTML=`<table class="seervi-bulk-table">
-    <thead><tr><th>ROW</th><th>STATUS</th><th>CATEGORY</th><th>SUBCATEGORY</th><th>ITEM</th><th>MODEL</th><th>HSN</th><th>MAIN IMAGE</th><th>GALLERY</th><th>VARIANTS</th><th>SPECS</th><th>ERRORS</th></tr></thead>
+    <thead><tr><th>ROW</th><th>STATUS</th><th>CATEGORY</th><th>SUBCATEGORY</th><th>ITEM</th><th>MODEL</th><th>HSN</th><th>MAIN IMAGE</th><th>GALLERY</th><th>SPECS</th><th>ERRORS</th></tr></thead>
     <tbody>${seerviBulkValidation.map(x=>{
       const status=x.errors.length?'ERROR':x.duplicate?'DUPLICATE':'READY';
       const cls=x.errors.length?'bulk-row-error':x.duplicate?'bulk-row-duplicate':'';
@@ -13156,7 +13140,6 @@ function seerviBulkRenderPreview(){
         <td>${seerviItemsEsc(x.data.hsnCode||'—')}</td>
         <td>${seerviItemsEsc(x.data.imageWebpUrl)}</td>
         <td>${(x.data.galleryImages||[]).length} image(s)</td>
-        <td>${(x.data.variants||[]).length}</td>
         <td>${Object.keys(x.data.specifications||{}).length}</td>
         <td class="seervi-bulk-error-text">${seerviItemsEsc(x.errors.join(' · '))}</td>
       </tr>`;
@@ -13556,14 +13539,9 @@ window.seerviBulkDownloadTemplate=function(){
     'HSN Code':'9403',
     'WEBP Image URL / Path':'images/items/example-main.webp',
     'Gallery Images':'images/items/example-02.webp|images/items/example-03.webp|images/items/example-04.webp',
+    'Variants JSON':'[{"name":"9 MODULE","options":[{"name":"Color","value":"White"},{"name":"Size","value":"9 Module"}]},{"name":"9 MODULE GLOSSY","options":[{"name":"Color","value":"White Glossy"}]}]',
     'Description':'Example item description',
     'Active':'TRUE',
-    'Variant 1 Sub Model':'OPTION-A',
-    'Variant 1 Size':'9 Module',
-    'Variant 1 Color':'White',
-    'Variant 2 Sub Model':'OPTION-B',
-    'Variant 2 Size':'9 Module',
-    'Variant 2 Color':'Black',
     'Spec 1 Name':'Material',
     'Spec 1 Value':'Aluminium',
     'Spec 2 Name':'Length',
@@ -13573,8 +13551,7 @@ window.seerviBulkDownloadTemplate=function(){
   };
   const ws=XLSX.utils.json_to_sheet([row]);
   ws['!cols']=[
-    {wch:24},{wch:24},{wch:30},{wch:18},{wch:18},{wch:48},{wch:72},{wch:45},{wch:12},
-    {wch:24},{wch:18},{wch:18},{wch:24},{wch:18},{wch:18},
+    {wch:24},{wch:24},{wch:30},{wch:18},{wch:48},{wch:72},{wch:72},{wch:45},{wch:12},
     {wch:20},{wch:24},{wch:20},{wch:24},{wch:20},{wch:24}
   ];
   const notes=[
@@ -13583,9 +13560,8 @@ window.seerviBulkDownloadTemplate=function(){
     ['This Item Bulk Add flow does NOT create missing Categories or Subcategories.'],
     ['If Category/Subcategory does not match existing Firebase taxonomy, the row will show ERROR and cannot be imported.'],
     ['Main WEBP Image URL / Path is required. Gallery Images is optional and supports unlimited additional WEBP paths.'],
-    ['Variants are optional. If an item has no Variant columns filled, it is a direct-add item.'],
-    ['For variant items use repeating groups: Variant 1 Sub Model / Size / Color, Variant 2 Sub Model / Size / Color, etc. Variants do not have separate images; they use the parent item's main image and gallery.'],
-    ['You can add more Variant N groups manually; the importer reads every Variant N group it finds.'],
+    ['Variants JSON is optional. Use an array of sub-models, each with a name and optional options such as Size, Color, Finish, Length.'],
+    ['No price, discount or variant image is stored in Variants JSON. Images remain in the Item main image / Gallery Images fields.'],
     ['Separate multiple Gallery Images with the | character. Example: image-02.webp|image-03.webp|image-04.webp'],
     ['Use the separate Category / Subcategory Bulk Import to create taxonomy first.']
   ];
@@ -13756,6 +13732,8 @@ window.seerviToggleItemActive=async function(itemId){
       model:item.model||'',
       description:item.description||'',
       imageWebpUrl:item.imageWebpUrl||'',
+      galleryImages:item.galleryImages||[],
+      variants:item.variants||[],
       specifications:item.specifications||{},
       active:nextActive
     });
@@ -13784,10 +13762,9 @@ window.seerviDuplicateItem=async function(itemId){
       model:item.model||'',
       description:item.description||'',
       imageWebpUrl:item.imageWebpUrl||'',
+      galleryImages:item.galleryImages||[],
+      variants:item.variants||[],
       specifications:{...(item.specifications||{})},
-      variants:Array.isArray(item.variants)?item.variants.map(x=>({...x})):[],
-      galleryImages:Array.isArray(item.galleryImages)?item.galleryImages.slice():[],
-      hsnCode:item.hsnCode||item.hsn||'',
       active:false
     });
 
@@ -14042,6 +14019,7 @@ function seerviPublicItemSearchText(item){
     item.name,item.model,item.description,
     seerviPublicCategoryName(item.categoryId),
     seerviPublicCategoryName(item.subcategoryId),
+    seerviItemVariantText(item),
     ...Object.entries(item.specifications||{}).flat()
   ].join(' ').toLowerCase();
 }
@@ -14052,6 +14030,9 @@ function seerviPublicCardCartControl(item){
   const qty=entry ? Math.max(1,Number(entry.qty)||1) : 0;
   const safeId=seerviItemsEsc(id);
   const safeName=seerviItemsEsc(item?.name||item?.model||'product');
+  if(seerviItemHasVariants(item)){
+    return `<button class="crm-primary small seervi-card-add-to-cart" type="button" onclick="seerviPublicOpenVariantPicker('${safeId}')">SELECT VARIANT</button>`;
+  }
   if(!qty){
     return `<button class="crm-primary small seervi-card-add-to-cart" type="button" onclick="seerviPublicAddToCart('${safeId}')">ADD TO CART</button>`;
   }
@@ -14352,31 +14333,38 @@ function seerviReadGalleryImages(){
   return seerviNormaliseItemGalleryImages(output);
 }
 
-function seerviAddVariantRow(value={}){
-  const wrap=$('seerviItemVariantRows');
-  if(!wrap)return;
-  const row=document.createElement('div');
-  row.className='seervi-variant-row';
-  const escv=v=>seerviItemsEsc(v||'').replace(/\"/g,'&quot;');
-  row.innerHTML=`<div class="seervi-variant-grid">
-    <input class="seervi-variant-submodel" maxlength="200" placeholder="Sub Model / Option" value="${escv(value.subModel||value.name||value.model)}">
-    <input class="seervi-variant-size" maxlength="120" placeholder="Size (optional)" value="${escv(value.size)}">
-    <input class="seervi-variant-color" maxlength="120" placeholder="Color (optional)" value="${escv(value.color)}">
-    <button class="crm-secondary small seervi-variant-remove" type="button" title="Remove option" onclick="this.parentElement.parentElement.remove()">×</button>
-  </div>`;
-  wrap.appendChild(row);
+function seerviVariantSafeText(value,max=200){return seerviCleanItemValue(value,max);}
+function seerviAddVariantOptionRow(variantWrap,name='',value=''){
+  const options=variantWrap?.querySelector('.seervi-variant-options');if(!options)return;
+  const row=document.createElement('div');row.className='seervi-variant-option';
+  row.innerHTML=`<input class="seervi-variant-option-name" maxlength="80" placeholder="Option name (e.g. Color)" value="${seerviItemsEsc(name)}"><input class="seervi-variant-option-value" maxlength="300" placeholder="Value (e.g. White)" value="${seerviItemsEsc(value)}"><button class="crm-secondary small" type="button" title="Remove option" onclick="this.parentElement.remove()">×</button>`;
+  options.appendChild(row);
 }
-window.seerviAddVariantRow=seerviAddVariantRow;
+function seerviAddVariantRow(name='',options=[]){
+  const wrap=$('seerviItemVariantsRows');if(!wrap)return;
+  const card=document.createElement('div');card.className='seervi-variant-card';
+  card.innerHTML=`<div class="seervi-variant-head"><input class="seervi-variant-name" maxlength="200" placeholder="Sub-model / variant name (e.g. 9 MODULE)" value="${seerviItemsEsc(name)}"><button class="crm-secondary small" type="button" title="Remove sub-model" onclick="this.parentElement.parentElement.remove()">×</button></div><div class="seervi-variant-options"></div><div class="seervi-variant-tools"><span class="seervi-variant-empty">Add options only when needed.</span><button class="crm-secondary small" type="button" onclick="seerviAddVariantOptionRow(this.closest('.seervi-variant-card'))">＋ ADD OPTION</button></div>`;
+  wrap.appendChild(card);
+  (Array.isArray(options)?options:[]).forEach(x=>seerviAddVariantOptionRow(card,x?.name||'',x?.value||''));
+}
 function seerviReadVariantRows(){
-  const out=[];
-  document.querySelectorAll('#seerviItemVariantRows .seervi-variant-row').forEach((row,index)=>{
-    const get=cls=>String(row.querySelector(cls)?.value||'').trim();
-    const subModel=get('.seervi-variant-submodel'),size=get('.seervi-variant-size'),color=get('.seervi-variant-color');
-    if(!subModel&&!size&&!color)return;
-    out.push({id:'v'+(index+1),subModel,size,color});
-  });
-  return seerviNormaliseItemVariants(out);
+  const out=[];document.querySelectorAll('#seerviItemVariantsRows .seervi-variant-card').forEach(card=>{
+    const name=seerviVariantSafeText(card.querySelector('.seervi-variant-name')?.value||'',200);
+    const options=[];card.querySelectorAll('.seervi-variant-option').forEach(row=>{const n=seerviVariantSafeText(row.querySelector('.seervi-variant-option-name')?.value||'',80),v=seerviVariantSafeText(row.querySelector('.seervi-variant-option-value')?.value||'',300);if(n&&v)options.push({name:n,value:v});});
+    if(name)out.push({name,options});
+  });return out;
 }
+function seerviNormaliseVariants(value){
+  if(!Array.isArray(value))return [];
+  return value.map(v=>{const name=seerviVariantSafeText(v?.name||v?.label||'',200);const options=Array.isArray(v?.options)?v.options.map(o=>({name:seerviVariantSafeText(o?.name||o?.key||'',80),value:seerviVariantSafeText(o?.value||'',300)})).filter(o=>o.name&&o.value):[];return {name,options};}).filter(v=>v.name);
+}
+function seerviVariantLabel(variant){
+  if(!variant)return '';
+  const attrs=Array.isArray(variant.options)?variant.options.map(o=>[o?.name,o?.value].filter(Boolean).join(': ')).filter(Boolean):[];
+  return [variant.name,...attrs].filter(Boolean).join(' — ');
+}
+function seerviItemHasVariants(item){return Array.isArray(item?.variants)&&item.variants.some(v=>String(v?.name||'').trim());}
+function seerviItemVariantText(item){return seerviNormaliseVariants(item?.variants).map(seerviVariantLabel).join(' | ');}
 
 window.seerviItemsResetForm=function(){
   seerviItemsEditingId='';
@@ -14389,7 +14377,7 @@ window.seerviItemsResetForm=function(){
   $('seerviItemActive').checked=true;
   const gallery=$('seerviItemGalleryRows');
   if(gallery)gallery.innerHTML='';
-  const variants=$('seerviItemVariantRows');
+  const variants=$('seerviItemVariantsRows');
   if(variants)variants.innerHTML='';
   $('seerviSpecificationsRows').innerHTML='';
   seerviAddSpecificationRow();
@@ -14424,10 +14412,10 @@ window.seerviEditItem=async function(itemId){
       gallery.innerHTML='';
       (Array.isArray(item.galleryImages)?item.galleryImages:[]).forEach(url=>seerviAddGalleryImageRow(url));
     }
-    const variants=$('seerviItemVariantRows');
+    const variants=$('seerviItemVariantsRows');
     if(variants){
       variants.innerHTML='';
-      (Array.isArray(item.variants)?item.variants:[]).forEach(v=>seerviAddVariantRow(v));
+      seerviNormaliseVariants(item.variants).forEach(v=>seerviAddVariantRow(v.name,v.options));
     }
     $('seerviSpecificationsRows').innerHTML='';
     Object.entries(item.specifications||{}).forEach(([k,v])=>seerviAddSpecificationRow(k,v));
@@ -14510,71 +14498,42 @@ window.seerviPublicGallerySelect=function(url,button){
   button?.classList.add('active');
 };
 
-window.seerviPublicAddToCart=function(itemId,variantIndex=null,variantQty=1){
-  const item=seerviPublicItems.find(x=>x.id===itemId);
-  if(!item)return false;
-  const variants=Array.isArray(item.variants)?item.variants.filter(v=>v&&((v.subModel||v.name||v.model||v.size||v.color))):[];
-  if(variants.length && variantIndex===null){
-    seerviOpenVariantPicker(item);
-    return false;
-  }
-  const variant=variantIndex===null?null:variants[Number(variantIndex)];
-  if(variants.length && !variant)return false;
+window.seerviPublicOpenVariantPicker=function(itemId){
+  const item=seerviPublicItems.find(x=>x.id===itemId);if(!item)return;
+  const variants=seerviNormaliseVariants(item.variants);if(!variants.length){seerviPublicAddToCart(itemId);return;}
+  let modal=document.getElementById('seerviVariantPickerModal');
+  if(!modal){modal=document.createElement('div');modal.id='seerviVariantPickerModal';modal.className='seervi-variant-picker';modal.setAttribute('aria-hidden','true');modal.innerHTML='<div class="seervi-variant-picker-box"><div class="seervi-variant-picker-head"><div><h3 id="seerviVariantPickerTitle">SELECT SUB-MODEL</h3><p id="seerviVariantPickerSubtitle"></p></div><button class="modal-close" type="button" onclick="seerviPublicCloseVariantPicker()">×</button></div><div id="seerviVariantPickerList"></div><div class="seervi-variant-picker-actions"><button class="crm-secondary" type="button" onclick="seerviPublicCloseVariantPicker()">CANCEL</button></div></div>';document.body.appendChild(modal);}
+  modal.dataset.itemId=item.id;
+  $('seerviVariantPickerTitle').textContent='SELECT SUB-MODEL';
+  $('seerviVariantPickerSubtitle').textContent=item.name||item.model||'Item';
+  $('seerviVariantPickerList').innerHTML=variants.map((v,i)=>`<button type="button" class="seervi-variant-choice" style="display:block;width:100%;text-align:left;color:#fff;cursor:pointer" onclick="seerviPublicChooseVariant('${seerviItemsEsc(item.id)}',${i})"><strong>${seerviItemsEsc(v.name)}</strong><div class="seervi-variant-choice-meta">${(v.options||[]).map(o=>`<span>${seerviItemsEsc(o.name)}: ${seerviItemsEsc(o.value)}</span>`).join('')||'<span>Standard</span>'}</div></button>`).join('');
+  modal.classList.add('show');modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
+};
+window.seerviPublicChooseVariant=function(itemId,index){
+  const item=seerviPublicItems.find(x=>x.id===itemId);if(!item)return;
+  const variant=seerviNormaliseVariants(item.variants)[Number(index)];if(!variant)return;
+  seerviPublicAddToCart(itemId,variant);seerviPublicCloseVariantPicker();
+};
+window.seerviPublicCloseVariantPicker=function(){const modal=$('seerviVariantPickerModal');if(!modal)return;modal.classList.remove('show');modal.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');};
+window.seerviPublicAddToCart=function(itemId,variant=null){
+  const item=seerviPublicItems.find(x=>x.id===itemId);if(!item)return;
+  const variants=seerviNormaliseVariants(item.variants);
+  if(variants.length&&!variant){seerviPublicOpenVariantPicker(itemId);return;}
+  const selected=variant?seerviNormaliseVariants([variant])[0]:null;
   const allImages=seerviPublicItemImageList(item);
-  const qty=Math.max(1,Math.floor(Number(variantQty)||1));
-  const variantId=variant?String(variant.id||('v'+variantIndex)):'';
-  const variantLabel=variant?[variant.subModel,variant.size,variant.color].filter(Boolean).join(' / '):'';
+  const variantKey=selected?JSON.stringify(selected):'';
   addToCart({
-    type:'Item',firebaseItemId:item.id,variantId,
+    type:'Item',firebaseItemId:item.id,variantKey,
+    variant:selected?{name:selected.name,options:selected.options}:null,
     categoryId:item.categoryId||'',subcategoryId:item.subcategoryId||'',
     category:seerviPublicCategoryName(item.categoryId),subcategory:seerviPublicCategoryName(item.subcategoryId),
-    model:variant?.subModel||item.model||item.id,name:item.name||item.model||'Item',
-    hsnCode:item.hsnCode||item.hsn||'',image:item.imageWebpUrl||'',imageWebpUrl:item.imageWebpUrl||'',
-    galleryImages:allImages.slice(1),description:item.description||'',specifications:{...(item.specifications||{})},
-    specification:Object.entries(item.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(', '),
-    size:variant?.size||'',color:variant?.color||'',
-    variantLabel,rate:0
+    model:item.model||item.id,name:item.name||item.model||'Item',hsnCode:item.hsnCode||item.hsn||'',
+    image:item.imageWebpUrl||'',imageWebpUrl:item.imageWebpUrl||'',galleryImages:allImages.slice(1),
+    description:item.description||'',specifications:{...(item.specifications||{})},
+    specification:Object.entries(item.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(', '),rate:0
   });
-  const entry=seerviCart.find(x=>cartKey(x)===cartKey({firebaseItemId:item.id,variantId}));
-  if(entry && qty>1)entry.qty+=qty-1;
-  saveCart();
   if(typeof seerviPublicRenderItems==='function')seerviPublicRenderItems();
-  return true;
 };
-
-function seerviOpenVariantPicker(item){
-  let modal=document.getElementById('seerviVariantPickerModal');
-  if(!modal){
-    modal=document.createElement('div');modal.id='seerviVariantPickerModal';modal.className='seervi-variant-picker-modal';
-    modal.innerHTML='<div class="seervi-variant-picker-backdrop" onclick="seerviCloseVariantPicker()"></div><div class="seervi-variant-picker-panel"><button type="button" class="modal-close" onclick="seerviCloseVariantPicker()">×</button><div id="seerviVariantPickerContent"></div></div>';
-    document.body.appendChild(modal);
-  }
-  const variants=Array.isArray(item.variants)?item.variants:[];
-  const title=seerviItemsEsc(item.name||'SELECT OPTION');
-  const gallery=seerviPublicItemImageList(item);
-  const galleryHtml=gallery.length?`<div class="seervi-variant-picker-gallery"><img src="${seerviItemsEsc(gallery[0])}" alt="${title}" loading="lazy">${gallery.length>1?`<div class="seervi-variant-picker-gallery-count">${gallery.length} product images</div>`:''}</div>`:'';
-  const rows=variants.map((v,i)=>{
-    const option=[v.subModel,v.size,v.color].filter(Boolean).join(' / ')||('OPTION '+(i+1));
-    return `<div class="seervi-variant-option" data-variant-index="${i}"><div class="seervi-variant-option-main"><strong>${seerviItemsEsc(option)}</strong><div class="seervi-variant-option-meta"><span>${v.subModel?'SUB MODEL '+seerviItemsEsc(v.subModel):''}</span><span>${v.size?'SIZE '+seerviItemsEsc(v.size):''}</span><span>${v.color?'COLOR '+seerviItemsEsc(v.color):''}</span></div></div><div class="seervi-variant-qty"><button type="button" onclick="seerviVariantQtyChange(${i},-1)">−</button><b data-variant-qty="${i}">0</b><button type="button" onclick="seerviVariantQtyChange(${i},1)">+</button></div></div>`;
-  }).join('');
-  document.getElementById('seerviVariantPickerContent').innerHTML=`<div class="seervi-variant-picker-head"><div class="crm-kicker">SELECT PRODUCT OPTION</div><h3>${title}</h3></div>${galleryHtml}<div class="seervi-variant-table-head"><span>SUB MODEL / OPTION</span><span>SIZE / COLOR</span><span>QTY</span></div><div id="seerviVariantRowsLive">${rows}</div><div class="seervi-variant-picker-footer"><span id="seerviVariantPickerTotal">Select option(s)</span><button type="button" class="crm-primary" onclick="seerviSubmitVariantPicker('${seerviItemsEsc(item.id)}')">SUBMIT</button></div>`;
-  modal.dataset.itemId=item.id;modal.classList.add('show');modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
-}
-window.seerviOpenVariantPicker=seerviOpenVariantPicker;
-window.seerviVariantQtyChange=function(index,delta){
-  const el=document.querySelector(`[data-variant-qty="${Number(index)}"]`);if(!el)return;
-  const next=Math.max(0,Math.min(1000000,Number(el.textContent||0)+Number(delta||0)));el.textContent=String(next);
-  const selected=[...document.querySelectorAll('[data-variant-qty]')].reduce((n,x)=>n+Number(x.textContent||0),0);
-  const total=document.getElementById('seerviVariantPickerTotal');if(total)total.textContent=selected?`${selected} item${selected===1?'':'s'} selected`:'Select option(s)';
-};
-window.seerviSubmitVariantPicker=function(itemId){
-  const item=seerviPublicItems.find(x=>x.id===itemId);if(!item)return;
-  const variants=Array.isArray(item.variants)?item.variants:[];let added=0;
-  document.querySelectorAll('[data-variant-qty]').forEach(el=>{const qty=Number(el.textContent||0);const idx=Number(el.dataset.variantQty);if(qty>0){seerviPublicAddToCart(itemId,idx,qty);added+=qty;}});
-  if(!added){alert('Please select at least one option.');return;}
-  seerviCloseVariantPicker();
-};
-window.seerviCloseVariantPicker=function(){const modal=document.getElementById('seerviVariantPickerModal');if(modal){modal.classList.remove('show');modal.setAttribute('aria-hidden','true');}document.body.classList.remove('modal-open');};
 
 window.seerviPublicCloseItem=function(){
   const modal=$('seerviPublicItemModal');
@@ -14596,6 +14555,8 @@ window.seerviPublicOpenItem=function(itemId){
     document.body.appendChild(modal);
   }
   const specs=Object.entries(item.specifications||{});
+  const variants=seerviNormaliseVariants(item.variants);
+  const variantTable=variants.length?`<div style="margin-top:18px;border:1px solid #ffffff12;border-radius:10px;overflow:hidden"><div style="padding:10px;color:#8f99a4;font-size:10px;letter-spacing:.08em">SUB-MODELS / OPTIONS</div>${variants.map(v=>`<div style="padding:10px;border-top:1px solid #ffffff0d"><strong style="display:block;font-size:12px">${seerviItemsEsc(v.name)}</strong><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">${(v.options||[]).map(o=>`<span style="border:1px solid #ffffff18;border-radius:999px;padding:4px 7px;color:#bfc6cd;font-size:10px">${seerviItemsEsc(o.name)}: ${seerviItemsEsc(o.value)}</span>`).join('')||'<span style="color:#777;font-size:10px">Standard</span>'}</div></div>`).join('')}</div>`:'';
   const specTable=specs.length?`<div style="margin-top:18px;border:1px solid #ffffff12;border-radius:10px;overflow:hidden"><table style="width:100%;border-collapse:collapse">${specs.map(([k,v])=>`<tr><td style="padding:9px;border-bottom:1px solid #ffffff0d;color:#8f99a4;width:35%">${seerviItemsEsc(k)}</td><td style="padding:9px;border-bottom:1px solid #ffffff0d;color:#f2f4f6">${seerviItemsEsc(v)}</td></tr>`).join('')}</table></div>`:'';
   $('seerviPublicItemModalContent').innerHTML=`${seerviPublicGalleryHtml(item)}
     <div class="modal-caption">
@@ -14605,7 +14566,8 @@ window.seerviPublicOpenItem=function(itemId){
        ${item.hsnCode||item.hsn?`<p><b>HSN:</b> ${seerviItemsEsc(item.hsnCode||item.hsn)}</p>`:''}
       ${item.description?`<p style="margin-top:8px">${seerviItemsEsc(item.description)}</p>`:''}
       ${specTable}
-      <button class="crm-primary" type="button" style="margin-top:16px" onclick="seerviPublicAddToCart('${seerviItemsEsc(item.id)}');seerviPublicCloseItem()">ADD TO CART</button>
+      ${variantTable}
+      <button class="crm-primary" type="button" style="margin-top:16px" onclick="seerviPublicAddToCart('${seerviItemsEsc(item.id)}');seerviPublicCloseItem()">${variants.length?'SELECT SUB-MODEL':'ADD TO CART'}</button>
     </div>`;
   modal.classList.add('show');
   modal.setAttribute('aria-hidden','false');
@@ -14639,6 +14601,7 @@ seerviPublicRenderItems=function(){
         <div class="seervi-public-category-line">${seerviItemsEsc(category)}${subcategory?' / '+seerviItemsEsc(subcategory):''}</div>
         <h3>${seerviItemsEsc(item.name||'Unnamed Item')}</h3>
         ${item.model?`<p>Model: ${seerviItemsEsc(item.model)}</p>`:''}
+        ${seerviItemHasVariants(item)?`<p>${seerviNormaliseVariants(item.variants).length} sub-model${seerviNormaliseVariants(item.variants).length===1?'':'s'} available</p>`:''}
         ${item.description?`<p>${seerviItemsEsc(item.description).slice(0,180)}</p>`:''}
         ${specHtml?`<div class="seervi-public-specs">${specHtml}</div>`:''}
         <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">
@@ -14706,6 +14669,11 @@ Seervi.expose('seerviItemCategoryChanged', seerviItemCategoryChanged);
 Seervi.expose('seerviItemsFilter', seerviItemsFilter);
 Seervi.expose('seerviItemsBackToDashboard', seerviItemsBackToDashboard);
 Seervi.expose('seerviAddSpecificationRow', seerviAddSpecificationRow);
+Seervi.expose('seerviAddVariantRow', seerviAddVariantRow);
+Seervi.expose('seerviAddVariantOptionRow', seerviAddVariantOptionRow);
+Seervi.expose('seerviPublicOpenVariantPicker', seerviPublicOpenVariantPicker);
+Seervi.expose('seerviPublicChooseVariant', seerviPublicChooseVariant);
+Seervi.expose('seerviPublicCloseVariantPicker', seerviPublicCloseVariantPicker);
 Seervi.expose('seerviAddSpecificationRowIfEmpty', seerviAddSpecificationRowIfEmpty);
 Seervi.expose('seerviItemsResetForm', seerviItemsResetForm);
 Seervi.expose('seerviEditItem', seerviEditItem);
@@ -15574,6 +15542,8 @@ function seerviShowSaveSuccess(message){
   }
 
   function addBase(itemId){
+    const item=(typeof seerviPublicItems!=='undefined'&&Array.isArray(seerviPublicItems))?seerviPublicItems.find(x=>String(x.id)===String(itemId)):null;
+    if(item && Array.isArray(item.variants) && item.variants.length){window.seerviPublicOpenVariantPicker?.(itemId);return getEntry(itemId);}
     if(typeof window.seerviPublicAddToCart==='function') window.seerviPublicAddToCart(itemId);
     setTimeout(syncRenderedCards,0);
     return getEntry(itemId);
@@ -15631,9 +15601,6 @@ function seerviShowSaveSuccess(message){
   };
 
   function controlHtml(item){
-    if(Array.isArray(item.variants) && item.variants.length){
-      return `<button class="crm-primary small" type="button" onclick="seerviOpenVariantPicker('${seerviItemsEsc(String(item.id||''))}')">ADD OPTIONS</button>`;
-    }
     const id=String(item.id||'');
     const entry=getEntry(id);
     const qty=entry ? Math.max(1,Number(entry.qty)||1) : 0;
@@ -15647,9 +15614,6 @@ function seerviShowSaveSuccess(message){
 
   function addButtonHtml(item){
     const id=String(item.id||'');
-    if(Array.isArray(item.variants) && item.variants.length){
-      return `<button class="crm-primary small" type="button" onclick="seerviOpenVariantPicker('${seerviItemsEsc(id)}')">ADD OPTIONS</button>`;
-    }
     return `<button class="crm-primary small" type="button" onclick="seerviPublicAddToCart('${seerviItemsEsc(id)}')">ADD TO CART</button>`;
   }
 
@@ -15668,11 +15632,6 @@ function seerviShowSaveSuccess(message){
         : null;
       if(!item)return;
       const entry=getEntry(id);
-      if(Array.isArray(item.variants) && item.variants.length){
-        if(control && !control.matches('button.crm-primary')) control.outerHTML=addButtonHtml(item);
-        if(addBtn && !addBtn.matches('button.crm-primary')) addBtn.outerHTML=addButtonHtml(item);
-        return;
-      }
       if(entry && !control && addBtn){
         addBtn.outerHTML=controlHtml(item);
       }else if(!entry && control){
@@ -16029,28 +15988,5 @@ function seerviShowSaveSuccess(message){
   new MutationObserver(()=>{if(!$id('seerviDocEditorStatus'))return;patchOriginalSave();}).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
-
-<style id="seervi-submodel-variant-picker-styles">
-.seervi-variant-row{padding:10px;border:1px solid #ffffff12;background:#0b1016;border-radius:9px;margin-top:8px}
-.seervi-variant-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr auto;gap:7px;align-items:center}
-.seervi-variant-grid input{width:100%;min-width:0}
-.seervi-variant-remove{width:34px;height:34px;padding:0;font-size:18px}
-.seervi-variant-picker-modal{position:fixed;inset:0;z-index:100050;display:none;align-items:center;justify-content:center;padding:18px}
-.seervi-variant-picker-modal.show{display:flex}
-.seervi-variant-picker-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(5px)}
-.seervi-variant-picker-panel{position:relative;z-index:1;width:min(980px,100%);max-height:min(88vh,760px);overflow:auto;background:#fff;color:#111;border-radius:18px;box-shadow:0 30px 90px #0009;padding:22px}
-.seervi-variant-picker-head{padding:0 44px 14px 2px}.seervi-variant-picker-head .crm-kicker{color:#705421}.seervi-variant-picker-head h3{margin:5px 0 0;font-size:26px}
-.seervi-variant-picker-gallery{position:relative;width:100%;height:190px;margin:0 0 14px;border:1px solid #e4e4e4;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.seervi-variant-picker-gallery img{width:100%;height:100%;object-fit:contain}
-.seervi-variant-picker-gallery-count{position:absolute;right:10px;bottom:10px;padding:5px 8px;border-radius:999px;background:#111a;color:#fff;font-size:10px;font-weight:700}
-.seervi-variant-table-head,.seervi-variant-option{display:grid;grid-template-columns:1.5fr 1.5fr 110px;gap:10px;align-items:center}
-.seervi-variant-table-head{padding:10px 8px;border-bottom:1px solid #ddd;font-size:12px;font-weight:900;letter-spacing:.5px}
-.seervi-variant-option{padding:9px 8px;border-bottom:1px solid #e6e6e6;min-height:70px}
-.seervi-variant-option-main strong{font-size:15px}.seervi-variant-option-meta{display:flex;gap:10px;color:#666;font-size:11px;margin-top:4px}
-.seervi-variant-qty{display:grid;grid-template-columns:30px 1fr 30px;align-items:center;border:1px solid #bbb;border-radius:6px;overflow:hidden;height:40px}
-.seervi-variant-qty button{height:100%;border:0;background:#fff;font-size:22px;color:#777}.seervi-variant-qty b{text-align:center;color:#555;font-size:14px}
-.seervi-variant-picker-footer{display:flex;justify-content:space-between;align-items:center;padding-top:14px;color:#777;font-size:13px}.seervi-variant-picker-footer .crm-primary{min-width:110px}
-@media(max-width:700px){.seervi-variant-grid{grid-template-columns:1fr 1fr}.seervi-variant-grid input:nth-child(1){grid-column:1/-1}.seervi-variant-table-head{display:none}.seervi-variant-option{grid-template-columns:1fr 145px;gap:8px}.seervi-variant-qty{grid-column:2;grid-row:1/2;width:145px}.seervi-variant-picker-gallery{height:150px}.seervi-variant-picker-panel{padding:16px;border-radius:14px}.seervi-variant-picker-head h3{font-size:21px}}
-</style>
 </body>
 </html>
