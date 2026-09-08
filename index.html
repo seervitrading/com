@@ -8007,7 +8007,10 @@ window.saveCustomerCartRequest=async function(){
     categoryId:item.categoryId||'', category:item.category||'',
     subcategoryId:item.subcategoryId||'', subcategory:item.subcategory||'',
     spec:item.spec||'', thickness:item.thickness||'', hsnCode:item.hsnCode||item.hsn||'',
-    qty:Number(item.qty)||1, rate:0, source:'customer-request'
+    qty:Number(item.qty)||1, rate:0, source:'customer-request',
+    selectedVariants:item.selectedVariants&&typeof item.selectedVariants==='object'?{...item.selectedVariants}:{},
+    variantKey:String(item.variantKey||''),
+    variantLabel:String(item.variantLabel||'')
   }));
   const qRef=await addDoc(collection(publicSignupDb,'quotations'),{
     partyId:party.id, customerUid:customerUser.uid, quoteNo:qNo, dateISO:now.toISOString(),
@@ -9640,7 +9643,10 @@ window.crmEditQuote=async function(id){
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
     image:'',
-    manual:!!x.manual
+    manual:!!x.manual,
+    selectedVariants:x.selectedVariants&&typeof x.selectedVariants==='object'?{...x.selectedVariants}:{},
+    variantKey:String(x.variantKey||''),
+    variantLabel:String(x.variantLabel||'')
   }));
   localStorage.setItem('seerviCart',JSON.stringify(seerviCart));
 
@@ -11577,7 +11583,10 @@ window.crmSaveCurrentQuote = async function(){
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
     amount:getLineTotal(x),
-    manual:!!x.manual
+    manual:!!x.manual,
+    selectedVariants:x.selectedVariants&&typeof x.selectedVariants==='object'?{...x.selectedVariants}:{},
+    variantKey:String(x.variantKey||''),
+    variantLabel:String(x.variantLabel||'')
   }));
 
   let stockApplied=[];
@@ -15837,7 +15846,7 @@ function seerviShowSaveSuccess(message){
   async function prepareSave(){syncItemsFromDomGuard();if(!S.items.length)throw new Error('Add at least one item.');for(const x of S.items){if(!String(x.model||x.name||'').trim())throw new Error('Every item must have a product/model name.');if(Number(x.qty||0)<0||Number(x.rate||0)<0)throw new Error('Quantity and rate cannot be negative.');}if(!S.party?.id)throw new Error('Quotation/invoice party is missing.');
     await ensureParty();
     crmPartyId=S.party.id; if(!Array.isArray(crmParties))window.crmParties=[]; if(!crmParties.some(p=>p.id===S.party.id))crmParties.push(S.party);
-    seerviCart=S.items.map(x=>({...x,name:x.name||x.model||'',model:x.model||x.name||'',thickness:x.spec||x.thickness||'',spec:x.spec||x.thickness||'',hsnCode:x.hsnCode||x.hsn||'',qty:Number(x.qty||0),rate:Number(x.rate||0),amount:Number(x.qty||0)*Number(x.rate||0)}));
+    seerviCart=S.items.map(x=>({...x,name:x.name||x.model||'',model:x.model||x.name||'',thickness:x.spec||x.thickness||'',spec:x.spec||x.thickness||'',hsnCode:x.hsnCode||x.hsn||'',qty:Number(x.qty||0),rate:Number(x.rate||0),amount:Number(x.qty||0)*Number(x.rate||0),selectedVariants:x.selectedVariants&&typeof x.selectedVariants==='object'?{...x.selectedVariants}:{},variantKey:String(x.variantKey||''),variantLabel:String(x.variantLabel||'')}));
     localStorage.setItem('seerviCart',JSON.stringify(seerviCart));
     const gstEnabled=!!$id('seerviDocGstEnabled')?.checked,gstRate=Number($id('seerviDocGstRate')?.value||0);
     const meta={dateISO:getv('seerviDocDate'),quoteNo:getv('seerviDocNumber'),status:getv('seerviDocStatus')||'saved',invoiceNo:getv('seerviDocNumber'),ewayBillNo:getv('seerviDocEway'),notes:getv('seerviDocNotes'),gstEnabled,gstRate,shipTo:{name:getv('seerviDocShipName'),company:getv('seerviDocShipCompany'),phone:getv('seerviDocShipPhone'),email:getv('seerviDocShipEmail'),city:getv('seerviDocShipCity'),address:getv('seerviDocShipAddress'),gstin:getv('seerviDocShipGstin'),pan:S.record?.shipTo?.pan||''}};
@@ -15846,7 +15855,7 @@ function seerviShowSaveSuccess(message){
     crmEditingQuoteId=S.mode==='quote'?S.id:'';crmEditingInvoiceId=S.mode==='invoice'?S.id:'';window.crmEditingInvoiceMeta=meta;
   }
   window.seerviSaveDocumentEditor=async function(){const status=$id('seerviDocEditorStatus');const err=$id('seerviDocEditorError');if(status)status.textContent='SAVING…';if(err){err.style.display='none';err.textContent='';}try{await prepareSave();const meta=window.__seerviEditorMeta||{};const mode=S.mode,id=S.id;if(mode==='invoice' && meta.invoiceNo && meta.invoiceNo!==String(S.record.invoiceNo||'').trim() && await seerviInvoiceNumberExistsExcept(meta.invoiceNo,id)){throw new Error('Invoice number '+meta.invoiceNo+' already exists. Please use another number.');}if(!S.originalSave)S.originalSave=window.__seerviOriginalCrmSave;await S.originalSave();if(mode==='quote'){await updateDoc(doc(db,'quotations',id),{quoteNo:meta.quoteNo||S.record.quoteNo||'',dateISO:meta.dateISO||S.record.dateISO||'',status:meta.status||S.record.status||'saved',updatedAt:serverTimestamp()});const linkedInvoiceId=S.record.invoiceId||'';if(linkedInvoiceId){await updateDoc(doc(db,SEERVI_INVOICE_COLLECTION,linkedInvoiceId),{quoteNo:meta.quoteNo||S.record.quoteNo||'',updatedAt:serverTimestamp()});}crmLoadGlobalAdmin(false);}else if(mode==='invoice'){await updateDoc(doc(db,SEERVI_INVOICE_COLLECTION,id),{dateISO:meta.dateISO||S.record.dateISO||'',invoiceNo:meta.invoiceNo||S.record.invoiceNo||'',updatedAt:serverTimestamp()});crmLoadGlobalAdmin(false);}if(status)status.textContent='SAVED';seerviCloseDocumentEditor();}catch(e){console.error('Document editor save failed:',e);if(err){err.textContent=e?.message||'Save failed.';err.style.display='block';}if(status)status.textContent='';alert('Could not save changes: '+(e?.message||'Check Firebase rules.'));}};
-  function open(mode,id){if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const rec=(mode==='quote'?adminGlobalQuotes:adminGlobalInvoices).find(x=>x.id===id);if(!rec){alert((mode==='quote'?'Quotation':'Invoice')+' not found. Refresh the Admin Panel.');return;}const party=(adminGlobalParties||[]).find(p=>p.id===rec.partyId)||(crmParties||[]).find(p=>p.id===rec.partyId)||rec.customer||{};if(!party?.id){alert('The document party could not be found. Refresh the Admin Panel.');return;}S.mode=mode;S.id=id;S.record=rec;S.party=party;S.items=(rec.items||[]).map(x=>({...x,model:x.model||x.name||'',name:x.name||x.model||'',spec:x.spec||x.thickness||'',thickness:x.spec||x.thickness||'',hsnCode:x.hsnCode||x.hsn||'',qty:Number(x.qty||0),rate:Number(x.rate||0)}));
+  function open(mode,id){if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const rec=(mode==='quote'?adminGlobalQuotes:adminGlobalInvoices).find(x=>x.id===id);if(!rec){alert((mode==='quote'?'Quotation':'Invoice')+' not found. Refresh the Admin Panel.');return;}const party=(adminGlobalParties||[]).find(p=>p.id===rec.partyId)||(crmParties||[]).find(p=>p.id===rec.partyId)||rec.customer||{};if(!party?.id){alert('The document party could not be found. Refresh the Admin Panel.');return;}S.mode=mode;S.id=id;S.record=rec;S.party=party;S.items=(rec.items||[]).map(x=>({...x,model:x.model||x.name||'',name:x.name||x.model||'',spec:x.spec||x.thickness||'',thickness:x.spec||x.thickness||'',hsnCode:x.hsnCode||x.hsn||'',qty:Number(x.qty||0),rate:Number(x.rate||0),selectedVariants:x.selectedVariants&&typeof x.selectedVariants==='object'?{...x.selectedVariants}:{},variantKey:String(x.variantKey||''),variantLabel:String(x.variantLabel||'')}));
     $id('seerviDocEditorTitle').textContent=mode==='quote'?'EDIT QUOTATION':'EDIT SALE INVOICE';$id('seerviDocTypeLabel').textContent=mode==='quote'?'WHOLESALE PRODUCT QUOTATION':'SALE INVOICE';$id('seerviDocNumberLabel').textContent=mode==='quote'?'Quotation No.':'Invoice No.';$id('seerviDocStatusWrap').style.display=mode==='quote'?'block':'none';$id('seerviDocEwayWrap').style.display=mode==='invoice'?'block':'none';$id('seerviDocShipSection').style.display=mode==='invoice'?'block':'none';
     setv('seerviDocNumber',mode==='quote'?(rec.quoteNo||''):(rec.invoiceNo||''));setv('seerviDocDate',rec.dateISO?String(rec.dateISO).slice(0,10):new Date().toISOString().slice(0,10));setv('seerviDocStatus',rec.status||'saved');setv('seerviDocEway',rec.ewayBillNo||'');fillCommon(party);fillShip(rec.shipTo||rec.customer||party);setv('seerviDocNotes',rec.notes||'');const ge=$id('seerviDocGstEnabled'),gr=$id('seerviDocGstRate');if(ge)ge.checked=!!rec.gstEnabled;if(gr)gr.value=Number(rec.gstRate||18);renderItems();showEditor();
   }
@@ -15858,5 +15867,218 @@ function seerviShowSaveSuccess(message){
   new MutationObserver(()=>{if(!$id('seerviDocEditorStatus'))return;patchOriginalSave();}).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
+
+<script id="seervi-item-variant-selection-v1">
+/* ===== SEERVI ITEM VARIANT SELECTION / MINIMAL ADD-TO-CART EXTENSION =====
+   Existing Item specifications remain the source of truth. A specification is
+   treated as a selectable variant only when it is a known variant dimension
+   and contains more than one value separated by comma, pipe, semicolon or line break.
+*/
+(function(){
+  const VARIANT_KEY_RE=/^(size|colour|color|thickness|length|width|height|finish|material|gauge|diameter|design|type|capacity|watt|wattage|voltage|pack|packing|variant|style)$/i;
+  const SPLIT_RE=/[,|;\n\r]+/;
+  const esc=v=>typeof seerviItemsEsc==='function'?seerviItemsEsc(v):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
+  function variantGroups(item){
+    const specs=item&&item.specifications&&typeof item.specifications==='object'?item.specifications:{};
+    const groups=[];
+    Object.entries(specs).forEach(([key,raw])=>{
+      if(!VARIANT_KEY_RE.test(String(key).trim()))return;
+      let values=Array.isArray(raw)?raw:typeof raw==='string'?raw.split(SPLIT_RE):[raw];
+      values=values.map(v=>String(v??'').trim()).filter(Boolean);
+      values=[...new Set(values)];
+      if(values.length>1)groups.push({key:String(key).trim(),values});
+    });
+    return groups;
+  }
+  function hasVariants(item){return variantGroups(item).length>0;}
+  function variantKey(selected){
+    return Object.keys(selected||{}).sort((a,b)=>a.localeCompare(b)).map(k=>k+'='+String(selected[k])).join('|');
+  }
+  function selectedText(selected){
+    return Object.entries(selected||{}).map(([k,v])=>k+': '+v).join(' · ');
+  }
+  function getItem(itemId){
+    return (typeof seerviPublicItems!=='undefined'&&Array.isArray(seerviPublicItems))
+      ? seerviPublicItems.find(x=>String(x.id)===String(itemId)) : null;
+  }
+
+  function ensureVariantModal(){
+    let modal=document.getElementById('seerviVariantSelectModal');
+    if(modal)return modal;
+    modal=document.createElement('div');
+    modal.id='seerviVariantSelectModal';
+    modal.className='seervi-variant-modal';
+    modal.setAttribute('aria-hidden','true');
+    modal.innerHTML=`<div class="seervi-variant-backdrop" data-variant-close></div>
+      <div class="seervi-variant-card" role="dialog" aria-modal="true" aria-labelledby="seerviVariantTitle">
+        <button type="button" class="seervi-variant-close" data-variant-close aria-label="Close">×</button>
+        <div class="seervi-variant-kicker">SELECT ITEM VARIANT</div>
+        <h3 id="seerviVariantTitle">Select options</h3>
+        <p id="seerviVariantHint">Choose the required size, colour, thickness, length or other available variant.</p>
+        <div id="seerviVariantOptions" class="seervi-variant-options"></div>
+        <div id="seerviVariantError" class="seervi-variant-error" aria-live="polite"></div>
+        <div class="seervi-variant-actions">
+          <button type="button" class="crm-secondary" data-variant-close>CANCEL</button>
+          <button type="button" class="crm-primary" id="seerviVariantConfirm">ADD TO CART</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click',e=>{if(e.target.closest('[data-variant-close]'))closeVariantModal();});
+    return modal;
+  }
+
+  let variantState=null;
+  function closeVariantModal(){
+    const modal=document.getElementById('seerviVariantSelectModal');
+    if(!modal)return;
+    modal.classList.remove('show');modal.setAttribute('aria-hidden','true');
+    document.body.classList.remove('seervi-variant-open');
+    variantState=null;
+  }
+  window.seerviCloseVariantModal=closeVariantModal;
+
+  function openVariantModal(item){
+    const groups=variantGroups(item);
+    if(!groups.length)return false;
+    const modal=ensureVariantModal();
+    variantState={item,groups,selected:{}};
+    const title=modal.querySelector('#seerviVariantTitle');
+    const hint=modal.querySelector('#seerviVariantHint');
+    const options=modal.querySelector('#seerviVariantOptions');
+    const error=modal.querySelector('#seerviVariantError');
+    if(title)title.textContent=item.name||item.model||'Select item variant';
+    if(hint)hint.textContent='Choose one option for each available variant.';
+    if(error)error.textContent='';
+    options.innerHTML=groups.map((g,gi)=>`<div class="seervi-variant-group">
+      <label for="seerviVariantSelect${gi}">${esc(g.key)}</label>
+      <select id="seerviVariantSelect${gi}" data-variant-index="${gi}">
+        <option value="">Select ${esc(g.key)}</option>
+        ${g.values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('')}
+      </select>
+    </div>`).join('');
+    options.querySelectorAll('select').forEach(sel=>sel.addEventListener('change',()=>{
+      const g=groups[Number(sel.dataset.variantIndex)];
+      if(g)variantState.selected[g.key]=sel.value;
+      if(error)error.textContent='';
+    }));
+    modal.querySelector('#seerviVariantConfirm').onclick=function(){
+      if(!variantState)return;
+      const missing=groups.filter(g=>!String(variantState.selected[g.key]||'').trim());
+      if(missing.length){if(error)error.textContent='Please select: '+missing.map(x=>x.key).join(', ');return;}
+      const selected={...variantState.selected};
+      closeVariantModal();
+      addSelectedVariantToCart(item,selected);
+    };
+    modal.classList.add('show');modal.setAttribute('aria-hidden','false');document.body.classList.add('seervi-variant-open');
+    setTimeout(()=>modal.querySelector('select')?.focus(),40);
+    return true;
+  }
+
+  function baseCartItem(item,selected){
+    const allImages=typeof seerviPublicItemImageList==='function'?seerviPublicItemImageList(item):[];
+    return {
+      type:'Item',firebaseItemId:item.id,categoryId:item.categoryId||'',subcategoryId:item.subcategoryId||'',
+      category:typeof seerviPublicCategoryName==='function'?seerviPublicCategoryName(item.categoryId):'',
+      subcategory:typeof seerviPublicCategoryName==='function'?seerviPublicCategoryName(item.subcategoryId):'',
+      model:item.model||item.id,name:item.name||item.model||'Item',hsnCode:item.hsnCode||item.hsn||'',
+      image:item.imageWebpUrl||'',imageWebpUrl:item.imageWebpUrl||'',galleryImages:allImages.slice(1),
+      description:item.description||'',specifications:{...(item.specifications||{})},
+      specification:Object.entries(item.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(', '),
+      selectedVariants:{...selected},variantKey:variantKey(selected),variantLabel:selectedText(selected),rate:0
+    };
+  }
+  function addSelectedVariantToCart(item,selected){
+    addToCart(baseCartItem(item,selected));
+    if(typeof seerviPublicRenderItems==='function')seerviPublicRenderItems();
+  }
+
+  /* Variant-aware cart identity: different selections of the same Firebase item
+     become separate cart lines, while legacy non-variant entries remain compatible. */
+  const originalCartKey=window.cartKey;
+  window.cartKey=function(item){
+    const base=originalCartKey?originalCartKey(item):(item&&item.firebaseItemId?'firebase|'+String(item.firebaseItemId):String(item?.type||'')+'|'+String(item?.model||''));
+    const vk=String(item?.variantKey||'');
+    return vk?base+'|variant|'+vk:base;
+  };
+
+  /* Public ADD TO CART entry point used by cards, details modal and AI/product flows. */
+  window.seerviPublicAddToCart=function(itemId){
+    const item=getItem(itemId);if(!item)return;
+    const groups=variantGroups(item);
+    if(groups.length){openVariantModal(item);return;}
+    addToCart(baseCartItem(item,{}));
+    if(typeof seerviPublicRenderItems==='function')seerviPublicRenderItems();
+  };
+
+  /* Keep variant items as ADD TO CART buttons rather than showing an ambiguous
+     single quantity control when multiple variant lines can exist in the cart. */
+  function variantCardButton(item){
+    return `<button class="crm-primary small seervi-card-add-to-cart" type="button" onclick="seerviPublicAddToCart('${esc(item.id)}')">ADD TO CART</button>`;
+  }
+  const originalCardControl=window.seerviPublicCardCartControl;
+  if(typeof originalCardControl==='function'){
+    window.seerviPublicCardCartControl=function(item){
+      return hasVariants(item)?variantCardButton(item):originalCardControl(item);
+    };
+  }
+
+  /* Replace the private sync hook with a variant-safe sync after the existing
+     catalogue/quantity extension has installed itself. */
+  function installVariantSync(){
+    const originalSync=window.seerviPublicSyncCartControls;
+    if(typeof originalSync!=='function'||originalSync.__seerviVariantWrapped)return;
+    function wrapped(){
+      try{originalSync();}catch(e){console.warn('Variant cart sync:',e);}
+      document.querySelectorAll('.seervi-public-product-card').forEach(card=>{
+        const addBtn=card.querySelector('[onclick*="seerviPublicAddToCart"]');
+        const id=addBtn?.getAttribute('onclick')?.match(/seerviPublicAddToCart\('([^']+)'\)/)?.[1]||'';
+        if(!id)return;
+        const item=getItem(id);
+        if(!item||!hasVariants(item))return;
+        const control=card.querySelector('.seervi-public-qty-control');
+        if(control)control.outerHTML=variantCardButton(item);
+      });
+    }
+    wrapped.__seerviVariantWrapped=true;
+    window.seerviPublicSyncCartControls=wrapped;
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installVariantSync,{once:true});
+  else setTimeout(installVariantSync,0);
+
+  /* Variant selections are displayed everywhere the cart item is represented. */
+  const originalLabel=window.seerviQuotationItemLabel;
+  window.seerviQuotationItemLabel=function(item){
+    const base=originalLabel?originalLabel(item):String(item?.model||item?.name||'').trim();
+    const label=String(item?.variantLabel||'').trim();
+    return label?base+' — '+label:base;
+  };
+
+  /* Preserve selected variants when quotation/invoice editor rehydrates an item. */
+  const originalDocOpen=window.crmEditQuote;
+  /* No wrapper is needed here: document records already retain arbitrary item
+     fields; the existing editor mapping is patched below by the final save hook. */
+
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('seerviVariantSelectModal')?.classList.contains('show'))closeVariantModal();});
+})();
+</script>
+<style id="seervi-item-variant-selection-style">
+.seervi-variant-modal{position:fixed;inset:0;z-index:13000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px)}
+.seervi-variant-modal.show{display:flex}
+.seervi-variant-backdrop{position:absolute;inset:0}
+.seervi-variant-card{position:relative;z-index:1;width:min(520px,94vw);max-height:90vh;overflow:auto;background:linear-gradient(145deg,#151a20,#090c10);border:1px solid #ffffff35;border-radius:18px;padding:24px;box-shadow:0 30px 100px #000;color:#fff}
+.seervi-variant-close{position:absolute;right:14px;top:12px;width:36px;height:36px;border:1px solid #ffffff20;border-radius:50%;background:#ffffff08;color:#fff;font-size:22px;cursor:pointer}
+.seervi-variant-kicker{font-size:9px;font-weight:900;letter-spacing:1.5px;color:#c7a34a;margin-bottom:8px}
+.seervi-variant-card h3{margin:0 42px 7px 0;font-size:24px}
+.seervi-variant-card>p{margin:0 0 18px;color:#89939e;font-size:11px;line-height:1.5}
+.seervi-variant-options{display:flex;flex-direction:column;gap:12px}
+.seervi-variant-group label{display:block;margin-bottom:6px;color:#cfd5db;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase}
+.seervi-variant-group select{width:100%;background:#10161c;color:#fff;border:1px solid #ffffff20;border-radius:8px;padding:11px 12px;font:inherit;font-size:12px;outline:none}
+.seervi-variant-group select:focus{border-color:#ffffff66}
+.seervi-variant-error{min-height:18px;margin-top:10px;color:#ff8e8e;font-size:10px}
+.seervi-variant-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+body.seervi-variant-open{overflow:hidden}
+@media(max-width:600px){.seervi-variant-modal{padding:0;align-items:flex-end}.seervi-variant-card{width:100%;max-height:92dvh;border-radius:18px 18px 0 0;padding:20px}.seervi-variant-actions{grid-template-columns:1fr}.seervi-variant-group select{font-size:16px;min-height:46px}}
+</style>
 </body>
 </html>
