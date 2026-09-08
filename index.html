@@ -5360,7 +5360,7 @@ body.seervi-ai-open .float-support{display:none!important}
           <button class="crm-secondary small" type="button" onclick="seerviAddSpecificationRow()">＋ ADD SPECIFICATION</button>
         </div>
         <div id="seerviSpecificationsRows" class="seervi-specifications-rows"></div>
-        <div class="crm-muted">Add only the specifications relevant to this item. Specification names are fully dynamic.</div>
+        <div class="crm-muted">Add only the specifications relevant to this item. Tick <b>VARIANT</b> for selectable options such as Size, Colour, Thickness or Length. For multiple options, separate values with <b>|</b>, comma, semicolon or new lines.</div>
       </div>
 
       <div class="seervi-item-form-section seervi-item-status-section">
@@ -5553,9 +5553,11 @@ function saveCart(){
 function cartKey(item){
   // Firebase items use their immutable document ID so two different items
   // with the same model/name can never collide in the cart.
-  if(item && item.firebaseItemId) return 'firebase|' + String(item.firebaseItemId);
-  // Legacy cart entries remain compatible with the existing quotation/cart flow.
-  return item.type + '|' + item.model + '|' + (item.thickness || '') + '|' + (item.subcategory || '');
+  const base=(item && item.firebaseItemId)
+    ? 'firebase|' + String(item.firebaseItemId)
+    : String(item?.type||'') + '|' + String(item?.model||'') + '|' + String(item?.thickness||'') + '|' + String(item?.subcategory||'');
+  const variant=String(item?.variantKey||'').trim();
+  return variant ? base+'|variant|'+variant : base;
 }
 
 function addToCart(item){
@@ -5932,6 +5934,7 @@ function downloadCartPDF(){
 
 function seerviQuotationItemLabel(item){
   const model=String(item?.model||item?.name||'').trim();
+  const variantLabel=String(item?.variantLabel||'').trim();
   let subcategory=String(item?.subcategory||'').trim();
   if(!subcategory && item?.subcategoryId && typeof window.seerviPublicCategoryName==='function'){
     subcategory=String(window.seerviPublicCategoryName(item.subcategoryId)||'').trim();
@@ -5939,7 +5942,8 @@ function seerviQuotationItemLabel(item){
   if(!subcategory && item?.subcategoryId && typeof seerviPublicCategoryName==='function'){
     subcategory=String(seerviPublicCategoryName(item.subcategoryId)||'').trim();
   }
-  return subcategory ? `${model} — ${subcategory}` : model;
+  const base=subcategory ? `${model} — ${subcategory}` : model;
+  return variantLabel ? `${base} — ${variantLabel}` : base;
 }
 
 function renderCart(){
@@ -6005,6 +6009,7 @@ function renderCart(){
         <span class="cart-item-type">${escapeHtml(item.type||'PRODUCT')}</span>
         <strong>${escapeHtml(seerviQuotationItemLabel(item))}</strong>
         ${item.thickness ? `<span class="cart-item-spec">Thickness: ${escapeHtml(item.thickness)}</span>` : ''}
+        ${item.variantLabel ? `<span class="cart-item-spec">${escapeHtml(item.variantLabel)}</span>` : ''}
       </div>
 
       <div class="cart-item-price-cell admin-only">
@@ -12789,7 +12794,8 @@ function seerviAddSpecificationRow(name='',value=''){
   const row=document.createElement('div');
   row.className='seervi-spec-row';
   row.innerHTML=`<input class="seervi-spec-name" maxlength="120" placeholder="Specification name" value="${seerviItemsEsc(name)}">
-    <input class="seervi-spec-value" maxlength="1000" placeholder="Value" value="${seerviItemsEsc(value)}">
+    <input class="seervi-spec-value" maxlength="1000" placeholder="Value (use | or comma for multiple variant options)" value="${seerviItemsEsc(value)}">
+    <label class="seervi-spec-variant" title="Use this specification as a selectable item variant"><input type="checkbox" class="seervi-spec-variant-check"> VARIANT</label>
     <button class="crm-secondary small" type="button" title="Remove" onclick="this.parentElement.remove()">×</button>`;
   wrap.appendChild(row);
 }
@@ -12805,6 +12811,17 @@ function seerviReadSpecificationRows(){
     const key=row.querySelector('.seervi-spec-name')?.value.trim()||'';
     const value=row.querySelector('.seervi-spec-value')?.value.trim()||'';
     if(key) result[key]=value;
+  });
+  return result;
+}
+
+function seerviReadVariantSpecifications(){
+  const result={};
+  document.querySelectorAll('#seerviSpecificationsRows .seervi-spec-row').forEach(row=>{
+    const check=row.querySelector('.seervi-spec-variant-check');
+    const key=row.querySelector('.seervi-spec-name')?.value.trim()||'';
+    const value=row.querySelector('.seervi-spec-value')?.value.trim()||'';
+    if(key && check?.checked && value) result[key]=value;
   });
   return result;
 }
@@ -12992,6 +13009,26 @@ function seerviBulkSpecColumns(row){
   });
   return specs;
 }
+function seerviBulkVariantSpecColumns(row){
+  const specs={};
+  Object.keys(row||{}).forEach(key=>{
+    const h=seerviBulkNormaliseHeader(key);
+    const m=h.match(/^variant\s*spec\s*(\d+)\s*(name|values?|value)$/i);
+    if(!m)return;
+    const n=Number(m[1]);
+    const kind=m[2].toLowerCase();
+    const val=String(row[key]??'').trim();
+    if(!specs[n])specs[n]={};
+    if(kind==='name')specs[n].name=val; else specs[n].value=val;
+  });
+  const out={};
+  Object.keys(specs).map(Number).sort((a,b)=>a-b).forEach(n=>{
+    const x=specs[n];
+    if(x.name && x.value)out[x.name]=x.value;
+  });
+  return out;
+}
+
 function seerviBulkSlug(v){
   return String(v||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
 }
@@ -13052,6 +13089,7 @@ async function seerviBulkPrepare(){
         categoryId:category?.id||'', subcategoryId:subcategory?.id||'',
         name, model, hsnCode, description, imageWebpUrl:image, galleryImages,
         specifications:seerviBulkSpecColumns(row),
+        variantSpecifications:seerviBulkVariantSpecColumns(row),
         active:!['false','0','no','inactive'].includes(seerviBulkCell(row,'Active','Status').toLowerCase())
       },
       errors, duplicate
@@ -13500,7 +13538,11 @@ window.seerviBulkDownloadTemplate=function(){
     'Spec 2 Name':'Length',
     'Spec 2 Value':'3 Meter',
     'Spec 3 Name':'Finish',
-    'Spec 3 Value':'Silver'
+    'Spec 3 Value':'Silver',
+    'Variant Spec 1 Name':'Size',
+    'Variant Spec 1 Values':'1 inch|2 inch|3 inch',
+    'Variant Spec 2 Name':'Colour',
+    'Variant Spec 2 Values':'Silver|Black'
   };
   const ws=XLSX.utils.json_to_sheet([row]);
   ws['!cols']=[
@@ -13514,6 +13556,9 @@ window.seerviBulkDownloadTemplate=function(){
     ['If Category/Subcategory does not match existing Firebase taxonomy, the row will show ERROR and cannot be imported.'],
     ['Main WEBP Image URL / Path is required. Gallery Images is optional and supports unlimited additional WEBP paths.'],
     ['Separate multiple Gallery Images with the | character. Example: image-02.webp|image-03.webp|image-04.webp'],
+    ['For selectable variants use Variant Spec 1 Name / Variant Spec 1 Values, Variant Spec 2 Name / Variant Spec 2 Values, etc. Separate values with |, comma, semicolon or new lines.'],
+    ['Example: Variant Spec 1 Name = Size; Variant Spec 1 Values = 1 inch|2 inch|3 inch.'],
+    ['Normal Spec columns remain available for non-selectable specifications.'],
     ['Use the separate Category / Subcategory Bulk Import to create taxonomy first.']
   ];
   const notesWs=XLSX.utils.aoa_to_sheet(notes);
@@ -13712,6 +13757,7 @@ window.seerviDuplicateItem=async function(itemId){
       description:item.description||'',
       imageWebpUrl:item.imageWebpUrl||'',
       specifications:{...(item.specifications||{})},
+      variantSpecifications:{...(item.variantSpecifications||{})},
       active:false
     });
 
@@ -14321,7 +14367,15 @@ window.seerviEditItem=async function(itemId){
       (Array.isArray(item.galleryImages)?item.galleryImages:[]).forEach(url=>seerviAddGalleryImageRow(url));
     }
     $('seerviSpecificationsRows').innerHTML='';
-    Object.entries(item.specifications||{}).forEach(([k,v])=>seerviAddSpecificationRow(k,v));
+    const variantSpecs=item.variantSpecifications&&typeof item.variantSpecifications==='object'?item.variantSpecifications:{};
+    Object.entries(item.specifications||{}).forEach(([k,v])=>{
+      seerviAddSpecificationRow(k,v);
+      const row=[...document.querySelectorAll('#seerviSpecificationsRows .seervi-spec-row')].at(-1);
+      const isMarked=Object.prototype.hasOwnProperty.call(variantSpecs,k);
+      const known=/^(size|colour|color|thickness|length|width|height|finish|material|gauge|diameter|design|capacity|watt|wattage|voltage|pack|packing|variant|style)$/i.test(k);
+      const multi=String(v||'').split(/[,|;\n\r]+/).map(x=>x.trim()).filter(Boolean).length>1;
+      if(row && (isMarked || (known && multi))) row.querySelector('.seervi-spec-variant-check').checked=true;
+    });
     seerviItemsAddSpecificationRowIfEmpty();
     $('seerviItemFormMode').textContent=`Editing item: ${item.name||item.id}`;
     $('seerviItemSaveButton').textContent='UPDATE ITEM';
@@ -14355,6 +14409,7 @@ window.seerviSaveItemForm=async function(){
       imageWebpUrl:image, galleryImages,
       description:$('seerviItemDescription').value.trim(),
       specifications:seerviReadSpecificationRows(),
+      variantSpecifications:seerviReadVariantSpecifications(),
       active:$('seerviItemActive').checked
     };
     if(!data.name)throw new Error('Item name is required.');
@@ -15881,13 +15936,20 @@ function seerviShowSaveSuccess(message){
 
   function variantGroups(item){
     const specs=item&&item.specifications&&typeof item.specifications==='object'?item.specifications:{};
+    const marked=item&&item.variantSpecifications&&typeof item.variantSpecifications==='object'?item.variantSpecifications:{};
     const groups=[];
-    Object.entries(specs).forEach(([key,raw])=>{
-      if(!VARIANT_KEY_RE.test(String(key).trim()))return;
+    const addGroup=(key,raw)=>{
       let values=Array.isArray(raw)?raw:typeof raw==='string'?raw.split(SPLIT_RE):[raw];
       values=values.map(v=>String(v??'').trim()).filter(Boolean);
       values=[...new Set(values)];
-      if(values.length>1)groups.push({key:String(key).trim(),values});
+      if(values.length)groups.push({key:String(key).trim(),values});
+    };
+    Object.entries(marked).forEach(([key,raw])=>addGroup(key,raw));
+    Object.entries(specs).forEach(([key,raw])=>{
+      if(groups.some(g=>g.key.toLowerCase()===String(key).trim().toLowerCase()))return;
+      if(!VARIANT_KEY_RE.test(String(key).trim()))return;
+      const values=String(raw??'').split(SPLIT_RE).map(v=>v.trim()).filter(Boolean);
+      if(values.length>1)addGroup(key,raw);
     });
     return groups;
   }
@@ -15983,7 +16045,7 @@ function seerviShowSaveSuccess(message){
       subcategory:typeof seerviPublicCategoryName==='function'?seerviPublicCategoryName(item.subcategoryId):'',
       model:item.model||item.id,name:item.name||item.model||'Item',hsnCode:item.hsnCode||item.hsn||'',
       image:item.imageWebpUrl||'',imageWebpUrl:item.imageWebpUrl||'',galleryImages:allImages.slice(1),
-      description:item.description||'',specifications:{...(item.specifications||{})},
+      description:item.description||'',specifications:{...(item.specifications||{})},variantSpecifications:{...(item.variantSpecifications||{})},
       specification:Object.entries(item.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(', '),
       selectedVariants:{...selected},variantKey:variantKey(selected),variantLabel:selectedText(selected),rate:0
     };
@@ -15995,12 +16057,6 @@ function seerviShowSaveSuccess(message){
 
   /* Variant-aware cart identity: different selections of the same Firebase item
      become separate cart lines, while legacy non-variant entries remain compatible. */
-  const originalCartKey=window.cartKey;
-  window.cartKey=function(item){
-    const base=originalCartKey?originalCartKey(item):(item&&item.firebaseItemId?'firebase|'+String(item.firebaseItemId):String(item?.type||'')+'|'+String(item?.model||''));
-    const vk=String(item?.variantKey||'');
-    return vk?base+'|variant|'+vk:base;
-  };
 
   /* Public ADD TO CART entry point used by cards, details modal and AI/product flows. */
   window.seerviPublicAddToCart=function(itemId){
@@ -16062,6 +16118,12 @@ function seerviShowSaveSuccess(message){
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('seerviVariantSelectModal')?.classList.contains('show'))closeVariantModal();});
 })();
 </script>
+<style id="seervi-item-variant-form-style">
+.seervi-spec-row{grid-template-columns:minmax(130px,1fr) minmax(180px,2fr) auto auto!important;align-items:center}
+.seervi-spec-variant{display:flex;align-items:center;gap:5px;white-space:nowrap;color:#c7a34a;font-size:9px;font-weight:800;letter-spacing:.5px}
+.seervi-spec-variant input{accent-color:#c7a34a}
+@media(max-width:650px){.seervi-spec-row{grid-template-columns:1fr!important}.seervi-spec-variant{justify-self:start}}
+</style>
 <style id="seervi-item-variant-selection-style">
 .seervi-variant-modal{position:fixed;inset:0;z-index:13000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px)}
 .seervi-variant-modal.show{display:flex}
