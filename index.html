@@ -5360,7 +5360,7 @@ body.seervi-ai-open .float-support{display:none!important}
           <button class="crm-secondary small" type="button" onclick="seerviAddSpecificationRow()">＋ ADD SPECIFICATION</button>
         </div>
         <div id="seerviSpecificationsRows" class="seervi-specifications-rows"></div>
-        <div class="crm-muted">Add only the specifications relevant to this item. Tick <b>VARIANT</b> for selectable options such as Size, Colour, Thickness or Length. For multiple options, separate values with <b>|</b>, comma, semicolon or new lines.</div>
+        <div class="crm-muted">Add only the specifications relevant to this item. Specification names are fully dynamic.</div>
       </div>
 
       <div class="seervi-item-form-section seervi-item-status-section">
@@ -5553,11 +5553,9 @@ function saveCart(){
 function cartKey(item){
   // Firebase items use their immutable document ID so two different items
   // with the same model/name can never collide in the cart.
-  const base=(item && item.firebaseItemId)
-    ? 'firebase|' + String(item.firebaseItemId)
-    : String(item?.type||'') + '|' + String(item?.model||'') + '|' + String(item?.thickness||'') + '|' + String(item?.subcategory||'');
-  const variant=String(item?.variantKey||'').trim();
-  return variant ? base+'|variant|'+variant : base;
+  if(item && item.firebaseItemId) return 'firebase|' + String(item.firebaseItemId);
+  // Legacy cart entries remain compatible with the existing quotation/cart flow.
+  return item.type + '|' + item.model + '|' + (item.thickness || '') + '|' + (item.subcategory || '');
 }
 
 function addToCart(item){
@@ -5934,7 +5932,6 @@ function downloadCartPDF(){
 
 function seerviQuotationItemLabel(item){
   const model=String(item?.model||item?.name||'').trim();
-  const variantLabel=String(item?.variantLabel||'').trim();
   let subcategory=String(item?.subcategory||'').trim();
   if(!subcategory && item?.subcategoryId && typeof window.seerviPublicCategoryName==='function'){
     subcategory=String(window.seerviPublicCategoryName(item.subcategoryId)||'').trim();
@@ -5942,8 +5939,7 @@ function seerviQuotationItemLabel(item){
   if(!subcategory && item?.subcategoryId && typeof seerviPublicCategoryName==='function'){
     subcategory=String(seerviPublicCategoryName(item.subcategoryId)||'').trim();
   }
-  const base=subcategory ? `${model} — ${subcategory}` : model;
-  return variantLabel ? `${base} — ${variantLabel}` : base;
+  return subcategory ? `${model} — ${subcategory}` : model;
 }
 
 function renderCart(){
@@ -6009,7 +6005,6 @@ function renderCart(){
         <span class="cart-item-type">${escapeHtml(item.type||'PRODUCT')}</span>
         <strong>${escapeHtml(seerviQuotationItemLabel(item))}</strong>
         ${item.thickness ? `<span class="cart-item-spec">Thickness: ${escapeHtml(item.thickness)}</span>` : ''}
-        ${item.variantLabel ? `<span class="cart-item-spec">${escapeHtml(item.variantLabel)}</span>` : ''}
       </div>
 
       <div class="cart-item-price-cell admin-only">
@@ -8012,10 +8007,7 @@ window.saveCustomerCartRequest=async function(){
     categoryId:item.categoryId||'', category:item.category||'',
     subcategoryId:item.subcategoryId||'', subcategory:item.subcategory||'',
     spec:item.spec||'', thickness:item.thickness||'', hsnCode:item.hsnCode||item.hsn||'',
-    qty:Number(item.qty)||1, rate:0, source:'customer-request',
-    selectedVariants:item.selectedVariants&&typeof item.selectedVariants==='object'?{...item.selectedVariants}:{},
-    variantKey:String(item.variantKey||''),
-    variantLabel:String(item.variantLabel||'')
+    qty:Number(item.qty)||1, rate:0, source:'customer-request'
   }));
   const qRef=await addDoc(collection(publicSignupDb,'quotations'),{
     partyId:party.id, customerUid:customerUser.uid, quoteNo:qNo, dateISO:now.toISOString(),
@@ -9648,10 +9640,7 @@ window.crmEditQuote=async function(id){
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
     image:'',
-    manual:!!x.manual,
-    selectedVariants:x.selectedVariants&&typeof x.selectedVariants==='object'?{...x.selectedVariants}:{},
-    variantKey:String(x.variantKey||''),
-    variantLabel:String(x.variantLabel||'')
+    manual:!!x.manual
   }));
   localStorage.setItem('seerviCart',JSON.stringify(seerviCart));
 
@@ -11588,10 +11577,7 @@ window.crmSaveCurrentQuote = async function(){
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
     amount:getLineTotal(x),
-    manual:!!x.manual,
-    selectedVariants:x.selectedVariants&&typeof x.selectedVariants==='object'?{...x.selectedVariants}:{},
-    variantKey:String(x.variantKey||''),
-    variantLabel:String(x.variantLabel||'')
+    manual:!!x.manual
   }));
 
   let stockApplied=[];
@@ -12794,8 +12780,7 @@ function seerviAddSpecificationRow(name='',value=''){
   const row=document.createElement('div');
   row.className='seervi-spec-row';
   row.innerHTML=`<input class="seervi-spec-name" maxlength="120" placeholder="Specification name" value="${seerviItemsEsc(name)}">
-    <input class="seervi-spec-value" maxlength="1000" placeholder="Value (use | or comma for multiple variant options)" value="${seerviItemsEsc(value)}">
-    <label class="seervi-spec-variant" title="Use this specification as a selectable item variant"><input type="checkbox" class="seervi-spec-variant-check"> VARIANT</label>
+    <input class="seervi-spec-value" maxlength="1000" placeholder="Value" value="${seerviItemsEsc(value)}">
     <button class="crm-secondary small" type="button" title="Remove" onclick="this.parentElement.remove()">×</button>`;
   wrap.appendChild(row);
 }
@@ -12811,17 +12796,6 @@ function seerviReadSpecificationRows(){
     const key=row.querySelector('.seervi-spec-name')?.value.trim()||'';
     const value=row.querySelector('.seervi-spec-value')?.value.trim()||'';
     if(key) result[key]=value;
-  });
-  return result;
-}
-
-function seerviReadVariantSpecifications(){
-  const result={};
-  document.querySelectorAll('#seerviSpecificationsRows .seervi-spec-row').forEach(row=>{
-    const check=row.querySelector('.seervi-spec-variant-check');
-    const key=row.querySelector('.seervi-spec-name')?.value.trim()||'';
-    const value=row.querySelector('.seervi-spec-value')?.value.trim()||'';
-    if(key && check?.checked && value) result[key]=value;
   });
   return result;
 }
@@ -13009,26 +12983,6 @@ function seerviBulkSpecColumns(row){
   });
   return specs;
 }
-function seerviBulkVariantSpecColumns(row){
-  const specs={};
-  Object.keys(row||{}).forEach(key=>{
-    const h=seerviBulkNormaliseHeader(key);
-    const m=h.match(/^variant\s*spec\s*(\d+)\s*(name|values?|value)$/i);
-    if(!m)return;
-    const n=Number(m[1]);
-    const kind=m[2].toLowerCase();
-    const val=String(row[key]??'').trim();
-    if(!specs[n])specs[n]={};
-    if(kind==='name')specs[n].name=val; else specs[n].value=val;
-  });
-  const out={};
-  Object.keys(specs).map(Number).sort((a,b)=>a-b).forEach(n=>{
-    const x=specs[n];
-    if(x.name && x.value)out[x.name]=x.value;
-  });
-  return out;
-}
-
 function seerviBulkSlug(v){
   return String(v||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
 }
@@ -13089,7 +13043,6 @@ async function seerviBulkPrepare(){
         categoryId:category?.id||'', subcategoryId:subcategory?.id||'',
         name, model, hsnCode, description, imageWebpUrl:image, galleryImages,
         specifications:seerviBulkSpecColumns(row),
-        variantSpecifications:seerviBulkVariantSpecColumns(row),
         active:!['false','0','no','inactive'].includes(seerviBulkCell(row,'Active','Status').toLowerCase())
       },
       errors, duplicate
@@ -13538,11 +13491,7 @@ window.seerviBulkDownloadTemplate=function(){
     'Spec 2 Name':'Length',
     'Spec 2 Value':'3 Meter',
     'Spec 3 Name':'Finish',
-    'Spec 3 Value':'Silver',
-    'Variant Spec 1 Name':'Size',
-    'Variant Spec 1 Values':'1 inch|2 inch|3 inch',
-    'Variant Spec 2 Name':'Colour',
-    'Variant Spec 2 Values':'Silver|Black'
+    'Spec 3 Value':'Silver'
   };
   const ws=XLSX.utils.json_to_sheet([row]);
   ws['!cols']=[
@@ -13556,9 +13505,6 @@ window.seerviBulkDownloadTemplate=function(){
     ['If Category/Subcategory does not match existing Firebase taxonomy, the row will show ERROR and cannot be imported.'],
     ['Main WEBP Image URL / Path is required. Gallery Images is optional and supports unlimited additional WEBP paths.'],
     ['Separate multiple Gallery Images with the | character. Example: image-02.webp|image-03.webp|image-04.webp'],
-    ['For selectable variants use Variant Spec 1 Name / Variant Spec 1 Values, Variant Spec 2 Name / Variant Spec 2 Values, etc. Separate values with |, comma, semicolon or new lines.'],
-    ['Example: Variant Spec 1 Name = Size; Variant Spec 1 Values = 1 inch|2 inch|3 inch.'],
-    ['Normal Spec columns remain available for non-selectable specifications.'],
     ['Use the separate Category / Subcategory Bulk Import to create taxonomy first.']
   ];
   const notesWs=XLSX.utils.aoa_to_sheet(notes);
@@ -13757,7 +13703,6 @@ window.seerviDuplicateItem=async function(itemId){
       description:item.description||'',
       imageWebpUrl:item.imageWebpUrl||'',
       specifications:{...(item.specifications||{})},
-      variantSpecifications:{...(item.variantSpecifications||{})},
       active:false
     });
 
@@ -14367,15 +14312,7 @@ window.seerviEditItem=async function(itemId){
       (Array.isArray(item.galleryImages)?item.galleryImages:[]).forEach(url=>seerviAddGalleryImageRow(url));
     }
     $('seerviSpecificationsRows').innerHTML='';
-    const variantSpecs=item.variantSpecifications&&typeof item.variantSpecifications==='object'?item.variantSpecifications:{};
-    Object.entries(item.specifications||{}).forEach(([k,v])=>{
-      seerviAddSpecificationRow(k,v);
-      const row=[...document.querySelectorAll('#seerviSpecificationsRows .seervi-spec-row')].at(-1);
-      const isMarked=Object.prototype.hasOwnProperty.call(variantSpecs,k);
-      const known=/^(size|colour|color|thickness|length|width|height|finish|material|gauge|diameter|design|capacity|watt|wattage|voltage|pack|packing|variant|style)$/i.test(k);
-      const multi=String(v||'').split(/[,|;\n\r]+/).map(x=>x.trim()).filter(Boolean).length>1;
-      if(row && (isMarked || (known && multi))) row.querySelector('.seervi-spec-variant-check').checked=true;
-    });
+    Object.entries(item.specifications||{}).forEach(([k,v])=>seerviAddSpecificationRow(k,v));
     seerviItemsAddSpecificationRowIfEmpty();
     $('seerviItemFormMode').textContent=`Editing item: ${item.name||item.id}`;
     $('seerviItemSaveButton').textContent='UPDATE ITEM';
@@ -14409,7 +14346,6 @@ window.seerviSaveItemForm=async function(){
       imageWebpUrl:image, galleryImages,
       description:$('seerviItemDescription').value.trim(),
       specifications:seerviReadSpecificationRows(),
-      variantSpecifications:seerviReadVariantSpecifications(),
       active:$('seerviItemActive').checked
     };
     if(!data.name)throw new Error('Item name is required.');
@@ -15901,7 +15837,7 @@ function seerviShowSaveSuccess(message){
   async function prepareSave(){syncItemsFromDomGuard();if(!S.items.length)throw new Error('Add at least one item.');for(const x of S.items){if(!String(x.model||x.name||'').trim())throw new Error('Every item must have a product/model name.');if(Number(x.qty||0)<0||Number(x.rate||0)<0)throw new Error('Quantity and rate cannot be negative.');}if(!S.party?.id)throw new Error('Quotation/invoice party is missing.');
     await ensureParty();
     crmPartyId=S.party.id; if(!Array.isArray(crmParties))window.crmParties=[]; if(!crmParties.some(p=>p.id===S.party.id))crmParties.push(S.party);
-    seerviCart=S.items.map(x=>({...x,name:x.name||x.model||'',model:x.model||x.name||'',thickness:x.spec||x.thickness||'',spec:x.spec||x.thickness||'',hsnCode:x.hsnCode||x.hsn||'',qty:Number(x.qty||0),rate:Number(x.rate||0),amount:Number(x.qty||0)*Number(x.rate||0),selectedVariants:x.selectedVariants&&typeof x.selectedVariants==='object'?{...x.selectedVariants}:{},variantKey:String(x.variantKey||''),variantLabel:String(x.variantLabel||'')}));
+    seerviCart=S.items.map(x=>({...x,name:x.name||x.model||'',model:x.model||x.name||'',thickness:x.spec||x.thickness||'',spec:x.spec||x.thickness||'',hsnCode:x.hsnCode||x.hsn||'',qty:Number(x.qty||0),rate:Number(x.rate||0),amount:Number(x.qty||0)*Number(x.rate||0)}));
     localStorage.setItem('seerviCart',JSON.stringify(seerviCart));
     const gstEnabled=!!$id('seerviDocGstEnabled')?.checked,gstRate=Number($id('seerviDocGstRate')?.value||0);
     const meta={dateISO:getv('seerviDocDate'),quoteNo:getv('seerviDocNumber'),status:getv('seerviDocStatus')||'saved',invoiceNo:getv('seerviDocNumber'),ewayBillNo:getv('seerviDocEway'),notes:getv('seerviDocNotes'),gstEnabled,gstRate,shipTo:{name:getv('seerviDocShipName'),company:getv('seerviDocShipCompany'),phone:getv('seerviDocShipPhone'),email:getv('seerviDocShipEmail'),city:getv('seerviDocShipCity'),address:getv('seerviDocShipAddress'),gstin:getv('seerviDocShipGstin'),pan:S.record?.shipTo?.pan||''}};
@@ -15910,7 +15846,7 @@ function seerviShowSaveSuccess(message){
     crmEditingQuoteId=S.mode==='quote'?S.id:'';crmEditingInvoiceId=S.mode==='invoice'?S.id:'';window.crmEditingInvoiceMeta=meta;
   }
   window.seerviSaveDocumentEditor=async function(){const status=$id('seerviDocEditorStatus');const err=$id('seerviDocEditorError');if(status)status.textContent='SAVING…';if(err){err.style.display='none';err.textContent='';}try{await prepareSave();const meta=window.__seerviEditorMeta||{};const mode=S.mode,id=S.id;if(mode==='invoice' && meta.invoiceNo && meta.invoiceNo!==String(S.record.invoiceNo||'').trim() && await seerviInvoiceNumberExistsExcept(meta.invoiceNo,id)){throw new Error('Invoice number '+meta.invoiceNo+' already exists. Please use another number.');}if(!S.originalSave)S.originalSave=window.__seerviOriginalCrmSave;await S.originalSave();if(mode==='quote'){await updateDoc(doc(db,'quotations',id),{quoteNo:meta.quoteNo||S.record.quoteNo||'',dateISO:meta.dateISO||S.record.dateISO||'',status:meta.status||S.record.status||'saved',updatedAt:serverTimestamp()});const linkedInvoiceId=S.record.invoiceId||'';if(linkedInvoiceId){await updateDoc(doc(db,SEERVI_INVOICE_COLLECTION,linkedInvoiceId),{quoteNo:meta.quoteNo||S.record.quoteNo||'',updatedAt:serverTimestamp()});}crmLoadGlobalAdmin(false);}else if(mode==='invoice'){await updateDoc(doc(db,SEERVI_INVOICE_COLLECTION,id),{dateISO:meta.dateISO||S.record.dateISO||'',invoiceNo:meta.invoiceNo||S.record.invoiceNo||'',updatedAt:serverTimestamp()});crmLoadGlobalAdmin(false);}if(status)status.textContent='SAVED';seerviCloseDocumentEditor();}catch(e){console.error('Document editor save failed:',e);if(err){err.textContent=e?.message||'Save failed.';err.style.display='block';}if(status)status.textContent='';alert('Could not save changes: '+(e?.message||'Check Firebase rules.'));}};
-  function open(mode,id){if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const rec=(mode==='quote'?adminGlobalQuotes:adminGlobalInvoices).find(x=>x.id===id);if(!rec){alert((mode==='quote'?'Quotation':'Invoice')+' not found. Refresh the Admin Panel.');return;}const party=(adminGlobalParties||[]).find(p=>p.id===rec.partyId)||(crmParties||[]).find(p=>p.id===rec.partyId)||rec.customer||{};if(!party?.id){alert('The document party could not be found. Refresh the Admin Panel.');return;}S.mode=mode;S.id=id;S.record=rec;S.party=party;S.items=(rec.items||[]).map(x=>({...x,model:x.model||x.name||'',name:x.name||x.model||'',spec:x.spec||x.thickness||'',thickness:x.spec||x.thickness||'',hsnCode:x.hsnCode||x.hsn||'',qty:Number(x.qty||0),rate:Number(x.rate||0),selectedVariants:x.selectedVariants&&typeof x.selectedVariants==='object'?{...x.selectedVariants}:{},variantKey:String(x.variantKey||''),variantLabel:String(x.variantLabel||'')}));
+  function open(mode,id){if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const rec=(mode==='quote'?adminGlobalQuotes:adminGlobalInvoices).find(x=>x.id===id);if(!rec){alert((mode==='quote'?'Quotation':'Invoice')+' not found. Refresh the Admin Panel.');return;}const party=(adminGlobalParties||[]).find(p=>p.id===rec.partyId)||(crmParties||[]).find(p=>p.id===rec.partyId)||rec.customer||{};if(!party?.id){alert('The document party could not be found. Refresh the Admin Panel.');return;}S.mode=mode;S.id=id;S.record=rec;S.party=party;S.items=(rec.items||[]).map(x=>({...x,model:x.model||x.name||'',name:x.name||x.model||'',spec:x.spec||x.thickness||'',thickness:x.spec||x.thickness||'',hsnCode:x.hsnCode||x.hsn||'',qty:Number(x.qty||0),rate:Number(x.rate||0)}));
     $id('seerviDocEditorTitle').textContent=mode==='quote'?'EDIT QUOTATION':'EDIT SALE INVOICE';$id('seerviDocTypeLabel').textContent=mode==='quote'?'WHOLESALE PRODUCT QUOTATION':'SALE INVOICE';$id('seerviDocNumberLabel').textContent=mode==='quote'?'Quotation No.':'Invoice No.';$id('seerviDocStatusWrap').style.display=mode==='quote'?'block':'none';$id('seerviDocEwayWrap').style.display=mode==='invoice'?'block':'none';$id('seerviDocShipSection').style.display=mode==='invoice'?'block':'none';
     setv('seerviDocNumber',mode==='quote'?(rec.quoteNo||''):(rec.invoiceNo||''));setv('seerviDocDate',rec.dateISO?String(rec.dateISO).slice(0,10):new Date().toISOString().slice(0,10));setv('seerviDocStatus',rec.status||'saved');setv('seerviDocEway',rec.ewayBillNo||'');fillCommon(party);fillShip(rec.shipTo||rec.customer||party);setv('seerviDocNotes',rec.notes||'');const ge=$id('seerviDocGstEnabled'),gr=$id('seerviDocGstRate');if(ge)ge.checked=!!rec.gstEnabled;if(gr)gr.value=Number(rec.gstRate||18);renderItems();showEditor();
   }
@@ -15922,225 +15858,5 @@ function seerviShowSaveSuccess(message){
   new MutationObserver(()=>{if(!$id('seerviDocEditorStatus'))return;patchOriginalSave();}).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
-
-<script id="seervi-item-variant-selection-v1">
-/* ===== SEERVI ITEM VARIANT SELECTION / MINIMAL ADD-TO-CART EXTENSION =====
-   Existing Item specifications remain the source of truth. A specification is
-   treated as a selectable variant only when it is a known variant dimension
-   and contains more than one value separated by comma, pipe, semicolon or line break.
-*/
-(function(){
-  const VARIANT_KEY_RE=/^(size|colour|color|thickness|length|width|height|finish|material|gauge|diameter|design|type|capacity|watt|wattage|voltage|pack|packing|variant|style)$/i;
-  const SPLIT_RE=/[,|;\n\r]+/;
-  const esc=v=>typeof seerviItemsEsc==='function'?seerviItemsEsc(v):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-
-  function variantGroups(item){
-    const specs=item&&item.specifications&&typeof item.specifications==='object'?item.specifications:{};
-    const marked=item&&item.variantSpecifications&&typeof item.variantSpecifications==='object'?item.variantSpecifications:{};
-    const groups=[];
-    const addGroup=(key,raw)=>{
-      let values=Array.isArray(raw)?raw:typeof raw==='string'?raw.split(SPLIT_RE):[raw];
-      values=values.map(v=>String(v??'').trim()).filter(Boolean);
-      values=[...new Set(values)];
-      if(values.length)groups.push({key:String(key).trim(),values});
-    };
-    Object.entries(marked).forEach(([key,raw])=>addGroup(key,raw));
-    Object.entries(specs).forEach(([key,raw])=>{
-      if(groups.some(g=>g.key.toLowerCase()===String(key).trim().toLowerCase()))return;
-      if(!VARIANT_KEY_RE.test(String(key).trim()))return;
-      const values=String(raw??'').split(SPLIT_RE).map(v=>v.trim()).filter(Boolean);
-      if(values.length>1)addGroup(key,raw);
-    });
-    return groups;
-  }
-  function hasVariants(item){return variantGroups(item).length>0;}
-  function variantKey(selected){
-    return Object.keys(selected||{}).sort((a,b)=>a.localeCompare(b)).map(k=>k+'='+String(selected[k])).join('|');
-  }
-  function selectedText(selected){
-    return Object.entries(selected||{}).map(([k,v])=>k+': '+v).join(' · ');
-  }
-  function getItem(itemId){
-    return (typeof seerviPublicItems!=='undefined'&&Array.isArray(seerviPublicItems))
-      ? seerviPublicItems.find(x=>String(x.id)===String(itemId)) : null;
-  }
-
-  function ensureVariantModal(){
-    let modal=document.getElementById('seerviVariantSelectModal');
-    if(modal)return modal;
-    modal=document.createElement('div');
-    modal.id='seerviVariantSelectModal';
-    modal.className='seervi-variant-modal';
-    modal.setAttribute('aria-hidden','true');
-    modal.innerHTML=`<div class="seervi-variant-backdrop" data-variant-close></div>
-      <div class="seervi-variant-card" role="dialog" aria-modal="true" aria-labelledby="seerviVariantTitle">
-        <button type="button" class="seervi-variant-close" data-variant-close aria-label="Close">×</button>
-        <div class="seervi-variant-kicker">SELECT ITEM VARIANT</div>
-        <h3 id="seerviVariantTitle">Select options</h3>
-        <p id="seerviVariantHint">Choose the required size, colour, thickness, length or other available variant.</p>
-        <div id="seerviVariantOptions" class="seervi-variant-options"></div>
-        <div id="seerviVariantError" class="seervi-variant-error" aria-live="polite"></div>
-        <div class="seervi-variant-actions">
-          <button type="button" class="crm-secondary" data-variant-close>CANCEL</button>
-          <button type="button" class="crm-primary" id="seerviVariantConfirm">ADD TO CART</button>
-        </div>
-      </div>`;
-    document.body.appendChild(modal);
-    modal.addEventListener('click',e=>{if(e.target.closest('[data-variant-close]'))closeVariantModal();});
-    return modal;
-  }
-
-  let variantState=null;
-  function closeVariantModal(){
-    const modal=document.getElementById('seerviVariantSelectModal');
-    if(!modal)return;
-    modal.classList.remove('show');modal.setAttribute('aria-hidden','true');
-    document.body.classList.remove('seervi-variant-open');
-    variantState=null;
-  }
-  window.seerviCloseVariantModal=closeVariantModal;
-
-  function openVariantModal(item){
-    const groups=variantGroups(item);
-    if(!groups.length)return false;
-    const modal=ensureVariantModal();
-    variantState={item,groups,selected:{}};
-    const title=modal.querySelector('#seerviVariantTitle');
-    const hint=modal.querySelector('#seerviVariantHint');
-    const options=modal.querySelector('#seerviVariantOptions');
-    const error=modal.querySelector('#seerviVariantError');
-    if(title)title.textContent=item.name||item.model||'Select item variant';
-    if(hint)hint.textContent='Choose one option for each available variant.';
-    if(error)error.textContent='';
-    options.innerHTML=groups.map((g,gi)=>`<div class="seervi-variant-group">
-      <label for="seerviVariantSelect${gi}">${esc(g.key)}</label>
-      <select id="seerviVariantSelect${gi}" data-variant-index="${gi}">
-        <option value="">Select ${esc(g.key)}</option>
-        ${g.values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('')}
-      </select>
-    </div>`).join('');
-    options.querySelectorAll('select').forEach(sel=>sel.addEventListener('change',()=>{
-      const g=groups[Number(sel.dataset.variantIndex)];
-      if(g)variantState.selected[g.key]=sel.value;
-      if(error)error.textContent='';
-    }));
-    modal.querySelector('#seerviVariantConfirm').onclick=function(){
-      if(!variantState)return;
-      const missing=groups.filter(g=>!String(variantState.selected[g.key]||'').trim());
-      if(missing.length){if(error)error.textContent='Please select: '+missing.map(x=>x.key).join(', ');return;}
-      const selected={...variantState.selected};
-      closeVariantModal();
-      addSelectedVariantToCart(item,selected);
-    };
-    modal.classList.add('show');modal.setAttribute('aria-hidden','false');document.body.classList.add('seervi-variant-open');
-    setTimeout(()=>modal.querySelector('select')?.focus(),40);
-    return true;
-  }
-
-  function baseCartItem(item,selected){
-    const allImages=typeof seerviPublicItemImageList==='function'?seerviPublicItemImageList(item):[];
-    return {
-      type:'Item',firebaseItemId:item.id,categoryId:item.categoryId||'',subcategoryId:item.subcategoryId||'',
-      category:typeof seerviPublicCategoryName==='function'?seerviPublicCategoryName(item.categoryId):'',
-      subcategory:typeof seerviPublicCategoryName==='function'?seerviPublicCategoryName(item.subcategoryId):'',
-      model:item.model||item.id,name:item.name||item.model||'Item',hsnCode:item.hsnCode||item.hsn||'',
-      image:item.imageWebpUrl||'',imageWebpUrl:item.imageWebpUrl||'',galleryImages:allImages.slice(1),
-      description:item.description||'',specifications:{...(item.specifications||{})},variantSpecifications:{...(item.variantSpecifications||{})},
-      specification:Object.entries(item.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(', '),
-      selectedVariants:{...selected},variantKey:variantKey(selected),variantLabel:selectedText(selected),rate:0
-    };
-  }
-  function addSelectedVariantToCart(item,selected){
-    addToCart(baseCartItem(item,selected));
-    if(typeof seerviPublicRenderItems==='function')seerviPublicRenderItems();
-  }
-
-  /* Variant-aware cart identity: different selections of the same Firebase item
-     become separate cart lines, while legacy non-variant entries remain compatible. */
-
-  /* Public ADD TO CART entry point used by cards, details modal and AI/product flows. */
-  window.seerviPublicAddToCart=function(itemId){
-    const item=getItem(itemId);if(!item)return;
-    const groups=variantGroups(item);
-    if(groups.length){openVariantModal(item);return;}
-    addToCart(baseCartItem(item,{}));
-    if(typeof seerviPublicRenderItems==='function')seerviPublicRenderItems();
-  };
-
-  /* Keep variant items as ADD TO CART buttons rather than showing an ambiguous
-     single quantity control when multiple variant lines can exist in the cart. */
-  function variantCardButton(item){
-    return `<button class="crm-primary small seervi-card-add-to-cart" type="button" onclick="seerviPublicAddToCart('${esc(item.id)}')">ADD TO CART</button>`;
-  }
-  const originalCardControl=window.seerviPublicCardCartControl;
-  if(typeof originalCardControl==='function'){
-    window.seerviPublicCardCartControl=function(item){
-      return hasVariants(item)?variantCardButton(item):originalCardControl(item);
-    };
-  }
-
-  /* Replace the private sync hook with a variant-safe sync after the existing
-     catalogue/quantity extension has installed itself. */
-  function installVariantSync(){
-    const originalSync=window.seerviPublicSyncCartControls;
-    if(typeof originalSync!=='function'||originalSync.__seerviVariantWrapped)return;
-    function wrapped(){
-      try{originalSync();}catch(e){console.warn('Variant cart sync:',e);}
-      document.querySelectorAll('.seervi-public-product-card').forEach(card=>{
-        const addBtn=card.querySelector('[onclick*="seerviPublicAddToCart"]');
-        const id=addBtn?.getAttribute('onclick')?.match(/seerviPublicAddToCart\('([^']+)'\)/)?.[1]||'';
-        if(!id)return;
-        const item=getItem(id);
-        if(!item||!hasVariants(item))return;
-        const control=card.querySelector('.seervi-public-qty-control');
-        if(control)control.outerHTML=variantCardButton(item);
-      });
-    }
-    wrapped.__seerviVariantWrapped=true;
-    window.seerviPublicSyncCartControls=wrapped;
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installVariantSync,{once:true});
-  else setTimeout(installVariantSync,0);
-
-  /* Variant selections are displayed everywhere the cart item is represented. */
-  const originalLabel=window.seerviQuotationItemLabel;
-  window.seerviQuotationItemLabel=function(item){
-    const base=originalLabel?originalLabel(item):String(item?.model||item?.name||'').trim();
-    const label=String(item?.variantLabel||'').trim();
-    return label?base+' — '+label:base;
-  };
-
-  /* Preserve selected variants when quotation/invoice editor rehydrates an item. */
-  const originalDocOpen=window.crmEditQuote;
-  /* No wrapper is needed here: document records already retain arbitrary item
-     fields; the existing editor mapping is patched below by the final save hook. */
-
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('seerviVariantSelectModal')?.classList.contains('show'))closeVariantModal();});
-})();
-</script>
-<style id="seervi-item-variant-form-style">
-.seervi-spec-row{grid-template-columns:minmax(130px,1fr) minmax(180px,2fr) auto auto!important;align-items:center}
-.seervi-spec-variant{display:flex;align-items:center;gap:5px;white-space:nowrap;color:#c7a34a;font-size:9px;font-weight:800;letter-spacing:.5px}
-.seervi-spec-variant input{accent-color:#c7a34a}
-@media(max-width:650px){.seervi-spec-row{grid-template-columns:1fr!important}.seervi-spec-variant{justify-self:start}}
-</style>
-<style id="seervi-item-variant-selection-style">
-.seervi-variant-modal{position:fixed;inset:0;z-index:13000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px)}
-.seervi-variant-modal.show{display:flex}
-.seervi-variant-backdrop{position:absolute;inset:0}
-.seervi-variant-card{position:relative;z-index:1;width:min(520px,94vw);max-height:90vh;overflow:auto;background:linear-gradient(145deg,#151a20,#090c10);border:1px solid #ffffff35;border-radius:18px;padding:24px;box-shadow:0 30px 100px #000;color:#fff}
-.seervi-variant-close{position:absolute;right:14px;top:12px;width:36px;height:36px;border:1px solid #ffffff20;border-radius:50%;background:#ffffff08;color:#fff;font-size:22px;cursor:pointer}
-.seervi-variant-kicker{font-size:9px;font-weight:900;letter-spacing:1.5px;color:#c7a34a;margin-bottom:8px}
-.seervi-variant-card h3{margin:0 42px 7px 0;font-size:24px}
-.seervi-variant-card>p{margin:0 0 18px;color:#89939e;font-size:11px;line-height:1.5}
-.seervi-variant-options{display:flex;flex-direction:column;gap:12px}
-.seervi-variant-group label{display:block;margin-bottom:6px;color:#cfd5db;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase}
-.seervi-variant-group select{width:100%;background:#10161c;color:#fff;border:1px solid #ffffff20;border-radius:8px;padding:11px 12px;font:inherit;font-size:12px;outline:none}
-.seervi-variant-group select:focus{border-color:#ffffff66}
-.seervi-variant-error{min-height:18px;margin-top:10px;color:#ff8e8e;font-size:10px}
-.seervi-variant-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-body.seervi-variant-open{overflow:hidden}
-@media(max-width:600px){.seervi-variant-modal{padding:0;align-items:flex-end}.seervi-variant-card{width:100%;max-height:92dvh;border-radius:18px 18px 0 0;padding:20px}.seervi-variant-actions{grid-template-columns:1fr}.seervi-variant-group select{font-size:16px;min-height:46px}}
-</style>
 </body>
 </html>
