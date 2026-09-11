@@ -97,8 +97,8 @@ nav{border-bottom:1px solid #ffffff40;box-shadow:0 8px 30px #0007}
  .home-product-meta h3{font-size:15px}
  .home-product-meta p{font-size:11px}
 }
-@media(max-width:1050px){}
-@media(max-width:800px){}
+
+
 
 
 
@@ -154,7 +154,7 @@ nav{border-bottom:1px solid #ffffff40;box-shadow:0 8px 30px #0007}
   nav .btn{display:none}
   .catalog-search{min-width:100%}
 }
-@media(max-width:800px){}
+
 
 
 .product-cart-control{display:grid;grid-template-columns:38px 1fr 38px;grid-template-rows:40px;gap:4px;margin-top:13px}
@@ -181,16 +181,11 @@ nav{border-bottom:1px solid #ffffff40;box-shadow:0 8px 30px #0007}
 @media(max-width:430px){.cart-item{grid-template-columns:54px 1fr auto}.cart-item-image{width:54px;height:54px}}
 
 
-@media(max-width:800px){
-}
-@media(max-width:900px){
-}
-@media(max-width:600px){
-}
-@media(max-width:900px){
-}
-@media(max-width:600px){
-}
+
+
+
+
+
 
 
 .bw-hero{position:relative;min-height:780px;height:100vh;max-height:900px;overflow:hidden;background:#0a0a0a;color:#fff}
@@ -500,8 +495,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 @media(max-width:430px){
   nav .cart-nav-btn{padding:8px 9px}
 }
-@media(max-width:700px){
-}
+
 
 
 .supply-flow-section{position:relative;overflow:hidden}
@@ -1067,8 +1061,7 @@ body.admin-quote-mode .quote-actions{display:grid!important}
   .party-signup-form{padding:16px}
   .party-signup-actions{display:grid;grid-template-columns:1fr 1fr}
 }
-@media(max-width:900px){
-}
+
 
 @media(max-width:600px){
   #customerLoginModal{
@@ -1392,8 +1385,7 @@ body.admin-quote-mode .quote-actions{display:grid!important}
   .cart-drawer .cart-table-head span{display:block!important}
 .cart-drawer .cart-table-head span:nth-child(1){text-align:center}
 .cart-drawer .cart-table-head span:nth-child(6){text-align:center}
-@media(max-width:700px){
-}
+
 .cart-drawer .cart-table-head .head-image{color:transparent!important}
 
 .cart-drawer .cart-item{
@@ -1907,8 +1899,7 @@ body.admin-quote-mode .quote-actions{display:grid!important}
 
 html{scroll-behavior:auto!important}
 img{content-visibility:auto}
-@media(max-width:700px){
-}
+
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
@@ -1917,7 +1908,7 @@ img{content-visibility:auto}
 
 button,a,input,select,textarea{touch-action:manipulation}
 .cart-drawer .cart-panel{overscroll-behavior:contain}
-@media(prefers-reduced-motion:reduce){}
+
 
 
 body:not(.admin-quote-mode) .cart-item-price-cell,
@@ -2136,7 +2127,7 @@ body:not(.admin-quote-mode) .cart-note{
 @media(max-width:520px){
   nav .top-account-actions .bw-nav-login,nav .top-account-actions .bw-nav-signup,nav .top-account-actions .bw-nav-dashboard{padding:7px 6px;font-size:7px;letter-spacing:.15px}
 }
-@media(max-width:600px){}
+
 
 
 nav .nav-left-group .bw-account-identity-top,
@@ -3022,7 +3013,7 @@ body.nav-is-scrolled{padding-top:76px;}
 
 .admin-items-toolbar{grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(145px,.55fr))}
 @media(max-width:900px){.admin-items-toolbar{grid-template-columns:1fr 1fr}}
-@media(max-width:620px){}
+
 
 .seervi-category-row{grid-template-columns:90px minmax(0,1fr) 80px 100px auto}
 .seervi-category-row .seervi-item-actions{justify-content:flex-end}
@@ -5148,6 +5139,40 @@ body.seervi-ai-open .float-support{display:none!important}
  .seervi-footer-social-row{justify-content:flex-start;gap:9px;margin-top:42px;font-size:9px;line-height:1.7}
 }
 </style>
+
+<style id="seervi-scroll-motion-v2">
+/* ===== SEERVI PREMIUM SCROLL STORY ===== */
+:root{--seervi-motion-ease:cubic-bezier(.16,1,.3,1)}
+.seervi-motion-item{opacity:0;transform:translate3d(var(--sx,0px),calc(var(--sy,34px) + var(--scroll-shift,0px)),0) scale(var(--ss,.985)) rotateX(var(--rx,1.2deg));filter:blur(var(--sb,4px));transform-origin:50% 80%;transition:opacity .72s var(--seervi-motion-ease),transform .9s var(--seervi-motion-ease),filter .72s var(--seervi-motion-ease);transition-delay:var(--sd,0ms);will-change:opacity,transform,filter}
+.seervi-motion-item.seervi-motion-visible{opacity:1;transform:translate3d(0,var(--scroll-shift,0px),0) scale(1) rotateX(0);filter:blur(0)}
+.seervi-motion-section{backface-visibility:hidden}
+.seervi-shuffle-a{--sx:-30px;--sy:24px;--ss:.985;--rx:1deg}
+.seervi-shuffle-b{--sx:28px;--sy:30px;--ss:.985;--rx:-1deg}
+.seervi-shuffle-c{--sx:-18px;--sy:42px;--ss:.98;--rx:1.5deg}
+.seervi-shuffle-d{--sx:20px;--sy:38px;--ss:.98;--rx:-1.2deg}
+.seervi-shuffle-e{--sx:0;--sy:52px;--ss:.975;--rx:.8deg}
+/* Cards arrive in a soft cascade instead of all appearing together. */
+.seervi-stagger-grid>*{opacity:0;transform:translate3d(0,24px,0) scale(.985);filter:blur(3px);transition:opacity .62s var(--seervi-motion-ease),transform .72s var(--seervi-motion-ease),filter .62s var(--seervi-motion-ease);transition-delay:calc(var(--i,0) * 75ms)}
+.seervi-motion-visible .seervi-stagger-grid>*{opacity:1;transform:none;filter:none}
+.seervi-depth{transform:translate3d(0,var(--depth-shift,0px),0);will-change:transform}
+.seervi-route-progress{position:relative;overflow:hidden}
+.seervi-route-progress::after{content:"";position:absolute;left:0;top:0;width:var(--route-progress,0%);height:2px;background:currentColor;opacity:.75;transition:width .5s var(--seervi-motion-ease);pointer-events:none}
+/* Premium hover micro-motion: no layout movement. */
+.sourcing-board,.sourcing-proof,.comparison-panel,.trust-banner,.source-match-widget,.source-request-widget,.why-card,.about-panel,.source-chip{transition:transform .35s var(--seervi-motion-ease),border-color .35s ease,box-shadow .35s ease}
+.sourcing-board:hover,.sourcing-proof:hover,.comparison-panel:hover,.trust-banner:hover,.source-match-widget:hover,.source-request-widget:hover,.why-card:hover,.about-panel:hover{transform:translateY(-3px)}
+@media(max-width:600px){
+ .seervi-motion-item{transition-duration:.58s;--sx:0px!important;--ss:1!important;--rx:0deg}
+ .seervi-shuffle-a{--sy:25px}.seervi-shuffle-b{--sy:29px}.seervi-shuffle-c{--sy:35px}.seervi-shuffle-d{--sy:32px}.seervi-shuffle-e{--sy:40px}
+ .seervi-depth{transform:none!important}
+ .seervi-stagger-grid>*{transition-duration:.52s;transition-delay:calc(var(--i,0) * 55ms)}
+ .sourcing-board:hover,.sourcing-proof:hover,.comparison-panel:hover,.trust-banner:hover,.source-match-widget:hover,.source-request-widget:hover,.why-card:hover,.about-panel:hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+ .seervi-motion-item,.seervi-stagger-grid>*{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}
+ .seervi-depth{transform:none!important}.seervi-route-progress::after{transition:none}
+}
+</style>
+<style id="seervi-home-settings-clean-v1">.admin-settings-subgroup{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)}.admin-settings-subgroup:first-of-type{margin-top:0;padding-top:0;border-top:0}.admin-settings-help-inline{font-size:.72em;opacity:.65;font-weight:400}</style>
 </head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -5201,7 +5226,7 @@ body.seervi-ai-open .float-support{display:none!important}
 
 <section id="customerHomeProfile" class="customer-home-profile" hidden><div class="customer-home-profile-inner"><div class="customer-home-profile-head"><div><div class="crm-kicker">SEERVI TRADING / MY PROFILE</div><h2>Welcome, <span id="customerHomeName">Customer</span></h2><p id="customerHomeMeta">Your account details and business profile.</p></div><div class="customer-home-profile-actions"><button class="crm-primary" type="button" onclick="customerEditProfile()">EDIT PROFILE</button><button class="crm-secondary" type="button" onclick="openCustomerLogin()">MY ACCOUNT</button></div></div><div id="customerHomeProfileGrid" class="customer-home-profile-grid"></div></div></section>
 
-<section id="how-seervi-works" class="supply-flow-section importer-home-section"><div class="wrap"><div class="section-head"><div><div class="tag">SOURCE WITH SEERVI</div><h2>MULTIPLE FACTORIES. ONE BETTER DEAL.</h2></div><p>Give us the requirement. We work with suitable factory and supplier contacts, compare quotations and help you move from sourcing to a practical import decision.</p></div><div class="sourcing-hero-widget"><div class="sourcing-board"><div class="sourcing-board-top"><div><div class="sourcing-board-kicker">SEERVI SOURCING DESK</div><div class="sourcing-board-sub">A real sourcing workflow — not just a product catalogue.</div></div><div class="sourcing-live"><i></i> SOURCING ACTIVE</div></div><div class="sourcing-steps"><div class="sourcing-step"><div class="sourcing-step-no">01</div><div class="sourcing-step-icon">⌕</div><b>YOU TELL US</b><span>Photo, model, specification, quantity or even a sample.</span></div><div class="sourcing-step"><div class="sourcing-step-no">02</div><div class="sourcing-step-icon">⌂</div><b>WE CONTACT FACTORIES</b><span>We approach suitable manufacturers and suppliers for the requirement.</span></div><div class="sourcing-step"><div class="sourcing-step-no">03</div><div class="sourcing-step-icon">≋</div><b>COMPARE THE DEAL</b><span>Quotes are compared on price, specification and supplier fit.</span></div><div class="sourcing-step"><div class="sourcing-step-no">04</div><div class="sourcing-step-icon">✓</div><b>TRIAL → IMPORT</b><span>Where suitable, start with a trial and scale after confirmation.</span></div></div></div><div class="sourcing-proof"><div><div class="sourcing-proof-label">IMPORTER MODE</div><div class="sourcing-proof-title">One requirement.<br><span>Multiple sourcing options.</span></div><p>Seervi can work between your requirement and overseas suppliers, so you don't have to independently chase every factory.</p></div><div class="sourcing-timeline"><div><strong>40–45</strong><small>typical days<br>import cycle*</small></div><div><strong>TRIAL</strong><small>test first<br>where suitable</small></div><div><strong>INDIA</strong><small>factory → freight<br>→ customs → supply</small></div></div></div></div><div class="importer-live-strip"><div><span class="live-dot"></span><b>HOW A SOURCING REQUEST MOVES</b></div><div class="live-route"><span>Requirement</span><em>→</em><span>Factory Quotes</span><em>→</em><span>Comparison</span><em>→</em><span>Trial</span><em>→</em><span>Import</span></div></div><div class="source-request-widget"><div><h3>Have a product in mind?</h3><p>Send a photo, model, specification or quantity. We can start the sourcing conversation from there.</p></div><button type="button" class="source-request-btn" onclick="openWhatsAppPanel();selectWhatsAppOption('quote')">REQUEST SOURCING ↗</button></div></div></section></main><section id="about" class="importer-home-section"><div class="wrap"><div class="section-head"><div><div class="tag">WHAT CAN WE SOURCE?</div><h2>IF YOU CAN SPECIFY IT, WE CAN SOURCE IT.</h2></div><p>Built for retailers, wholesalers, fabricators, contractors and businesses looking beyond their regular local supply.</p></div><div class="importer-pill-grid"><div class="importer-pill"><div class="pill-icon">▦</div><b>ELECTRICAL & LED</b><span>Drivers, SMPS, lighting components and related items.</span></div><div class="importer-pill"><div class="pill-icon">⌗</div><b>HARDWARE</b><span>Fasteners, fittings, accessories and practical trade products.</span></div><div class="importer-pill"><div class="pill-icon">▤</div><b>ALUMINIUM</b><span>Profiles, accessories and fabrication requirements.</span></div><div class="importer-pill"><div class="pill-icon">⚙</div><b>TOOLS & MACHINERY</b><span>Tools, machines and equipment for business applications.</span></div></div><div class="source-categories"><span class="source-chip">INDUSTRIAL</span><span class="source-chip">CONSTRUCTION</span><span class="source-chip">INTERIOR</span><span class="source-chip">FABRICATION</span><span class="source-chip">CUSTOM REQUIREMENTS</span><span class="source-chip">WHOLESALE</span></div><div class="source-match-widget"><div class="source-match-head"><div><div class="source-match-kicker">CAN'T FIND IT IN OUR CATALOGUE?</div><h3>Ask Seervi to source it.</h3></div><span class="source-match-badge">CUSTOM SOURCING</span></div><div class="source-match-flow"><div><strong>01</strong><span>Share product photo / model</span></div><div class="source-match-arrow">→</div><div><strong>02</strong><span>We identify suitable suppliers</span></div><div class="source-match-arrow">→</div><div><strong>03</strong><span>You receive sourcing options</span></div></div></div></div></section><section id="why-seervi" class="importer-home-section"><div class="wrap"><div class="section-head"><div><div class="tag">WHY SOURCE WITH SEERVI?</div><h2>DON'T BET ON ONE FACTORY.</h2></div><p>A practical sourcing approach: compare suitable suppliers first, then decide what makes sense for your requirement.</p></div><div class="comparison-widget"><div class="comparison-panel"><div class="comparison-panel-top"><div><h3>SUPPLIER COMPARISON</h3><p>Example of how we think about a sourcing decision.</p></div><span class="comparison-badge">3 OPTIONS</span></div><div class="quote-row quote-head"><b>OPTION</b><span>FOCUS</span><span>STATUS</span></div><div class="quote-row"><b>Factory Option A</b><span>Rate</span><span class="quote-status">COMPARE</span></div><div class="quote-row"><b>Factory Option B</b><span>Spec + Rate</span><span class="quote-status best">BETTER FIT</span></div><div class="quote-row"><b>Factory Option C</b><span>MOQ</span><span class="quote-status">COMPARE</span></div><div class="quote-row"><b>Seervi Review</b><span>Overall fit</span><span class="quote-status best">SHORTLIST</span></div></div><div class="comparison-panel"><h3>WHAT WE CHECK</h3><p>Because the cheapest quote is not always the best import deal.</p><div class="trust-stack"><div class="trust-mini"><strong>PRICE</strong><span>Quotation and negotiation potential.</span></div><div class="trust-mini"><strong>SPECIFICATION</strong><span>Model, size, material and configuration.</span></div><div class="trust-mini"><strong>MOQ</strong><span>Order quantity and trial feasibility.</span></div><div class="trust-mini"><strong>FACTORY FIT</strong><span>Suitability for your requirement.</span></div><div class="trust-mini"><strong>IMPORT FLOW</strong><span>Freight, customs and delivery coordination.</span></div><div class="trust-mini"><strong>REPEAT SUPPLY</strong><span>Potential for a long-term source.</span></div></div></div></div><div class="trust-banner"><div class="trust-banner-mark">S</div><div><b>THE SEERVI APPROACH</b><span>Source smart → compare → trial where suitable → import → build repeat supply.</span></div><strong>BUILT FOR BUSINESS</strong></div></div></section><section id="contact" class="seervi-contact-footer importer-home-section">
+<section id="how-seervi-works" class="supply-flow-section importer-home-section"><div class="wrap"><div class="section-head"><div><div class="tag" id="homeSourcingTag">SOURCE WITH SEERVI</div><h2 id="homeSourcingTitle">MULTIPLE FACTORIES. ONE BETTER DEAL.</h2></div><p id="homeSourcingDescription">Give us the requirement. We work with suitable factory and supplier contacts, compare quotations and help you move from sourcing to a practical import decision.</p></div><div class="sourcing-hero-widget"><div class="sourcing-board"><div class="sourcing-board-top"><div><div class="sourcing-board-kicker">SEERVI SOURCING DESK</div><div class="sourcing-board-sub">A real sourcing workflow — not just a product catalogue.</div></div><div class="sourcing-live"><i></i> SOURCING ACTIVE</div></div><div class="sourcing-steps"><div class="sourcing-step"><div class="sourcing-step-no">01</div><div class="sourcing-step-icon">⌕</div><b id="homeSourcingStep1Title">YOU TELL US</b><span id="homeSourcingStep1Text">Photo, model, specification, quantity or even a sample.</span></div><div class="sourcing-step"><div class="sourcing-step-no">02</div><div class="sourcing-step-icon">⌂</div><b id="homeSourcingStep2Title">WE CONTACT FACTORIES</b><span id="homeSourcingStep2Text">We approach suitable manufacturers and suppliers for the requirement.</span></div><div class="sourcing-step"><div class="sourcing-step-no">03</div><div class="sourcing-step-icon">≋</div><b id="homeSourcingStep3Title">COMPARE THE DEAL</b><span id="homeSourcingStep3Text">Quotes are compared on price, specification and supplier fit.</span></div><div class="sourcing-step"><div class="sourcing-step-no">04</div><div class="sourcing-step-icon">✓</div><b id="homeSourcingStep4Title">TRIAL → IMPORT</b><span id="homeSourcingStep4Text">Where suitable, start with a trial and scale after confirmation.</span></div></div></div><div class="sourcing-proof"><div><div class="sourcing-proof-label">IMPORTER MODE</div><div class="sourcing-proof-title">One requirement.<br><span>Multiple sourcing options.</span></div><p>Seervi can work between your requirement and overseas suppliers, so you don't have to independently chase every factory.</p></div><div class="sourcing-timeline"><div><strong id="homeImportTimeline">40–45</strong><small id="homeImportTimelineLabel">typical days<br>import cycle*</small></div><div><strong>TRIAL</strong><small>test first<br>where suitable</small></div><div><strong>INDIA</strong><small>factory → freight<br>→ customs → supply</small></div></div></div></div><div class="importer-live-strip"><div><span class="live-dot"></span><b>HOW A SOURCING REQUEST MOVES</b></div><div class="live-route"><span>Requirement</span><em>→</em><span>Factory Quotes</span><em>→</em><span>Comparison</span><em>→</em><span>Trial</span><em>→</em><span>Import</span></div></div><div class="source-request-widget"><div><h3>Have a product in mind?</h3><p>Send a photo, model, specification or quantity. We can start the sourcing conversation from there.</p></div><button type="button" class="source-request-btn" onclick="openWhatsAppPanel();selectWhatsAppOption('quote')">REQUEST SOURCING ↗</button></div></div></section></main><section id="about" class="importer-home-section"><div class="wrap"><div class="section-head"><div><div class="tag" id="homeSourceCategoriesTag">WHAT CAN WE SOURCE?</div><h2 id="homeSourceCategoriesTitle">IF YOU CAN SPECIFY IT, WE CAN SOURCE IT.</h2></div><p id="homeSourceCategoriesDescription">Built for retailers, wholesalers, fabricators, contractors and businesses looking beyond their regular local supply.</p></div><div class="importer-pill-grid"><div class="importer-pill"><div class="pill-icon">▦</div><b id="homeSourceCategory1Title">ELECTRICAL & LED</b><span id="homeSourceCategory1Text">Drivers, SMPS, lighting components and related items.</span></div><div class="importer-pill"><div class="pill-icon">⌗</div><b id="homeSourceCategory2Title">HARDWARE</b><span id="homeSourceCategory2Text">Fasteners, fittings, accessories and practical trade products.</span></div><div class="importer-pill"><div class="pill-icon">▤</div><b id="homeSourceCategory3Title">ALUMINIUM</b><span id="homeSourceCategory3Text">Profiles, accessories and fabrication requirements.</span></div><div class="importer-pill"><div class="pill-icon">⚙</div><b id="homeSourceCategory4Title">TOOLS & MACHINERY</b><span id="homeSourceCategory4Text">Tools, machines and equipment for business applications.</span></div></div><div class="source-categories"><span class="source-chip">INDUSTRIAL</span><span class="source-chip">CONSTRUCTION</span><span class="source-chip">INTERIOR</span><span class="source-chip">FABRICATION</span><span class="source-chip">CUSTOM REQUIREMENTS</span><span class="source-chip">WHOLESALE</span></div><div class="source-match-widget"><div class="source-match-head"><div><div class="source-match-kicker">CAN'T FIND IT IN OUR CATALOGUE?</div><h3>Ask Seervi to source it.</h3></div><span class="source-match-badge">CUSTOM SOURCING</span></div><div class="source-match-flow"><div><strong>01</strong><span>Share product photo / model</span></div><div class="source-match-arrow">→</div><div><strong>02</strong><span>We identify suitable suppliers</span></div><div class="source-match-arrow">→</div><div><strong>03</strong><span>You receive sourcing options</span></div></div></div></div></section><section id="why-seervi" class="importer-home-section"><div class="wrap"><div class="section-head"><div><div class="tag" id="homeWhyTag">WHY SOURCE WITH SEERVI?</div><h2 id="homeWhyTitle">DON'T BET ON ONE FACTORY.</h2></div><p id="homeWhyDescription">A practical sourcing approach: compare suitable suppliers first, then decide what makes sense for your requirement.</p></div><div class="comparison-widget"><div class="comparison-panel"><div class="comparison-panel-top"><div><h3>SUPPLIER COMPARISON</h3><p>Example of how we think about a sourcing decision.</p></div><span class="comparison-badge">3 OPTIONS</span></div><div class="quote-row quote-head"><b>OPTION</b><span>FOCUS</span><span>STATUS</span></div><div class="quote-row"><b>Factory Option A</b><span>Rate</span><span class="quote-status">COMPARE</span></div><div class="quote-row"><b>Factory Option B</b><span>Spec + Rate</span><span class="quote-status best">BETTER FIT</span></div><div class="quote-row"><b>Factory Option C</b><span>MOQ</span><span class="quote-status">COMPARE</span></div><div class="quote-row"><b>Seervi Review</b><span>Overall fit</span><span class="quote-status best">SHORTLIST</span></div></div><div class="comparison-panel"><h3>WHAT WE CHECK</h3><p>Because the cheapest quote is not always the best import deal.</p><div class="trust-stack"><div class="trust-mini"><strong id="homeWhyCheck1Title">PRICE</strong><span id="homeWhyCheck1Text">Quotation and negotiation potential.</span></div><div class="trust-mini"><strong id="homeWhyCheck2Title">SPECIFICATION</strong><span id="homeWhyCheck2Text">Model, size, material and configuration.</span></div><div class="trust-mini"><strong id="homeWhyCheck3Title">MOQ</strong><span id="homeWhyCheck3Text">Order quantity and trial feasibility.</span></div><div class="trust-mini"><strong id="homeWhyCheck4Title">FACTORY FIT</strong><span id="homeWhyCheck4Text">Suitability for your requirement.</span></div><div class="trust-mini"><strong id="homeWhyCheck5Title">IMPORT FLOW</strong><span id="homeWhyCheck5Text">Freight, customs and delivery coordination.</span></div><div class="trust-mini"><strong id="homeWhyCheck6Title">REPEAT SUPPLY</strong><span id="homeWhyCheck6Text">Potential for a long-term source.</span></div></div></div></div><div class="trust-banner"><div class="trust-banner-mark">S</div><div><b>THE SEERVI APPROACH</b><span>Source smart → compare → trial where suitable → import → build repeat supply.</span></div><strong>BUILT FOR BUSINESS</strong></div></div></section><section id="contact" class="seervi-contact-footer importer-home-section">
   <div class="seervi-contact-footer-inner">
     <div class="seervi-contact-brand">
       <div class="seervi-contact-logo">SEERVI</div>
@@ -5226,8 +5251,8 @@ body.seervi-ai-open .float-support{display:none!important}
       </div>
 
       <div class="seervi-contact-column seervi-contact-address">
-        <div class="seervi-footer-heading">SEERVI TRADING</div>
-        <p>Global sourcing for retailers, wholesalers, businesses and project requirements.</p>
+        <div class="seervi-footer-heading" id="homeContactFooterTitle">SEERVI TRADING</div>
+        <p id="homeContactFooterDescription">Global sourcing for retailers, wholesalers, businesses and project requirements.</p>
         <div class="seervi-address-block"><span class="seervi-contact-label">ADDRESS</span><span>Nagarbhavi Circle,<br>Jannabharathi Main Road,<br>Bengaluru – 566072<br>India</span></div>
         <a class="seervi-footer-wa" href="https://wa.me/917073741650?text=Hello%20Seervi%20Trading%2C%20I%20would%20like%20to%20discuss%20a%20sourcing%20requirement." target="_blank" rel="noopener">WHATSAPP SEERVI ↗</a>
       </div>
@@ -5348,10 +5373,29 @@ body.seervi-ai-open .float-support{display:none!important}
       <section id="adminSettingsSectionBranding" class="admin-settings-section" hidden><div class="crm-section-title">BRANDING / BUSINESS</div><div class="admin-settings-grid">
         <label>Company Name<input id="settingCompany" type="text"></label><label>Tagline<input id="settingTagline" type="text"></label><label>Email<input id="settingEmail" type="email"></label><label>Primary WhatsApp Number<input id="settingWhatsapp" type="text" inputmode="numeric"></label><label>Contact 1 Name<input id="settingContact1Name" type="text"></label><label>Contact 1 Mobile<input id="settingContact1Number" type="text" inputmode="numeric"></label><label>Contact 2 Name<input id="settingContact2Name" type="text"></label><label>Contact 2 Mobile<input id="settingContact2Number" type="text" inputmode="numeric"></label>
       </div></section>
-      <section id="adminSettingsSectionHomepage" class="admin-settings-section" hidden><div class="crm-section-title">HOMEPAGE</div><div class="admin-settings-grid">
-        <label>Hero Kicker<input id="settingHeroKicker" type="text"></label><label>Hero Title<input id="settingHeroTitle" type="text"></label><label>Hero Highlight<input id="settingHeroHighlight" type="text"></label><label>Hero CTA<input id="settingHeroCta" type="text"></label><label>Hero Media Type<select id="settingHeroMediaType"><option value="image">IMAGE</option><option value="video">VIDEO</option></select></label><label class="full">Hero Description<textarea id="settingHeroDescription"></textarea></label><label class="full">Hero Image Path<input id="settingHeroImage" type="text" placeholder="GitHub project path, e.g. images/hero.webp"></label><label class="full">Hero Video Path<input id="settingHeroVideo" type="text" placeholder="GitHub project path, e.g. videos/hero.mp4"></label>
-        <label class="admin-settings-check"><input id="settingShowSupply" type="checkbox"> Show Supply Flow</label><label class="admin-settings-check"><input id="settingShowAbout" type="checkbox"> Show About</label><label class="admin-settings-check"><input id="settingShowWhy" type="checkbox"> Show Why Seervi</label><label class="admin-settings-check"><input id="settingShowContact" type="checkbox"> Show Contact</label>
-      </div></section>
+      <section id="adminSettingsSectionHomepage" class="admin-settings-section" hidden><div class="crm-section-title">HOMEPAGE</div>
+        <div class="admin-settings-subgroup"><div class="crm-section-title">HERO</div><div class="admin-settings-grid">
+          <label>Hero Kicker<input id="settingHeroKicker" type="text"></label><label>Hero Title<input id="settingHeroTitle" type="text"></label><label>Hero Highlight<input id="settingHeroHighlight" type="text"></label><label>Hero CTA<input id="settingHeroCta" type="text"></label><label>Hero Media Type<select id="settingHeroMediaType"><option value="image">IMAGE</option><option value="video">VIDEO</option></select></label><label class="full">Hero Description<textarea id="settingHeroDescription"></textarea></label><label class="full">Hero Image Path<input id="settingHeroImage" type="text" placeholder="GitHub project path, e.g. images/hero.webp"></label><label class="full">Hero Video Path<input id="settingHeroVideo" type="text" placeholder="GitHub project path, e.g. videos/hero.mp4"></label>
+        </div></div>
+        <div class="admin-settings-subgroup"><div class="crm-section-title">SOURCE WITH SEERVI</div><div class="admin-settings-grid">
+          <label>Section Tag<input id="settingSourcingTag" type="text"></label><label>Section Title<input id="settingSourcingTitle" type="text"></label><label class="full">Section Description<textarea id="settingSourcingDescription"></textarea></label>
+          <label>Step 1 Title<input id="settingSourcingStep1Title" type="text"></label><label>Step 1 Text<textarea id="settingSourcingStep1Text"></textarea></label><label>Step 2 Title<input id="settingSourcingStep2Title" type="text"></label><label>Step 2 Text<textarea id="settingSourcingStep2Text"></textarea></label><label>Step 3 Title<input id="settingSourcingStep3Title" type="text"></label><label>Step 3 Text<textarea id="settingSourcingStep3Text"></textarea></label><label>Step 4 Title<input id="settingSourcingStep4Title" type="text"></label><label>Step 4 Text<textarea id="settingSourcingStep4Text"></textarea></label>
+          <label>Import Timeline<input id="settingImportTimeline" type="text"></label><label>Timeline Label<textarea id="settingImportTimelineLabel"></textarea></label>
+        </div></div>
+        <div class="admin-settings-subgroup"><div class="crm-section-title">WHAT CAN WE SOURCE?</div><div class="admin-settings-grid">
+          <label>Section Tag<input id="settingSourceCategoriesTag" type="text"></label><label>Section Title<input id="settingSourceCategoriesTitle" type="text"></label><label class="full">Section Description<textarea id="settingSourceCategoriesDescription"></textarea></label>
+          <label>Category 1 Title<input id="settingSourceCategory1Title" type="text"></label><label>Category 1 Text<textarea id="settingSourceCategory1Text"></textarea></label><label>Category 2 Title<input id="settingSourceCategory2Title" type="text"></label><label>Category 2 Text<textarea id="settingSourceCategory2Text"></textarea></label><label>Category 3 Title<input id="settingSourceCategory3Title" type="text"></label><label>Category 3 Text<textarea id="settingSourceCategory3Text"></textarea></label><label>Category 4 Title<input id="settingSourceCategory4Title" type="text"></label><label>Category 4 Text<textarea id="settingSourceCategory4Text"></textarea></label>
+          <label class="full">Category Chips <span class="admin-settings-help-inline">One per line</span><textarea id="settingSourceCategoryChips"></textarea></label>
+        </div></div>
+        <div class="admin-settings-subgroup"><div class="crm-section-title">WHY SOURCE WITH SEERVI?</div><div class="admin-settings-grid">
+          <label>Section Tag<input id="settingWhyTag" type="text"></label><label>Section Title<input id="settingWhyTitle" type="text"></label><label class="full">Section Description<textarea id="settingWhyDescription"></textarea></label>
+          <label>Check 1 Title<input id="settingWhyCheck1Title" type="text"></label><label>Check 1 Text<textarea id="settingWhyCheck1Text"></textarea></label><label>Check 2 Title<input id="settingWhyCheck2Title" type="text"></label><label>Check 2 Text<textarea id="settingWhyCheck2Text"></textarea></label><label>Check 3 Title<input id="settingWhyCheck3Title" type="text"></label><label>Check 3 Text<textarea id="settingWhyCheck3Text"></textarea></label><label>Check 4 Title<input id="settingWhyCheck4Title" type="text"></label><label>Check 4 Text<textarea id="settingWhyCheck4Text"></textarea></label><label>Check 5 Title<input id="settingWhyCheck5Title" type="text"></label><label>Check 5 Text<textarea id="settingWhyCheck5Text"></textarea></label><label>Check 6 Title<input id="settingWhyCheck6Title" type="text"></label><label>Check 6 Text<textarea id="settingWhyCheck6Text"></textarea></label>
+        </div></div>
+        <div class="admin-settings-subgroup"><div class="crm-section-title">CONTACT</div><div class="admin-settings-grid">
+          <label>Footer Title<input id="settingContactFooterTitle" type="text"></label><label class="full">Footer Description<textarea id="settingContactFooterDescription"></textarea></label>
+        </div></div>
+        <div class="admin-settings-grid"><label class="admin-settings-check"><input id="settingShowSupply" type="checkbox"> Show Supply Flow</label><label class="admin-settings-check"><input id="settingShowAbout" type="checkbox"> Show About / Source Categories</label><label class="admin-settings-check"><input id="settingShowWhy" type="checkbox"> Show Why Seervi</label><label class="admin-settings-check"><input id="settingShowContact" type="checkbox"> Show Contact</label></div>
+      </section>
       <section id="adminSettingsSectionCatalogue" class="admin-settings-section" hidden><div class="crm-section-title">CATALOGUE</div><div class="admin-settings-grid">
         <label>Products Section Title<input id="settingCatalogueTitle" type="text"></label><label class="admin-settings-check"><input id="settingShowCatalogue" type="checkbox"> Show Catalogue</label><label class="admin-settings-check"><input id="settingShowSearch" type="checkbox"> Show Search</label><label class="admin-settings-check"><input id="settingShowSort" type="checkbox"> Show Sort</label><label class="admin-settings-check"><input id="settingShowCategory" type="checkbox"> Show Category Filter</label><label class="admin-settings-check"><input id="settingShowSubcategory" type="checkbox"> Show Subcategory Filter</label>
       </div></section>
@@ -14913,7 +14957,7 @@ window.seerviCloseItemsPanel=function(){
 const SEERVI_SITE_SETTINGS_DEFAULTS={
   vanta:{color:'#ff99c5',backgroundColor:'#000000',points:10,maxDistance:15,spacing:15,showDots:true},
   branding:{companyName:'Seervi Trading',tagline:'Sourced Globally. Supplied by Seervi.',email:'info@seervitrading.com',whatsapp:'917073741650',contact1Name:'KAILASH SEERVI',contact1Number:'917073741650',contact2Name:'SHRAVAN KUMAR',contact2Number:'9740598345'},
-  homepage:{heroKicker:'SEERVI TRADING / GLOBAL SOURCING',heroTitle:'Sourced Globally.',heroHighlight:'Supplied by Seervi.',heroDescription:'Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.',heroCta:'Explore Our Solutions',heroMediaType:'image',heroImage:'images/00-old-products/product-image-001-055cde1217d3c801.webp',heroVideo:'',showSupplyFlow:true,showAbout:true,showWhy:true,showContact:true},
+  homepage:{heroKicker:'SEERVI TRADING / GLOBAL SOURCING',heroTitle:'Sourced Globally.',heroHighlight:'Supplied by Seervi.',heroDescription:'Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.',heroCta:'Explore Our Solutions',heroMediaType:'image',heroImage:'images/00-old-products/product-image-001-055cde1217d3c801.webp',heroVideo:'',showSupplyFlow:true,sourcingTag:'SOURCE WITH SEERVI',sourcingTitle:'MULTIPLE FACTORIES. ONE BETTER DEAL.',sourcingDescription:'Give us the requirement. We work with suitable factory and supplier contacts, compare quotations and help you move from sourcing to a practical import decision.',sourcingStep1Title:'YOU TELL US',sourcingStep1Text:'Photo, model, specification, quantity or even a sample.',sourcingStep2Title:'WE CONTACT FACTORIES',sourcingStep2Text:'We approach suitable manufacturers and suppliers for the requirement.',sourcingStep3Title:'COMPARE THE DEAL',sourcingStep3Text:'Quotes are compared on price, specification and supplier fit.',sourcingStep4Title:'TRIAL → IMPORT',sourcingStep4Text:'Where suitable, start with a trial and scale after confirmation.',importTimeline:'40–45',importTimelineLabel:'typical days\nimport cycle*',showAbout:true,sourcingCategoriesTag:'WHAT CAN WE SOURCE?',sourcingCategoriesTitle:'IF YOU CAN SPECIFY IT, WE CAN SOURCE IT.',sourcingCategoriesDescription:'Built for retailers, wholesalers, fabricators, contractors and businesses looking beyond their regular local supply.',sourcingCategory1Title:'ELECTRICAL & LED',sourcingCategory1Text:'Drivers, SMPS, lighting components and related items.',sourcingCategory2Title:'HARDWARE',sourcingCategory2Text:'Fasteners, fittings, accessories and practical trade products.',sourcingCategory3Title:'ALUMINIUM',sourcingCategory3Text:'Profiles, accessories and fabrication requirements.',sourcingCategory4Title:'TOOLS & MACHINERY',sourcingCategory4Text:'Tools, machines and equipment for business applications.',sourcingCategoryChips:'INDUSTRIAL\nCONSTRUCTION\nINTERIOR\nFABRICATION\nCUSTOM REQUIREMENTS\nWHOLESALE',showWhy:true,whyTag:'WHY SOURCE WITH SEERVI?',whyTitle:"DON'T BET ON ONE FACTORY.",whyDescription:'A practical sourcing approach: compare suitable suppliers first, then decide what makes sense for your requirement.',whyCheck1Title:'PRICE',whyCheck1Text:'Quotation and negotiation potential.',whyCheck2Title:'SPECIFICATION',whyCheck2Text:'Model, size, material and configuration.',whyCheck3Title:'MOQ',whyCheck3Text:'Order quantity and trial feasibility.',whyCheck4Title:'FACTORY FIT',whyCheck4Text:'Suitability for your requirement.',whyCheck5Title:'IMPORT FLOW',whyCheck5Text:'Freight, customs and delivery coordination.',whyCheck6Title:'REPEAT SUPPLY',whyCheck6Text:'Potential for a long-term source.',showContact:true,contactFooterTitle:'SEERVI TRADING',contactFooterDescription:'Global sourcing for retailers, wholesalers, businesses and project requirements.'},
   catalogue:{sectionTitle:'Our Products',showCatalogue:true,showSearch:true,showSort:true,showCategoryFilter:true,showSubcategoryFilter:true},
   customer:{loginEnabled:true,signupEnabled:true},
   notifications:{enabled:true,soundEnabled:true},
@@ -14961,6 +15005,8 @@ function seerviNormaliseSettings(raw){
   s.homepage.heroMediaType=['image','video'].includes(String(s.homepage.heroMediaType||'').toLowerCase())?String(s.homepage.heroMediaType).toLowerCase():SEERVI_SITE_SETTINGS_DEFAULTS.homepage.heroMediaType;
   s.homepage.heroImage=String(s.homepage.heroImage||SEERVI_SITE_SETTINGS_DEFAULTS.homepage.heroImage).slice(0,500);
   s.homepage.heroVideo=String(s.homepage.heroVideo||'').slice(0,500);
+  const homeText=(key,max)=>{s.homepage[key]=String(s.homepage[key]??SEERVI_SITE_SETTINGS_DEFAULTS.homepage[key]).slice(0,max);};
+  [['sourcingTag',80],['sourcingTitle',140],['sourcingDescription',500],['sourcingStep1Title',80],['sourcingStep1Text',220],['sourcingStep2Title',80],['sourcingStep2Text',220],['sourcingStep3Title',80],['sourcingStep3Text',220],['sourcingStep4Title',80],['sourcingStep4Text',220],['importTimeline',30],['importTimelineLabel',80],['sourcingCategoriesTag',80],['sourcingCategoriesTitle',140],['sourcingCategoriesDescription',400],['sourcingCategory1Title',80],['sourcingCategory1Text',180],['sourcingCategory2Title',80],['sourcingCategory2Text',180],['sourcingCategory3Title',80],['sourcingCategory3Text',180],['sourcingCategory4Title',80],['sourcingCategory4Text',180],['sourcingCategoryChips',300],['whyTag',80],['whyTitle',140],['whyDescription',400],['whyCheck1Title',60],['whyCheck1Text',180],['whyCheck2Title',60],['whyCheck2Text',180],['whyCheck3Title',60],['whyCheck3Text',180],['whyCheck4Title',60],['whyCheck4Text',180],['whyCheck5Title',60],['whyCheck5Text',180],['whyCheck6Title',60],['whyCheck6Text',180],['contactFooterTitle',100],['contactFooterDescription',300]].forEach(([key,max])=>homeText(key,max));
   ['showSupplyFlow','showAbout','showWhy','showContact'].forEach(k=>s.homepage[k]=!!s.homepage[k]);
   s.catalogue.sectionTitle=String(s.catalogue.sectionTitle||SEERVI_SITE_SETTINGS_DEFAULTS.catalogue.sectionTitle).slice(0,100);
   ['showCatalogue','showSearch','showSort','showCategoryFilter','showSubcategoryFilter'].forEach(k=>s.catalogue[k]=!!s.catalogue[k]);
@@ -14982,6 +15028,7 @@ function seerviNormaliseSettings(raw){
 function seerviApplySiteSettings(raw){
   seerviSiteSettings=seerviNormaliseSettings(raw);
   window.SeerviSiteSettings=seerviSiteSettings;
+  seerviApplyHomepageContent();
   const v=seerviSiteSettings.vanta;
   const root=document.documentElement;
   const hero=document.querySelector('#home .bw-hero-image');
@@ -15070,6 +15117,29 @@ function seerviApplySiteSettings(raw){
   }
   window.dispatchEvent(new CustomEvent('seervi:global-settings-ready',{detail:seerviSiteSettings}));
 }
+function seerviApplyHomepageContent(){
+  const h=seerviSiteSettings.homepage;
+  const textMap={
+    homeSourcingTag:h.sourcingTag,homeSourcingTitle:h.sourcingTitle,homeSourcingDescription:h.sourcingDescription,
+    homeSourcingStep1Title:h.sourcingStep1Title,homeSourcingStep1Text:h.sourcingStep1Text,homeSourcingStep2Title:h.sourcingStep2Title,homeSourcingStep2Text:h.sourcingStep2Text,
+    homeSourcingStep3Title:h.sourcingStep3Title,homeSourcingStep3Text:h.sourcingStep3Text,homeSourcingStep4Title:h.sourcingStep4Title,homeSourcingStep4Text:h.sourcingStep4Text,
+    homeImportTimeline:h.importTimeline,homeImportTimelineLabel:h.importTimelineLabel,homeSourceCategoriesTag:h.sourcingCategoriesTag,homeSourceCategoriesTitle:h.sourcingCategoriesTitle,
+    homeSourceCategoriesDescription:h.sourcingCategoriesDescription,homeSourceCategory1Title:h.sourcingCategory1Title,homeSourceCategory1Text:h.sourcingCategory1Text,homeSourceCategory2Title:h.sourcingCategory2Title,
+    homeSourceCategory2Text:h.sourcingCategory2Text,homeSourceCategory3Title:h.sourcingCategory3Title,homeSourceCategory3Text:h.sourcingCategory3Text,homeSourceCategory4Title:h.sourcingCategory4Title,homeSourceCategory4Text:h.sourcingCategory4Text,
+    homeWhyTag:h.whyTag,homeWhyTitle:h.whyTitle,homeWhyDescription:h.whyDescription,homeWhyCheck1Title:h.whyCheck1Title,homeWhyCheck1Text:h.whyCheck1Text,homeWhyCheck2Title:h.whyCheck2Title,homeWhyCheck2Text:h.whyCheck2Text,
+    homeWhyCheck3Title:h.whyCheck3Title,homeWhyCheck3Text:h.whyCheck3Text,homeWhyCheck4Title:h.whyCheck4Title,homeWhyCheck4Text:h.whyCheck4Text,homeWhyCheck5Title:h.whyCheck5Title,homeWhyCheck5Text:h.whyCheck5Text,
+    homeWhyCheck6Title:h.whyCheck6Title,homeWhyCheck6Text:h.whyCheck6Text,homeContactFooterTitle:h.contactFooterTitle,homeContactFooterDescription:h.contactFooterDescription
+  };
+  Object.entries(textMap).forEach(([id,value])=>{const el=document.getElementById(id);if(el)el.textContent=String(value??'');});
+  const label=document.getElementById('homeImportTimelineLabel');
+  if(label)label.innerHTML=seerviEscHtml(h.importTimelineLabel).replace(/\n/g,'<br>');
+  const chipWrap=document.querySelector('#about .source-categories');
+  if(chipWrap){
+    const chips=String(h.sourcingCategoryChips||'').split(/[\n,]+/).map(x=>x.trim()).filter(Boolean).slice(0,12);
+    chipWrap.innerHTML=chips.map(x=>`<span class="source-chip homeSourceChip">${seerviEscHtml(x)}</span>`).join('');
+  }
+}
+
 function seerviEscHtml(value){
   return String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 }
@@ -15155,7 +15225,11 @@ function seerviSettingsFillForm(){
   const vals={
     settingVantaColor:s.vanta.color,settingVantaBg:s.vanta.backgroundColor,settingVantaPoints:s.vanta.points,settingVantaMax:s.vanta.maxDistance,settingVantaSpacing:s.vanta.spacing,settingVantaDots:s.vanta.showDots,
     settingCompany:s.branding.companyName,settingTagline:s.branding.tagline,settingEmail:s.branding.email,settingWhatsapp:s.branding.whatsapp,settingContact1Name:s.branding.contact1Name,settingContact1Number:s.branding.contact1Number,settingContact2Name:s.branding.contact2Name,settingContact2Number:s.branding.contact2Number,
-    settingHeroKicker:s.homepage.heroKicker,settingHeroTitle:s.homepage.heroTitle,settingHeroHighlight:s.homepage.heroHighlight,settingHeroDescription:s.homepage.heroDescription,settingHeroCta:s.homepage.heroCta,settingHeroMediaType:s.homepage.heroMediaType,settingHeroImage:s.homepage.heroImage,settingHeroVideo:s.homepage.heroVideo,settingShowSupply:s.homepage.showSupplyFlow,settingShowAbout:s.homepage.showAbout,settingShowWhy:s.homepage.showWhy,settingShowContact:s.homepage.showContact,
+    settingHeroKicker:s.homepage.heroKicker,settingHeroTitle:s.homepage.heroTitle,settingHeroHighlight:s.homepage.heroHighlight,settingHeroDescription:s.homepage.heroDescription,settingHeroCta:s.homepage.heroCta,settingHeroMediaType:s.homepage.heroMediaType,settingHeroImage:s.homepage.heroImage,settingHeroVideo:s.homepage.heroVideo,
+    settingSourcingTag:s.homepage.sourcingTag,settingSourcingTitle:s.homepage.sourcingTitle,settingSourcingDescription:s.homepage.sourcingDescription,settingSourcingStep1Title:s.homepage.sourcingStep1Title,settingSourcingStep1Text:s.homepage.sourcingStep1Text,settingSourcingStep2Title:s.homepage.sourcingStep2Title,settingSourcingStep2Text:s.homepage.sourcingStep2Text,settingSourcingStep3Title:s.homepage.sourcingStep3Title,settingSourcingStep3Text:s.homepage.sourcingStep3Text,settingSourcingStep4Title:s.homepage.sourcingStep4Title,settingSourcingStep4Text:s.homepage.sourcingStep4Text,settingImportTimeline:s.homepage.importTimeline,settingImportTimelineLabel:s.homepage.importTimelineLabel,
+    settingSourceCategoriesTag:s.homepage.sourcingCategoriesTag,settingSourceCategoriesTitle:s.homepage.sourcingCategoriesTitle,settingSourceCategoriesDescription:s.homepage.sourcingCategoriesDescription,settingSourceCategory1Title:s.homepage.sourcingCategory1Title,settingSourceCategory1Text:s.homepage.sourcingCategory1Text,settingSourceCategory2Title:s.homepage.sourcingCategory2Title,settingSourceCategory2Text:s.homepage.sourcingCategory2Text,settingSourceCategory3Title:s.homepage.sourcingCategory3Title,settingSourceCategory3Text:s.homepage.sourcingCategory3Text,settingSourceCategory4Title:s.homepage.sourcingCategory4Title,settingSourceCategory4Text:s.homepage.sourcingCategory4Text,settingSourceCategoryChips:s.homepage.sourcingCategoryChips,
+    settingWhyTag:s.homepage.whyTag,settingWhyTitle:s.homepage.whyTitle,settingWhyDescription:s.homepage.whyDescription,settingWhyCheck1Title:s.homepage.whyCheck1Title,settingWhyCheck1Text:s.homepage.whyCheck1Text,settingWhyCheck2Title:s.homepage.whyCheck2Title,settingWhyCheck2Text:s.homepage.whyCheck2Text,settingWhyCheck3Title:s.homepage.whyCheck3Title,settingWhyCheck3Text:s.homepage.whyCheck3Text,settingWhyCheck4Title:s.homepage.whyCheck4Title,settingWhyCheck4Text:s.homepage.whyCheck4Text,settingWhyCheck5Title:s.homepage.whyCheck5Title,settingWhyCheck5Text:s.homepage.whyCheck5Text,settingWhyCheck6Title:s.homepage.whyCheck6Title,settingWhyCheck6Text:s.homepage.whyCheck6Text,settingContactFooterTitle:s.homepage.contactFooterTitle,settingContactFooterDescription:s.homepage.contactFooterDescription,
+    settingShowSupply:s.homepage.showSupplyFlow,settingShowAbout:s.homepage.showAbout,settingShowWhy:s.homepage.showWhy,settingShowContact:s.homepage.showContact,
     settingCatalogueTitle:s.catalogue.sectionTitle,settingShowCatalogue:s.catalogue.showCatalogue,settingShowSearch:s.catalogue.showSearch,settingShowSort:s.catalogue.showSort,settingShowCategory:s.catalogue.showCategoryFilter,settingShowSubcategory:s.catalogue.showSubcategoryFilter,
     settingLogin:s.customer.loginEnabled,settingSignup:s.customer.signupEnabled,settingNotifications:s.notifications.enabled,settingSound:s.notifications.soundEnabled,settingQuotationPdfLayout:s.pdf.quotationLayout,settingInvoicePdfLayout:s.pdf.invoiceLayout,
     settingQuoteMarginTop:s.pdf.quotation.marginTop,settingQuoteMarginRight:s.pdf.quotation.marginRight,settingQuoteMarginBottom:s.pdf.quotation.marginBottom,settingQuoteMarginLeft:s.pdf.quotation.marginLeft,settingQuoteHeaderFont:s.pdf.quotation.headerFont,settingQuoteBodyFont:s.pdf.quotation.bodyFont,settingQuoteTableFont:s.pdf.quotation.tableFont,settingQuoteTotalFont:s.pdf.quotation.totalFont,settingQuoteGrandFont:s.pdf.quotation.grandFont,settingQuoteFooterFont:s.pdf.quotation.footerFont,settingQuoteRowMin:s.pdf.quotation.rowMin,settingQuoteRowLine:s.pdf.quotation.rowLine,settingQuoteRowPad:s.pdf.quotation.rowPad,
@@ -15179,7 +15253,11 @@ window.seerviSaveAdminSettings=async function(){
   },branding:{
     companyName:seerviSettingsField('settingCompany')?.value,tagline:seerviSettingsField('settingTagline')?.value,email:seerviSettingsField('settingEmail')?.value,whatsapp:seerviSettingsField('settingWhatsapp')?.value,contact1Name:seerviSettingsField('settingContact1Name')?.value,contact1Number:seerviSettingsField('settingContact1Number')?.value,contact2Name:seerviSettingsField('settingContact2Name')?.value,contact2Number:seerviSettingsField('settingContact2Number')?.value
   },homepage:{
-    heroKicker:seerviSettingsField('settingHeroKicker')?.value,heroTitle:seerviSettingsField('settingHeroTitle')?.value,heroHighlight:seerviSettingsField('settingHeroHighlight')?.value,heroDescription:seerviSettingsField('settingHeroDescription')?.value,heroCta:seerviSettingsField('settingHeroCta')?.value,heroMediaType:seerviSettingsField('settingHeroMediaType')?.value,heroImage:seerviSettingsField('settingHeroImage')?.value,heroVideo:seerviSettingsField('settingHeroVideo')?.value,showSupplyFlow:!!seerviSettingsField('settingShowSupply')?.checked,showAbout:!!seerviSettingsField('settingShowAbout')?.checked,showWhy:!!seerviSettingsField('settingShowWhy')?.checked,showContact:!!seerviSettingsField('settingShowContact')?.checked
+    heroKicker:seerviSettingsField('settingHeroKicker')?.value,heroTitle:seerviSettingsField('settingHeroTitle')?.value,heroHighlight:seerviSettingsField('settingHeroHighlight')?.value,heroDescription:seerviSettingsField('settingHeroDescription')?.value,heroCta:seerviSettingsField('settingHeroCta')?.value,heroMediaType:seerviSettingsField('settingHeroMediaType')?.value,heroImage:seerviSettingsField('settingHeroImage')?.value,heroVideo:seerviSettingsField('settingHeroVideo')?.value,
+    sourcingTag:seerviSettingsField('settingSourcingTag')?.value,sourcingTitle:seerviSettingsField('settingSourcingTitle')?.value,sourcingDescription:seerviSettingsField('settingSourcingDescription')?.value,sourcingStep1Title:seerviSettingsField('settingSourcingStep1Title')?.value,sourcingStep1Text:seerviSettingsField('settingSourcingStep1Text')?.value,sourcingStep2Title:seerviSettingsField('settingSourcingStep2Title')?.value,sourcingStep2Text:seerviSettingsField('settingSourcingStep2Text')?.value,sourcingStep3Title:seerviSettingsField('settingSourcingStep3Title')?.value,sourcingStep3Text:seerviSettingsField('settingSourcingStep3Text')?.value,sourcingStep4Title:seerviSettingsField('settingSourcingStep4Title')?.value,sourcingStep4Text:seerviSettingsField('settingSourcingStep4Text')?.value,importTimeline:seerviSettingsField('settingImportTimeline')?.value,importTimelineLabel:seerviSettingsField('settingImportTimelineLabel')?.value,
+    sourcingCategoriesTag:seerviSettingsField('settingSourceCategoriesTag')?.value,sourcingCategoriesTitle:seerviSettingsField('settingSourceCategoriesTitle')?.value,sourcingCategoriesDescription:seerviSettingsField('settingSourceCategoriesDescription')?.value,sourcingCategory1Title:seerviSettingsField('settingSourceCategory1Title')?.value,sourcingCategory1Text:seerviSettingsField('settingSourceCategory1Text')?.value,sourcingCategory2Title:seerviSettingsField('settingSourceCategory2Title')?.value,sourcingCategory2Text:seerviSettingsField('settingSourceCategory2Text')?.value,sourcingCategory3Title:seerviSettingsField('settingSourceCategory3Title')?.value,sourcingCategory3Text:seerviSettingsField('settingSourceCategory3Text')?.value,sourcingCategory4Title:seerviSettingsField('settingSourceCategory4Title')?.value,sourcingCategory4Text:seerviSettingsField('settingSourceCategory4Text')?.value,sourcingCategoryChips:seerviSettingsField('settingSourceCategoryChips')?.value,
+    whyTag:seerviSettingsField('settingWhyTag')?.value,whyTitle:seerviSettingsField('settingWhyTitle')?.value,whyDescription:seerviSettingsField('settingWhyDescription')?.value,whyCheck1Title:seerviSettingsField('settingWhyCheck1Title')?.value,whyCheck1Text:seerviSettingsField('settingWhyCheck1Text')?.value,whyCheck2Title:seerviSettingsField('settingWhyCheck2Title')?.value,whyCheck2Text:seerviSettingsField('settingWhyCheck2Text')?.value,whyCheck3Title:seerviSettingsField('settingWhyCheck3Title')?.value,whyCheck3Text:seerviSettingsField('settingWhyCheck3Text')?.value,whyCheck4Title:seerviSettingsField('settingWhyCheck4Title')?.value,whyCheck4Text:seerviSettingsField('settingWhyCheck4Text')?.value,whyCheck5Title:seerviSettingsField('settingWhyCheck5Title')?.value,whyCheck5Text:seerviSettingsField('settingWhyCheck5Text')?.value,whyCheck6Title:seerviSettingsField('settingWhyCheck6Title')?.value,whyCheck6Text:seerviSettingsField('settingWhyCheck6Text')?.value,contactFooterTitle:seerviSettingsField('settingContactFooterTitle')?.value,contactFooterDescription:seerviSettingsField('settingContactFooterDescription')?.value,
+    showSupplyFlow:!!seerviSettingsField('settingShowSupply')?.checked,showAbout:!!seerviSettingsField('settingShowAbout')?.checked,showWhy:!!seerviSettingsField('settingShowWhy')?.checked,showContact:!!seerviSettingsField('settingShowContact')?.checked
   },catalogue:{
     sectionTitle:seerviSettingsField('settingCatalogueTitle')?.value,showCatalogue:!!seerviSettingsField('settingShowCatalogue')?.checked,showSearch:!!seerviSettingsField('settingShowSearch')?.checked,showSort:!!seerviSettingsField('settingShowSort')?.checked,showCategoryFilter:!!seerviSettingsField('settingShowCategory')?.checked,showSubcategoryFilter:!!seerviSettingsField('settingShowSubcategory')?.checked
   },customer:{loginEnabled:!!seerviSettingsField('settingLogin')?.checked,signupEnabled:!!seerviSettingsField('settingSignup')?.checked},notifications:{enabled:!!seerviSettingsField('settingNotifications')?.checked,soundEnabled:!!seerviSettingsField('settingSound')?.checked},pdf:{quotationLayout:seerviSettingsField('settingQuotationPdfLayout')?.value,invoiceLayout:seerviSettingsField('settingInvoicePdfLayout')?.value,quotation:{marginTop:Number(seerviSettingsField('settingQuoteMarginTop')?.value),marginRight:Number(seerviSettingsField('settingQuoteMarginRight')?.value),marginBottom:Number(seerviSettingsField('settingQuoteMarginBottom')?.value),marginLeft:Number(seerviSettingsField('settingQuoteMarginLeft')?.value),headerFont:Number(seerviSettingsField('settingQuoteHeaderFont')?.value),bodyFont:Number(seerviSettingsField('settingQuoteBodyFont')?.value),tableFont:Number(seerviSettingsField('settingQuoteTableFont')?.value),totalFont:Number(seerviSettingsField('settingQuoteTotalFont')?.value),grandFont:Number(seerviSettingsField('settingQuoteGrandFont')?.value),footerFont:Number(seerviSettingsField('settingQuoteFooterFont')?.value),rowMin:Number(seerviSettingsField('settingQuoteRowMin')?.value),rowLine:Number(seerviSettingsField('settingQuoteRowLine')?.value),rowPad:Number(seerviSettingsField('settingQuoteRowPad')?.value)},invoice:{marginTop:Number(seerviSettingsField('settingInvoiceMarginTop')?.value),marginRight:Number(seerviSettingsField('settingInvoiceMarginRight')?.value),marginBottom:Number(seerviSettingsField('settingInvoiceMarginBottom')?.value),marginLeft:Number(seerviSettingsField('settingInvoiceMarginLeft')?.value),headerFont:Number(seerviSettingsField('settingInvoiceHeaderFont')?.value),bodyFont:Number(seerviSettingsField('settingInvoiceBodyFont')?.value),tableFont:Number(seerviSettingsField('settingInvoiceTableFont')?.value),totalFont:Number(seerviSettingsField('settingInvoiceTotalFont')?.value),grandFont:Number(seerviSettingsField('settingInvoiceGrandFont')?.value),footerFont:Number(seerviSettingsField('settingInvoiceFooterFont')?.value),rowMin:Number(seerviSettingsField('settingInvoiceRowMin')?.value),rowLine:Number(seerviSettingsField('settingInvoiceRowLine')?.value),rowPad:Number(seerviSettingsField('settingInvoiceRowPad')?.value),headerH:Number(seerviSettingsField('settingInvoiceHeaderH')?.value),billH:Number(seerviSettingsField('settingInvoiceBillH')?.value)}},order:{whatsappNumber:seerviSettingsField('settingOrderWhatsapp')?.value},advanced:{maintenanceMode:!!seerviSettingsField('settingMaintenance')?.checked,maintenanceMessage:seerviSettingsField('settingMaintenanceMessage')?.value}});
@@ -16089,6 +16167,220 @@ function seerviShowSaveSuccess(message){
   function install(){patchOriginalSave();const ge=$id('seerviDocGstEnabled'),gr=$id('seerviDocGstRate');ge?.addEventListener('change',renderTotals);gr?.addEventListener('input',renderTotals);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
   new MutationObserver(()=>{if(!$id('seerviDocEditorStatus'))return;patchOriginalSave();}).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
+<script id="seervi-scroll-motion-v2-runtime">
+(function(){
+  'use strict';
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var homeSelectors=[
+    '#home .bw-kicker','#home h1','#home .bw-hero-copy>p','#home .bw-cta',
+    '#how-seervi-works .section-head','#how-seervi-works .sourcing-board','#how-seervi-works .sourcing-proof','#how-seervi-works .importer-live-strip','#how-seervi-works .source-request-widget',
+    '#about .section-head','#about .importer-pill','#about .source-categories','#about .source-match-widget',
+    '#why-seervi .section-head','#why-seervi .comparison-panel','#why-seervi .trust-banner',
+    '#contact .seervi-contact-brand','#contact .seervi-contact-column','#contact .seervi-footer-social-row'
+  ];
+  var nodes=[];
+  homeSelectors.forEach(function(sel){document.querySelectorAll(sel).forEach(function(el){if(nodes.indexOf(el)<0)nodes.push(el);});});
+  nodes.forEach(function(el,i){
+    el.classList.add('seervi-motion-item','seervi-motion-section');
+    el.classList.add(['seervi-shuffle-a','seervi-shuffle-b','seervi-shuffle-c','seervi-shuffle-d','seervi-shuffle-e'][i%5]);
+    el.style.setProperty('--sd',(Math.min(i%4,3)*65)+'ms');
+  });
+  /* Stagger repeated cards inside major importer widgets. */
+  document.querySelectorAll('#how-seervi-works .sourcing-board,#how-seervi-works .sourcing-proof,#about .source-match-widget,#why-seervi .comparison-panel,#why-seervi .trust-banner,#why-seervi .why-grid').forEach(function(grid){
+    grid.classList.add('seervi-stagger-grid');
+    Array.prototype.forEach.call(grid.children,function(el,i){el.style.setProperty('--i',i);});
+  });
+  document.querySelectorAll('#how-seervi-works .sourcing-proof,#about .source-match-widget,#why-seervi .trust-banner').forEach(function(el){el.classList.add('seervi-depth');});
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting)entry.target.classList.add('seervi-motion-visible');
+      else if(entry.boundingClientRect.top>window.innerHeight*1.15)entry.target.classList.remove('seervi-motion-visible');
+    });
+  },{root:null,rootMargin:'-10% 0px -10% 0px',threshold:.06});
+  nodes.forEach(function(el){io.observe(el);});
+  var ticking=false;
+  function onScroll(){
+    if(ticking)return;
+    ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      if(window.innerWidth<=600)return;
+      var h=window.innerHeight||800;
+      document.querySelectorAll('.seervi-depth').forEach(function(el){
+        var r=el.getBoundingClientRect();
+        var center=(h*.5)-(r.top+r.height*.5);
+        var shift=Math.max(-10,Math.min(10,center*.018));
+        el.style.setProperty('--depth-shift',shift.toFixed(2)+'px');
+      });
+      var route=document.querySelector('#how-seervi-works .live-route');
+      if(route){
+        var rr=route.getBoundingClientRect();
+        var p=Math.max(0,Math.min(100,((h*.82-rr.top)/(Math.max(1,rr.height+h*.35)))*100));
+        route.classList.add('seervi-route-progress');
+        route.style.setProperty('--route-progress',p.toFixed(1)+'%');
+      }
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll,{passive:true});
+  onScroll();
+})();
+</script>
+
+<style id="seervi-scroll-motion-css">
+/* ===== SEERVI SCROLL MOTION SYSTEM ===== */
+html{scroll-behavior:smooth}
+:root{--seervi-motion-ease:cubic-bezier(.22,.8,.24,1)}
+.seervi-scroll-progress{position:fixed;z-index:99998;top:0;left:0;width:100%;height:2px;pointer-events:none;transform-origin:left center;transform:scaleX(0);background:linear-gradient(90deg,#fff,#f0c66a,#fff);opacity:.9}
+body.seervi-motion-ready .seervi-reveal{opacity:0;transform:translate3d(0,34px,0);transition:opacity .8s var(--seervi-motion-ease),transform .9s var(--seervi-motion-ease);will-change:opacity,transform}
+body.seervi-motion-ready .seervi-reveal.seervi-visible{opacity:1;transform:none}
+body.seervi-motion-ready .seervi-reveal[data-motion="left"]{transform:translate3d(-42px,0,0)}
+body.seervi-motion-ready .seervi-reveal[data-motion="right"]{transform:translate3d(42px,0,0)}
+body.seervi-motion-ready .seervi-reveal[data-motion="scale"]{transform:scale(.94);}
+body.seervi-motion-ready .seervi-reveal[data-motion="scale"].seervi-visible{transform:scale(1)}
+.seervi-stagger>*{transition-delay:calc(var(--seervi-i,0) * 70ms)!important}
+.seervi-section-marker{position:absolute;left:0;top:0;width:3px;height:0;border-radius:0 0 3px 3px;background:linear-gradient(#fff,#f0c66a);transition:height 1s var(--seervi-motion-ease);opacity:.65}
+.seervi-section-marker.on{height:100%}
+.seervi-parallax{transition:transform .12s linear;will-change:transform}
+.seervi-magnetic{transition:transform .25s var(--seervi-motion-ease),box-shadow .25s ease}
+.seervi-magnetic:hover{transform:translateY(-3px)}
+@media(max-width:600px){
+  body.seervi-motion-ready .seervi-reveal{transform:translate3d(0,22px,0);transition-duration:.65s}
+  body.seervi-motion-ready .seervi-reveal[data-motion="left"]{transform:translate3d(-24px,0,0)}
+  body.seervi-motion-ready .seervi-reveal[data-motion="right"]{transform:translate3d(24px,0,0)}
+  .seervi-scroll-progress{height:2px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .seervi-scroll-progress,.seervi-section-marker{display:none!important}
+  body.seervi-motion-ready .seervi-reveal,
+  body.seervi-motion-ready .seervi-reveal[data-motion="left"],
+  body.seervi-motion-ready .seervi-reveal[data-motion="right"],
+  body.seervi-motion-ready .seervi-reveal[data-motion="scale"]{opacity:1;transform:none!important;transition:none!important}
+  .seervi-parallax{transform:none!important}
+}
+</style>
+<script id="seervi-scroll-motion-system">
+(function(){
+  'use strict';
+  const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const homeSelectors=[
+    '#home', '#how-seervi-works', '#about', '#why-seervi', '#contact'
+  ];
+  const revealGroups=[
+    '#home .bw-hero-copy',
+    '#how-seervi-works .section-head', '#how-seervi-works .sourcing-hero-widget', '#how-seervi-works .importer-live-strip', '#how-seervi-works .source-request-widget',
+    '#about .section-head', '#about .importer-pill-grid', '#about .source-categories', '#about .source-match-widget',
+    '#why-seervi .section-head', '#why-seervi .comparison-widget', '#why-seervi .trust-banner',
+    '#contact .seervi-contact-inner', '#contact .seervi-contact-nav', '#contact .seervi-contact-main', '#contact .seervi-contact-bottom'
+  ];
+
+  function setupReveal(){
+    document.body.classList.add('seervi-motion-ready');
+    const nodes=[];
+    revealGroups.forEach(sel=>document.querySelectorAll(sel).forEach(el=>{
+      if(!el.classList.contains('seervi-reveal')) el.classList.add('seervi-reveal');
+      nodes.push(el);
+    }));
+
+    // Section-level reveal for anything that did not match a more specific group.
+    homeSelectors.forEach(sel=>{
+      document.querySelectorAll(sel).forEach(section=>{
+        if(section.id==='home') return;
+        if(!section.classList.contains('seervi-reveal')) section.classList.add('seervi-reveal');
+      });
+    });
+
+    // Stagger important cards/items without touching functional controls.
+    const staggerGroups=[
+      '#how-seervi-works .sourcing-step',
+      '#about .importer-pill',
+      '#about .source-chip',
+      '#why-seervi .quote-row',
+      '#why-seervi .trust-mini'
+    ];
+    staggerGroups.forEach(sel=>{
+      const items=[...document.querySelectorAll(sel)];
+      if(!items.length) return;
+      const parent=items[0].parentElement;
+      if(parent) parent.classList.add('seervi-stagger');
+      items.forEach((el,i)=>{
+        el.classList.add('seervi-reveal');
+        el.style.setProperty('--seervi-i',Math.min(i,7));
+        if(!el.dataset.motion) el.dataset.motion=(i%2===0?'up':'scale');
+      });
+    });
+
+    if(reduce){
+      document.querySelectorAll('.seervi-reveal').forEach(el=>el.classList.add('seervi-visible'));
+      return;
+    }
+    const io=new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('seervi-visible');
+          entry.target.dispatchEvent(new CustomEvent('seervi:revealed'));
+          io.unobserve(entry.target);
+        }
+      });
+    },{threshold:.12,rootMargin:'0px 0px -7% 0px'});
+    document.querySelectorAll('.seervi-reveal').forEach(el=>io.observe(el));
+  }
+
+  function setupProgress(){
+    if(reduce) return;
+    const bar=document.createElement('div');
+    bar.className='seervi-scroll-progress';
+    bar.setAttribute('aria-hidden','true');
+    document.body.appendChild(bar);
+    let ticking=false;
+    const update=()=>{
+      const doc=document.documentElement;
+      const max=Math.max(1,doc.scrollHeight-window.innerHeight);
+      bar.style.transform='scaleX('+Math.min(1,Math.max(0,window.scrollY/max))+')';
+      ticking=false;
+    };
+    window.addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});
+    window.addEventListener('resize',update,{passive:true});
+    update();
+  }
+
+  function setupHero(){
+    const hero=document.querySelector('#home .bw-hero-image');
+    if(!hero||reduce) return;
+    let ticking=false;
+    const update=()=>{
+      const y=Math.min(window.scrollY,window.innerHeight*.65);
+      hero.style.transform='translate3d(0,'+(y*.10)+'px,0) scale(1.025)';
+      ticking=false;
+    };
+    window.addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});
+    update();
+  }
+
+  function setupMarkers(){
+    if(reduce) return;
+    ['#how-seervi-works','#about','#why-seervi','#contact'].forEach(sel=>{
+      const section=document.querySelector(sel);
+      if(!section||section.querySelector('.seervi-section-marker')) return;
+      if(getComputedStyle(section).position==='static') section.style.position='relative';
+      const marker=document.createElement('i');
+      marker.className='seervi-section-marker';
+      marker.setAttribute('aria-hidden','true');
+      section.appendChild(marker);
+      const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){marker.classList.add('on');io.disconnect()}}),{threshold:.18});
+      io.observe(section);
+    });
+  }
+
+  function setup(){
+    // Wait until the existing homepage DOM is ready, then layer motion on top.
+    setupReveal(); setupProgress(); setupHero(); setupMarkers();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',setup,{once:true}); else setup();
 })();
 </script>
 </body>
