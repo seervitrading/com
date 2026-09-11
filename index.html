@@ -5535,7 +5535,15 @@ body.seervi-ai-open .float-support{display:none!important}
 </div>
   </div>
 </div>
-</div><script>
+</div><style id="seervi-nonblocking-toast-style">
+#seerviNonBlockingToast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,18px);opacity:0;visibility:hidden;z-index:99999;max-width:min(440px,calc(100vw - 28px));padding:12px 16px;border:1px solid #3a414b;border-radius:12px;background:#11161c;color:#f4f6f8;box-shadow:0 14px 40px #0009;font:600 13px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;pointer-events:none;transition:opacity .18s ease,transform .18s ease,visibility .18s ease;text-align:center}
+#seerviNonBlockingToast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
+</style>
+<div id="seerviNonBlockingToast" role="status" aria-live="polite" aria-atomic="true"></div>
+<script id="seervi-nonblocking-alert-bridge">
+(function(){var timer=null;window.seerviToastAlert=function(message){var el=document.getElementById('seerviNonBlockingToast');if(!el)return;el.textContent=String(message==null?'':message);el.classList.add('show');clearTimeout(timer);timer=setTimeout(function(){el.classList.remove('show');},2600);};})();
+</script>
+<script>
 let seerviCart = JSON.parse(localStorage.getItem('seerviCart') || '[]');
 
 function saveCart(){
@@ -5698,7 +5706,7 @@ function renderCartTotalsOnly(){
 function validateQuoteRates(){
   const missing=seerviCart.filter(item=>!(Number(item.rate)>0));
   if(missing.length){
-    alert('Please enter a rate for every selected item before downloading the quotation PDF.');
+    seerviToastAlert('Please enter a rate for every selected item before downloading the quotation PDF.');
     const idx=seerviCart.findIndex(item=>!(Number(item.rate)>0));
     setTimeout(()=>document.getElementById('cartRate'+idx)?.focus(),50);
     return false;
@@ -5723,7 +5731,7 @@ function getQuoteCustomer(){
 function validateQuoteCustomer(){
   const p=getSelectedCartParty();
   if(!p || !p.id){
-    alert('Please select a party from the cart first. If the party is new, add it in CRM and then select it here.');
+    seerviToastAlert('Please select a party from the cart first. If the party is new, add it in CRM and then select it here.');
     return false;
   }
   return true;
@@ -5758,7 +5766,7 @@ function downloadCartPDF(){
   if(!validateQuoteCustomer() || !validateQuoteRates()) return;
 
   if(!window.jspdf || !window.jspdf.jsPDF){
-    alert('PDF engine is not available. Please check your internet connection and try again.');
+    seerviToastAlert('PDF engine is not available. Please check your internet connection and try again.');
     return;
   }
 
@@ -6099,7 +6107,7 @@ async function sendCartToWhatsApp(){
       const saved=await window.saveCustomerCartRequest();
       if(saved?.quoteNo) window.__lastCustomerRequestQuoteNo=saved.quoteNo;
     }catch(err){
-      alert(err?.message||'Could not save your enquiry to Seervi Cloud. Please try again.');
+      seerviToastAlert(err?.message||'Could not save your enquiry to Seervi Cloud. Please try again.');
       return;
     }
   }
@@ -6107,7 +6115,7 @@ async function sendCartToWhatsApp(){
   if(admin){
     const party = getSelectedCartParty();
     if(!party || !party.id){
-      alert('Please select a party from the cart first. New parties must be created in CRM before making the quotation.');
+      seerviToastAlert('Please select a party from the cart first. New parties must be created in CRM before making the quotation.');
       return;
     }
 
@@ -6279,7 +6287,7 @@ document.addEventListener('keydown',function(e){
   if(typeof originalDownload === 'function'){
     window.downloadCartPDF = function(){
       if(typeof isQuotationMode==='function' && !isQuotationMode()){
-        alert('Quotation Mode is locked.');
+        seerviToastAlert('Quotation Mode is locked.');
         return;
       }
       return originalDownload();
@@ -6835,12 +6843,12 @@ function addManualQuoteItem(){
   const rate=parseFloat(rateRaw);
 
   if(!name){
-    alert('Please enter the product / item name.');
+    seerviToastAlert('Please enter the product / item name.');
     document.getElementById('manualItemName')?.focus();
     return;
   }
   if(!Number.isFinite(rate) || rate<0){
-    alert('Please enter a valid rate.');
+    seerviToastAlert('Please enter a valid rate.');
     document.getElementById('manualItemRate')?.focus();
     return;
   }
@@ -7111,7 +7119,7 @@ function seerviStartPermissionWatch(user, mode, partyId=''){
       goHomeAfterAuth();
     }
     window.Seervi?.notify?.play('signout');
-    alert(disabled
+    seerviToastAlert(disabled
       ? 'Your account has been disabled by the Master Admin. You have been logged out.'
       : (mode==='admin'
         ? 'Your Admin Permission was revoked. You have been logged out. Please login again for normal User access.'
@@ -7348,13 +7356,13 @@ window.crmClearSelectedParty = () => { crmPartyId=''; renderCartPartySelector();
 Seervi.expose('crmRefreshParties', crmRefreshParties);
 window.crmSelectPartyFromCart = async (id) => {
   if(!crmUser){
-    alert('Connect CRM first.');
+    seerviToastAlert('Connect CRM first.');
     openCRM();
     return;
   }
   const p=crmParties.find(x=>x.id===id);
   if(!p){
-    alert('Party not found. Refresh CRM and try again.');
+    seerviToastAlert('Party not found. Refresh CRM and try again.');
     return;
   }
   crmPartyId=id;
@@ -8086,7 +8094,7 @@ window.customerRefreshDashboard=async function(){
     seerviShowSaveSuccess('Customer dashboard refreshed.');
   }catch(e){
     console.error('Customer dashboard refresh failed:',e);
-    alert('Could not refresh dashboard: '+(e?.message||'Please try again.'));
+    seerviToastAlert('Could not refresh dashboard: '+(e?.message||'Please try again.'));
   }finally{if(btn){btn.disabled=false;btn.textContent='↻ REFRESH';}}
 };
 
@@ -8177,10 +8185,10 @@ window.customerEditProfile=function(){
 window.customerSaveProfile=async function(){
   if(!customerUser||!customerParty)return;
   const gstin=String($('custEditGstin')?.value||'').trim().toUpperCase().replace(/\s+/g,'');
-  if(gstin && !/^[0-9A-Z]{15}$/.test(gstin)){alert('Please enter a valid 15-character GSTIN or leave it blank.');return;}
+  if(gstin && !/^[0-9A-Z]{15}$/.test(gstin)){seerviToastAlert('Please enter a valid 15-character GSTIN or leave it blank.');return;}
   const payload={name:$('custEditName').value.trim(),company:$('custEditCompany').value.trim(),phone:$('custEditPhone').value.trim(),city:$('custEditCity').value.trim(),address:$('custEditAddress').value.trim(),gstin,customerUid:customerUser.uid,accountType:'customer',publicSignup:true,adminPermissionGranted:!!customerParty.adminPermissionGranted,adminPermissionGrantedAt:customerParty.adminPermissionGrantedAt||null,adminPermissionGrantedBy:customerParty.adminPermissionGrantedBy||null,accountDisabled:!!customerParty.accountDisabled,updatedAt:serverTimestamp()};
-  if(!payload.name||!payload.phone||!payload.city){alert('Party name, phone and city are required.');return;}
-  try{await updateDoc(doc(publicSignupDb,'parties',customerParty.id),payload);await customerLoadDashboard();$('customerProfileEdit').hidden=true;seerviShowSaveSuccess('Profile updated successfully.');}catch(e){alert('Profile update failed: '+(e?.message||'Check Firebase rules.'));}
+  if(!payload.name||!payload.phone||!payload.city){seerviToastAlert('Party name, phone and city are required.');return;}
+  try{await updateDoc(doc(publicSignupDb,'parties',customerParty.id),payload);await customerLoadDashboard();$('customerProfileEdit').hidden=true;seerviShowSaveSuccess('Profile updated successfully.');}catch(e){seerviToastAlert('Profile update failed: '+(e?.message||'Check Firebase rules.'));}
 };
 
 window.customerPortalTab=function(tab){
@@ -8361,7 +8369,7 @@ window.accountDashboardStock=function(){
   closeAccountDashboard();
   requestAnimationFrame(()=>{
     try{ensureAdminUtilityModals();toggleInventoryStock(true);}
-    catch(e){console.error('STOCK launcher failed',e);alert('Could not open Stock: '+(e?.message||'workspace unavailable.'));}
+    catch(e){console.error('STOCK launcher failed',e);seerviToastAlert('Could not open Stock: '+(e?.message||'workspace unavailable.'));}
   });
 };
 window.accountDashboardNewParty=function(){
@@ -8371,7 +8379,7 @@ window.accountDashboardNewParty=function(){
   closeAccountDashboard();
   requestAnimationFrame(()=>{
     try{ensureAdminUtilityModals();crmNewParty();}
-    catch(e){console.error('NEW PARTY launcher failed',e);alert('Could not open New Party: '+(e?.message||'workspace unavailable.'));}
+    catch(e){console.error('NEW PARTY launcher failed',e);seerviToastAlert('Could not open New Party: '+(e?.message||'workspace unavailable.'));}
   });
 };
 window.accountDashboardBackup=function(){
@@ -8598,7 +8606,7 @@ window.accountDashboardSignOut=function(){
   try{if(typeof closeAdminStock==='function')closeAdminStock();}catch(e){console.warn('Stock close during sign-out:',e);}
   if(typeof crmSignOut==='function') return crmSignOut();
   console.error('crmSignOut is unavailable.');
-  alert('Sign out is temporarily unavailable. Please refresh once and try again.');
+  seerviToastAlert('Sign out is temporarily unavailable. Please refresh once and try again.');
 };
 window.accountDashboardEditProfile=function(){
   closeAccountDashboard();
@@ -8821,7 +8829,7 @@ window.crmSignOut = async function(){
     window.Seervi?.notify?.play('signout');
   }
   if(logoutError){
-    alert('Logout could not be confirmed by Firebase. Please check your internet connection and try again.');
+    seerviToastAlert('Logout could not be confirmed by Firebase. Please check your internet connection and try again.');
   }
 };
 
@@ -8932,7 +8940,7 @@ window.crmLoadSavedPartyForEdit=function(id){
 };
 
 window.crmToggleAdminPermission=async function(id){
-  if(!crmUser || !isMasterAdmin(crmUser)){alert('Only the Master Admin can grant or revoke Admin Permission.');return;}
+  if(!crmUser || !isMasterAdmin(crmUser)){seerviToastAlert('Only the Master Admin can grant or revoke Admin Permission.');return;}
   const party=crmParties.find(p=>p.id===id);
   if(!party)return;
   const grant=!party.adminPermissionGranted;
@@ -8969,12 +8977,12 @@ window.crmToggleAdminPermission=async function(id){
     seerviShowSaveSuccess(grant?'Admin Permission granted successfully.':'Admin Permission revoked successfully.');
   }catch(e){
     console.error('Admin permission update failed:',e);
-    alert('Could not update Admin Permission: '+(e?.message||'Check Firebase rules.'));
+    seerviToastAlert('Could not update Admin Permission: '+(e?.message||'Check Firebase rules.'));
   }
 };
 
 window.crmToggleAccountDisabled=async function(id){
-  if(!crmUser || !isMasterAdmin(crmUser)){alert('Only the Master Admin can disable or enable accounts.');return;}
+  if(!crmUser || !isMasterAdmin(crmUser)){seerviToastAlert('Only the Master Admin can disable or enable accounts.');return;}
   const party=crmParties.find(p=>p.id===id);
   if(!party)return;
   const disable=!party.accountDisabled;
@@ -9005,7 +9013,7 @@ window.crmToggleAccountDisabled=async function(id){
     seerviShowSaveSuccess(disable?'Account disabled successfully.':'Account enabled successfully.');
   }catch(e){
     console.error('Account disable/enable failed:',e);
-    alert('Could not update account status: '+(e?.message||'Check Firebase rules.'));
+    seerviToastAlert('Could not update account status: '+(e?.message||'Check Firebase rules.'));
   }
 };
 
@@ -9067,8 +9075,8 @@ window.crmSaveParty = async function(){
     gstin:String($('crmPartyGstin')?.value||'').trim().toUpperCase().replace(/\s+/g,''),
     updatedAt:serverTimestamp()
   };
-  if(!data.name && !data.company){alert('Enter at least Party Name or Shop / Company.');return;}
-  if(data.gstin && !/^[0-9A-Z]{15}$/.test(data.gstin)){alert('Please enter a valid 15-character GSTIN or leave it blank.');return;}
+  if(!data.name && !data.company){seerviToastAlert('Enter at least Party Name or Shop / Company.');return;}
+  if(data.gstin && !/^[0-9A-Z]{15}$/.test(data.gstin)){seerviToastAlert('Please enter a valid 15-character GSTIN or leave it blank.');return;}
   try{
     if(crmPartyId){
       await setDoc(doc(db,'parties',crmPartyId),data,{merge:true});
@@ -9089,7 +9097,7 @@ window.crmSaveParty = async function(){
     if($('crmPartyMaster')) $('crmPartyMaster').hidden=true;
     if(typeof renderCartPartySelector==='function') renderCartPartySelector();
   }catch(e){
-    alert('Could not save party: '+(e?.message||'Check Firestore rules.'));
+    seerviToastAlert('Could not save party: '+(e?.message||'Check Firestore rules.'));
   }
 };
 
@@ -9443,7 +9451,7 @@ window.crmLoadGlobalAdmin=async function(force=false){
     crmRenderGlobalAdmin();
     renderCartPartySelector();
   }catch(e){
-    alert('Admin data load failed: '+(e?.message||'Check Firestore rules.'));
+    seerviToastAlert('Admin data load failed: '+(e?.message||'Check Firestore rules.'));
   }
 };
 
@@ -9621,8 +9629,8 @@ window.crmEditQuote=async function(id){
   if(typeof seerviSetAdminQuoteReturnState==='function') seerviSetAdminQuoteReturnState();
   if(!crmUser){crmShowLogin();return;}
   const q=adminGlobalQuotes.find(x=>x.id===id) || crmQuotes.find(x=>x.id===id);
-  if(!q){alert('Quotation not found. Refresh the Admin Panel.');return;}
-  if(!q.partyId){alert('This quotation has no linked party.');return;}
+  if(!q){seerviToastAlert('Quotation not found. Refresh the Admin Panel.');return;}
+  if(!q.partyId){seerviToastAlert('This quotation has no linked party.');return;}
 
   crmEditingQuoteId=id;
   seerviCart=(q.items||[]).map(x=>({
@@ -9767,7 +9775,7 @@ window.crmSetPartyLedgerFilter=function(range){
 
 window.crmViewPartyLedger=function(partyId){
   const party=adminGlobalParties.find(p=>p.id===partyId) || crmParties.find(p=>p.id===partyId);
-  if(!party){alert('Party not found. Refresh the Admin Panel.');return;}
+  if(!party){seerviToastAlert('Party not found. Refresh the Admin Panel.');return;}
 
   const billTx=(seerviAdminPanelMode==='invoices'?adminGlobalInvoices:adminGlobalQuotes)
     .filter(x=>x.partyId===partyId)
@@ -9821,7 +9829,7 @@ window.crmViewPartyLedger=function(partyId){
 
 window.crmDownloadPartyLedger=async function(){
   const state=crmPartyLedgerState;
-  if(!state.party){alert('Open a party ledger first.');return;}
+  if(!state.party){seerviToastAlert('Open a party ledger first.');return;}
 
   const tx=state.transactions.filter(x=>crmPartyLedgerInRange(crmPartyLedgerDate(x),state.filter));
   const party=state.party;
@@ -9830,7 +9838,7 @@ window.crmDownloadPartyLedger=async function(){
   const outstanding=debit-credit;
 
   if(!window.jspdf || !window.jspdf.jsPDF){
-    alert('PDF engine is not available. Please check your internet connection and try again.');
+    seerviToastAlert('PDF engine is not available. Please check your internet connection and try again.');
     return;
   }
 
@@ -9911,7 +9919,7 @@ window.crmDownloadPartyLedger=async function(){
     const filename='Seervi_Ledger_'+String(party.company||party.name||'Party').replace(/[^a-z0-9]+/gi,'_')+'_'+state.filter+'.pdf';
     doc.save(filename);
   }catch(e){
-    alert('Ledger PDF failed: '+(e?.message||'Please try again.'));
+    seerviToastAlert('Ledger PDF failed: '+(e?.message||'Please try again.'));
   }
 };
 
@@ -9952,14 +9960,14 @@ window.crmSaveQuoteStatus=async function(){
     if(meta && !meta.textContent.includes('·')) meta.textContent=crmQuoteStatusLabel(status);
     seerviShowSaveSuccess('Quotation status updated successfully.');
   }catch(e){
-    alert('Could not update quotation status: '+(e?.message||'Check Firestore rules.'));
+    seerviToastAlert('Could not update quotation status: '+(e?.message||'Check Firestore rules.'));
   }
 };
 
 window.crmViewQuote=function(id){
   if($('crmQuoteViewStatusBar')) $('crmQuoteViewStatusBar').hidden=false;
   const q=adminGlobalQuotes.find(x=>x.id===id) || crmQuotes.find(x=>x.id===id);
-  if(!q){alert('Quotation not found. Refresh the Admin Panel.');return;}
+  if(!q){seerviToastAlert('Quotation not found. Refresh the Admin Panel.');return;}
 
   const party=adminGlobalParties.find(p=>p.id===q.partyId) || crmParties.find(p=>p.id===q.partyId);
   const title=$('crmQuoteViewTitle');
@@ -10022,14 +10030,14 @@ window.crmDownloadQuote=async function(id){
   if(!crmUser){crmShowLogin();return;}
 
   const q=adminGlobalQuotes.find(x=>x.id===id) || crmQuotes.find(x=>x.id===id);
-  if(!q){alert('Quotation not found. Refresh the Admin Panel.');return;}
+  if(!q){seerviToastAlert('Quotation not found. Refresh the Admin Panel.');return;}
 
   const party=adminGlobalParties.find(p=>p.id===q.partyId) ||
               crmParties.find(p=>p.id===q.partyId) ||
               q.customer || {};
 
   if(!window.jspdf || !window.jspdf.jsPDF){
-    alert('PDF engine is not available. Please check your internet connection and try again.');
+    seerviToastAlert('PDF engine is not available. Please check your internet connection and try again.');
     return;
   }
 
@@ -10255,18 +10263,18 @@ window.crmDownloadQuote=async function(id){
     doc.save(filename);
   }catch(e){
     console.error('Saved quotation PDF error:',e);
-    alert('Could not generate the quotation PDF. Please try again.');
+    seerviToastAlert('Could not generate the quotation PDF. Please try again.');
   }
 };
 
 window.customerDownloadQuote=async function(id){
   const q=customerQuotes.find(x=>x.id===id);
-  if(!q){alert('Quotation not found. Please refresh your Customer Portal.');return;}
+  if(!q){seerviToastAlert('Quotation not found. Please refresh your Customer Portal.');return;}
 
   const party=customerParty || q.customer || {};
 
   if(!window.jspdf || !window.jspdf.jsPDF){
-    alert('PDF engine is not available. Please check your internet connection and try again.');
+    seerviToastAlert('PDF engine is not available. Please check your internet connection and try again.');
     return;
   }
 
@@ -10492,7 +10500,7 @@ window.customerDownloadQuote=async function(id){
     doc.save(filename);
   }catch(e){
     console.error('Saved quotation PDF error:',e);
-    alert('Could not generate the quotation PDF. Please try again.');
+    seerviToastAlert('Could not generate the quotation PDF. Please try again.');
   }
 };
 
@@ -10575,7 +10583,7 @@ window.saveGstProfile=async function(){
   const gstNumber=seerviGstField('gstNumber')?.value.trim().toUpperCase()||'';
   const address=seerviGstField('gstAddress')?.value.trim()||'';
   if(!businessName||!gstNumber||!address){
-    alert('Business / Legal Name, GSTIN and Address are required.');
+    seerviToastAlert('Business / Legal Name, GSTIN and Address are required.');
     return;
   }
   const s=seerviGstProfileClean({
@@ -11032,8 +11040,8 @@ function seerviCollectInvoiceInputModal(){
 }
 function seerviSubmitInvoiceInputModal(){
   const data=seerviCollectInvoiceInputModal();
-  if(seerviInvoiceInputMode==='create' && !data.invoiceNo){alert('Invoice number is required.');return;}
-  if(seerviInvoiceInputMode==='edit' && !data.invoiceNo){alert('Invoice number is required.');return;}
+  if(seerviInvoiceInputMode==='create' && !data.invoiceNo){seerviToastAlert('Invoice number is required.');return;}
+  if(seerviInvoiceInputMode==='edit' && !data.invoiceNo){seerviToastAlert('Invoice number is required.');return;}
   const modal=$('seerviInvoiceInputModal');
   if(modal){modal.classList.remove('show');modal.setAttribute('aria-hidden','true');}
   if(seerviInvoiceInputResolver){const r=seerviInvoiceInputResolver;seerviInvoiceInputResolver=null;r(data);}
@@ -11046,13 +11054,13 @@ window.seerviCloseInvoiceInputModal=seerviCloseInvoiceInputModal;
 window.crmConvertQuoteToInvoice=async function(id){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
   const q=adminGlobalQuotes.find(x=>x.id===id);
-  if(!q){alert('Quotation not found. Refresh the Admin Panel.');return;}
-  if(q.invoiceNo){alert('This quotation is already converted to invoice '+q.invoiceNo+'.');return;}
-  if(!q.items?.length){alert('This quotation has no items.');return;}
+  if(!q){seerviToastAlert('Quotation not found. Refresh the Admin Panel.');return;}
+  if(q.invoiceNo){seerviToastAlert('This quotation is already converted to invoice '+q.invoiceNo+'.');return;}
+  if(!q.items?.length){seerviToastAlert('This quotation has no items.');return;}
 
   let profile;
   try{profile=await seerviLoadInvoiceProfile();}
-  catch(e){alert(e.message||'Please save GST Profile first.');return;}
+  catch(e){seerviToastAlert(e.message||'Please save GST Profile first.');return;}
 
   let suggested='';
   try{suggested=await seerviGetNextInvoiceNumber();}catch(e){console.warn('Could not calculate next invoice number:',e);}
@@ -11070,7 +11078,7 @@ window.crmConvertQuoteToInvoice=async function(id){
   });
   if(!inputData)return;
   const invoiceNo=String(inputData.invoiceNo||'').trim();
-  if(await seerviInvoiceNumberExists(invoiceNo)){alert('Invoice number '+invoiceNo+' already exists. Please use another number.');return;}
+  if(await seerviInvoiceNumberExists(invoiceNo)){seerviToastAlert('Invoice number '+invoiceNo+' already exists. Please use another number.');return;}
   const ewayBillNo=String(inputData.ewayBillNo||'').trim();
 
   const sourceParty=adminGlobalParties.find(p=>p.id===q.partyId) || q.customer || {};
@@ -11168,25 +11176,25 @@ window.crmConvertQuoteToInvoice=async function(id){
     seerviGenerateSaleInvoicePDF(invoice,profile);
   }catch(e){
     console.error('Invoice conversion failed:',e);
-    alert('Could not convert quotation to invoice: '+(e?.message||'Check Firebase rules.'));
+    seerviToastAlert('Could not convert quotation to invoice: '+(e?.message||'Check Firebase rules.'));
   }
 };
 
 window.crmDownloadInvoiceByQuotation=async function(id){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
   const q=adminGlobalQuotes.find(x=>x.id===id) || crmQuotes.find(x=>x.id===id);
-  if(!q){alert('Quotation not found. Refresh the Admin Panel.');return;}
-  if(!q.invoiceNo){alert('This quotation has not been converted to an invoice yet.');return;}
-  if(!q.invoiceId){alert('Invoice record link is missing for '+q.invoiceNo+'.');return;}
+  if(!q){seerviToastAlert('Quotation not found. Refresh the Admin Panel.');return;}
+  if(!q.invoiceNo){seerviToastAlert('This quotation has not been converted to an invoice yet.');return;}
+  if(!q.invoiceId){seerviToastAlert('Invoice record link is missing for '+q.invoiceNo+'.');return;}
   try{
     const snap=await getDoc(doc(db,SEERVI_INVOICE_COLLECTION,q.invoiceId));
-    if(!snap.exists()){alert('Invoice record is missing from Firebase.');return;}
+    if(!snap.exists()){seerviToastAlert('Invoice record is missing from Firebase.');return;}
     const invoice={id:snap.id,...snap.data()};
     const profile=invoice.gstProfile || await seerviLoadInvoiceProfile();
     seerviGenerateSaleInvoicePDF(invoice,profile);
   }catch(e){
     console.error('Invoice PDF failed:',e);
-    alert('Invoice PDF failed: '+(e?.message||'Check Firebase connection.'));
+    seerviToastAlert('Invoice PDF failed: '+(e?.message||'Check Firebase connection.'));
   }
 };
 
@@ -11196,13 +11204,13 @@ window.crmEditInvoice=async function(id){
 
   // Edit the Firebase invoice directly. Never require the source quotation.
   const inv=adminGlobalInvoices.find(x=>x.id===id);
-  if(!inv){alert('Invoice not found. Refresh the Admin Panel.');return;}
+  if(!inv){seerviToastAlert('Invoice not found. Refresh the Admin Panel.');return;}
 
   const partyId=inv.partyId||'';
   const party=adminGlobalParties.find(p=>p.id===partyId) ||
                crmParties.find(p=>p.id===partyId);
   if(!party){
-    alert('The invoice party could not be found. Refresh the Admin Panel.');
+    seerviToastAlert('The invoice party could not be found. Refresh the Admin Panel.');
     return;
   }
 
@@ -11231,9 +11239,9 @@ window.crmEditInvoice=async function(id){
   });
   if(!editData)return;
   const editedInvoiceNo=String(editData.invoiceNo||'').trim();
-  if(!editedInvoiceNo){alert('Invoice number is required.');return;}
+  if(!editedInvoiceNo){seerviToastAlert('Invoice number is required.');return;}
   if(editedInvoiceNo!==currentInvoiceNo && await seerviInvoiceNumberExistsExcept(editedInvoiceNo,id)){
-    alert('Invoice number '+editedInvoiceNo+' already exists. Please use another number.');
+    seerviToastAlert('Invoice number '+editedInvoiceNo+' already exists. Please use another number.');
     return;
   }
 
@@ -11296,7 +11304,7 @@ window.crmDeleteInvoice=async function(id){
   if(!crmUser || !isAuthorisedAdmin(crmUser)) return;
 
   const inv=adminGlobalInvoices.find(x=>x.id===id);
-  if(!inv){alert('Invoice not found. Refresh the Admin Panel.');return;}
+  if(!inv){seerviToastAlert('Invoice not found. Refresh the Admin Panel.');return;}
 
   const invoiceNo=inv.invoiceNo||'this invoice';
   if(!confirm('Delete Sale Invoice '+invoiceNo+'? The linked quotation will remain saved, but its invoice link will be cleared.')) return;
@@ -11357,14 +11365,14 @@ window.crmDeleteInvoice=async function(id){
     );
   }catch(e){
     console.error('Invoice delete failed:',e);
-    alert('Invoice delete failed: '+(e?.message||'Check Firestore rules.'));
+    seerviToastAlert('Invoice delete failed: '+(e?.message||'Check Firestore rules.'));
   }
 };
 
 window.crmViewInvoice=function(id){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
   const inv=adminGlobalInvoices.find(x=>x.id===id);
-  if(!inv){alert('Invoice not found. Refresh the Admin Panel.');return;}
+  if(!inv){seerviToastAlert('Invoice not found. Refresh the Admin Panel.');return;}
   const party=adminGlobalParties.find(p=>p.id===inv.partyId);
   const title=$('crmQuoteViewTitle'),meta=$('crmQuoteViewMeta'),body=$('crmQuoteViewBody'),dl=$('crmQuoteViewDownload');
   if(!title||!meta||!body||!dl)return;
@@ -11391,13 +11399,13 @@ window.crmDownloadInvoiceById=async function(id){
   if(!crmUser || !isAuthorisedAdmin(crmUser)){openAdminPanel();return;}
   try{
     const snap=await getDoc(doc(db,SEERVI_INVOICE_COLLECTION,id));
-    if(!snap.exists()){alert('Invoice record is missing from Firebase.');return;}
+    if(!snap.exists()){seerviToastAlert('Invoice record is missing from Firebase.');return;}
     const invoice={id:snap.id,...snap.data()};
     const profile=invoice.gstProfile || await seerviLoadInvoiceProfile();
     seerviGenerateSaleInvoicePDF(invoice,profile);
   }catch(e){
     console.error('Invoice PDF failed:',e);
-    alert('Invoice PDF failed: '+(e?.message||'Check Firebase connection.'));
+    seerviToastAlert('Invoice PDF failed: '+(e?.message||'Check Firebase connection.'));
   }
 };
 
@@ -11492,7 +11500,7 @@ window.crmConfirmDeleteParty=async function(){
   }catch(e){
     console.error('Party delete failed:',e);
     if(submit){submit.disabled=false;submit.textContent='DELETE';}
-    alert('Delete failed: '+(e?.message||'Check Firestore rules.'));
+    seerviToastAlert('Delete failed: '+(e?.message||'Check Firestore rules.'));
   }
 };
 
@@ -11516,7 +11524,7 @@ window.crmDeleteQuote=async function(id){
     await crmLoadGlobalAdmin();
     seerviShowSaveSuccess('Quotation deleted successfully.');
   }catch(e){
-    alert('Delete failed: '+(e?.message||'Check Firestore rules.'));
+    seerviToastAlert('Delete failed: '+(e?.message||'Check Firestore rules.'));
   }
 };
 
@@ -11529,19 +11537,19 @@ window.crmDeleteLedger=async function(id){
     await crmLoadGlobalAdmin();
     seerviShowSaveSuccess('Ledger entry deleted successfully.');
   }catch(e){
-    alert('Delete failed: '+(e?.message||'Check Firestore rules.'));
+    seerviToastAlert('Delete failed: '+(e?.message||'Check Firestore rules.'));
   }
 };
 
 window.crmSaveCurrentQuote = async function(){
   if(!crmUser){
-    alert('Admin login required. Please sign in from ADMIN PANEL first.');
+    seerviToastAlert('Admin login required. Please sign in from ADMIN PANEL first.');
     openAdminPanel();
     return;
   }
-  if(!seerviCart.length){alert('Add at least one item to the cart first.');return;}
+  if(!seerviCart.length){seerviToastAlert('Add at least one item to the cart first.');return;}
   if(!crmPartyId){
-    alert('Please select the party in the cart first. New parties must be created in CRM before making the quotation.');
+    seerviToastAlert('Please select the party in the cart first. New parties must be created in CRM before making the quotation.');
     return;
   }
 
@@ -11549,7 +11557,7 @@ window.crmSaveCurrentQuote = async function(){
   const now=new Date();
   const selectedParty=crmParties.find(p=>p.id===crmPartyId);
   if(!selectedParty){
-    alert('Selected party could not be found in CRM. Refresh and select the party again.');
+    seerviToastAlert('Selected party could not be found in CRM. Refresh and select the party again.');
     return;
   }
   const customer={
@@ -11583,7 +11591,7 @@ window.crmSaveCurrentQuote = async function(){
     // EDIT SALE INVOICE DIRECTLY when its original quotation is no longer available.
     if(crmEditingInvoiceId){
       const oldInv=adminGlobalInvoices.find(x=>x.id===crmEditingInvoiceId);
-      if(!oldInv){alert('Original invoice could not be found. Refresh and try again.');return;}
+      if(!oldInv){seerviToastAlert('Original invoice could not be found. Refresh and try again.');return;}
 
       const editStockDeltas=inventoryQuoteDeltas(oldInv.items||[],items);
       stockApplied=await adjustInventoryForQuoteDeltas(editStockDeltas,{strict:true});
@@ -11671,7 +11679,7 @@ window.crmSaveCurrentQuote = async function(){
     // EDIT EXISTING QUOTATION
     if(crmEditingQuoteId){
       const oldQ=crmQuotes.find(q=>q.id===crmEditingQuoteId) || adminGlobalQuotes.find(q=>q.id===crmEditingQuoteId);
-      if(!oldQ){alert('Original quotation could not be found. Refresh and try again.');return;}
+      if(!oldQ){seerviToastAlert('Original quotation could not be found. Refresh and try again.');return;}
 
       const editStockDeltas=inventoryQuoteDeltas(oldQ.items||[],items);
       stockApplied=await adjustInventoryForQuoteDeltas(editStockDeltas,{strict:true});
@@ -11920,18 +11928,18 @@ window.crmSaveCurrentQuote = async function(){
     window.Seervi?.notify?.play('quotation');
   }catch(e){
     if(stockApplied.length) await rollbackInventoryQuoteDeltas(stockApplied);
-    alert('Quotation save failed: '+(e?.message||'Check Firestore rules/database.'));
+    seerviToastAlert('Quotation save failed: '+(e?.message||'Check Firestore rules/database.'));
   }
 };
 
 window.crmDeleteLedgerEntry = async function(id){
   if(!crmUser){crmShowLogin();return;}
-  if(!id){alert('Payment entry not found.');return;}
+  if(!id){seerviToastAlert('Payment entry not found.');return;}
   const entry=crmLedger.find(x=>x.id===id) || adminGlobalLedger.find(x=>x.id===id);
-  if(!entry){alert('Payment entry not found. Refresh the Admin Panel.');return;}
+  if(!entry){seerviToastAlert('Payment entry not found. Refresh the Admin Panel.');return;}
 
   if(entry.source==='quotation' || entry.quoteId){
-    alert('Quotation entries cannot be deleted from Payment Entry.');
+    seerviToastAlert('Quotation entries cannot be deleted from Payment Entry.');
     return;
   }
 
@@ -11944,17 +11952,17 @@ window.crmDeleteLedgerEntry = async function(id){
     await crmLoadGlobalAdmin();
     crmTab('ledger');
   }catch(e){
-    alert('Payment entry delete failed: '+(e?.message||'Check Firestore rules.'));
+    seerviToastAlert('Payment entry delete failed: '+(e?.message||'Check Firestore rules.'));
   }
 };
 
 window.crmAddLedgerEntry = async function(){
   if(!crmUser){crmShowLogin();return;}
-  if(!crmPartyId){alert('Select a party first.');return;}
+  if(!crmPartyId){seerviToastAlert('Select a party first.');return;}
   const type=$('crmLedgerType').value;
   const amount=parseFloat($('crmLedgerAmount').value||'0');
   const note=$('crmLedgerNote').value.trim();
-  if(!Number.isFinite(amount)||amount<=0){alert('Enter a valid amount.');return;}
+  if(!Number.isFinite(amount)||amount<=0){seerviToastAlert('Enter a valid amount.');return;}
   try{
     await addDoc(collection(db,'ledger'),{
       partyId:crmPartyId,
@@ -11970,7 +11978,7 @@ window.crmAddLedgerEntry = async function(){
     await crmLoadPartyData(crmPartyId);
     crmTab('ledger');
   }catch(e){
-    alert('Ledger entry failed: '+(e?.message||'Check Firestore rules.'));
+    seerviToastAlert('Ledger entry failed: '+(e?.message||'Check Firestore rules.'));
   }
 };
 /* ===== FIREBASE ITEMS / STOCK BRIDGE =====
@@ -12137,7 +12145,7 @@ async function inventoryEnsureItemsLoaded(){
 }
 
 window.setInventorySubcategoryStock=async function(categoryId,subcategoryId,stock,input){
-  if(!crmUser||!isAuthorisedAdmin(crmUser)){if(input)input.checked=!stock;alert('Admin login required.');return;}
+  if(!crmUser||!isAuthorisedAdmin(crmUser)){if(input)input.checked=!stock;seerviToastAlert('Admin login required.');return;}
   const items=seerviInventoryItems.filter(item=>item.categoryId===categoryId&&item.subcategoryId===subcategoryId);
   if(!items.length)return;
   const section=input?.closest('.inventory-stock-category');
@@ -12152,7 +12160,7 @@ window.setInventorySubcategoryStock=async function(categoryId,subcategoryId,stoc
     },{merge:true})));
     items.forEach(item=>{seerviInventoryState[item.key]=!!stock;});
     inventoryApplyToHome();inventoryRenderAdmin();
-  }catch(e){alert('Subcategory stock update failed: '+(e?.message||'Check Firebase rules.'));inventoryRenderAdmin();}
+  }catch(e){seerviToastAlert('Subcategory stock update failed: '+(e?.message||'Check Firebase rules.'));inventoryRenderAdmin();}
   finally{if(input)input.disabled=false;}
 };
 
@@ -12167,18 +12175,18 @@ function inventoryInitFilters(){
 }
 
 window.setInventoryCategoryStock=async function(categoryId,stock,input){
-  if(!crmUser||!isAuthorisedAdmin(crmUser)){if(input)input.checked=!stock;alert('Admin login required.');return;}
+  if(!crmUser||!isAuthorisedAdmin(crmUser)){if(input)input.checked=!stock;seerviToastAlert('Admin login required.');return;}
   const items=seerviInventoryItems.filter(item=>item.categoryId===categoryId);
   if(!items.length)return;
   try{
     await Promise.all(items.map(item=>setDoc(doc(db,'inventory',item.key),{key:item.key,itemId:item.id,categoryId:item.categoryId,subcategoryId:item.subcategoryId,stock:!!stock,public:true,updatedBy:crmUser.email||crmUser.uid,updatedAt:serverTimestamp()},{merge:true})));
     items.forEach(item=>{seerviInventoryState[item.key]=!!stock;});
     inventoryApplyToHome();inventoryRenderAdmin();
-  }catch(e){alert('Category stock update failed: '+(e?.message||'Check Firebase rules.'));inventoryRenderAdmin();}
+  }catch(e){seerviToastAlert('Category stock update failed: '+(e?.message||'Check Firebase rules.'));inventoryRenderAdmin();}
 };
 
 window.setInventoryQuantity=async function(key,value,input){
-  if(!crmUser||!isAuthorisedAdmin(crmUser)){alert('Admin login required.');return;}
+  if(!crmUser||!isAuthorisedAdmin(crmUser)){seerviToastAlert('Admin login required.');return;}
   const qty=Math.floor(Number(value));
   if(!Number.isFinite(qty)||qty<0){inventoryRenderAdmin();return;}
   const item=seerviInventoryItems.find(x=>x.key===key);if(!item)return;
@@ -12188,7 +12196,7 @@ window.setInventoryQuantity=async function(key,value,input){
     seerviInventoryQty[key]=qty;
     if(qty===0)seerviInventoryState[key]=false;
     inventoryApplyToHome();inventoryRenderAdmin();
-  }catch(e){alert('Available quantity update failed: '+(e?.message||'Check Firebase rules.'));inventoryRenderAdmin();}
+  }catch(e){seerviToastAlert('Available quantity update failed: '+(e?.message||'Check Firebase rules.'));inventoryRenderAdmin();}
   finally{if(input)input.disabled=false;}
 };
 
@@ -12287,13 +12295,13 @@ window.toggleInventoryStock=async function(force){
 };
 
 window.setInventoryStock=async function(key,stock,input){
-  if(!crmUser||!isAuthorisedAdmin(crmUser)){if(input)input.checked=!stock;alert('Admin login required.');return;}
+  if(!crmUser||!isAuthorisedAdmin(crmUser)){if(input)input.checked=!stock;seerviToastAlert('Admin login required.');return;}
   const item=seerviInventoryItems.find(x=>x.key===key);if(!item)return;
   const card=input?.closest('.inventory-stock-card');if(card)card.classList.add('inventory-stock-saving');
   try{
     await setDoc(doc(db,'inventory',key),{key,itemId:item.id,categoryId:item.categoryId,subcategoryId:item.subcategoryId,category:item.category,subcategory:item.subcategory,name:item.name,model:item.model,spec:item.spec||'',stock:!!stock,...(Number.isFinite(Number(seerviInventoryQty[key]))?{availableQty:Math.max(0,Number(seerviInventoryQty[key])),qtyTracking:true}:{}),public:true,updatedBy:crmUser.email||crmUser.uid,updatedAt:serverTimestamp()},{merge:true});
     seerviInventoryState[key]=!!stock;inventoryApplyToHome();inventoryRenderAdmin();
-  }catch(e){if(input)input.checked=!stock;alert('Stock update failed: '+(e?.message||'Check Firebase rules.'));inventoryRenderAdmin();}
+  }catch(e){if(input)input.checked=!stock;seerviToastAlert('Stock update failed: '+(e?.message||'Check Firebase rules.'));inventoryRenderAdmin();}
   finally{if(card)card.classList.remove('inventory-stock-saving');}
 };
 
@@ -13362,7 +13370,7 @@ window.seerviCategoryBulkImport=async function(){
 
 window.seerviCategoryBulkDownloadTemplate=function(){
   if(typeof XLSX==='undefined'){
-    alert('Excel template generator is not loaded. Refresh the page and try again.');
+    seerviToastAlert('Excel template generator is not loaded. Refresh the page and try again.');
     return;
   }
 
@@ -13471,7 +13479,7 @@ window.seerviBulkImport=async function(){
 
 window.seerviBulkDownloadTemplate=function(){
   if(typeof XLSX==='undefined'){
-    alert('Excel template generator is not loaded. Refresh the page and try again.');
+    seerviToastAlert('Excel template generator is not loaded. Refresh the page and try again.');
     return;
   }
   const row={
@@ -13815,11 +13823,11 @@ window.seerviDeleteCategoryConfirm=async function(categoryId){
     const linked=seerviItemsCache.filter(x=>x.categoryId===categoryId||x.subcategoryId===categoryId);
 
     if(children.length){
-      alert(`Cannot delete "${category.name}".\n\nIt has ${children.length} child ${children.length===1?'subcategory':'subcategories'}.\n\nDelete or move them first.`);
+      seerviToastAlert(`Cannot delete "${category.name}".\n\nIt has ${children.length} child ${children.length===1?'subcategory':'subcategories'}.\n\nDelete or move them first.`);
       return;
     }
     if(linked.length){
-      alert(`Cannot delete "${category.name}".\n\n${linked.length} item(s) are linked to it.\n\nMove or delete those items first.`);
+      seerviToastAlert(`Cannot delete "${category.name}".\n\n${linked.length} item(s) are linked to it.\n\nMove or delete those items first.`);
       return;
     }
     if(!confirm(`Delete category "${category.name}"?\n\nThis action cannot be undone.`))return;
@@ -14780,7 +14788,7 @@ function seerviRequireSettingsAdmin(){
 
 window.openAdminSettings=function(){
   closeAccountDashboard();
-  try{seerviRequireSettingsAdmin();}catch(e){alert(e.message||'Admin access required.');return;}
+  try{seerviRequireSettingsAdmin();}catch(e){seerviToastAlert(e.message||'Admin access required.');return;}
   const modal=document.getElementById('adminSettingsModal');
   if(!modal)return;
   seerviSettingsFillForm();
@@ -14850,7 +14858,7 @@ window.seerviPreviewVantaSettings=function(){
   seerviApplySiteSettings(preview);
 };
 window.seerviSaveAdminSettings=async function(){
-  try{seerviRequireSettingsAdmin();}catch(e){alert(e.message||'Admin access required.');return;}
+  try{seerviRequireSettingsAdmin();}catch(e){seerviToastAlert(e.message||'Admin access required.');return;}
   const s=seerviSettingsMerge(SEERVI_SITE_SETTINGS_DEFAULTS,{vanta:{
     color:seerviSettingsField('settingVantaColor')?.value,backgroundColor:seerviSettingsField('settingVantaBg')?.value,points:Number(seerviSettingsField('settingVantaPoints')?.value),maxDistance:Number(seerviSettingsField('settingVantaMax')?.value),spacing:Number(seerviSettingsField('settingVantaSpacing')?.value),showDots:!!seerviSettingsField('settingVantaDots')?.checked
   },branding:{
@@ -15755,8 +15763,8 @@ function seerviShowSaveSuccess(message){
     if(gstEnabled){const ge=$id('gstEnabled'),gr=$id('gstRate');if(ge)ge.checked=true;if(gr){gr.value=gstRate;gr.disabled=false;}}else{const ge=$id('gstEnabled'),gr=$id('gstRate');if(ge)ge.checked=false;if(gr)gr.disabled=true;}
     crmEditingQuoteId=S.mode==='quote'?S.id:'';crmEditingInvoiceId=S.mode==='invoice'?S.id:'';window.crmEditingInvoiceMeta=meta;
   }
-  window.seerviSaveDocumentEditor=async function(){const status=$id('seerviDocEditorStatus');const err=$id('seerviDocEditorError');if(status)status.textContent='SAVING…';if(err){err.style.display='none';err.textContent='';}try{await prepareSave();const meta=window.__seerviEditorMeta||{};const mode=S.mode,id=S.id;if(mode==='invoice' && meta.invoiceNo && meta.invoiceNo!==String(S.record.invoiceNo||'').trim() && await seerviInvoiceNumberExistsExcept(meta.invoiceNo,id)){throw new Error('Invoice number '+meta.invoiceNo+' already exists. Please use another number.');}if(!S.originalSave)S.originalSave=window.__seerviOriginalCrmSave;await S.originalSave();if(mode==='quote'){await updateDoc(doc(db,'quotations',id),{quoteNo:meta.quoteNo||S.record.quoteNo||'',dateISO:meta.dateISO||S.record.dateISO||'',status:meta.status||S.record.status||'saved',updatedAt:serverTimestamp()});const linkedInvoiceId=S.record.invoiceId||'';if(linkedInvoiceId){await updateDoc(doc(db,SEERVI_INVOICE_COLLECTION,linkedInvoiceId),{quoteNo:meta.quoteNo||S.record.quoteNo||'',updatedAt:serverTimestamp()});}crmLoadGlobalAdmin(false);}else if(mode==='invoice'){await updateDoc(doc(db,SEERVI_INVOICE_COLLECTION,id),{dateISO:meta.dateISO||S.record.dateISO||'',invoiceNo:meta.invoiceNo||S.record.invoiceNo||'',updatedAt:serverTimestamp()});crmLoadGlobalAdmin(false);}if(status)status.textContent='SAVED';seerviCloseDocumentEditor();}catch(e){console.error('Document editor save failed:',e);if(err){err.textContent=e?.message||'Save failed.';err.style.display='block';}if(status)status.textContent='';alert('Could not save changes: '+(e?.message||'Check Firebase rules.'));}};
-  function open(mode,id){if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const rec=(mode==='quote'?adminGlobalQuotes:adminGlobalInvoices).find(x=>x.id===id);if(!rec){alert((mode==='quote'?'Quotation':'Invoice')+' not found. Refresh the Admin Panel.');return;}const party=(adminGlobalParties||[]).find(p=>p.id===rec.partyId)||(crmParties||[]).find(p=>p.id===rec.partyId)||rec.customer||{};if(!party?.id){alert('The document party could not be found. Refresh the Admin Panel.');return;}S.mode=mode;S.id=id;S.record=rec;S.party=party;S.items=(rec.items||[]).map(x=>({...x,model:x.model||x.name||'',name:x.name||x.model||'',spec:x.spec||x.thickness||'',thickness:x.spec||x.thickness||'',hsnCode:x.hsnCode||x.hsn||'',qty:Number(x.qty||0),rate:Number(x.rate||0)}));
+  window.seerviSaveDocumentEditor=async function(){const status=$id('seerviDocEditorStatus');const err=$id('seerviDocEditorError');if(status)status.textContent='SAVING…';if(err){err.style.display='none';err.textContent='';}try{await prepareSave();const meta=window.__seerviEditorMeta||{};const mode=S.mode,id=S.id;if(mode==='invoice' && meta.invoiceNo && meta.invoiceNo!==String(S.record.invoiceNo||'').trim() && await seerviInvoiceNumberExistsExcept(meta.invoiceNo,id)){throw new Error('Invoice number '+meta.invoiceNo+' already exists. Please use another number.');}if(!S.originalSave)S.originalSave=window.__seerviOriginalCrmSave;await S.originalSave();if(mode==='quote'){await updateDoc(doc(db,'quotations',id),{quoteNo:meta.quoteNo||S.record.quoteNo||'',dateISO:meta.dateISO||S.record.dateISO||'',status:meta.status||S.record.status||'saved',updatedAt:serverTimestamp()});const linkedInvoiceId=S.record.invoiceId||'';if(linkedInvoiceId){await updateDoc(doc(db,SEERVI_INVOICE_COLLECTION,linkedInvoiceId),{quoteNo:meta.quoteNo||S.record.quoteNo||'',updatedAt:serverTimestamp()});}crmLoadGlobalAdmin(false);}else if(mode==='invoice'){await updateDoc(doc(db,SEERVI_INVOICE_COLLECTION,id),{dateISO:meta.dateISO||S.record.dateISO||'',invoiceNo:meta.invoiceNo||S.record.invoiceNo||'',updatedAt:serverTimestamp()});crmLoadGlobalAdmin(false);}if(status)status.textContent='SAVED';seerviCloseDocumentEditor();}catch(e){console.error('Document editor save failed:',e);if(err){err.textContent=e?.message||'Save failed.';err.style.display='block';}if(status)status.textContent='';seerviToastAlert('Could not save changes: '+(e?.message||'Check Firebase rules.'));}};
+  function open(mode,id){if(!crmUser||!isAuthorisedAdmin(crmUser)){openAdminPanel();return;}const rec=(mode==='quote'?adminGlobalQuotes:adminGlobalInvoices).find(x=>x.id===id);if(!rec){seerviToastAlert((mode==='quote'?'Quotation':'Invoice')+' not found. Refresh the Admin Panel.');return;}const party=(adminGlobalParties||[]).find(p=>p.id===rec.partyId)||(crmParties||[]).find(p=>p.id===rec.partyId)||rec.customer||{};if(!party?.id){seerviToastAlert('The document party could not be found. Refresh the Admin Panel.');return;}S.mode=mode;S.id=id;S.record=rec;S.party=party;S.items=(rec.items||[]).map(x=>({...x,model:x.model||x.name||'',name:x.name||x.model||'',spec:x.spec||x.thickness||'',thickness:x.spec||x.thickness||'',hsnCode:x.hsnCode||x.hsn||'',qty:Number(x.qty||0),rate:Number(x.rate||0)}));
     $id('seerviDocEditorTitle').textContent=mode==='quote'?'EDIT QUOTATION':'EDIT SALE INVOICE';$id('seerviDocTypeLabel').textContent=mode==='quote'?'WHOLESALE PRODUCT QUOTATION':'SALE INVOICE';$id('seerviDocNumberLabel').textContent=mode==='quote'?'Quotation No.':'Invoice No.';$id('seerviDocStatusWrap').style.display=mode==='quote'?'block':'none';$id('seerviDocEwayWrap').style.display=mode==='invoice'?'block':'none';$id('seerviDocShipSection').style.display=mode==='invoice'?'block':'none';
     setv('seerviDocNumber',mode==='quote'?(rec.quoteNo||''):(rec.invoiceNo||''));setv('seerviDocDate',rec.dateISO?String(rec.dateISO).slice(0,10):new Date().toISOString().slice(0,10));setv('seerviDocStatus',rec.status||'saved');setv('seerviDocEway',rec.ewayBillNo||'');fillCommon(party);fillShip(rec.shipTo||rec.customer||party);setv('seerviDocNotes',rec.notes||'');const ge=$id('seerviDocGstEnabled'),gr=$id('seerviDocGstRate');if(ge)ge.checked=!!rec.gstEnabled;if(gr)gr.value=Number(rec.gstRate||18);renderItems();showEditor();
   }
