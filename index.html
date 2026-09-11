@@ -4869,6 +4869,285 @@ body.seervi-ai-open .float-support{display:none!important}
   #home.bw-hero .bw-bottom-bar{display:none!important;}
 }
 </style>
+
+<style id="seervi-importer-home-v2">
+/* ===== SEERVI IMPORTER HOME V2 ===== */
+.importer-home-section{position:relative;overflow:hidden}
+.importer-home-section .section-head{margin-bottom:22px}
+.importer-home-section .section-head p{max-width:620px}
+.sourcing-hero-widget{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin-top:18px}
+.sourcing-board,.sourcing-proof{background:linear-gradient(145deg,#111820,#0b0f14);border:1px solid #ffffff14;border-radius:18px;box-shadow:0 16px 40px #00000022}
+.sourcing-board{padding:20px}
+.sourcing-board-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.sourcing-board-kicker{font-size:9px;font-weight:900;letter-spacing:1.4px;color:#f0c66a}
+.sourcing-live{font-size:8px;font-weight:900;letter-spacing:1px;color:#aeb7c0;border:1px solid #ffffff16;border-radius:999px;padding:6px 9px}
+.sourcing-live i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#7dd3a6;margin-right:5px;box-shadow:0 0 10px #7dd3a688}
+.sourcing-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.sourcing-step{position:relative;min-height:112px;padding:13px;border:1px solid #ffffff10;border-radius:13px;background:#ffffff05}
+.sourcing-step:not(:last-child):after{content:'→';position:absolute;right:-9px;top:43px;z-index:2;width:18px;text-align:center;color:#f0c66a;font-size:12px;background:#10161c}
+.sourcing-step-no{font-size:8px;color:#6f7b86;font-weight:900;letter-spacing:1px}
+.sourcing-step-icon{font-size:18px;margin:9px 0 7px;color:#f0c66a}
+.sourcing-step b{display:block;font-size:10px;color:#fff;letter-spacing:.4px}
+.sourcing-step span{display:block;margin-top:5px;font-size:9px;line-height:1.45;color:#8f9aa5}
+.sourcing-proof{padding:18px;display:flex;flex-direction:column;justify-content:space-between}
+.sourcing-proof-label{font-size:8px;letter-spacing:1.3px;font-weight:900;color:#7f8a95}
+.sourcing-proof-title{font-size:24px;line-height:1.05;font-weight:950;letter-spacing:-.7px;color:#fff;margin:10px 0 8px}
+.sourcing-proof-title span{color:#f0c66a}
+.sourcing-proof p{font-size:10px;line-height:1.55;color:#9ba5ae;margin:0}
+.sourcing-timeline{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-top:18px;padding-top:14px;border-top:1px solid #ffffff10}
+.sourcing-timeline strong{font-size:21px;line-height:1;color:#fff}
+.sourcing-timeline small{display:block;margin-top:4px;color:#78838d;font-size:8px;line-height:1.4}
+.importer-pill-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.importer-pill{padding:15px;border-radius:14px;border:1px solid #ffffff12;background:#0e141a;min-height:92px}
+.importer-pill .pill-icon{font-size:18px;color:#f0c66a;margin-bottom:9px}
+.importer-pill b{display:block;font-size:10px;color:#fff}
+.importer-pill span{display:block;margin-top:5px;color:#8d98a3;font-size:9px;line-height:1.45}
+.source-categories{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.source-chip{border:1px solid #ffffff14;background:#10161c;color:#cbd2d8;border-radius:999px;padding:7px 10px;font-size:8px;font-weight:800;letter-spacing:.35px}
+.source-request-widget{display:grid;grid-template-columns:1fr auto;align-items:center;gap:18px;margin-top:16px;padding:18px 20px;border:1px solid #f0c66a30;border-radius:16px;background:linear-gradient(100deg,#f0c66a0c,#ffffff03)}
+.source-request-widget h3{margin:0;color:#fff;font-size:16px;letter-spacing:-.2px}
+.source-request-widget p{margin:5px 0 0;color:#8f9aa5;font-size:9px;line-height:1.5}
+.source-request-btn{border:0;border-radius:10px;background:#f0c66a;color:#0b0d10;padding:11px 15px;font-size:9px;font-weight:950;letter-spacing:.6px;cursor:pointer;white-space:nowrap}
+.source-request-btn:active{transform:translateY(1px)}
+.comparison-widget{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.comparison-panel{border:1px solid #ffffff12;border-radius:16px;background:#0d1319;padding:18px}
+.comparison-panel h3{margin:0 0 5px;color:#fff;font-size:13px}
+.comparison-panel>p{margin:0 0 13px;color:#87929d;font-size:9px;line-height:1.5}
+.quote-row{display:grid;grid-template-columns:1.25fr .7fr .7fr;gap:7px;align-items:center;padding:9px 0;border-bottom:1px solid #ffffff0b;font-size:9px}
+.quote-row:last-child{border-bottom:0}
+.quote-row b{color:#dfe4e8;font-size:9px}
+.quote-row span{color:#8b96a1}
+.quote-row .quote-status{justify-self:end;border-radius:999px;padding:4px 7px;font-size:7px;font-weight:900;border:1px solid #ffffff12;color:#9ca7b1}
+.quote-row .quote-status.best{color:#9fe2b9;border-color:#9fe2b92a;background:#9fe2b90a}
+.trust-stack{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.trust-mini{padding:13px;border:1px solid #ffffff10;border-radius:13px;background:#ffffff04}
+.trust-mini strong{display:block;color:#fff;font-size:9px}
+.trust-mini span{display:block;margin-top:4px;color:#7f8a94;font-size:8px;line-height:1.45}
+.importer-contact-widget{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.importer-contact-card{padding:17px;border:1px solid #ffffff12;border-radius:15px;background:#0d1319}
+.importer-contact-card b{display:block;color:#fff;font-size:11px}
+.importer-contact-card p{margin:5px 0 11px;color:#87929d;font-size:9px;line-height:1.5}
+.importer-contact-card a,.importer-contact-card button{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:9px;padding:9px 11px;font-size:8px;font-weight:900;letter-spacing:.4px}
+.importer-contact-card a{background:#f0c66a;color:#0b0d10}
+.importer-contact-card button{border:1px solid #ffffff18;background:#121920;color:#dce1e5;cursor:pointer}
+@media(max-width:800px){
+ .sourcing-hero-widget,.comparison-widget,.importer-contact-widget{grid-template-columns:1fr}
+ .sourcing-steps{grid-template-columns:1fr 1fr}
+ .sourcing-step:not(:last-child):after{display:none}
+ .importer-pill-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+ .importer-home-section .section-head{margin-bottom:15px}
+ .sourcing-board{padding:14px;border-radius:15px}
+ .sourcing-board-top{margin-bottom:12px}
+ .sourcing-steps{gap:7px}
+ .sourcing-step{min-height:100px;padding:11px}
+ .sourcing-proof{padding:15px;border-radius:15px}
+ .sourcing-proof-title{font-size:22px}
+ .importer-pill-grid{gap:8px}
+ .importer-pill{padding:12px;min-height:82px}
+ .source-request-widget{grid-template-columns:1fr;padding:15px;gap:12px}
+ .source-request-btn{width:100%}
+ .comparison-panel{padding:14px}
+ .quote-row{grid-template-columns:1.15fr .7fr .7fr}
+ .trust-stack{grid-template-columns:1fr;gap:8px}
+ .importer-contact-widget{gap:9px}
+}
+</style>
+
+<style id="seervi-importer-home-v3">
+/* ===== IMPORTER HOME V3: LARGER TYPE + INTERACTIVE-LOOK WIDGETS ===== */
+.importer-home-section .section-head h2{font-size:clamp(28px,3vw,44px);line-height:1.04;letter-spacing:-1.1px}
+.importer-home-section .section-head p{font-size:13px;line-height:1.65}
+.sourcing-board-sub{margin-top:5px;color:#7f8b96;font-size:11px;line-height:1.4}
+.sourcing-step b{font-size:12px}.sourcing-step span{font-size:10.5px;line-height:1.5}.sourcing-step-icon{font-size:21px}.sourcing-step-no{font-size:9px}
+.sourcing-proof-title{font-size:30px}.sourcing-proof p{font-size:12px}.sourcing-timeline strong{font-size:25px}.sourcing-timeline small{font-size:9px}
+.importer-live-strip{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:14px;padding:12px 15px;border:1px solid #ffffff12;border-radius:13px;background:#0b1015}
+.importer-live-strip>div:first-child{display:flex;align-items:center;gap:8px;white-space:nowrap}.importer-live-strip b{font-size:10px;color:#cdd4da;letter-spacing:.7px}.live-dot{width:7px;height:7px;border-radius:50%;background:#7dd3a6;box-shadow:0 0 12px #7dd3a688}.live-route{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}.live-route span{font-size:9px;font-weight:800;color:#9ba5ae}.live-route em{font-style:normal;color:#f0c66a;font-size:11px}
+.importer-pill b{font-size:12px}.importer-pill span{font-size:10px;line-height:1.5}.source-chip{font-size:9px;padding:8px 11px}
+.source-match-widget{margin-top:16px;padding:18px;border:1px solid #f0c66a24;border-radius:16px;background:linear-gradient(120deg,#f0c66a0a,#ffffff03)}
+.source-match-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.source-match-kicker{font-size:9px;font-weight:900;letter-spacing:1.3px;color:#f0c66a}.source-match-head h3{margin:5px 0 0;color:#fff;font-size:19px}.source-match-badge,.comparison-badge{font-size:8px;font-weight:900;letter-spacing:.8px;color:#f0c66a;border:1px solid #f0c66a35;border-radius:999px;padding:7px 9px;white-space:nowrap}.source-match-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:10px;margin-top:15px}.source-match-flow>div:not(.source-match-arrow){padding:12px;border:1px solid #ffffff10;border-radius:11px;background:#ffffff04}.source-match-flow strong{display:block;color:#f0c66a;font-size:9px}.source-match-flow span{display:block;color:#c8cfd5;font-size:10px;line-height:1.4;margin-top:4px}.source-match-arrow{color:#f0c66a;font-size:17px}
+.comparison-panel h3{font-size:16px}.comparison-panel>p{font-size:10.5px}.comparison-panel-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.quote-row{font-size:10.5px;padding:11px 0}.quote-row b{font-size:10.5px}.quote-row .quote-status{font-size:8px}.trust-mini{padding:14px}.trust-mini strong{font-size:10px}.trust-mini span{font-size:9px}.trust-banner{display:flex;align-items:center;gap:12px;margin-top:14px;padding:14px 16px;border:1px solid #ffffff12;border-radius:14px;background:#0d1319}.trust-banner-mark{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#f0c66a;color:#0b0d10;font-weight:950}.trust-banner b{display:block;color:#fff;font-size:10px;letter-spacing:.7px}.trust-banner span{display:block;margin-top:3px;color:#89949f;font-size:9px}.trust-banner>strong{margin-left:auto;font-size:9px;color:#f0c66a;letter-spacing:.8px}
+.contact-command-card{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;padding:20px;border:1px solid #f0c66a2b;border-radius:18px;background:linear-gradient(135deg,#111820,#0b0f14)}.contact-command-kicker{font-size:9px;font-weight:900;letter-spacing:1.4px;color:#f0c66a}.contact-command-main h3{margin:8px 0 7px;font-size:24px;color:#fff}.contact-command-main p{margin:0;color:#929ca6;font-size:11px;line-height:1.55}.contact-command-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.contact-command-actions a,.contact-command-actions button{display:inline-flex;align-items:center;justify-content:center;border-radius:10px;padding:11px 13px;font-size:9px;font-weight:950;letter-spacing:.5px;text-decoration:none}.contact-command-actions a{background:#f0c66a;color:#0b0d10}.contact-command-actions button{border:1px solid #ffffff18;background:#121920;color:#dce1e5;cursor:pointer}.contact-people{display:grid;grid-template-columns:1fr 1fr;gap:9px}.contact-person{display:flex;flex-direction:column;justify-content:center;padding:15px;border:1px solid #ffffff12;border-radius:13px;background:#ffffff04;text-decoration:none}.contact-person-role{font-size:8px;color:#f0c66a;font-weight:900;letter-spacing:1px}.contact-person b{font-size:13px;color:#fff;margin-top:8px}.contact-person>span:not(.contact-person-role){font-size:10px;color:#a7b0b8;margin-top:4px}.contact-person small{font-size:8px;color:#7dd3a6;margin-top:9px}.contact-detail-grid{display:grid;grid-template-columns:1.3fr .8fr 1.2fr;gap:10px;margin-top:10px}.contact-detail{padding:13px 15px;border:1px solid #ffffff10;border-radius:12px;background:#0d1319}.contact-detail b{display:block;font-size:8px;letter-spacing:1px;color:#78838d}.contact-detail span,.contact-detail a{display:block;margin-top:5px;font-size:10px;line-height:1.45;color:#c9d0d5;text-decoration:none}.contact-trust-line{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:15px;color:#78838d;font-size:8px;font-weight:900;letter-spacing:1px}.contact-trust-line i{width:3px;height:3px;border-radius:50%;background:#f0c66a}
+@media(max-width:800px){.importer-live-strip{display:block}.live-route{justify-content:flex-start;margin-top:9px}.source-match-flow{grid-template-columns:1fr}.source-match-arrow{display:none}.contact-command-card,.contact-detail-grid{grid-template-columns:1fr}.trust-banner{align-items:flex-start}.trust-banner>strong{margin-left:0}}
+@media(max-width:600px){.importer-home-section .section-head h2{font-size:27px}.importer-home-section .section-head p{font-size:12px}.sourcing-step b{font-size:11px}.sourcing-step span{font-size:10px}.sourcing-proof-title{font-size:26px}.sourcing-proof p{font-size:11px}.importer-pill b{font-size:11px}.importer-pill span{font-size:9.5px}.source-chip{font-size:8.5px}.source-match-head h3{font-size:17px}.comparison-panel h3{font-size:15px}.contact-command-main h3{font-size:21px}.contact-people{grid-template-columns:1fr}.contact-detail span,.contact-detail a{font-size:10px}.contact-trust-line{font-size:7.5px;gap:7px}}
+</style>
+
+<style id="seervi-home-readable-v3">
+/* ===== SEERVI HOME READABILITY / MOBILE V3 ===== */
+@media(max-width:600px){
+  /* Section headings */
+  #home .section-head h2,
+  #how-seervi-works .section-head h2,
+  #about .section-head h2,
+  #why-seervi .section-head h2,
+  #contact .section-head h2,
+  .importer-home-section .section-head h2{
+    font-size:32px!important;
+    line-height:1.08!important;
+    letter-spacing:-.7px!important;
+  }
+  .section-head{margin-bottom:24px!important}
+  .section-head .tag,
+  .importer-home-section .tag{font-size:12px!important;letter-spacing:1.6px!important;margin-bottom:10px!important}
+  .section-head p,
+  .importer-home-section .section-head p{
+    font-size:15px!important;
+    line-height:1.65!important;
+    max-width:none!important;
+  }
+
+  /* Existing supply/about/why/contact cards */
+  .supply-step{padding:22px!important;min-height:0!important}
+  .supply-step h3{font-size:17px!important;line-height:1.25!important}
+  .supply-step p{font-size:14px!important;line-height:1.65!important}
+  .supply-step>span{font-size:11px!important}
+  .supply-icon{width:46px!important;height:46px!important;font-size:19px!important}
+
+  .about-panel{padding:22px!important}
+  .about-panel h3{font-size:24px!important}
+  .about-panel p{font-size:15px!important;line-height:1.7!important}
+  .about-bullet{font-size:14px!important;line-height:1.6!important;padding:15px!important}
+  .about-bullet b{font-size:12px!important;margin-bottom:5px!important}
+
+  .why-card{padding:21px!important;min-height:0!important}
+  .why-card strong{font-size:17px!important;line-height:1.3!important}
+  .why-card p{font-size:14px!important;line-height:1.65!important}
+
+  .contact-card{padding:19px!important}
+  .contact-card b{font-size:12px!important;margin-bottom:9px!important}
+  .contact-card span,.contact-card a{font-size:15px!important;line-height:1.6!important}
+
+  /* Importer widgets */
+  .sourcing-board,.sourcing-proof{padding:18px!important}
+  .sourcing-board-top{margin-bottom:15px!important}
+  .sourcing-board-kicker{font-size:11px!important;letter-spacing:1.5px!important}
+  .sourcing-live{font-size:10px!important;padding:7px 10px!important}
+  .sourcing-steps{grid-template-columns:1fr!important;gap:10px!important}
+  .sourcing-step{min-height:0!important;padding:17px!important}
+  .sourcing-step:not(:last-child):after{content:'↓';right:50%!important;top:auto!important;bottom:-15px!important;transform:translateX(50%)!important;width:20px!important;font-size:15px!important}
+  .sourcing-step-no{font-size:10px!important}
+  .sourcing-step-icon{font-size:22px!important;margin:8px 0!important}
+  .sourcing-step b{font-size:15px!important;line-height:1.3!important}
+  .sourcing-step span{font-size:13px!important;line-height:1.55!important}
+
+  /* Make every importer widget readable rather than tiny UI-label style */
+  .importer-home-section p,
+  .importer-home-section li,
+  .importer-home-section span{line-height:1.6}
+  .importer-home-section .btn,
+  .importer-home-section button,
+  .importer-home-section a{font-size:13px!important}
+
+  /* Hero copy */
+  #home .bw-kicker{font-size:12px!important;letter-spacing:1.7px!important}
+  #home .bw-hero-copy h1{font-size:42px!important;line-height:1.03!important;letter-spacing:-1.5px!important}
+  #home .bw-hero-copy>p{font-size:16px!important;line-height:1.7!important}
+  #home .bw-cta{font-size:13px!important;padding:14px 17px!important}
+}
+</style>
+<style id="seervi-importer-font-size-v3">
+/* ===== IMPORTER HOME READABILITY V3 ===== */
+.importer-home-section .section-head h2{font-size:clamp(26px,3vw,38px)!important;line-height:1.08!important}
+.importer-home-section .section-head .tag{font-size:11px!important;letter-spacing:1.6px!important}
+.importer-home-section .section-head p{font-size:14px!important;line-height:1.6!important}
+.sourcing-board-kicker{font-size:11px!important}
+.sourcing-live{font-size:10px!important}
+.sourcing-step-no{font-size:10px!important}
+.sourcing-step-icon{font-size:21px!important}
+.sourcing-step b{font-size:13px!important}
+.sourcing-step span{font-size:11px!important;line-height:1.5!important}
+.sourcing-proof-label{font-size:10px!important}
+.sourcing-proof-title{font-size:28px!important}
+.sourcing-proof p{font-size:12px!important;line-height:1.6!important}
+.sourcing-timeline strong{font-size:24px!important}
+.sourcing-timeline small{font-size:10px!important}
+.importer-pill .pill-icon{font-size:21px!important}
+.importer-pill b{font-size:13px!important}
+.importer-pill span{font-size:11px!important;line-height:1.5!important}
+.source-chip{font-size:10px!important;padding:8px 12px!important}
+.source-request-widget h3{font-size:19px!important}
+.source-request-widget p{font-size:11px!important;line-height:1.55!important}
+.source-request-btn{font-size:11px!important;padding:12px 17px!important}
+.comparison-panel h3{font-size:16px!important}
+.comparison-panel>p{font-size:11px!important;line-height:1.55!important}
+.quote-row,.quote-row b{font-size:11px!important}
+.quote-row .quote-status{font-size:9px!important}
+.trust-mini strong{font-size:11px!important}
+.trust-mini span{font-size:10px!important;line-height:1.5!important}
+.importer-contact-card b{font-size:13px!important}
+.importer-contact-card p{font-size:11px!important;line-height:1.55!important}
+.importer-contact-card a,.importer-contact-card button{font-size:10px!important;padding:10px 13px!important}
+@media(max-width:600px){
+ .importer-home-section .section-head h2{font-size:29px!important}
+ .importer-home-section .section-head .tag{font-size:10px!important}
+ .importer-home-section .section-head p{font-size:13px!important}
+ .sourcing-step{min-height:116px!important;padding:13px!important}
+ .sourcing-step b{font-size:13px!important}
+ .sourcing-step span{font-size:11px!important}
+ .sourcing-proof-title{font-size:26px!important}
+ .sourcing-proof p{font-size:12px!important}
+ .importer-pill{min-height:94px!important;padding:13px!important}
+ .importer-pill b{font-size:13px!important}
+ .importer-pill span{font-size:11px!important}
+ .source-request-widget h3{font-size:19px!important}
+ .source-request-widget p{font-size:12px!important}
+ .comparison-panel h3{font-size:16px!important}
+ .comparison-panel>p{font-size:12px!important}
+ .quote-row,.quote-row b{font-size:11px!important}
+ .trust-mini strong{font-size:12px!important}
+ .trust-mini span{font-size:11px!important}
+ .importer-contact-card b{font-size:14px!important}
+ .importer-contact-card p{font-size:12px!important}
+ .importer-contact-card a,.importer-contact-card button{font-size:11px!important}
+}
+</style>
+<style id="seervi-contact-footer-v4">
+/* ===== SEERVI CONTACT FOOTER / MINIMAL IMPORTER FOOTPRINT ===== */
+.seervi-contact-footer{background:#000!important;color:#fff!important;border-top:1px solid #ffffff20!important;border-bottom:1px solid #ffffff12!important;margin-top:0!important;padding:0!important;overflow:hidden}
+.seervi-contact-footer-inner{width:min(1180px,calc(100% - 48px));margin:0 auto;padding:54px 0 30px}
+.seervi-contact-brand{text-align:center}
+.seervi-contact-logo{font-size:clamp(48px,7vw,82px);font-weight:950;letter-spacing:-4px;line-height:.82;color:#fff;font-family:Arial,Helvetica,sans-serif;text-transform:uppercase}
+.seervi-contact-rule{height:1px;background:#ffffff55;margin:34px 0 50px}
+.seervi-contact-grid{display:grid;grid-template-columns:.8fr 1.25fr 1fr;gap:70px}
+.seervi-contact-column{display:flex;flex-direction:column;align-items:flex-start}
+.seervi-footer-heading{font-size:17px;font-weight:500;letter-spacing:1.5px;color:#fff;margin-bottom:25px}
+.seervi-contact-menu a{font-size:18px;line-height:1.65;color:#f4f4f4;text-decoration:none;transition:opacity .2s ease}
+.seervi-contact-menu a:hover,.seervi-contact-main-info a:hover{opacity:.7}
+.seervi-contact-line{margin-bottom:22px}
+.seervi-contact-label{display:block;font-size:11px;letter-spacing:1.7px;color:#8c8c8c;margin-bottom:7px;text-transform:uppercase}
+.seervi-contact-main-info a{display:flex;flex-direction:column;text-decoration:none;color:#fff}
+.seervi-contact-main-info b{font-size:18px;font-weight:600;line-height:1.35}
+.seervi-contact-main-info a span,.seervi-contact-main-info>a{font-size:17px;line-height:1.5;color:#e9e9e9;text-decoration:none}
+.seervi-contact-address p{font-size:16px;line-height:1.65;color:#c9c9c9;margin:0 0 27px;max-width:340px}
+.seervi-address-block>span:last-child{font-size:17px;line-height:1.7;color:#f2f2f2}
+.seervi-footer-wa{display:inline-flex;margin-top:30px;border:1px solid #ffffff55;padding:13px 17px;border-radius:2px;color:#fff!important;text-decoration:none;font-size:13px!important;letter-spacing:1px;font-weight:700;transition:background .2s ease,color .2s ease}
+.seervi-footer-wa:hover{background:#fff;color:#000!important}
+.seervi-footer-social-row{display:flex;align-items:center;justify-content:center;gap:13px;flex-wrap:wrap;margin-top:58px;padding-top:22px;border-top:1px solid #ffffff1c;color:#888;font-size:10px;font-weight:700;letter-spacing:1.5px}
+.seervi-footer-social-row i{width:3px;height:3px;border-radius:50%;background:#777}
+@media(max-width:800px){
+ .seervi-contact-footer-inner{width:calc(100% - 40px);padding:42px 0 26px}
+ .seervi-contact-rule{margin:27px 0 38px}
+ .seervi-contact-grid{grid-template-columns:1fr 1fr;gap:42px 28px}
+ .seervi-contact-address{grid-column:1/-1}
+}
+@media(max-width:600px){
+ .seervi-contact-footer-inner{width:calc(100% - 34px);padding:34px 0 22px}
+ .seervi-contact-logo{font-size:57px;letter-spacing:-3px}
+ .seervi-contact-rule{margin:25px 0 36px;background:#ffffff50}
+ .seervi-contact-grid{grid-template-columns:1fr;gap:38px}
+ .seervi-contact-address{grid-column:auto}
+ .seervi-footer-heading{font-size:18px;letter-spacing:1.4px;margin-bottom:18px}
+ .seervi-contact-menu a{font-size:19px;line-height:1.7}
+ .seervi-contact-label{font-size:11px;letter-spacing:1.5px;margin-bottom:7px}
+ .seervi-contact-main-info b{font-size:19px}
+ .seervi-contact-main-info a span,.seervi-contact-main-info>a{font-size:18px}
+ .seervi-contact-address p{font-size:16px;line-height:1.65}
+ .seervi-address-block>span:last-child{font-size:17px;line-height:1.75}
+ .seervi-footer-wa{font-size:13px!important;padding:14px 16px;margin-top:24px}
+ .seervi-footer-social-row{justify-content:flex-start;gap:9px;margin-top:42px;font-size:9px;line-height:1.7}
+}
+</style>
 </head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -4922,7 +5201,43 @@ body.seervi-ai-open .float-support{display:none!important}
 
 <section id="customerHomeProfile" class="customer-home-profile" hidden><div class="customer-home-profile-inner"><div class="customer-home-profile-head"><div><div class="crm-kicker">SEERVI TRADING / MY PROFILE</div><h2>Welcome, <span id="customerHomeName">Customer</span></h2><p id="customerHomeMeta">Your account details and business profile.</p></div><div class="customer-home-profile-actions"><button class="crm-primary" type="button" onclick="customerEditProfile()">EDIT PROFILE</button><button class="crm-secondary" type="button" onclick="openCustomerLogin()">MY ACCOUNT</button></div></div><div id="customerHomeProfileGrid" class="customer-home-profile-grid"></div></div></section>
 
-<section id="how-seervi-works" class="supply-flow-section"><div class="wrap"><div class="section-head"><div><div class="tag">HOW SEERVI WORKS</div><h2>FROM FACTORY TO RETAIL</h2></div><p>We connect trusted overseas manufacturers with Indian retailers through quality-focused wholesale supply.</p></div><div class="supply-flow"><div class="supply-step"><div class="supply-icon">⌂</div><h3>FACTORY SOURCING</h3><p>Products are sourced from trusted manufacturers in China.</p></div><div class="supply-line"></div><div class="supply-step"><div class="supply-icon">✓</div><h3>QUALITY VERIFIED</h3><p>Products are checked as part of our quality-focused sourcing process.</p></div><div class="supply-line"></div><div class="supply-step"><div class="supply-icon">S</div><h3>SEERVI SUPPLY</h3><p>Imported products are supplied in India for wholesale requirements.</p></div><div class="supply-line"></div><div class="supply-step"><div class="supply-icon">R</div><h3>RETAILER / BUSINESS</h3><p>Supply reaches retailers, shops, businesses and project requirements.</p></div></div></div></section></main><section id="about"><div class="wrap"><div class="section-head"><div><div class="tag">ABOUT SEERVI</div><h2>BUILT AROUND TRUST</h2></div><p>Seervi is built around trusted sourcing, quality-verified imported items and dependable wholesale supply.</p></div><div class="about-grid"><div class="about-panel"><h3>Seervi Trading</h3><p>Seervi is the name we chose for our company because it is our Sir's name. We source imported items from trusted companies in China and focus on quality-verified products before supplying them to our customers.</p><div class="about-bullets"><div class="about-bullet"><b>Trusted Sourcing</b>Imported items sourced from trusted companies in China.</div><div class="about-bullet"><b>Quality Focus</b>Products are quality-verified as part of our sourcing process.</div></div></div><div class="about-panel"><h3>What We Supply</h3><p>Wholesale supply for interiors, exteriors and kitchen items, with a growing range of practical products for businesses and projects.</p><div class="about-bullets"><div class="about-bullet"><b>Interiors</b>Products for interior applications and finishing.</div><div class="about-bullet"><b>Exteriors</b>Products for exterior and project requirements.</div><div class="about-bullet"><b>Kitchen</b>Practical kitchen-related items for wholesale supply.</div><div class="about-bullet"><b>Wholesale</b>Business-focused quantities and enquiry-based supply.</div></div></div></div></div></section><section id="why-seervi"><div class="wrap"><div class="section-head"><div><div class="tag">WHY SEERVI</div><h2>STRAIGHTFORWARD SUPPLY</h2></div><p>A clear focus on sourcing, quality and service.</p></div><div class="why-grid"><div class="why-card"><strong>Trusted Import Sourcing</strong><p>Imported items sourced from trusted Chinese companies for our product range.</p></div><div class="why-card"><strong>Quality Verified</strong><p>Quality is checked as part of our sourcing and supply approach.</p></div><div class="why-card"><strong>Wholesale Focus</strong><p>Built for shops, businesses, interiors, exteriors and kitchen requirements.</p></div><div class="why-card"><strong>Direct Enquiry</strong><p>Send your product requirements directly through WhatsApp for faster discussion.</p></div></div></div></section><section id="contact"><div class="wrap"><div class="section-head"><div><div class="tag">CONTACT</div><h2>LET'S TALK BUSINESS</h2></div><p>Have a product requirement? Send us the model, quantity or photos and we'll take it from there.</p></div><div class="contact-grid"><div class="contact-card"><b>Location</b><span>Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072</span></div><div class="contact-card"><a id="contactPerson1Link" href="https://wa.me/917073741650" target="_blank" rel="noopener"><span id="contactPerson1Name">KAILASH SEERVI</span><br><span id="contactPerson1Number">+91 70737 41650</span></a></div><div class="contact-card"><a id="contactPerson2Link" href="https://wa.me/919740598345" target="_blank" rel="noopener"><span id="contactPerson2Name">SHRAVAN KUMAR</span><br><span id="contactPerson2Number">+91 97405 98345</span></a></div><div class="contact-card"><b>Email</b><a id="contactEmailLink" href="mailto:info@seervitrading.com">Email Seervi</a></div></div></div></section><footer><div class="wrap" style="width:100%;display:flex;justify-content:space-between"><span>© 2026 Seervi Trading. All rights reserved.</span><span>Kailash Choudhary</span></div></footer><div id="cartDrawer" class="cart-drawer" aria-hidden="true"><div class="cart-backdrop" onclick="closeCart()"></div><aside class="cart-panel"><div class="cart-head"><div><div class="cart-title-row"><span class="tag">SEERVI ORDER</span><span id="adminModeBadge" class="admin-only admin-mode-badge" title="Quotation Mode active">QUOTATION MODE</span></div><h3>Your Cart</h3></div><button class="cart-close cart-back-btn" type="button" onclick="closeCart()" aria-label="Back to previous page">← <span>BACK</span></button></div><div class="cart-party-selector"><div class="cart-party-selector-head"><div><div class="admin-section-title">SELECT PARTY <span>FROM CRM</span></div><p class="cart-party-help">Party pehle CRM me create/save karo. Yahin se quotation ke liye select hoga.</p></div><span class="cart-party-admin-note">Manage parties from ADMIN PANEL</span></div><div class="cart-party-select-row"><select id="cartPartySelect" class="cart-party-select" onchange="selectCartParty(this.value)"><option value="">Select Party</option></select><span id="cartPartyStatus" class="cart-party-status">No party selected</span></div></div><div id="cartItems" class="cart-items"></div><div class="cart-empty" id="cartEmpty"><div class="cart-empty-icon">🛒</div><h4>Your cart is empty</h4><p>Add items to build your enquiry.</p></div><div class="cart-admin-area admin-only"><div class="manual-quote-item-box"><div class="manual-item-head"><div><div class="admin-section-title">ADD MANUAL ITEM <span>PRIVATE</span></div><p class="manual-item-help">Product website par nahi hai? Yahan manually add kar sakte ho.</p></div><button type="button" class="manual-item-toggle" onclick="toggleManualQuoteItem()">+ ADD ITEM</button></div><div id="manualQuoteItemForm" class="manual-item-form" hidden><div class="manual-item-grid"><div class="full"><label for="manualItemName">Product / Item Name *</label><input id="manualItemName" type="text" placeholder="e.g. Pop Wood Screw 4 x 1 inch"></div><div><label for="manualItemType">Category</label><input id="manualItemType" type="text" placeholder="e.g. Hardware"></div><div><label for="manualItemSpec">Specification</label><input id="manualItemSpec" type="text" placeholder="Size / model / spec"></div><div><label for="manualItemQty">Qty *</label><input id="manualItemQty" type="number" min="1" step="1" value="1"></div><div><label for="manualItemRate">Rate ₹ *</label><input id="manualItemRate" type="number" min="0" step="0.01" placeholder="Enter rate"></div></div><div class="manual-item-actions"><button type="button" class="manual-item-add-btn" onclick="addManualQuoteItem()">ADD TO QUOTATION</button><button type="button" class="manual-item-cancel-btn" onclick="toggleManualQuoteItem(false)">Cancel</button></div></div></div><div class="cart-pricing-box"><div class="cart-price-row"><span>Total Items</span><strong id="cartTotalItems">0</strong></div><div class="cart-price-row"><span>Subtotal</span><strong id="cartSubtotal">₹0</strong></div><div class="cart-gst-row"><input id="gstEnabled" type="checkbox" onchange="renderCart()"><label for="gstEnabled">Add GST</label><input id="gstRate" class="cart-gst-rate" type="number" min="0" max="100" step="0.01" value="18" disabled onchange="renderCart()"><span>%</span></div><div class="cart-price-row" id="gstAmountRow" style="display:none"><span>GST</span><strong id="cartGstAmount">₹0</strong></div><div class="cart-price-row"><span>Round Off</span><strong id="cartRoundOff">₹0</strong></div><div class="cart-price-row cart-grand-total"><span>Grand Total</span><strong id="cartGrandTotal">₹0</strong></div></div></div><div class="cart-footer"><div class="cart-process-row"><button type="button" class="cart-process-btn" onclick="renderCart()">↻ UPDATE CART</button><button type="button" class="cart-process-btn primary" onclick="closeCart()">CONTINUE SHOPPING</button></div><div class="cart-bottom-grid"><div><div class="cart-tools-title">ORDER / QUOTATION</div><p class="cart-tools-note">Review your selected products, update quantities, then continue with WhatsApp enquiry or quotation.</p><button class="whatsapp-order-btn" type="button" onclick="sendCartToWhatsApp()">ORDER ON WHATSAPP <span>↗</span></button><div id="quoteEditStatus" class="quote-edit-status admin-only"></div><div class="quote-actions admin-only"><button class="quote-pdf-btn" type="button" onclick="downloadCartPDF()">DOWNLOAD PDF QUOTATION</button><button class="crm-save-btn" type="button" onclick="crmSaveCurrentQuote()">SAVE</button><button class="clear-cart-btn" type="button" onclick="clearCart()">Clear Cart</button></div><button class="clear-cart-btn customer-clear-cart" type="button" onclick="clearCart()">Clear Cart</button></div><div class="admin-only"><div class="cart-tools-title">CART TOTALS</div><div class="cart-totals-card"><div class="cart-summary-line"><span>Total Items</span><strong id="cartTotalItemsSummary">0</strong></div><div class="cart-summary-line"><span>Subtotal</span><strong id="cartSubtotalSummary">₹0</strong></div><div class="cart-summary-line" id="cartGstSummaryLine" style="display:none"><span>GST</span><strong id="cartGstSummary">₹0</strong></div><div class="cart-summary-line"><span>Round Off</span><strong id="cartRoundOffSummary">₹0</strong></div><div class="cart-summary-line cart-grand"><span>Grand Total</span><strong id="cartGrandTotalSummary">₹0</strong></div></div></div><p class="cart-note">Send your selected models and quantities on WhatsApp. Quotation pricing is handled separately.</p></div></aside></div><div id="partySignupModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closePartySignup()"></div><div class="crm-panel party-signup-panel" role="dialog" aria-modal="true" aria-labelledby="partySignupTitle"><div class="customer-auth-visual"><div class="customer-auth-visual-kicker">SEERVI TRADING / BUSINESS ACCOUNT</div><div class="customer-auth-visual-title">SOURCE.<br><span>SUPPLY. GROW.</span></div><div class="customer-auth-visual-copy">Create your account and keep your Seervi business enquiries, quotations and order history connected.</div><div class="customer-auth-visual-mark">S</div></div><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / PARTY REGISTRATION</div><h3 id="partySignupTitle">Sign Up</h3><div class="crm-auth-status">Create your Seervi Trading customer account and save your party details securely.</div></div><button class="crm-close" type="button" onclick="closePartySignup()">×</button></div><form class="crm-login party-signup-form" onsubmit="submitPartySignup(event)"><section id="publicSignupStep1"><div class="crm-section-title">CREATE ACCOUNT</div><p>Enter your account details first. Your Seervi Trading account will be created only after the compulsory party/business details are completed.</p><div class="crm-login-grid"><input id="publicAccountName" required placeholder="Your Name *" autocomplete="name"><input id="publicAccountEmail" type="email" required placeholder="Email *" autocomplete="email"><input id="publicAccountPassword" type="password" required minlength="6" placeholder="Create Password *" autocomplete="new-password"></div><div class="party-signup-actions"><button class="crm-primary" type="button" onclick="createPublicCustomerAccount()">NEXT →</button><button class="crm-secondary" type="button" onclick="closePartySignup()">CANCEL</button></div></section><section id="publicSignupStep2" hidden><div class="crm-section-title">PARTY DETAILS</div><p>Complete the compulsory party/business details. Your account and profile will be created together after you submit this step.</p><div class="crm-login-grid"><div class="gstin-lookup-row"><input id="publicPartyGstin" type="text" maxlength="15" placeholder="GSTIN (Optional)" autocomplete="off" style="text-transform:uppercase" oninput="seerviGstinInputChanged(this)" onpaste="seerviGstinPaste(event)"><button id="publicGstinGetDetails" class="crm-secondary gstin-get-btn" type="button" onclick="getPublicGstinDetails()">OPEN GST</button></div><div class="gstin-import-row"><button id="publicGstinImport" class="crm-secondary gstin-import-btn" type="button" onclick="importCopiedGstinPage()">IMPORT COPIED GST DATA</button><span>GST Portal → Search → copy the result page → paste here</span></div><input id="publicPartyName" required placeholder="Party / Customer Name *" autocomplete="organization"><input id="publicPartyCompany" placeholder="Shop / Company"><input id="publicPartyPhone" required placeholder="Phone / WhatsApp *" autocomplete="tel"><input id="publicPartyCity" required placeholder="City *" autocomplete="address-level2"><input id="publicPartyAddress" required placeholder="Address *" autocomplete="street-address"><input id="publicPartyState" placeholder="State (Auto-filled)" autocomplete="address-level1"><input id="publicPartyPincode" inputmode="numeric" maxlength="6" placeholder="Pincode (Auto-filled)" autocomplete="postal-code"></div><div id="publicGstinLookupStatus" class="gstin-lookup-status" aria-live="polite"></div><textarea id="publicPartyNote" class="party-signup-note" placeholder="Requirement / Note (optional)"></textarea><div class="party-signup-actions"><button class="crm-primary" type="submit">COMPLETE SIGN UP</button><button class="crm-secondary" type="button" onclick="closePartySignup()">CANCEL</button></div></section><div id="publicPartySignupStatus" class="crm-auth-status"></div></form></div></div><div id="accountDashboardModal" class="crm-modal" aria-hidden="true">
+<section id="how-seervi-works" class="supply-flow-section importer-home-section"><div class="wrap"><div class="section-head"><div><div class="tag">SOURCE WITH SEERVI</div><h2>MULTIPLE FACTORIES. ONE BETTER DEAL.</h2></div><p>Give us the requirement. We work with suitable factory and supplier contacts, compare quotations and help you move from sourcing to a practical import decision.</p></div><div class="sourcing-hero-widget"><div class="sourcing-board"><div class="sourcing-board-top"><div><div class="sourcing-board-kicker">SEERVI SOURCING DESK</div><div class="sourcing-board-sub">A real sourcing workflow — not just a product catalogue.</div></div><div class="sourcing-live"><i></i> SOURCING ACTIVE</div></div><div class="sourcing-steps"><div class="sourcing-step"><div class="sourcing-step-no">01</div><div class="sourcing-step-icon">⌕</div><b>YOU TELL US</b><span>Photo, model, specification, quantity or even a sample.</span></div><div class="sourcing-step"><div class="sourcing-step-no">02</div><div class="sourcing-step-icon">⌂</div><b>WE CONTACT FACTORIES</b><span>We approach suitable manufacturers and suppliers for the requirement.</span></div><div class="sourcing-step"><div class="sourcing-step-no">03</div><div class="sourcing-step-icon">≋</div><b>COMPARE THE DEAL</b><span>Quotes are compared on price, specification and supplier fit.</span></div><div class="sourcing-step"><div class="sourcing-step-no">04</div><div class="sourcing-step-icon">✓</div><b>TRIAL → IMPORT</b><span>Where suitable, start with a trial and scale after confirmation.</span></div></div></div><div class="sourcing-proof"><div><div class="sourcing-proof-label">IMPORTER MODE</div><div class="sourcing-proof-title">One requirement.<br><span>Multiple sourcing options.</span></div><p>Seervi can work between your requirement and overseas suppliers, so you don't have to independently chase every factory.</p></div><div class="sourcing-timeline"><div><strong>40–45</strong><small>typical days<br>import cycle*</small></div><div><strong>TRIAL</strong><small>test first<br>where suitable</small></div><div><strong>INDIA</strong><small>factory → freight<br>→ customs → supply</small></div></div></div></div><div class="importer-live-strip"><div><span class="live-dot"></span><b>HOW A SOURCING REQUEST MOVES</b></div><div class="live-route"><span>Requirement</span><em>→</em><span>Factory Quotes</span><em>→</em><span>Comparison</span><em>→</em><span>Trial</span><em>→</em><span>Import</span></div></div><div class="source-request-widget"><div><h3>Have a product in mind?</h3><p>Send a photo, model, specification or quantity. We can start the sourcing conversation from there.</p></div><button type="button" class="source-request-btn" onclick="openWhatsAppPanel();selectWhatsAppOption('quote')">REQUEST SOURCING ↗</button></div></div></section></main><section id="about" class="importer-home-section"><div class="wrap"><div class="section-head"><div><div class="tag">WHAT CAN WE SOURCE?</div><h2>IF YOU CAN SPECIFY IT, WE CAN SOURCE IT.</h2></div><p>Built for retailers, wholesalers, fabricators, contractors and businesses looking beyond their regular local supply.</p></div><div class="importer-pill-grid"><div class="importer-pill"><div class="pill-icon">▦</div><b>ELECTRICAL & LED</b><span>Drivers, SMPS, lighting components and related items.</span></div><div class="importer-pill"><div class="pill-icon">⌗</div><b>HARDWARE</b><span>Fasteners, fittings, accessories and practical trade products.</span></div><div class="importer-pill"><div class="pill-icon">▤</div><b>ALUMINIUM</b><span>Profiles, accessories and fabrication requirements.</span></div><div class="importer-pill"><div class="pill-icon">⚙</div><b>TOOLS & MACHINERY</b><span>Tools, machines and equipment for business applications.</span></div></div><div class="source-categories"><span class="source-chip">INDUSTRIAL</span><span class="source-chip">CONSTRUCTION</span><span class="source-chip">INTERIOR</span><span class="source-chip">FABRICATION</span><span class="source-chip">CUSTOM REQUIREMENTS</span><span class="source-chip">WHOLESALE</span></div><div class="source-match-widget"><div class="source-match-head"><div><div class="source-match-kicker">CAN'T FIND IT IN OUR CATALOGUE?</div><h3>Ask Seervi to source it.</h3></div><span class="source-match-badge">CUSTOM SOURCING</span></div><div class="source-match-flow"><div><strong>01</strong><span>Share product photo / model</span></div><div class="source-match-arrow">→</div><div><strong>02</strong><span>We identify suitable suppliers</span></div><div class="source-match-arrow">→</div><div><strong>03</strong><span>You receive sourcing options</span></div></div></div></div></section><section id="why-seervi" class="importer-home-section"><div class="wrap"><div class="section-head"><div><div class="tag">WHY SOURCE WITH SEERVI?</div><h2>DON'T BET ON ONE FACTORY.</h2></div><p>A practical sourcing approach: compare suitable suppliers first, then decide what makes sense for your requirement.</p></div><div class="comparison-widget"><div class="comparison-panel"><div class="comparison-panel-top"><div><h3>SUPPLIER COMPARISON</h3><p>Example of how we think about a sourcing decision.</p></div><span class="comparison-badge">3 OPTIONS</span></div><div class="quote-row quote-head"><b>OPTION</b><span>FOCUS</span><span>STATUS</span></div><div class="quote-row"><b>Factory Option A</b><span>Rate</span><span class="quote-status">COMPARE</span></div><div class="quote-row"><b>Factory Option B</b><span>Spec + Rate</span><span class="quote-status best">BETTER FIT</span></div><div class="quote-row"><b>Factory Option C</b><span>MOQ</span><span class="quote-status">COMPARE</span></div><div class="quote-row"><b>Seervi Review</b><span>Overall fit</span><span class="quote-status best">SHORTLIST</span></div></div><div class="comparison-panel"><h3>WHAT WE CHECK</h3><p>Because the cheapest quote is not always the best import deal.</p><div class="trust-stack"><div class="trust-mini"><strong>PRICE</strong><span>Quotation and negotiation potential.</span></div><div class="trust-mini"><strong>SPECIFICATION</strong><span>Model, size, material and configuration.</span></div><div class="trust-mini"><strong>MOQ</strong><span>Order quantity and trial feasibility.</span></div><div class="trust-mini"><strong>FACTORY FIT</strong><span>Suitability for your requirement.</span></div><div class="trust-mini"><strong>IMPORT FLOW</strong><span>Freight, customs and delivery coordination.</span></div><div class="trust-mini"><strong>REPEAT SUPPLY</strong><span>Potential for a long-term source.</span></div></div></div></div><div class="trust-banner"><div class="trust-banner-mark">S</div><div><b>THE SEERVI APPROACH</b><span>Source smart → compare → trial where suitable → import → build repeat supply.</span></div><strong>BUILT FOR BUSINESS</strong></div></div></section><section id="contact" class="seervi-contact-footer importer-home-section">
+  <div class="seervi-contact-footer-inner">
+    <div class="seervi-contact-brand">
+      <div class="seervi-contact-logo">SEERVI</div>
+      <div class="seervi-contact-rule"></div>
+    </div>
+
+    <div class="seervi-contact-grid">
+      <div class="seervi-contact-column seervi-contact-menu">
+        <div class="seervi-footer-heading">EXPLORE</div>
+        <a href="#profiles">PRODUCTS</a>
+        <a href="#how-seervi-works">SOURCING</a>
+        <a href="#about">ABOUT US</a>
+        <a href="#why-seervi">WHY SEERVI</a>
+        <a href="#contact">CONTACT</a>
+      </div>
+
+      <div class="seervi-contact-column seervi-contact-main-info">
+        <div class="seervi-footer-heading">CONTACT</div>
+        <div class="seervi-contact-line"><span class="seervi-contact-label">BUSINESS / SOURCING</span><a id="contactPerson1Link" href="https://wa.me/917073741650" target="_blank" rel="noopener"><b id="contactPerson1Name">KAILASH SEERVI</b><span id="contactPerson1Number">+91 70737 41650</span></a></div>
+        <div class="seervi-contact-line"><span class="seervi-contact-label">BUSINESS / SOURCING</span><a id="contactPerson2Link" href="https://wa.me/919740598345" target="_blank" rel="noopener"><b id="contactPerson2Name">SHRAVAN KUMAR</b><span id="contactPerson2Number">+91 97405 98345</span></a></div>
+        <div class="seervi-contact-line"><span class="seervi-contact-label">E-MAIL</span><a id="contactEmailLink" href="mailto:info@seervitrading.com">info@seervitrading.com</a></div>
+      </div>
+
+      <div class="seervi-contact-column seervi-contact-address">
+        <div class="seervi-footer-heading">SEERVI TRADING</div>
+        <p>Global sourcing for retailers, wholesalers, businesses and project requirements.</p>
+        <div class="seervi-address-block"><span class="seervi-contact-label">ADDRESS</span><span>Nagarbhavi Circle,<br>Jannabharathi Main Road,<br>Bengaluru – 566072<br>India</span></div>
+        <a class="seervi-footer-wa" href="https://wa.me/917073741650?text=Hello%20Seervi%20Trading%2C%20I%20would%20like%20to%20discuss%20a%20sourcing%20requirement." target="_blank" rel="noopener">WHATSAPP SEERVI ↗</a>
+      </div>
+    </div>
+
+    <div class="seervi-footer-social-row">
+      <span>DIRECT SOURCING</span><i></i><span>FACTORY COMPARISON</span><i></i><span>TRIAL FIRST</span><i></i><span>IMPORT SUPPORT</span>
+    </div>
+  </div>
+</section><footer><div class="wrap" style="width:100%;display:flex;justify-content:space-between"><span>© 2026 Seervi Trading. All rights reserved.</span><span>Kailash Choudhary</span></div></footer><div id="cartDrawer" class="cart-drawer" aria-hidden="true"><div class="cart-backdrop" onclick="closeCart()"></div><aside class="cart-panel"><div class="cart-head"><div><div class="cart-title-row"><span class="tag">SEERVI ORDER</span><span id="adminModeBadge" class="admin-only admin-mode-badge" title="Quotation Mode active">QUOTATION MODE</span></div><h3>Your Cart</h3></div><button class="cart-close cart-back-btn" type="button" onclick="closeCart()" aria-label="Back to previous page">← <span>BACK</span></button></div><div class="cart-party-selector"><div class="cart-party-selector-head"><div><div class="admin-section-title">SELECT PARTY <span>FROM CRM</span></div><p class="cart-party-help">Party pehle CRM me create/save karo. Yahin se quotation ke liye select hoga.</p></div><span class="cart-party-admin-note">Manage parties from ADMIN PANEL</span></div><div class="cart-party-select-row"><select id="cartPartySelect" class="cart-party-select" onchange="selectCartParty(this.value)"><option value="">Select Party</option></select><span id="cartPartyStatus" class="cart-party-status">No party selected</span></div></div><div id="cartItems" class="cart-items"></div><div class="cart-empty" id="cartEmpty"><div class="cart-empty-icon">🛒</div><h4>Your cart is empty</h4><p>Add items to build your enquiry.</p></div><div class="cart-admin-area admin-only"><div class="manual-quote-item-box"><div class="manual-item-head"><div><div class="admin-section-title">ADD MANUAL ITEM <span>PRIVATE</span></div><p class="manual-item-help">Product website par nahi hai? Yahan manually add kar sakte ho.</p></div><button type="button" class="manual-item-toggle" onclick="toggleManualQuoteItem()">+ ADD ITEM</button></div><div id="manualQuoteItemForm" class="manual-item-form" hidden><div class="manual-item-grid"><div class="full"><label for="manualItemName">Product / Item Name *</label><input id="manualItemName" type="text" placeholder="e.g. Pop Wood Screw 4 x 1 inch"></div><div><label for="manualItemType">Category</label><input id="manualItemType" type="text" placeholder="e.g. Hardware"></div><div><label for="manualItemSpec">Specification</label><input id="manualItemSpec" type="text" placeholder="Size / model / spec"></div><div><label for="manualItemQty">Qty *</label><input id="manualItemQty" type="number" min="1" step="1" value="1"></div><div><label for="manualItemRate">Rate ₹ *</label><input id="manualItemRate" type="number" min="0" step="0.01" placeholder="Enter rate"></div></div><div class="manual-item-actions"><button type="button" class="manual-item-add-btn" onclick="addManualQuoteItem()">ADD TO QUOTATION</button><button type="button" class="manual-item-cancel-btn" onclick="toggleManualQuoteItem(false)">Cancel</button></div></div></div><div class="cart-pricing-box"><div class="cart-price-row"><span>Total Items</span><strong id="cartTotalItems">0</strong></div><div class="cart-price-row"><span>Subtotal</span><strong id="cartSubtotal">₹0</strong></div><div class="cart-gst-row"><input id="gstEnabled" type="checkbox" onchange="renderCart()"><label for="gstEnabled">Add GST</label><input id="gstRate" class="cart-gst-rate" type="number" min="0" max="100" step="0.01" value="18" disabled onchange="renderCart()"><span>%</span></div><div class="cart-price-row" id="gstAmountRow" style="display:none"><span>GST</span><strong id="cartGstAmount">₹0</strong></div><div class="cart-price-row"><span>Round Off</span><strong id="cartRoundOff">₹0</strong></div><div class="cart-price-row cart-grand-total"><span>Grand Total</span><strong id="cartGrandTotal">₹0</strong></div></div></div><div class="cart-footer"><div class="cart-process-row"><button type="button" class="cart-process-btn" onclick="renderCart()">↻ UPDATE CART</button><button type="button" class="cart-process-btn primary" onclick="closeCart()">CONTINUE SHOPPING</button></div><div class="cart-bottom-grid"><div><div class="cart-tools-title">ORDER / QUOTATION</div><p class="cart-tools-note">Review your selected products, update quantities, then continue with WhatsApp enquiry or quotation.</p><button class="whatsapp-order-btn" type="button" onclick="sendCartToWhatsApp()">ORDER ON WHATSAPP <span>↗</span></button><div id="quoteEditStatus" class="quote-edit-status admin-only"></div><div class="quote-actions admin-only"><button class="quote-pdf-btn" type="button" onclick="downloadCartPDF()">DOWNLOAD PDF QUOTATION</button><button class="crm-save-btn" type="button" onclick="crmSaveCurrentQuote()">SAVE</button><button class="clear-cart-btn" type="button" onclick="clearCart()">Clear Cart</button></div><button class="clear-cart-btn customer-clear-cart" type="button" onclick="clearCart()">Clear Cart</button></div><div class="admin-only"><div class="cart-tools-title">CART TOTALS</div><div class="cart-totals-card"><div class="cart-summary-line"><span>Total Items</span><strong id="cartTotalItemsSummary">0</strong></div><div class="cart-summary-line"><span>Subtotal</span><strong id="cartSubtotalSummary">₹0</strong></div><div class="cart-summary-line" id="cartGstSummaryLine" style="display:none"><span>GST</span><strong id="cartGstSummary">₹0</strong></div><div class="cart-summary-line"><span>Round Off</span><strong id="cartRoundOffSummary">₹0</strong></div><div class="cart-summary-line cart-grand"><span>Grand Total</span><strong id="cartGrandTotalSummary">₹0</strong></div></div></div><p class="cart-note">Send your selected models and quantities on WhatsApp. Quotation pricing is handled separately.</p></div></aside></div><div id="partySignupModal" class="crm-modal" aria-hidden="true"><div class="crm-backdrop" onclick="closePartySignup()"></div><div class="crm-panel party-signup-panel" role="dialog" aria-modal="true" aria-labelledby="partySignupTitle"><div class="customer-auth-visual"><div class="customer-auth-visual-kicker">SEERVI TRADING / BUSINESS ACCOUNT</div><div class="customer-auth-visual-title">SOURCE.<br><span>SUPPLY. GROW.</span></div><div class="customer-auth-visual-copy">Create your account and keep your Seervi business enquiries, quotations and order history connected.</div><div class="customer-auth-visual-mark">S</div></div><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / PARTY REGISTRATION</div><h3 id="partySignupTitle">Sign Up</h3><div class="crm-auth-status">Create your Seervi Trading customer account and save your party details securely.</div></div><button class="crm-close" type="button" onclick="closePartySignup()">×</button></div><form class="crm-login party-signup-form" onsubmit="submitPartySignup(event)"><section id="publicSignupStep1"><div class="crm-section-title">CREATE ACCOUNT</div><p>Enter your account details first. Your Seervi Trading account will be created only after the compulsory party/business details are completed.</p><div class="crm-login-grid"><input id="publicAccountName" required placeholder="Your Name *" autocomplete="name"><input id="publicAccountEmail" type="email" required placeholder="Email *" autocomplete="email"><input id="publicAccountPassword" type="password" required minlength="6" placeholder="Create Password *" autocomplete="new-password"></div><div class="party-signup-actions"><button class="crm-primary" type="button" onclick="createPublicCustomerAccount()">NEXT →</button><button class="crm-secondary" type="button" onclick="closePartySignup()">CANCEL</button></div></section><section id="publicSignupStep2" hidden><div class="crm-section-title">PARTY DETAILS</div><p>Complete the compulsory party/business details. Your account and profile will be created together after you submit this step.</p><div class="crm-login-grid"><div class="gstin-lookup-row"><input id="publicPartyGstin" type="text" maxlength="15" placeholder="GSTIN (Optional)" autocomplete="off" style="text-transform:uppercase" oninput="seerviGstinInputChanged(this)" onpaste="seerviGstinPaste(event)"><button id="publicGstinGetDetails" class="crm-secondary gstin-get-btn" type="button" onclick="getPublicGstinDetails()">OPEN GST</button></div><div class="gstin-import-row"><button id="publicGstinImport" class="crm-secondary gstin-import-btn" type="button" onclick="importCopiedGstinPage()">IMPORT COPIED GST DATA</button><span>GST Portal → Search → copy the result page → paste here</span></div><input id="publicPartyName" required placeholder="Party / Customer Name *" autocomplete="organization"><input id="publicPartyCompany" placeholder="Shop / Company"><input id="publicPartyPhone" required placeholder="Phone / WhatsApp *" autocomplete="tel"><input id="publicPartyCity" required placeholder="City *" autocomplete="address-level2"><input id="publicPartyAddress" required placeholder="Address *" autocomplete="street-address"><input id="publicPartyState" placeholder="State (Auto-filled)" autocomplete="address-level1"><input id="publicPartyPincode" inputmode="numeric" maxlength="6" placeholder="Pincode (Auto-filled)" autocomplete="postal-code"></div><div id="publicGstinLookupStatus" class="gstin-lookup-status" aria-live="polite"></div><textarea id="publicPartyNote" class="party-signup-note" placeholder="Requirement / Note (optional)"></textarea><div class="party-signup-actions"><button class="crm-primary" type="submit">COMPLETE SIGN UP</button><button class="crm-secondary" type="button" onclick="closePartySignup()">CANCEL</button></div></section><div id="publicPartySignupStatus" class="crm-auth-status"></div></form></div></div><div id="accountDashboardModal" class="crm-modal" aria-hidden="true">
   <div class="crm-backdrop" onclick="closeAccountDashboard()"></div>
   <div class="crm-panel account-dashboard-panel" role="dialog" aria-modal="true" aria-labelledby="accountDashboardTitle">
     <div class="crm-head">
