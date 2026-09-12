@@ -5301,7 +5301,7 @@ body.seervi-ai-open .float-support{display:none!important}
   <div class="crm-backdrop" onclick="closeAdminCatalogues()"></div>
   <div class="crm-panel admin-settings-panel" role="dialog" aria-modal="true" aria-labelledby="adminCataloguesTitle">
     <div class="crm-head">
-      <div><div class="crm-kicker">SEERVI TRADING / ADMIN DASHBOARD</div><h3 id="adminCataloguesTitle">Catalogues</h3><div class="crm-auth-status">Add customer-facing PDF catalogues. Upload the PDF to GitHub and save its public URL here.</div></div>
+      <div><div class="crm-kicker">SEERVI TRADING / ADMIN DASHBOARD</div><h3 id="adminCataloguesTitle">Catalogues</h3><div class="crm-auth-status">Add customer-facing PDF catalogues. Upload the PDF to GitHub and enter its URL / path, just like product images.</div></div>
       <button class="crm-close" type="button" onclick="closeAdminCatalogues()">×</button>
     </div>
     <div class="admin-settings-scroll">
@@ -5309,7 +5309,7 @@ body.seervi-ai-open .float-support{display:none!important}
         <div class="crm-section-title">ADD / EDIT CATALOGUE</div>
         <div class="admin-settings-grid">
           <label>Catalogue Name<input id="settingCatalogueName" type="text" maxlength="120" placeholder="e.g. Electrical Catalogue"></label>
-          <label class="full">PDF URL<input id="settingCatalogueUrl" type="url" maxlength="1000" placeholder="https://raw.githubusercontent.com/.../catalogue.pdf"></label>
+          <label class="full">PDF URL / PATH<input id="settingCatalogueUrl" type="text" maxlength="1000" placeholder="Catalogue/school-project-item.pdf"></label>
         </div>
         <div class="admin-settings-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
           <button class="crm-primary" type="button" onclick="seerviSaveCatalogue()">+ ADD CATALOGUE</button>
@@ -15213,7 +15213,12 @@ let seerviCatalogueEditingId='';
 
 function seerviCatalogueCleanName(value){return String(value??'').replace(/\s+/g,' ').trim().slice(0,120);}
 function seerviCatalogueCleanUrl(value){return String(value??'').trim().slice(0,1000);}
-function seerviCatalogueValidUrl(value){try{const u=new URL(value);return /^https?:$/.test(u.protocol)&&!!u.hostname;}catch(_){return false;}}
+function seerviCatalogueValidUrl(value){
+  const v=seerviCatalogueCleanUrl(value);
+  if(!v || /^(?:javascript|data|vbscript):/i.test(v) || /^\/\//.test(v))return false;
+  if(/^https?:\/\//i.test(v)){try{const u=new URL(v);return /^https?:$/.test(u.protocol)&&!!u.hostname;}catch(_){return false;}}
+  return !/^[a-z][a-z0-9+.-]*:/i.test(v);
+}
 
 function seerviCatalogueRenderPublic(){
   const list=document.getElementById('seerviCatalogueList');if(!list)return;
@@ -15272,7 +15277,7 @@ window.seerviSaveCatalogue=async function(){
   const url=seerviCatalogueCleanUrl(document.getElementById('settingCatalogueUrl')?.value);
   const status=document.getElementById('seerviCataloguesStatus');
   if(!name){if(status)status.textContent='Enter a catalogue name.';return;}
-  if(!seerviCatalogueValidUrl(url)){if(status)status.textContent='Enter a valid public HTTP/HTTPS PDF URL.';return;}
+  if(!seerviCatalogueValidUrl(url)){if(status)status.textContent='Enter a valid PDF URL / path, e.g. Catalogue/catalogue.pdf';return;}
   if(!/\.pdf(?:[?#].*)?$/i.test(url)){if(status)status.textContent='Please enter the direct PDF URL ending in .pdf.';return;}
   try{
     if(status)status.textContent=seerviCatalogueEditingId?'Saving catalogue…':'Adding catalogue…';
@@ -16057,7 +16062,7 @@ function seerviShowSaveSuccess(message){
         }else{
           setBar('');
           if(s.overlay==='cart') baseOpenCart?.();
-          else if(s.overlay==='whatsapp') baseOpenWhatsApp?.();
+          else if(s.overlay==='catalogue') baseOpenCatalogue?.();
           else if(s.overlay==='support') baseOpenSupport?.();
           else if(s.overlay==='login') authOpen?.();
           else if(s.overlay==='signup') signupOpen?.();
