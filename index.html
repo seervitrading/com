@@ -3405,9 +3405,9 @@ body.nav-is-scrolled{padding-top:76px;}
 #customerDashboardView .customer-portal-tabs[hidden],
 #customerDashboardView .customer-profile-edit[hidden]{display:none !important}
 
-#seerviCataloguePanel{position:fixed;inset:0;z-index:9990;display:none;background:#07090b;color:#f2f4f6;overflow:hidden}
+#seerviCataloguePanel{position:fixed;inset:0;z-index:9990;display:none;background:#080a0d;color:#f2f4f6;overflow:hidden}
 #seerviCataloguePanel.show{display:block}
-.seervi-catalogue-card{width:100%;height:100%;overflow:auto;background:radial-gradient(circle at 75% 8%,#3b2b0d55 0,transparent 28%),radial-gradient(circle at 10% 35%,#151b22 0,transparent 25%),linear-gradient(180deg,#07090b,#0a0d11 45%,#080a0d);padding:0 28px 50px;box-sizing:border-box}
+.seervi-catalogue-card{width:100%;height:100%;overflow:auto;background:linear-gradient(180deg,#0b0e12 0%,#080a0d 100%);padding:0 28px 50px;box-sizing:border-box}
 .seervi-catalogue-head{position:sticky;top:0;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:24px 0 20px;margin-bottom:26px;background:linear-gradient(180deg,#0b0e12 78%,rgba(11,14,18,0))}
 .seervi-catalogue-head-copy{min-width:0}
 .seervi-catalogue-kicker{color:#d8b45a;font-size:10px;font-weight:900;letter-spacing:1.4px}
@@ -5193,7 +5193,48 @@ body.seervi-ai-open .float-support{display:none!important}
     display: none;
   }
 </style>
-<style id="seervi-home-uniform-section-gap">/* Uniform 60px vertical spacing for homepage sections; product catalogue excluded. */#how-seervi-works.importer-home-section,#about.importer-home-section,#why-seervi.importer-home-section,#contact.seervi-contact-footer.importer-home-section{padding-top:60px!important;padding-bottom:60px!important}@media(max-width:800px){#how-seervi-works.importer-home-section,#about.importer-home-section,#why-seervi.importer-home-section,#contact.seervi-contact-footer.importer-home-section{padding-top:60px!important;padding-bottom:60px!important}}</style></head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
+<style id="seervi-home-uniform-section-gap">/* Uniform 60px vertical spacing for homepage sections; product catalogue excluded. */#how-seervi-works.importer-home-section,#about.importer-home-section,#why-seervi.importer-home-section,#contact.seervi-contact-footer.importer-home-section{padding-top:60px!important;padding-bottom:60px!important}@media(max-width:800px){#how-seervi-works.importer-home-section,#about.importer-home-section,#why-seervi.importer-home-section,#contact.seervi-contact-footer.importer-home-section{padding-top:60px!important;padding-bottom:60px!important}}</style>
+<style id="seervi-catalogue-product-page-style">
+/* Catalogue uses the same visual canvas as the mobile Products view:
+   Vanta remains visible, the top gold progress line stays above it,
+   and the mobile taskbar remains interactive. */
+@media(max-width:600px){
+  #seerviCataloguePanel{
+    z-index:150!important;
+    background:transparent!important;
+    overflow:hidden!important;
+    pointer-events:none;
+  }
+  #seerviCataloguePanel.show{display:block!important;pointer-events:auto!important}
+  #seerviCataloguePanel .seervi-catalogue-card{
+    position:relative;
+    width:100%;
+    height:100%;
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding:0 14px 125px!important;
+    background:linear-gradient(180deg,rgba(8,10,13,.18) 0%,rgba(8,10,13,.06) 38%,rgba(8,10,13,.16) 100%)!important;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  #seerviCataloguePanel .seervi-catalogue-card::-webkit-scrollbar{display:none}
+  #seerviCataloguePanel .seervi-catalogue-head{
+    background:linear-gradient(180deg,rgba(8,10,13,.82) 0%,rgba(8,10,13,.38) 72%,transparent 100%)!important;
+    padding-top:18px!important;
+  }
+  #seerviCataloguePanel .seervi-catalogue-list,
+  #seerviCataloguePanel .seervi-catalogue-note{position:relative;z-index:1}
+  #seerviCataloguePanel .seervi-catalogue-item{
+    background:linear-gradient(145deg,rgba(19,24,30,.92),rgba(12,15,19,.90))!important;
+    backdrop-filter:blur(3px);
+  }
+  /* Keep the four-way taskbar above the catalogue page, exactly like Products/Cart. */
+  body:has(#seerviCataloguePanel.show) .mobile-bottom-bar{z-index:170!important}
+  /* Catalogue scroll uses the same gold progress indicator as the main page. */
+  body.seervi-catalogue-open #seerviScrollProgress{display:block!important;z-index:99998!important}
+}
+</style>
+</head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
 </button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" aria-hidden="true"></div><video class="bw-hero-media-video" id="bwHeroVideo" aria-hidden="true" autoplay muted loop playsinline preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
@@ -6691,12 +6732,28 @@ document.addEventListener('keydown',function(e){
   window.openCataloguePanel=function(){
     const m=document.getElementById('seerviCataloguePanel');if(!m)return;
     try{window.closeAccountDashboard?.();}catch(e){}
-    m.classList.add('show');m.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
+    m.classList.add('show');m.setAttribute('aria-hidden','false');document.body.classList.add('modal-open','seervi-catalogue-open');
     if(typeof window.seerviLoadPublicCatalogues==='function')window.seerviLoadPublicCatalogues();
+    try{window.seerviBindCatalogueScrollProgress?.();}catch(e){}
   };
   window.closeCataloguePanel=function(){
     const m=document.getElementById('seerviCataloguePanel');if(!m)return;
-    m.classList.remove('show');m.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');
+    m.classList.remove('show');m.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open','seervi-catalogue-open');
+  };
+  window.seerviBindCatalogueScrollProgress=function(){
+    const card=document.querySelector('#seerviCataloguePanel .seervi-catalogue-card');
+    const fill=document.querySelector('#seerviScrollProgress span');
+    if(!card||!fill||card.dataset.progressBound==='1')return;
+    card.dataset.progressBound='1';
+    let ticking=false;
+    const update=function(){
+      ticking=false;
+      const max=card.scrollHeight-card.clientHeight;
+      const pct=max>0?Math.max(0,Math.min(1,card.scrollTop/max)):0;
+      fill.style.width=(pct*100).toFixed(2)+'%';
+    };
+    card.addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});
+    update();
   };
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeCataloguePanel();});
 })();
