@@ -5151,7 +5151,7 @@ body.seervi-ai-open .float-support{display:none!important}
 </head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
-</button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" aria-hidden="true"></div><video class="bw-hero-media-video" id="bwHeroVideo" aria-hidden="true" autoplay muted loop playsinline preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / GLOBAL SOURCING</div><h1>Sourced Globally.<br><span>Supplied by Seervi.</span></h1><p>Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.</p><a class="bw-cta" href="#profiles">Explore Our Solutions <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
+</button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" aria-hidden="true"></div><video class="bw-hero-media-video" id="bwHeroVideo" aria-hidden="true" autoplay muted loop playsinline preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
 
 
 <section id="profiles" class="firebase-public-catalog">
@@ -14911,7 +14911,7 @@ window.seerviCloseItemsPanel=function(){
 const SEERVI_SITE_SETTINGS_DEFAULTS={
   vanta:{color:'#ff99c5',backgroundColor:'#000000',points:10,maxDistance:15,spacing:15,showDots:true},
   branding:{companyName:'Seervi Trading',tagline:'Sourced Globally. Supplied by Seervi.',email:'info@seervitrading.com',whatsapp:'917073741650',contact1Name:'KAILASH SEERVI',contact1Number:'917073741650',contact2Name:'SHRAVAN KUMAR',contact2Number:'9740598345'},
-  homepage:{heroKicker:'SEERVI TRADING / GLOBAL SOURCING',heroTitle:'Sourced Globally.',heroHighlight:'Supplied by Seervi.',heroDescription:'Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.',heroCta:'Explore Our Solutions',heroMediaType:'image',heroImage:'images/00-old-products/product-image-001-055cde1217d3c801.webp',heroVideo:'',showSupplyFlow:true,showAbout:true,showWhy:true,showContact:true,companyName:'Seervi Trading',tagline:'Sourced Globally. Supplied by Seervi.',email:'info@seervitrading.com',whatsapp:'917073741650',contact1Name:'KAILASH SEERVI',contact1Number:'917073741650',contact2Name:'SHRAVAN KUMAR',contact2Number:'9740598345',contactAddress:'Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072, India'},
+  homepage:{heroKicker:'SEERVI TRADING / FACTORY SOURCING & IMPORT',heroTitle:'YOU NEED IT.',heroHighlight:'WE SOURCE IT.',heroDescription:'We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.',heroCta:'Request a Product',heroMediaType:'image',heroImage:'images/00-old-products/product-image-001-055cde1217d3c801.webp',heroVideo:'',showSupplyFlow:true,showAbout:true,showWhy:true,showContact:true,companyName:'Seervi Trading',tagline:'Sourced Globally. Supplied by Seervi.',email:'info@seervitrading.com',whatsapp:'917073741650',contact1Name:'KAILASH SEERVI',contact1Number:'917073741650',contact2Name:'SHRAVAN KUMAR',contact2Number:'9740598345',contactAddress:'Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072, India'},
   catalogue:{sectionTitle:'Our Products',showCatalogue:true,showSearch:true,showSort:true,showCategoryFilter:true,showSubcategoryFilter:true},
   customer:{loginEnabled:true,signupEnabled:true},
   notifications:{enabled:true,soundEnabled:true},
@@ -14940,6 +14940,21 @@ function seerviNormaliseHex(value,fallback){
 }
 function seerviNormaliseSettings(raw){
   const s=seerviSettingsMerge(SEERVI_SITE_SETTINGS_DEFAULTS,raw||{});
+  // Migrate the previous default hero copy to the new importer-focused positioning
+  // without overwriting a custom hero configured by the admin.
+  const oldHero={
+    heroKicker:'SEERVI TRADING / GLOBAL SOURCING',
+    heroTitle:'Sourced Globally.',
+    heroHighlight:'Supplied by Seervi.',
+    heroDescription:'Quality-focused wholesale sourcing for fabrication, interior, construction and professional trade applications.',
+    heroCta:'Explore Our Solutions'
+  };
+  const newHero=SEERVI_SITE_SETTINGS_DEFAULTS.homepage;
+  if(s.homepage.heroKicker===oldHero.heroKicker)s.homepage.heroKicker=newHero.heroKicker;
+  if(s.homepage.heroTitle===oldHero.heroTitle)s.homepage.heroTitle=newHero.heroTitle;
+  if(s.homepage.heroHighlight===oldHero.heroHighlight)s.homepage.heroHighlight=newHero.heroHighlight;
+  if(s.homepage.heroDescription===oldHero.heroDescription)s.homepage.heroDescription=newHero.heroDescription;
+  if(s.homepage.heroCta===oldHero.heroCta)s.homepage.heroCta=newHero.heroCta;
   s.vanta.color=seerviNormaliseHex(s.vanta.color,SEERVI_SITE_SETTINGS_DEFAULTS.vanta.color);
   s.vanta.backgroundColor=seerviNormaliseHex(s.vanta.backgroundColor,SEERVI_SITE_SETTINGS_DEFAULTS.vanta.backgroundColor);
   ['points','maxDistance','spacing'].forEach(k=>{
