@@ -3405,21 +3405,31 @@ body.nav-is-scrolled{padding-top:76px;}
 #customerDashboardView .customer-portal-tabs[hidden],
 #customerDashboardView .customer-profile-edit[hidden]{display:none !important}
 
-#seerviCataloguePanel{position:fixed;inset:0;z-index:20000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.62);backdrop-filter:blur(8px)}
-#seerviCataloguePanel.show{display:flex}
-.seervi-catalogue-card{width:min(620px,calc(100vw - 28px));max-height:min(720px,calc(100vh - 28px));overflow:auto;background:#0d1218;border:1px solid #ffffff18;border-radius:18px;box-shadow:0 28px 90px #000b;padding:22px}
-.seervi-catalogue-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+#seerviCataloguePanel{position:fixed;inset:0;z-index:20000;display:none;background:#080a0d;color:#f2f4f6;overflow:hidden}
+#seerviCataloguePanel.show{display:block}
+.seervi-catalogue-card{width:100%;height:100%;overflow:auto;background:linear-gradient(180deg,#0b0e12 0%,#080a0d 100%);padding:0 28px 50px;box-sizing:border-box}
+.seervi-catalogue-head{position:sticky;top:0;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:24px 0 20px;margin-bottom:26px;background:linear-gradient(180deg,#0b0e12 78%,rgba(11,14,18,0))}
+.seervi-catalogue-head-copy{min-width:0}
 .seervi-catalogue-kicker{color:#d8b45a;font-size:10px;font-weight:900;letter-spacing:1.4px}
-.seervi-catalogue-title{margin:5px 0 0;font-size:25px;font-weight:900;color:#f2f4f6}
+.seervi-catalogue-title{margin:5px 0 0;font-size:32px;font-weight:900;color:#f2f4f6;letter-spacing:-.7px}
 .seervi-catalogue-sub{margin:7px 0 0;color:#8f99a4;font-size:13px;line-height:1.5}
-.seervi-catalogue-close{width:42px;height:42px;border:1px solid #ffffff18;background:#151b22;color:#d9dde2;border-radius:10px;cursor:pointer;font-size:22px;font-weight:900}
-.seervi-catalogue-list{display:grid;gap:10px}
-.seervi-catalogue-item{display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid #ffffff14;background:#11171e;color:#f2f4f6;border-radius:13px;padding:15px}
-.seervi-catalogue-item-name{font-size:14px;font-weight:900;min-width:0;overflow-wrap:anywhere}
-.seervi-catalogue-item-open{flex:0 0 auto;border:0;border-radius:9px;background:#fff;color:#0b0d10;padding:10px 13px;font-size:9px;font-weight:900;cursor:pointer;text-decoration:none}
-.seervi-catalogue-empty{border:1px dashed #ffffff18;border-radius:13px;padding:24px;text-align:center;color:#7f8995;font-size:11px;line-height:1.5}
-.seervi-catalogue-note{margin-top:13px;color:#707985;font-size:10px;line-height:1.45}
-@media(max-width:600px){#seerviCataloguePanel{padding:12px;align-items:flex-end}.seervi-catalogue-card{width:100%;border-radius:18px 18px 12px 12px;padding:18px;max-height:calc(100vh - 24px)}.seervi-catalogue-title{font-size:22px}.seervi-catalogue-item{align-items:flex-start}.seervi-catalogue-item-open{padding:10px 11px}}
+.seervi-catalogue-close{flex:0 0 auto;width:44px;height:44px;border:1px solid #ffffff18;background:#151b22;color:#d9dde2;border-radius:10px;cursor:pointer;font-size:22px;font-weight:900}
+.seervi-catalogue-close:hover{border-color:#ffffff55;color:#fff}
+.seervi-catalogue-list{width:min(1100px,100%);margin:0 auto;display:grid;gap:14px}
+.seervi-catalogue-item{display:grid;grid-template-columns:180px minmax(0,1fr);align-items:stretch;gap:22px;border:1px solid #ffffff12;background:linear-gradient(145deg,#13181e,#0c0f13);color:#f2f4f6;border-radius:16px;padding:14px;box-shadow:0 15px 40px #0005;overflow:hidden}
+.seervi-catalogue-item:hover{border-color:#ffffff35;box-shadow:0 20px 48px #0007}
+.seervi-catalogue-preview{position:relative;width:180px;height:225px;border-radius:11px;overflow:hidden;background:#171b20;border:1px solid #ffffff12;cursor:pointer}
+.seervi-catalogue-preview iframe{display:block;width:100%;height:100%;border:0;background:#fff;pointer-events:none}
+.seervi-catalogue-preview::after{content:'PDF ↗';position:absolute;right:8px;bottom:8px;padding:6px 8px;border-radius:7px;background:#080a0dcc;color:#fff;font-size:8px;font-weight:900;letter-spacing:.7px;backdrop-filter:blur(5px)}
+.seervi-catalogue-info{min-width:0;display:flex;flex-direction:column;justify-content:center;padding:10px 12px 10px 0}
+.seervi-catalogue-item-kicker{color:#8d97a2;font-size:9px;font-weight:900;letter-spacing:1.2px;margin-bottom:8px}
+.seervi-catalogue-item-name{font-size:23px;font-weight:900;line-height:1.2;min-width:0;overflow-wrap:anywhere;color:#f2f4f6}
+.seervi-catalogue-item-file{margin-top:8px;color:#737e89;font-size:10px;line-height:1.45;overflow-wrap:anywhere}
+.seervi-catalogue-item-open{align-self:flex-start;margin-top:20px;flex:0 0 auto;border:1px solid #ffffff22;border-radius:9px;background:#fff;color:#0b0d10;padding:11px 15px;font-size:9px;font-weight:900;letter-spacing:.6px;cursor:pointer;text-decoration:none}
+.seervi-catalogue-item-open:hover{background:#f0c66a;border-color:#f0c66a}
+.seervi-catalogue-empty{width:min(1100px,100%);margin:0 auto;border:1px dashed #ffffff18;border-radius:13px;padding:35px;text-align:center;color:#7f8995;font-size:11px;line-height:1.5;box-sizing:border-box}
+.seervi-catalogue-note{width:min(1100px,100%);margin:18px auto 0;color:#606a75;font-size:10px;line-height:1.45}
+@media(max-width:700px){#seerviCataloguePanel{overflow:hidden}.seervi-catalogue-card{padding:0 14px 34px}.seervi-catalogue-head{padding:18px 0 17px;margin-bottom:18px}.seervi-catalogue-title{font-size:25px}.seervi-catalogue-sub{font-size:11px}.seervi-catalogue-close{width:40px;height:40px}.seervi-catalogue-item{grid-template-columns:105px minmax(0,1fr);gap:13px;padding:10px}.seervi-catalogue-preview{width:105px;height:145px}.seervi-catalogue-info{padding:6px 5px 6px 0}.seervi-catalogue-item-kicker{font-size:7px;margin-bottom:6px}.seervi-catalogue-item-name{font-size:16px}.seervi-catalogue-item-file{font-size:8px;margin-top:6px}.seervi-catalogue-item-open{margin-top:13px;padding:9px 10px;font-size:8px}.seervi-catalogue-note{font-size:9px}}
 
 @media(max-width:600px){
   body:not(.mobile-products-view) #tvMounts{display:none!important}
@@ -6666,7 +6676,7 @@ document.addEventListener('keydown',function(e){
 <div id="seerviCataloguePanel" aria-hidden="true">
   <div class="seervi-catalogue-card" role="dialog" aria-modal="true" aria-labelledby="seerviCatalogueTitle">
     <div class="seervi-catalogue-head">
-      <div><div class="seervi-catalogue-kicker">SEERVI TRADING / DOCUMENTS</div><h3 id="seerviCatalogueTitle" class="seervi-catalogue-title">Catalogues</h3><p class="seervi-catalogue-sub">Browse our latest product catalogues and open the PDF you need.</p></div>
+      <div class="seervi-catalogue-head-copy"><div class="seervi-catalogue-kicker">SEERVI TRADING / DOCUMENTS</div><h3 id="seerviCatalogueTitle" class="seervi-catalogue-title">Catalogues</h3><p class="seervi-catalogue-sub">Browse our latest product catalogues and open the PDF you need.</p></div>
       <button type="button" class="seervi-catalogue-close" onclick="closeCataloguePanel()" aria-label="Close catalogues">×</button>
     </div>
     <div id="seerviCatalogueList" class="seervi-catalogue-list"><div class="seervi-catalogue-empty">Loading catalogues…</div></div>
@@ -15220,10 +15230,24 @@ function seerviCatalogueValidUrl(value){
   return !/^[a-z][a-z0-9+.-]*:/i.test(v);
 }
 
+function seerviCatalogueResolveUrl(value){
+  const raw=seerviCatalogueCleanUrl(value);
+  if(/^https?:\/\//i.test(raw))return raw;
+  try{return new URL(raw,document.baseURI).href;}catch(_){return raw;}
+}
+function seerviCatalogueFileName(value){
+  try{const u=new URL(seerviCatalogueResolveUrl(value));return decodeURIComponent(u.pathname.split('/').pop()||'Catalogue PDF');}catch(_){return String(value||'Catalogue PDF').split('/').pop()||'Catalogue PDF';}
+}
 function seerviCatalogueRenderPublic(){
   const list=document.getElementById('seerviCatalogueList');if(!list)return;
   if(!seerviPublicCatalogues.length){list.innerHTML='<div class="seervi-catalogue-empty">No catalogues are available right now.</div>';return;}
-  list.innerHTML=seerviPublicCatalogues.map(item=>`<div class="seervi-catalogue-item"><div class="seervi-catalogue-item-name">${seerviEscHtml(item.name||'Catalogue')}</div><a class="seervi-catalogue-item-open" href="${seerviEscHtml(item.url)}" target="_blank" rel="noopener noreferrer">VIEW CATALOGUE ↗</a></div>`).join('');
+  list.innerHTML=seerviPublicCatalogues.map(item=>{
+    const url=seerviCatalogueResolveUrl(item.url),name=seerviEscHtml(item.name||'Catalogue'),file=seerviEscHtml(seerviCatalogueFileName(item.url));
+    return `<article class="seervi-catalogue-item">
+      <a class="seervi-catalogue-preview" href="${seerviEscHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${name}"><iframe src="${seerviEscHtml(url)}#page=1&toolbar=0&navpanes=0&scrollbar=0" title="${name} PDF preview" loading="lazy"></iframe></a>
+      <div class="seervi-catalogue-info"><div class="seervi-catalogue-item-kicker">SEERVI TRADING / PDF CATALOGUE</div><div class="seervi-catalogue-item-name">${name}</div><div class="seervi-catalogue-item-file">${file}</div><a class="seervi-catalogue-item-open" href="${seerviEscHtml(url)}" target="_blank" rel="noopener noreferrer">VIEW CATALOGUE ↗</a></div>
+    </article>`;
+  }).join('');
 }
 
 window.seerviLoadPublicCatalogues=async function(){
