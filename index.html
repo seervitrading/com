@@ -3405,7 +3405,7 @@ body.nav-is-scrolled{padding-top:76px;}
 #customerDashboardView .customer-portal-tabs[hidden],
 #customerDashboardView .customer-profile-edit[hidden]{display:none !important}
 
-#seerviCataloguePanel{position:fixed;inset:0;z-index:100000;display:none;background:#080a0d;color:#f2f4f6;overflow:hidden}
+#seerviCataloguePanel{position:fixed;inset:0;z-index:9990;display:none;background:#080a0d;color:#f2f4f6;overflow:hidden}
 #seerviCataloguePanel.show{display:block}
 .seervi-catalogue-card{width:100%;height:100%;overflow:auto;background:linear-gradient(180deg,#0b0e12 0%,#080a0d 100%);padding:0 28px 50px;box-sizing:border-box}
 .seervi-catalogue-head{position:sticky;top:0;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:24px 0 20px;margin-bottom:26px;background:linear-gradient(180deg,#0b0e12 78%,rgba(11,14,18,0))}
@@ -5193,7 +5193,13 @@ body.seervi-ai-open .float-support{display:none!important}
     display: none;
   }
 </style>
-<style id="seervi-home-uniform-section-gap">/* Uniform 60px vertical spacing for homepage sections; product catalogue excluded. */#how-seervi-works.importer-home-section,#about.importer-home-section,#why-seervi.importer-home-section,#contact.seervi-contact-footer.importer-home-section{padding-top:60px!important;padding-bottom:60px!important}@media(max-width:800px){#how-seervi-works.importer-home-section,#about.importer-home-section,#why-seervi.importer-home-section,#contact.seervi-contact-footer.importer-home-section{padding-top:60px!important;padding-bottom:60px!important}}</style></head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
+<style id="seervi-home-uniform-section-gap">/* Uniform 60px vertical spacing for homepage sections; product catalogue excluded. */#how-seervi-works.importer-home-section,#about.importer-home-section,#why-seervi.importer-home-section,#contact.seervi-contact-footer.importer-home-section{padding-top:60px!important;padding-bottom:60px!important}@media(max-width:800px){#how-seervi-works.importer-home-section,#about.importer-home-section,#why-seervi.importer-home-section,#contact.seervi-contact-footer.importer-home-section{padding-top:60px!important;padding-bottom:60px!important}}</style><style id="seervi-catalogue-background-match">
+/* Keep the same site/Vanta background visible behind the full catalogue, like Home and Products. */
+#seerviCataloguePanel{background:transparent!important;}
+#seerviCataloguePanel .seervi-catalogue-card{background:transparent!important;}
+#seerviCataloguePanel .seervi-catalogue-head{background:linear-gradient(180deg,rgba(11,14,18,.88) 70%,rgba(11,14,18,0))!important;}
+</style>
+</head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
 </button></div></nav><main><section id="home" class="bw-hero"><div class="bw-hero-image" aria-hidden="true"></div><video class="bw-hero-media-video" id="bwHeroVideo" aria-hidden="true" autoplay muted loop playsinline preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
@@ -16011,7 +16017,7 @@ function seerviShowSaveSuccess(message){
     document.querySelectorAll('.mobile-bottom-bar a,.mobile-bottom-bar button').forEach(function(el){
       el.classList.remove('active');
       const label=(el.textContent||'').trim().toLowerCase();
-      if((view==='home'&&label==='home')||(view==='products'&&label==='products')||(view==='cart'&&label==='cart')) el.classList.add('active');
+      if((view==='home'&&label==='home')||(view==='catalogue'&&label==='catalogue')||(view==='products'&&label==='products')||(view==='cart'&&label==='cart')) el.classList.add('active');
     });
   }
   function closeLayers(){
@@ -16034,6 +16040,10 @@ function seerviShowSaveSuccess(message){
       try{baseShowHome?.({preventDefault(){}});}catch(e){}
       try{baseOpenCart?.();}catch(e){}
       document.body.classList.remove('mobile-products-view');
+    }else if(view==='catalogue'){
+      try{baseShowHome?.({preventDefault(){}});}catch(e){}
+      try{baseOpenCatalogue?.();}catch(e){}
+      document.body.classList.remove('mobile-products-view');
     }else if(view==='products'){
       try{baseShowProducts?.({preventDefault(){}});}catch(e){}
     }else{
@@ -16054,9 +16064,11 @@ function seerviShowSaveSuccess(message){
     const bar=document.querySelector('.mobile-bottom-bar');
     if(!bar)return;
     const home=bar.querySelector('a[href="#home"]') || bar.querySelector('a');
+    const catalogue=Array.from(bar.querySelectorAll('button')).find(b=>(b.textContent||'').trim().toLowerCase().includes('catalogue'));
     const products=bar.querySelector('a[href="#profiles"]');
     const cart=Array.from(bar.querySelectorAll('button')).find(b=>(b.textContent||'').trim().toLowerCase().includes('cart'));
     if(home){home.removeAttribute('href');home.removeAttribute('onclick');home.onclick=function(e){e.preventDefault();navigate('home');};}
+    if(catalogue){catalogue.removeAttribute('onclick');catalogue.onclick=function(e){e.preventDefault();navigate('catalogue');};}
     if(products){products.removeAttribute('href');products.removeAttribute('onclick');products.onclick=function(e){e.preventDefault();navigate('products');};}
     if(cart){cart.removeAttribute('onclick');cart.onclick=function(e){e.preventDefault();navigate('cart');};}
   }
@@ -16127,7 +16139,7 @@ function seerviShowSaveSuccess(message){
       const s=e.state;
       if(s && s[STATE_KEY]){
         closeLayers();
-        if(isMobile() && (s.view==='home'||s.view==='products'||s.view==='cart')){
+        if(isMobile() && (s.view==='home'||s.view==='catalogue'||s.view==='products'||s.view==='cart')){
           showView(s.view);
         }else{
           setBar('');
