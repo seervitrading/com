@@ -219,8 +219,8 @@ nav{border-bottom:1px solid #ffffff40;box-shadow:0 8px 30px #0007}
 @media(max-width:600px){.about-bullets{grid-template-columns:1fr}.contact-grid{grid-template-columns:1fr}.why-grid{grid-template-columns:1fr}
  .mobile-bottom-bar{position:fixed;left:10px;right:10px;bottom:10px;z-index:170;display:grid;grid-template-columns:repeat(4,1fr);background:#0b0f14ee;border:1px solid #ffffff18;border-radius:13px;padding:7px;box-shadow:0 18px 50px #000c;backdrop-filter:blur(12px)}
  .mobile-bottom-bar a,.mobile-bottom-bar button{border:0;background:none;color:#8f99a4;text-decoration:none;font:inherit;font-size:9px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;padding:7px 2px;cursor:pointer;min-width:0;height:62px;box-sizing:border-box}
- .mobile-bottom-bar a>b,.mobile-bottom-bar button>b,.mobile-bottom-bar .wa-icon{width:34px;height:34px;min-width:34px;min-height:34px;display:flex;align-items:center;justify-content:center;box-sizing:border-box;line-height:1;color:#fff;flex:0 0 34px}
- .mobile-bottom-bar b{font-size:25px;line-height:1;font-weight:700}.mobile-bottom-bar .wa-icon{width:30px;height:30px;min-width:30px;min-height:30px;flex-basis:30px;margin-top:2px}
+ .mobile-bottom-bar a>b,.mobile-bottom-bar button>b{width:34px;height:34px;min-width:34px;min-height:34px;display:flex;align-items:center;justify-content:center;box-sizing:border-box;line-height:1;color:#fff;flex:0 0 34px}
+ .mobile-bottom-bar b{font-size:25px;line-height:1;font-weight:700}
  .mobile-bottom-bar a>span,.mobile-bottom-bar button>span{display:flex;align-items:center;justify-content:center;width:100%;height:16px;line-height:16px;font-size:8px;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
 
@@ -534,7 +534,6 @@ body.admin-quote-mode .quote-actions{display:grid!important}
  .cart-items{min-height:170px}
 }
 
-.wa-icon{width:28px;height:28px;display:block;flex:0 0 auto}
 
 .float-support{position:fixed;right:20px;bottom:22px;z-index:180;width:58px;height:58px;border:1px solid #ffffff55;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#fff,#d6b25b);color:#0b0d10;box-shadow:0 12px 35px #000b,0 0 0 4px #f0c66a18;cursor:pointer;transition:.2s}
 .float-support:hover{transform:translateY(-3px) scale(1.03);filter:brightness(1.05)}
@@ -3406,25 +3405,21 @@ body.nav-is-scrolled{padding-top:76px;}
 #customerDashboardView .customer-portal-tabs[hidden],
 #customerDashboardView .customer-profile-edit[hidden]{display:none !important}
 
-#seerviWhatsAppPanel{position:fixed;inset:0;z-index:20000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.62);backdrop-filter:blur(8px)}
-#seerviWhatsAppPanel.show{display:flex}
-.seervi-wa-card{width:min(520px,calc(100vw - 28px));max-height:min(720px,calc(100vh - 28px));overflow:auto;background:#0d1218;border:1px solid #ffffff18;border-radius:18px;box-shadow:0 28px 90px #000b;padding:22px}
-.seervi-wa-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
-.seervi-wa-kicker{color:#d8b45a;font-size:10px;font-weight:900;letter-spacing:1.4px}
-.seervi-wa-title{margin:5px 0 0;font-size:25px;font-weight:900;color:#f2f4f6}
-.seervi-wa-sub{margin:7px 0 0;color:#8f99a4;font-size:13px;line-height:1.5}
-.seervi-wa-close,.seervi-wa-back{border:1px solid #ffffff18;background:#151b22;color:#d9dde2;border-radius:10px;cursor:pointer;font-weight:900}
-.seervi-wa-close{width:42px;height:42px;font-size:22px}
-.seervi-wa-options{display:grid;gap:10px}
-.seervi-wa-option{width:100%;text-align:left;border:1px solid #ffffff14;background:#11171e;color:#f2f4f6;border-radius:13px;padding:15px;cursor:pointer}
-.seervi-wa-option.active{border-color:#d8b45a;background:#171b20}
-.seervi-wa-option strong{display:block;font-size:14px}
-.seervi-wa-option span{display:block;margin-top:4px;color:#8f99a4;font-size:11px;line-height:1.45}
-.seervi-wa-actions{display:flex;gap:10px;margin-top:18px}
-.seervi-wa-open{flex:1;border:0;border-radius:11px;background:#25d366;color:#061108;padding:14px;font-weight:900;cursor:pointer}
-.seervi-wa-back{padding:0 18px}
-.seervi-wa-note{margin-top:13px;color:#707985;font-size:10px;line-height:1.45}
-@media(max-width:600px){#seerviWhatsAppPanel{padding:12px;align-items:flex-end}.seervi-wa-card{width:100%;border-radius:18px 18px 12px 12px;padding:18px;max-height:calc(100vh - 24px)}.seervi-wa-title{font-size:22px}.seervi-wa-actions{position:sticky;bottom:0;padding-top:10px;background:linear-gradient(transparent,#0d1218 28%)}}
+#seerviCataloguePanel{position:fixed;inset:0;z-index:20000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.62);backdrop-filter:blur(8px)}
+#seerviCataloguePanel.show{display:flex}
+.seervi-catalogue-card{width:min(620px,calc(100vw - 28px));max-height:min(720px,calc(100vh - 28px));overflow:auto;background:#0d1218;border:1px solid #ffffff18;border-radius:18px;box-shadow:0 28px 90px #000b;padding:22px}
+.seervi-catalogue-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+.seervi-catalogue-kicker{color:#d8b45a;font-size:10px;font-weight:900;letter-spacing:1.4px}
+.seervi-catalogue-title{margin:5px 0 0;font-size:25px;font-weight:900;color:#f2f4f6}
+.seervi-catalogue-sub{margin:7px 0 0;color:#8f99a4;font-size:13px;line-height:1.5}
+.seervi-catalogue-close{width:42px;height:42px;border:1px solid #ffffff18;background:#151b22;color:#d9dde2;border-radius:10px;cursor:pointer;font-size:22px;font-weight:900}
+.seervi-catalogue-list{display:grid;gap:10px}
+.seervi-catalogue-item{display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid #ffffff14;background:#11171e;color:#f2f4f6;border-radius:13px;padding:15px}
+.seervi-catalogue-item-name{font-size:14px;font-weight:900;min-width:0;overflow-wrap:anywhere}
+.seervi-catalogue-item-open{flex:0 0 auto;border:0;border-radius:9px;background:#fff;color:#0b0d10;padding:10px 13px;font-size:9px;font-weight:900;cursor:pointer;text-decoration:none}
+.seervi-catalogue-empty{border:1px dashed #ffffff18;border-radius:13px;padding:24px;text-align:center;color:#7f8995;font-size:11px;line-height:1.5}
+.seervi-catalogue-note{margin-top:13px;color:#707985;font-size:10px;line-height:1.45}
+@media(max-width:600px){#seerviCataloguePanel{padding:12px;align-items:flex-end}.seervi-catalogue-card{width:100%;border-radius:18px 18px 12px 12px;padding:18px;max-height:calc(100vh - 24px)}.seervi-catalogue-title{font-size:22px}.seervi-catalogue-item{align-items:flex-start}.seervi-catalogue-item-open{padding:10px 11px}}
 
 @media(max-width:600px){
   body:not(.mobile-products-view) #tvMounts{display:none!important}
@@ -3434,8 +3429,7 @@ body.nav-is-scrolled{padding-top:76px;}
 body.seervi-non-home-view nav{display:none !important;}
 
 .cart-close.cart-back-btn,
-.admin-universal-back,
-.seervi-wa-back{
+.admin-universal-back{
   width:96px !important;
   min-width:96px !important;
   height:38px !important;
@@ -3456,11 +3450,9 @@ body.seervi-non-home-view nav{display:none !important;}
   cursor:pointer !important;
 }
 .cart-close.cart-back-btn span{font-size:10px !important;letter-spacing:.8px !important}
-.seervi-wa-back{border-radius:8px !important}
 @media(max-width:600px){
   .cart-close.cart-back-btn,
-  .admin-universal-back,
-  .seervi-wa-back{
+  .admin-universal-back{
     width:96px !important;
     min-width:96px !important;
     height:38px !important;
@@ -5268,7 +5260,7 @@ body.seervi-ai-open .float-support{display:none!important}
         <div class="seervi-footer-heading">SEERVI TRADING</div>
         <p>Global sourcing for retailers, wholesalers, businesses and project requirements.</p>
         <div class="seervi-address-block"><span class="seervi-contact-label">ADDRESS</span><span>Nagarbhavi Circle,<br>Jannabharathi Main Road,<br>Bengaluru – 566072<br>India</span></div>
-        <a class="seervi-footer-wa" href="https://wa.me/917073741650?text=Hello%20Seervi%20Trading%2C%20I%20would%20like%20to%20discuss%20a%20sourcing%20requirement." target="_blank" rel="noopener">WHATSAPP SEERVI ↗</a>
+        <button class="seervi-footer-wa" type="button" onclick="openCataloguePanel()">VIEW CATALOGUES ↗</button>
       </div>
     </div>
 
@@ -5368,7 +5360,8 @@ body.seervi-ai-open .float-support{display:none!important}
         <button type="button" class="active" data-settings-section="vanta" onclick="seerviSettingsSection('vanta')">VANTA</button>
         
         <button type="button" data-settings-section="homepage" onclick="seerviSettingsSection('homepage')">HOMEPAGE</button>
-        <button type="button" data-settings-section="catalogue" onclick="seerviSettingsSection('catalogue')">CATALOGUE</button>
+        <button type="button" data-settings-section="catalogue" onclick="seerviSettingsSection('catalogue')">PRODUCT SETTINGS</button>
+        <button type="button" data-settings-section="catalogues" onclick="seerviSettingsSection('catalogues')">CATALOGUES</button>
         <button type="button" data-settings-section="customer" onclick="seerviSettingsSection('customer')">CUSTOMER / ORDER</button>
         <button type="button" data-settings-section="notifications" onclick="seerviSettingsSection('notifications')">NOTIFICATIONS</button>
         <button type="button" data-settings-section="pdf" onclick="seerviSettingsSection('pdf')">PDF LAYOUT</button>
@@ -5392,6 +5385,20 @@ body.seervi-ai-open .float-support{display:none!important}
       <section id="adminSettingsSectionCatalogue" class="admin-settings-section" hidden><div class="crm-section-title">CATALOGUE</div><div class="admin-settings-grid">
         <label>Products Section Title<input id="settingCatalogueTitle" type="text"></label><label class="admin-settings-check"><input id="settingShowCatalogue" type="checkbox"> Show Catalogue</label><label class="admin-settings-check"><input id="settingShowSearch" type="checkbox"> Show Search</label><label class="admin-settings-check"><input id="settingShowSort" type="checkbox"> Show Sort</label><label class="admin-settings-check"><input id="settingShowCategory" type="checkbox"> Show Category Filter</label><label class="admin-settings-check"><input id="settingShowSubcategory" type="checkbox"> Show Subcategory Filter</label>
       </div></section>
+      <section id="adminSettingsSectionCatalogues" class="admin-settings-section" hidden>
+        <div class="crm-section-title">CATALOGUE</div>
+        <p class="admin-settings-help">Add as many customer-facing PDF catalogues as you need. Save the public PDF URL here after uploading the same file/path to GitHub.</p>
+        <div class="admin-settings-grid">
+          <label>Catalogue Name<input id="settingCatalogueName" type="text" maxlength="120" placeholder="e.g. Electrical Catalogue"></label>
+          <label class="full">PDF URL<input id="settingCatalogueUrl" type="url" maxlength="1000" placeholder="https://raw.githubusercontent.com/.../catalogue.pdf"></label>
+        </div>
+        <div class="admin-settings-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+          <button class="crm-primary" type="button" onclick="seerviSaveCatalogue()">+ ADD CATALOGUE</button>
+          <button class="crm-secondary" type="button" onclick="seerviClearCatalogueForm()">CLEAR</button>
+        </div>
+        <div id="seerviCataloguesStatus" class="crm-auth-status" style="margin-top:10px"></div>
+        <div id="seerviAdminCataloguesList" class="crm-list" style="margin-top:12px"></div>
+      </section>
       <section id="adminSettingsSectionCustomer" class="admin-settings-section" hidden><div class="crm-section-title">CUSTOMER / ORDER</div><div class="admin-settings-grid">
         <label class="admin-settings-check"><input id="settingLogin" type="checkbox"> Customer Login</label><label class="admin-settings-check"><input id="settingSignup" type="checkbox"> Customer Sign Up</label><label>Order WhatsApp Number<input id="settingOrderWhatsapp" type="text" inputmode="numeric"></label>
       </div></section>
@@ -6537,7 +6544,7 @@ document.addEventListener('keydown',function(e){
     if(typeof closeProfile==='function') closeProfile();
   }
 });
-</script><button class="float-support" type="button" onclick="openSupportModal()" aria-label="Open Seervi AI Assistance"><span class="support-icon" aria-hidden="true">✦</span><span class="float-support-label">AI Assistance</span></button><div class="mobile-bottom-bar" aria-label="Mobile quick navigation"><a href="#home" onclick="showMobileHome(event)"><b>⌂</b><span>HOME</span></a><a href="#profiles" onclick="showMobileProducts(event)"><b>▦</b><span>PRODUCTS</span></a><button type="button" onclick="openCart()"><b>🛒</b><span>CART</span></button><button type="button" onclick="openWhatsAppPanel()" aria-label="Open WhatsApp contact options"><svg class="wa-icon" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M19.11 17.26c-.28-.14-1.65-.81-1.9-.9-.26-.1-.45-.14-.64.14-.19.28-.73.9-.9 1.09-.16.19-.33.21-.61.07-.28-.14-1.17-.43-2.24-1.38-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.57.12-.12.28-.31.42-.47.14-.16.19-.28.28-.47.09-.19.05-.35-.02-.49-.07-.14-.64-1.54-.88-2.11-.23-.55-.47-.48-.64-.49h-.54c-.19 0-.49.07-.75.35-.26.28-.99.97-.99 2.36s1.02 2.74 1.16 2.93c.14.19 2 3.05 4.84 4.28.68.29 1.21.46 1.62.59.68.22 1.3.19 1.79.12.55-.08 1.65-.67 1.88-1.31.23-.64.23-1.19.16-1.31-.07-.12-.26-.19-.54-.33Z"/><path fill="currentColor" d="M16.01 4.02c-6.61 0-11.98 5.37-11.98 11.98 0 2.11.55 4.09 1.51 5.81L4 27.98l6.31-1.5a11.94 11.94 0 0 0 5.7 1.45h.01c6.61 0 11.98-5.37 11.98-11.98S22.63 4.02 16.01 4.02Zm0 21.75h-.01a9.75 9.75 0 0 1-4.98-1.37l-.36-.21-3.74.89.9-3.65-.23-.37a9.73 9.73 0 1 1 8.42 4.71Z"/></svg><span>WHATSAPP</span></button></div><script>
+</script><button class="float-support" type="button" onclick="openSupportModal()" aria-label="Open Seervi AI Assistance"><span class="support-icon" aria-hidden="true">✦</span><span class="float-support-label">AI Assistance</span></button><div class="mobile-bottom-bar" aria-label="Mobile quick navigation"><a href="#home" onclick="showMobileHome(event)"><b>⌂</b><span>HOME</span></a><a href="#profiles" onclick="showMobileProducts(event)"><b>▦</b><span>PRODUCTS</span></a><button type="button" onclick="openCart()"><b>🛒</b><span>CART</span></button><button type="button" onclick="openCataloguePanel()" aria-label="Open catalogues"><b>▤</b><span>CATALOGUE</span></button></div><script>
 /* ===== V42 UX ENHANCEMENTS ===== */
 (function(){
   const input = document.querySelector('.catalog-search input');
@@ -6642,48 +6649,28 @@ document.addEventListener('keydown',function(e){
 })();
 </script>
 
-<div id="seerviWhatsAppPanel" aria-hidden="true">
-  <div class="seervi-wa-card" role="dialog" aria-modal="true" aria-labelledby="seerviWhatsAppTitle">
-    <div class="seervi-wa-head">
-      <div><div class="seervi-wa-kicker">SEERVI TRADING / CONTACT</div><h3 id="seerviWhatsAppTitle" class="seervi-wa-title">WhatsApp</h3><p class="seervi-wa-sub">Choose what you want to discuss. WhatsApp will open only after you press the button below.</p></div>
-      <button type="button" class="seervi-wa-close" onclick="closeWhatsAppPanel()" aria-label="Close WhatsApp panel">×</button>
+<div id="seerviCataloguePanel" aria-hidden="true">
+  <div class="seervi-catalogue-card" role="dialog" aria-modal="true" aria-labelledby="seerviCatalogueTitle">
+    <div class="seervi-catalogue-head">
+      <div><div class="seervi-catalogue-kicker">SEERVI TRADING / DOCUMENTS</div><h3 id="seerviCatalogueTitle" class="seervi-catalogue-title">Catalogues</h3><p class="seervi-catalogue-sub">Browse our latest product catalogues and open the PDF you need.</p></div>
+      <button type="button" class="seervi-catalogue-close" onclick="closeCataloguePanel()" aria-label="Close catalogues">×</button>
     </div>
-    <div class="seervi-wa-options">
-      <button type="button" class="seervi-wa-option active" data-wa-type="general" onclick="selectWhatsAppOption('general')"><strong>General Enquiry</strong><span>Talk to Seervi Trading about a general requirement.</span></button>
-      <button type="button" class="seervi-wa-option" data-wa-type="product" onclick="selectWhatsAppOption('product')"><strong>Product Enquiry</strong><span>Ask about a product, model, specification or availability.</span></button>
-      <button type="button" class="seervi-wa-option" data-wa-type="quote" onclick="selectWhatsAppOption('quote')"><strong>Request a Quote</strong><span>Send your requirement and quotation request to Seervi Trading.</span></button>
-    </div>
-    <div class="seervi-wa-actions"><button type="button" class="seervi-wa-back admin-universal-back" onclick="closeWhatsAppPanel()">← BACK</button><button type="button" class="seervi-wa-open" onclick="openSelectedWhatsApp()">OPEN WHATSAPP</button></div>
-    <div class="seervi-wa-note">Your browser will open WhatsApp only when you choose OPEN WHATSAPP.</div>
+    <div id="seerviCatalogueList" class="seervi-catalogue-list"><div class="seervi-catalogue-empty">Loading catalogues…</div></div>
+    <div class="seervi-catalogue-note">Catalogues are maintained by Seervi Trading. The PDF opens in a new browser tab.</div>
   </div>
 </div>
-<script id="seervi-whatsapp-panel-script">
+<script id="seervi-catalogue-panel-script">
 (function(){
-  let selected='general';
-  window.openWhatsAppPanel=function(){
-    const m=document.getElementById('seerviWhatsAppPanel'); if(!m)return;
-    selected='general';
-    m.classList.add('show'); m.setAttribute('aria-hidden','false');
-    document.body.classList.add('modal-open');
-    selectWhatsAppOption('general');
+  window.openCataloguePanel=function(){
+    const m=document.getElementById('seerviCataloguePanel');if(!m)return;
+    m.classList.add('show');m.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
+    if(typeof window.seerviLoadPublicCatalogues==='function')window.seerviLoadPublicCatalogues();
   };
-  window.closeWhatsAppPanel=function(){
-    const m=document.getElementById('seerviWhatsAppPanel'); if(!m)return;
-    m.classList.remove('show'); m.setAttribute('aria-hidden','true');
-    document.body.classList.remove('modal-open');
+  window.closeCataloguePanel=function(){
+    const m=document.getElementById('seerviCataloguePanel');if(!m)return;
+    m.classList.remove('show');m.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');
   };
-  window.selectWhatsAppOption=function(type){
-    selected=type||'general';
-    document.querySelectorAll('#seerviWhatsAppPanel .seervi-wa-option').forEach(function(btn){btn.classList.toggle('active',btn.dataset.waType===selected);});
-  };
-  window.openSelectedWhatsApp=function(){
-    let message='Hello Seervi Trading, I would like to make a general enquiry.';
-    if(selected==='product') message='Hello Seervi Trading, I would like to enquire about a product/model. Please share the details and availability.';
-    if(selected==='quote') message='Hello Seervi Trading, I would like to request a quotation. I will share my required items and quantities.';
-    const url='https://wa.me/'+(window.SeerviSiteSettings?.order?.whatsappNumber||'917073741650')+'?text='+encodeURIComponent(message);
-    window.open(url,'_blank','noopener');
-  };
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeWhatsAppPanel();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeCataloguePanel();});
 })();
 </script>
 <script>
@@ -15182,11 +15169,109 @@ window.seerviPdfLayoutSection=function(section){
   });
 };
 window.seerviSettingsSection=function(section){
-  const map={vanta:'adminSettingsSectionVanta',homepage:'adminSettingsSectionHomepage',catalogue:'adminSettingsSectionCatalogue',customer:'adminSettingsSectionCustomer',notifications:'adminSettingsSectionNotifications',pdf:'adminSettingsSectionPdf',advanced:'adminSettingsSectionAdvanced'};
+  const map={vanta:'adminSettingsSectionVanta',homepage:'adminSettingsSectionHomepage',catalogue:'adminSettingsSectionCatalogue',catalogues:'adminSettingsSectionCatalogues',customer:'adminSettingsSectionCustomer',notifications:'adminSettingsSectionNotifications',pdf:'adminSettingsSectionPdf',advanced:'adminSettingsSectionAdvanced'};
   Object.entries(map).forEach(([key,id])=>{const el=document.getElementById(id);if(el)el.hidden=key!==section;});
   document.querySelectorAll('.admin-settings-subnav button[data-settings-section]').forEach(btn=>{const active=btn.dataset.settingsSection===section;btn.classList.toggle('active',active);btn.setAttribute('aria-selected',active?'true':'false');});
   if(section==='pdf')seerviPdfLayoutSection('quotation');
+  if(section==='catalogues')seerviLoadAdminCatalogues();
 };
+/* ===== SEERVI PDF CATALOGUES ===== */
+const SEERVI_CATALOGUES_COLLECTION='catalogues';
+let seerviPublicCatalogues=[];
+let seerviAdminCatalogues=[];
+let seerviCatalogueEditingId='';
+
+function seerviCatalogueCleanName(value){return String(value??'').replace(/\s+/g,' ').trim().slice(0,120);}
+function seerviCatalogueCleanUrl(value){return String(value??'').trim().slice(0,1000);}
+function seerviCatalogueValidUrl(value){try{const u=new URL(value);return /^https?:$/.test(u.protocol)&&!!u.hostname;}catch(_){return false;}}
+
+function seerviCatalogueRenderPublic(){
+  const list=document.getElementById('seerviCatalogueList');if(!list)return;
+  if(!seerviPublicCatalogues.length){list.innerHTML='<div class="seervi-catalogue-empty">No catalogues are available right now.</div>';return;}
+  list.innerHTML=seerviPublicCatalogues.map(item=>`<div class="seervi-catalogue-item"><div class="seervi-catalogue-item-name">${seerviEscHtml(item.name||'Catalogue')}</div><a class="seervi-catalogue-item-open" href="${seerviEscHtml(item.url)}" target="_blank" rel="noopener noreferrer">VIEW CATALOGUE ↗</a></div>`).join('');
+}
+
+window.seerviLoadPublicCatalogues=async function(){
+  const list=document.getElementById('seerviCatalogueList');
+  try{
+    if(list && !seerviPublicCatalogues.length)list.innerHTML='<div class="seervi-catalogue-empty">Loading catalogues…</div>';
+    const snap=await getDocs(query(collection(db,SEERVI_CATALOGUES_COLLECTION),limit(500)));
+    seerviPublicCatalogues=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>x.active!==false&&seerviCatalogueValidUrl(x.url)).sort((a,b)=>Number(a.sortOrder||0)-Number(b.sortOrder||0)||String(a.name||'').localeCompare(String(b.name||'')));
+    seerviCatalogueRenderPublic();
+  }catch(error){
+    console.error('Seervi public catalogues:',error);
+    if(list)list.innerHTML='<div class="seervi-catalogue-empty">Catalogues are temporarily unavailable.</div>';
+  }
+};
+
+function seerviCatalogueRenderAdmin(){
+  const list=document.getElementById('seerviAdminCataloguesList');if(!list)return;
+  if(!seerviAdminCatalogues.length){list.innerHTML='<div class="crm-auth-status">No catalogues added yet.</div>';return;}
+  list.innerHTML=seerviAdminCatalogues.map(item=>`<div class="crm-list-item" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap"><div style="min-width:0;flex:1"><strong style="display:block;color:#fff">${seerviEscHtml(item.name||'Catalogue')}</strong><span style="display:block;color:#7f8995;font-size:10px;overflow-wrap:anywhere;margin-top:4px">${seerviEscHtml(item.url||'')}</span></div><div style="display:flex;gap:7px"><button class="crm-secondary small" type="button" onclick="seerviEditCatalogue('${seerviEscHtml(item.id)}')">EDIT</button><button class="crm-secondary small" type="button" onclick="seerviDeleteCatalogue('${seerviEscHtml(item.id)}')">DELETE</button></div></div>`).join('');
+}
+
+window.seerviLoadAdminCatalogues=async function(){
+  try{seerviRequireSettingsAdmin();}catch(e){return;}
+  const status=document.getElementById('seerviCataloguesStatus');if(status)status.textContent='Loading catalogues…';
+  try{
+    const snap=await getDocs(query(collection(db,SEERVI_CATALOGUES_COLLECTION),limit(500)));
+    seerviAdminCatalogues=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>Number(a.sortOrder||0)-Number(b.sortOrder||0)||String(a.name||'').localeCompare(String(b.name||'')));
+    seerviCatalogueRenderAdmin();
+    if(status)status.textContent=`${seerviAdminCatalogues.length} catalogue${seerviAdminCatalogues.length===1?'':'s'} saved.`;
+  }catch(error){console.error('Admin catalogue load failed:',error);if(status)status.textContent='Load failed: '+(error?.message||'Check Firebase Security Rules.');}
+};
+
+window.seerviClearCatalogueForm=function(){
+  seerviCatalogueEditingId='';
+  const n=document.getElementById('settingCatalogueName'),u=document.getElementById('settingCatalogueUrl');if(n)n.value='';if(u)u.value='';
+  const b=document.querySelector('#adminSettingsSectionCatalogues .crm-primary');if(b)b.textContent='+ ADD CATALOGUE';
+};
+
+window.seerviEditCatalogue=function(id){
+  try{seerviRequireSettingsAdmin();}catch(e){return;}
+  const item=seerviAdminCatalogues.find(x=>x.id===id);if(!item)return;
+  seerviCatalogueEditingId=id;
+  const n=document.getElementById('settingCatalogueName'),u=document.getElementById('settingCatalogueUrl');if(n)n.value=item.name||'';if(u)u.value=item.url||'';
+  const b=document.querySelector('#adminSettingsSectionCatalogues .crm-primary');if(b)b.textContent='SAVE CATALOGUE';
+  n?.focus();
+};
+
+window.seerviSaveCatalogue=async function(){
+  try{seerviRequireSettingsAdmin();}catch(e){seerviToastAlert(e.message||'Admin access required.');return;}
+  const name=seerviCatalogueCleanName(document.getElementById('settingCatalogueName')?.value);
+  const url=seerviCatalogueCleanUrl(document.getElementById('settingCatalogueUrl')?.value);
+  const status=document.getElementById('seerviCataloguesStatus');
+  if(!name){if(status)status.textContent='Enter a catalogue name.';return;}
+  if(!seerviCatalogueValidUrl(url)){if(status)status.textContent='Enter a valid public HTTP/HTTPS PDF URL.';return;}
+  if(!/\.pdf(?:[?#].*)?$/i.test(url)){if(status)status.textContent='Please enter the direct PDF URL ending in .pdf.';return;}
+  try{
+    if(status)status.textContent=seerviCatalogueEditingId?'Saving catalogue…':'Adding catalogue…';
+    if(seerviCatalogueEditingId){await updateDoc(doc(db,SEERVI_CATALOGUES_COLLECTION,seerviCatalogueEditingId),{name,url,updatedAt:serverTimestamp()});}
+    else{await addDoc(collection(db,SEERVI_CATALOGUES_COLLECTION),{name,url,active:true,sortOrder:seerviAdminCatalogues.length,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});}
+    seerviClearCatalogueForm();
+    await seerviLoadAdminCatalogues();
+    seerviPublicCatalogues=[];
+    if(typeof window.seerviLoadPublicCatalogues==='function')window.seerviLoadPublicCatalogues();
+    if(status)status.textContent='Catalogue saved successfully.';
+  }catch(error){console.error('Catalogue save failed:',error);if(status)status.textContent='Save failed: '+(error?.message||'Check Firebase Security Rules.');}
+};
+
+window.seerviDeleteCatalogue=async function(id){
+  try{seerviRequireSettingsAdmin();}catch(e){return;}
+  const item=seerviAdminCatalogues.find(x=>x.id===id);if(!item)return;
+  if(!confirm(`Delete catalogue "${item.name||'Catalogue'}"?\
+\
+This removes it from the customer-facing catalogue list. The GitHub PDF itself will not be deleted.`))return;
+  const status=document.getElementById('seerviCataloguesStatus');
+  try{
+    if(status)status.textContent='Deleting catalogue…';
+    await deleteDoc(doc(db,SEERVI_CATALOGUES_COLLECTION,id));
+    seerviPublicCatalogues=[];
+    await seerviLoadAdminCatalogues();
+    if(typeof window.seerviLoadPublicCatalogues==='function')window.seerviLoadPublicCatalogues();
+  }catch(error){console.error('Catalogue delete failed:',error);if(status)status.textContent='Delete failed: '+(error?.message||'Check Firebase Security Rules.');}
+};
+
 function seerviSettingsFillForm(){
   const s=seerviSiteSettings;
   const vals={
@@ -15805,8 +15890,8 @@ function seerviShowSaveSuccess(message){
   const baseCloseCart=window.closeCart;
   const baseShowHome=window.showMobileHome;
   const baseShowProducts=window.showMobileProducts;
-  const baseOpenWhatsApp=window.openWhatsAppPanel;
-  const baseCloseWhatsApp=window.closeWhatsAppPanel;
+  const baseOpenCatalogue=window.openCataloguePanel;
+  const baseCloseCatalogue=window.closeCataloguePanel;
   const baseOpenSupport=window.openSupportModal;
   const baseCloseSupport=window.closeSupportModal;
   const baseOpenItem=window.seerviPublicOpenItem;
@@ -15825,7 +15910,7 @@ function seerviShowSaveSuccess(message){
     });
   }
   function closeLayers(){
-    try{baseCloseWhatsApp?.();}catch(e){}
+    try{baseCloseCatalogue?.();}catch(e){}
     try{baseCloseSupport?.();}catch(e){}
     try{baseCloseItem?.();}catch(e){}
     try{baseCloseCart?.();}catch(e){}
@@ -15897,8 +15982,8 @@ function seerviShowSaveSuccess(message){
   }
 
   /* Public/customer overlays: history-backed at desktop and mobile. */
-  wrapOpen('openWhatsAppPanel',baseOpenWhatsApp,'whatsapp');
-  wrapClose('closeWhatsAppPanel',baseCloseWhatsApp,'whatsapp');
+  wrapOpen('openCataloguePanel',baseOpenCatalogue,'catalogue');
+  wrapClose('closeCataloguePanel',baseCloseCatalogue,'catalogue');
   wrapOpen('openSupportModal',baseOpenSupport,'support');
   wrapClose('closeSupportModal',baseCloseSupport,'support');
   wrapOpen('seerviPublicOpenItem',baseOpenItem,'item');
