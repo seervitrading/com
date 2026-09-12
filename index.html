@@ -4229,7 +4229,7 @@ body.seervi-ai-open .float-support{display:none!important}
 #partySignupModal .crm-secondary{font-size:13px;line-height:1.25}
 
 /* Admin panel typography: match the established quotation-panel desktop scale. */
-#adminSettingsModal .crm-panel,
+#adminSettingsModal .crm-panel,#adminCataloguesModal .crm-panel,
 #adminBackupOptionsModal .crm-panel,
 #notificationModal .crm-panel,
 #notificationPostModal .crm-panel,
@@ -4242,7 +4242,7 @@ body.seervi-ai-open .float-support{display:none!important}
   line-height:1.45;
 }
 
-#adminSettingsModal .crm-head h3,
+#adminSettingsModal .crm-head h3,#adminCataloguesModal .crm-head h3,
 #adminBackupOptionsModal .crm-head h3,
 #notificationModal .crm-head h3,
 #notificationPostModal .crm-head h3,
@@ -4252,8 +4252,8 @@ body.seervi-ai-open .float-support{display:none!important}
   line-height:1.15;
 }
 
-#adminSettingsModal .crm-kicker,
-#adminSettingsModal .crm-section-title,
+#adminSettingsModal .crm-kicker,#adminCataloguesModal .crm-kicker,
+#adminSettingsModal .crm-section-title,#adminCataloguesModal .crm-section-title,
 #adminBackupOptionsModal .crm-kicker,
 #adminBackupOptionsModal .crm-section-title,
 #notificationModal .crm-kicker,
@@ -4269,7 +4269,7 @@ body.seervi-ai-open .float-support{display:none!important}
   line-height:1.25;
 }
 
-#adminSettingsModal .crm-auth-status,
+#adminSettingsModal .crm-auth-status,#adminCataloguesModal .crm-auth-status,
 #adminSettingsModal .admin-settings-help,
 #adminSettingsModal .admin-settings-readonly,
 #adminBackupOptionsModal .crm-auth-status,
@@ -4285,9 +4285,9 @@ body.seervi-ai-open .float-support{display:none!important}
   line-height:1.45;
 }
 
-#adminSettingsModal input,
-#adminSettingsModal select,
-#adminSettingsModal textarea,
+#adminSettingsModal input,#adminCataloguesModal input,
+#adminSettingsModal select,#adminCataloguesModal select,
+#adminSettingsModal textarea,#adminCataloguesModal textarea,
 #adminBackupOptionsModal input,
 #adminBackupOptionsModal select,
 #adminBackupOptionsModal textarea,
@@ -4401,7 +4401,7 @@ body.seervi-ai-open .float-support{display:none!important}
 #adminDashboardOptions .account-dashboard-option small{font-size:13px;line-height:1.45;}
 
 @media(max-width:600px){
-  #adminSettingsModal .crm-head h3,
+  #adminSettingsModal .crm-head h3,#adminCataloguesModal .crm-head h3,
   #adminBackupOptionsModal .crm-head h3,
   #notificationModal .crm-head h3,
   #notificationPostModal .crm-head h3,
@@ -5283,6 +5283,7 @@ body.seervi-ai-open .float-support{display:none!important}
       <button class="account-dashboard-option" type="button" onclick="accountDashboardNewParty()"><span>＋</span><strong>NEW PARTY</strong><small>Create a new customer / party</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardBackup()"><span>⇩</span><strong>BACKUP DATA</strong><small>Backup items, categories, quotations &amp; invoices</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardStock()"><span>▤</span><strong>STOCK</strong><small>Control catalogue item availability</small></button>
+            <button class="account-dashboard-option" type="button" onclick="openAdminCatalogues()"><span>▤</span><strong>CATALOGUES</strong><small>Manage customer-facing PDF catalogues</small></button>
       
       <button class="account-dashboard-option" type="button" onclick="accountDashboardNotificationPost()"><span>🔔</span><strong>NOTIFICATION POST</strong><small>Send an important notice to everyone</small></button>
       <button class="account-dashboard-option" type="button" onclick="openAdminSettings()"><span>⚙</span><strong>SETTINGS</strong><small>Control global website, Vanta & business settings</small></button>
@@ -5293,6 +5294,33 @@ body.seervi-ai-open .float-support{display:none!important}
       <button class="account-dashboard-option" type="button" onclick="accountDashboardEditProfile()"><span>✎</span><strong>EDIT PROFILE</strong><small>Update your business & contact details</small></button>
       <button class="account-dashboard-option" type="button" onclick="accountDashboardMyOrder()"><span>▣</span><strong>MY ORDER</strong><small>View your quotations & order requests</small></button>
       <button class="account-dashboard-option danger" type="button" onclick="accountDashboardCustomerSignOut()"><span>↪</span><strong>SIGN OUT</strong><small>End your customer session</small></button>
+    </div>
+  </div>
+</div>
+<div id="adminCataloguesModal" class="crm-modal admin-settings-modal" aria-hidden="true">
+  <div class="crm-backdrop" onclick="closeAdminCatalogues()"></div>
+  <div class="crm-panel admin-settings-panel" role="dialog" aria-modal="true" aria-labelledby="adminCataloguesTitle">
+    <div class="crm-head">
+      <div><div class="crm-kicker">SEERVI TRADING / ADMIN DASHBOARD</div><h3 id="adminCataloguesTitle">Catalogues</h3><div class="crm-auth-status">Add customer-facing PDF catalogues. Upload the PDF to GitHub and save its public URL here.</div></div>
+      <button class="crm-close" type="button" onclick="closeAdminCatalogues()">×</button>
+    </div>
+    <div class="admin-settings-scroll">
+      <section class="admin-settings-section">
+        <div class="crm-section-title">ADD / EDIT CATALOGUE</div>
+        <div class="admin-settings-grid">
+          <label>Catalogue Name<input id="settingCatalogueName" type="text" maxlength="120" placeholder="e.g. Electrical Catalogue"></label>
+          <label class="full">PDF URL<input id="settingCatalogueUrl" type="url" maxlength="1000" placeholder="https://raw.githubusercontent.com/.../catalogue.pdf"></label>
+        </div>
+        <div class="admin-settings-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+          <button class="crm-primary" type="button" onclick="seerviSaveCatalogue()">+ ADD CATALOGUE</button>
+          <button class="crm-secondary" type="button" onclick="seerviClearCatalogueForm()">CLEAR</button>
+        </div>
+        <div id="seerviCataloguesStatus" class="crm-auth-status" style="margin-top:10px"></div>
+      </section>
+      <section class="admin-settings-section">
+        <div class="crm-section-title">SAVED CATALOGUES</div>
+        <div id="seerviAdminCataloguesList" class="crm-list"></div>
+      </section>
     </div>
   </div>
 </div>
@@ -5385,20 +5413,6 @@ body.seervi-ai-open .float-support{display:none!important}
       <section id="adminSettingsSectionCatalogue" class="admin-settings-section" hidden><div class="crm-section-title">CATALOGUE</div><div class="admin-settings-grid">
         <label>Products Section Title<input id="settingCatalogueTitle" type="text"></label><label class="admin-settings-check"><input id="settingShowCatalogue" type="checkbox"> Show Catalogue</label><label class="admin-settings-check"><input id="settingShowSearch" type="checkbox"> Show Search</label><label class="admin-settings-check"><input id="settingShowSort" type="checkbox"> Show Sort</label><label class="admin-settings-check"><input id="settingShowCategory" type="checkbox"> Show Category Filter</label><label class="admin-settings-check"><input id="settingShowSubcategory" type="checkbox"> Show Subcategory Filter</label>
       </div></section>
-      <section id="adminSettingsSectionCatalogues" class="admin-settings-section" hidden>
-        <div class="crm-section-title">CATALOGUE</div>
-        <p class="admin-settings-help">Add as many customer-facing PDF catalogues as you need. Save the public PDF URL here after uploading the same file/path to GitHub.</p>
-        <div class="admin-settings-grid">
-          <label>Catalogue Name<input id="settingCatalogueName" type="text" maxlength="120" placeholder="e.g. Electrical Catalogue"></label>
-          <label class="full">PDF URL<input id="settingCatalogueUrl" type="url" maxlength="1000" placeholder="https://raw.githubusercontent.com/.../catalogue.pdf"></label>
-        </div>
-        <div class="admin-settings-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-          <button class="crm-primary" type="button" onclick="seerviSaveCatalogue()">+ ADD CATALOGUE</button>
-          <button class="crm-secondary" type="button" onclick="seerviClearCatalogueForm()">CLEAR</button>
-        </div>
-        <div id="seerviCataloguesStatus" class="crm-auth-status" style="margin-top:10px"></div>
-        <div id="seerviAdminCataloguesList" class="crm-list" style="margin-top:12px"></div>
-      </section>
       <section id="adminSettingsSectionCustomer" class="admin-settings-section" hidden><div class="crm-section-title">CUSTOMER / ORDER</div><div class="admin-settings-grid">
         <label class="admin-settings-check"><input id="settingLogin" type="checkbox"> Customer Login</label><label class="admin-settings-check"><input id="settingSignup" type="checkbox"> Customer Sign Up</label><label>Order WhatsApp Number<input id="settingOrderWhatsapp" type="text" inputmode="numeric"></label>
       </div></section>
@@ -15169,12 +15183,28 @@ window.seerviPdfLayoutSection=function(section){
   });
 };
 window.seerviSettingsSection=function(section){
-  const map={vanta:'adminSettingsSectionVanta',homepage:'adminSettingsSectionHomepage',catalogue:'adminSettingsSectionCatalogue',catalogues:'adminSettingsSectionCatalogues',customer:'adminSettingsSectionCustomer',notifications:'adminSettingsSectionNotifications',pdf:'adminSettingsSectionPdf',advanced:'adminSettingsSectionAdvanced'};
+  const map={vanta:'adminSettingsSectionVanta',homepage:'adminSettingsSectionHomepage',catalogue:'adminSettingsSectionCatalogue',customer:'adminSettingsSectionCustomer',notifications:'adminSettingsSectionNotifications',pdf:'adminSettingsSectionPdf',advanced:'adminSettingsSectionAdvanced'};
   Object.entries(map).forEach(([key,id])=>{const el=document.getElementById(id);if(el)el.hidden=key!==section;});
   document.querySelectorAll('.admin-settings-subnav button[data-settings-section]').forEach(btn=>{const active=btn.dataset.settingsSection===section;btn.classList.toggle('active',active);btn.setAttribute('aria-selected',active?'true':'false');});
   if(section==='pdf')seerviPdfLayoutSection('quotation');
-  if(section==='catalogues')seerviLoadAdminCatalogues();
 };
+window.openAdminCatalogues=function(){
+  closeAccountDashboard();
+  try{seerviRequireSettingsAdmin();}catch(e){seerviToastAlert(e.message||'Admin access required.');return;}
+  const modal=document.getElementById('adminCataloguesModal');
+  if(!modal)return;
+  seerviClearCatalogueForm();
+  modal.classList.add('show');modal.setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+  seerviLoadAdminCatalogues();
+};
+window.closeAdminCatalogues=function(){
+  const modal=document.getElementById('adminCataloguesModal');
+  if(!modal)return;
+  modal.classList.remove('show');modal.setAttribute('aria-hidden','true');
+  document.body.classList.remove('modal-open');
+};
+
 /* ===== SEERVI PDF CATALOGUES ===== */
 const SEERVI_CATALOGUES_COLLECTION='catalogues';
 let seerviPublicCatalogues=[];
@@ -15224,7 +15254,7 @@ window.seerviLoadAdminCatalogues=async function(){
 window.seerviClearCatalogueForm=function(){
   seerviCatalogueEditingId='';
   const n=document.getElementById('settingCatalogueName'),u=document.getElementById('settingCatalogueUrl');if(n)n.value='';if(u)u.value='';
-  const b=document.querySelector('#adminSettingsSectionCatalogues .crm-primary');if(b)b.textContent='+ ADD CATALOGUE';
+  const b=document.querySelector('#adminCataloguesModal .crm-primary');if(b)b.textContent='+ ADD CATALOGUE';
 };
 
 window.seerviEditCatalogue=function(id){
@@ -15232,7 +15262,7 @@ window.seerviEditCatalogue=function(id){
   const item=seerviAdminCatalogues.find(x=>x.id===id);if(!item)return;
   seerviCatalogueEditingId=id;
   const n=document.getElementById('settingCatalogueName'),u=document.getElementById('settingCatalogueUrl');if(n)n.value=item.name||'';if(u)u.value=item.url||'';
-  const b=document.querySelector('#adminSettingsSectionCatalogues .crm-primary');if(b)b.textContent='SAVE CATALOGUE';
+  const b=document.querySelector('#adminCataloguesModal .crm-primary');if(b)b.textContent='SAVE CATALOGUE';
   n?.focus();
 };
 
