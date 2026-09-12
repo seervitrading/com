@@ -16121,53 +16121,38 @@ function seerviShowSaveSuccess(message){
 </body>
 </html>
 <style id="seervi-hero-motion-upgrade">
-/* ===== SEERVI HERO MOTION — premium, restrained ===== */
+/* ===== SEERVI HERO MOTION — clean, premium, no replay ===== */
 .bw-hero-image{
-  animation:seerviHeroKenBurns 16s ease-in-out infinite alternate;
+  animation:seerviHeroKenBurns 18s ease-in-out infinite alternate;
   transform-origin:center center;
   will-change:transform;
 }
-.bw-hero-copy{
-  position:relative;
-  isolation:isolate;
-}
-.bw-hero-copy::before{
-  content:"";
-  position:absolute;
-  left:-22px;
-  top:2px;
-  width:3px;
-  height:42px;
-  background:#fff;
-  opacity:.72;
-  transform:scaleY(0);
-  transform-origin:top;
-  animation:seerviHeroLine .8s cubic-bezier(.2,.8,.2,1) .15s forwards;
-}
 .bw-kicker{
   opacity:0;
-  animation:seerviHeroFadeUp .7s cubic-bezier(.2,.8,.2,1) .15s forwards;
+  animation:seerviHeroFadeUp .7s cubic-bezier(.2,.8,.2,1) .12s forwards;
 }
 .bw-hero-copy h1{
   opacity:0;
-  transform:translateY(24px);
-  animation:seerviHeroTitle .95s cubic-bezier(.16,1,.3,1) .28s forwards;
+  transform:translateY(22px);
+  animation:seerviHeroTitle .9s cubic-bezier(.16,1,.3,1) .25s forwards;
 }
+/* Keep the highlight part visually stable. It must not run its own animation,
+   because Global Settings can refresh the H1 text asynchronously. */
 .bw-hero-copy h1 span{
-  display:inline-block;
-  opacity:0;
-  transform:translateY(18px);
-  animation:seerviHeroHighlight .85s cubic-bezier(.16,1,.3,1) .52s forwards;
+  display:inline;
+  opacity:1;
+  transform:none;
+  animation:none!important;
 }
 .bw-hero-copy p{
   opacity:0;
-  transform:translateY(16px);
-  animation:seerviHeroFadeUp .75s cubic-bezier(.2,.8,.2,1) .72s forwards;
+  transform:translateY(14px);
+  animation:seerviHeroFadeUp .75s cubic-bezier(.2,.8,.2,1) .58s forwards;
 }
 .bw-hero-copy .bw-cta{
   opacity:0;
-  transform:translateY(14px);
-  animation:seerviHeroFadeUp .7s cubic-bezier(.2,.8,.2,1) .9s forwards;
+  transform:translateY(12px);
+  animation:seerviHeroFadeUp .7s cubic-bezier(.2,.8,.2,1) .76s forwards;
   transition:transform .25s ease,box-shadow .25s ease,background-color .25s ease;
 }
 .bw-hero-copy .bw-cta:hover{
@@ -16179,26 +16164,19 @@ function seerviShowSaveSuccess(message){
   transition:transform .25s ease;
 }
 .bw-hero-copy .bw-cta:hover span{transform:translate(3px,-3px)}
-.bw-hero-wash{
-  animation:seerviHeroWash 7s ease-in-out infinite alternate;
-}
+.bw-hero-wash{animation:seerviHeroWash 8s ease-in-out infinite alternate}
 @keyframes seerviHeroKenBurns{
   0%{transform:scale(1.025) translate3d(0,0,0)}
-  100%{transform:scale(1.075) translate3d(-.7%,-.35%,0)}
+  100%{transform:scale(1.07) translate3d(-.55%,-.3%,0)}
 }
 @keyframes seerviHeroWash{
-  0%{opacity:.92}
+  0%{opacity:.94}
   100%{opacity:1}
 }
-@keyframes seerviHeroLine{to{transform:scaleY(1)}}
 @keyframes seerviHeroFadeUp{to{opacity:1;transform:translateY(0)}}
 @keyframes seerviHeroTitle{to{opacity:1;transform:translateY(0)}}
-@keyframes seerviHeroHighlight{to{opacity:1;transform:translateY(0)}}
-@media(max-width:600px){
-  .bw-hero-copy::before{left:-10px;height:34px}
-  .bw-hero-image{animation-duration:18s}
-}
+@media(max-width:600px){.bw-hero-image{animation-duration:20s}}
 @media(prefers-reduced-motion:reduce){
-  .bw-hero-image,.bw-hero-wash,.bw-kicker,.bw-hero-copy h1,.bw-hero-copy h1 span,.bw-hero-copy p,.bw-hero-copy .bw-cta,.bw-hero-copy::before{animation:none!important;opacity:1!important;transform:none!important}
+  .bw-hero-image,.bw-hero-wash,.bw-kicker,.bw-hero-copy h1,.bw-hero-copy h1 span,.bw-hero-copy p,.bw-hero-copy .bw-cta{animation:none!important;opacity:1!important;transform:none!important}
 }
 </style>
