@@ -3446,6 +3446,9 @@ body.nav-is-scrolled{padding-top:76px;}
 
 /* Catalogue is public like Products: visible on Home for guests, customers and admins. */
 @media(max-width:600px){.seervi-home-catalogue-section{display:block !important;padding:54px 0 36px}}
+/* Public Catalogue visibility: never depend on login/customer/admin state. */
+#homeCatalogues{display:block !important}
+@media(max-width:600px){body.mobile-products-view #homeCatalogues{display:none !important}}
 
 #seerviCataloguePanel{position:fixed;inset:0;z-index:9990;display:none;background:#080a0d;color:#f2f4f6;overflow:hidden}
 #seerviCataloguePanel.show{display:block}
@@ -15384,7 +15387,7 @@ window.seerviLoadPublicCatalogues=async function(){
   const list=document.getElementById('seerviCatalogueList');
   try{
     if(list && !seerviPublicCatalogues.length)list.innerHTML='<div class="seervi-catalogue-empty">Loading catalogues…</div>';
-    const snap=await getDocs(query(collection(db,SEERVI_CATALOGUES_COLLECTION),where('active','==',true),limit(500)));
+    const snap=await getDocs(query(collection(db,SEERVI_CATALOGUES_COLLECTION),limit(500)));
     seerviPublicCatalogues=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>x.active!==false&&seerviCatalogueValidUrl(x.url)).sort((a,b)=>Number(a.sortOrder||0)-Number(b.sortOrder||0)||String(a.name||'').localeCompare(String(b.name||'')));
     seerviCatalogueRenderPublic();
     document.querySelectorAll('.seervi-catalogue-preview').forEach((el,index)=>{
@@ -15401,8 +15404,14 @@ window.seerviLoadPublicCatalogues=async function(){
 
 
 (function seerviBootHomeCatalogues(){
-  function load(){if(typeof window.seerviLoadPublicCatalogues==='function')window.seerviLoadPublicCatalogues();}
+  let loaded=false;
+  function load(){
+    if(typeof window.seerviLoadPublicCatalogues!=='function')return;
+    window.seerviLoadPublicCatalogues().finally(()=>{loaded=true;});
+  }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load,{once:true});else load();
+  // Re-attempt once Firebase auth initialization settles; catalogue visibility is public and does not require login.
+  document.addEventListener('seerviAuthReady',()=>{if(!loaded)load();},{once:true});
 })();
 
 function seerviCatalogueRenderAdmin(){
