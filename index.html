@@ -5264,6 +5264,19 @@ body.seervi-ai-open .float-support{display:none!important}
    matching the Product view. */
 #seerviScrollProgress{z-index:100000 !important;}
 </style>
+<style id="seervi-catalogue-mobile-product-view-fix">
+/* Mobile Catalogue uses the same isolated page treatment as the mobile Products view:
+   hide the underlying Home document and keep only the catalogue UI over the Vanta layer. */
+@media(max-width:600px){
+  body.mobile-catalogue-view main,
+  body.mobile-catalogue-view nav,
+  body.mobile-catalogue-view footer{display:none!important;visibility:hidden!important;}
+  body.mobile-catalogue-view #seerviVantaBackground{display:block!important;visibility:visible!important;opacity:.27!important;z-index:0!important;}
+  body.mobile-catalogue-view #seerviCataloguePanel{display:block!important;visibility:visible!important;z-index:9990!important;background:transparent!important;}
+  body.mobile-catalogue-view .mobile-bottom-bar{display:flex!important;visibility:visible!important;z-index:100000!important;}
+  body.mobile-catalogue-view #seerviScrollProgress{display:block!important;visibility:visible!important;z-index:100001!important;}
+}
+</style>
 <style id="seervi-catalogue-underlay-fix">body.seervi-catalogue-open main,body.seervi-catalogue-open header,body.seervi-catalogue-open footer{visibility:hidden!important}body.seervi-catalogue-open #seerviVantaBackground{visibility:visible!important;opacity:.34!important}body.seervi-catalogue-open #seerviCataloguePanel{visibility:visible!important}</style></head><body><div id="seerviVantaBackground" aria-hidden="true"></div><div id="cloudConnectedBadge" class="cloud-connected-badge" aria-live="polite"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div id="bwAccountIdentity" class="bw-account-identity bw-account-identity-top" aria-label="Current time and account"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button id="bwNavLogin" class="bw-nav-login" type="button" onclick="openCustomerLogin()">Log In</button><button id="bwNavSignup" class="bw-nav-signup" type="button" onclick="openPartySignup()">Sign Up</button><button id="bwNavDashboard" class="bw-nav-dashboard" type="button" onclick="openMyDashboard()" hidden>My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button class="cart-nav-btn" type="button" onclick="openCart()" aria-label="Open cart">
  CART <span id="cartCount">0</span></button><span id="mobileTopDateTime" aria-label="Current date and time">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button id="notificationBell" class="notification-bell" type="button" onclick="openNotifications()" aria-label="Open notifications" aria-haspopup="dialog" aria-controls="notificationModal">
   <span class="notification-bell-icon">🔔</span><span id="notificationUnreadBadge" class="notification-unread-badge" hidden>0</span>
@@ -6779,12 +6792,12 @@ document.addEventListener('keydown',function(e){
   window.openCataloguePanel=function(){
     const m=document.getElementById('seerviCataloguePanel');if(!m)return;
     try{window.closeAccountDashboard?.();}catch(e){}
-    m.classList.add('show');m.setAttribute('aria-hidden','false');document.body.classList.add('modal-open','seervi-catalogue-open');
+    m.classList.add('show');m.setAttribute('aria-hidden','false');document.body.classList.add('modal-open','seervi-catalogue-open');if(window.innerWidth<=600)document.body.classList.add('mobile-catalogue-view');
     if(typeof window.seerviLoadPublicCatalogues==='function')window.seerviLoadPublicCatalogues();
   };
   window.closeCataloguePanel=function(){
     const m=document.getElementById('seerviCataloguePanel');if(!m)return;
-    m.classList.remove('show');m.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open','seervi-catalogue-open');
+    m.classList.remove('show');m.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open','seervi-catalogue-open','mobile-catalogue-view');
   };
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeCataloguePanel();});
 })();
