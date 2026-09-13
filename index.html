@@ -15383,7 +15383,7 @@ window.seerviLoadPublicCatalogues=async function(){
   const list=document.getElementById('seerviCatalogueList');
   try{
     if(list && !seerviPublicCatalogues.length)list.innerHTML='<div class="seervi-catalogue-empty">Loading catalogues…</div>';
-    const snap=await getDocs(query(collection(db,SEERVI_CATALOGUES_COLLECTION),limit(500)));
+    const snap=await getDocs(query(collection(db,SEERVI_CATALOGUES_COLLECTION),where('active','==',true),limit(500)));
     seerviPublicCatalogues=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>x.active!==false&&seerviCatalogueValidUrl(x.url)).sort((a,b)=>Number(a.sortOrder||0)-Number(b.sortOrder||0)||String(a.name||'').localeCompare(String(b.name||'')));
     seerviCatalogueRenderPublic();
     document.querySelectorAll('.seervi-catalogue-preview').forEach((el,index)=>{
