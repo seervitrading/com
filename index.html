@@ -3414,7 +3414,7 @@ body.nav-is-scrolled{padding-top:76px;}
 .seervi-home-catalogue-head p{max-width:520px;margin:0;color:#7f8995;font-size:12px;line-height:1.55}
 .seervi-home-catalogue-track-wrap{position:relative;overflow:hidden;margin:0 -1px;padding:8px 1px 20px}
 .seervi-home-catalogue-track{display:flex;gap:16px;width:max-content;animation:seerviCatalogueSlide 34s linear infinite;will-change:transform}
-.seervi-home-catalogue-track:hover{animation-play-state:paused}
+.seervi-home-catalogue-track:hover{animation-play-state:paused}.seervi-home-catalogue-track.seervi-home-catalogue-single{animation:none}
 .seervi-home-catalogue-card{width:min(470px,78vw);min-height:205px;display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:stretch;padding:12px;border:1px solid #ffffff14;border-radius:16px;background:linear-gradient(145deg,#13181e,#0c0f13);box-shadow:0 16px 42px #0006;box-sizing:border-box}
 .seervi-home-catalogue-card:hover{border-color:#ffffff35;transform:translateY(-2px);transition:.2s ease}
 .seervi-home-catalogue-preview{position:relative;display:block;width:150px;height:181px;overflow:hidden;border-radius:11px;background:#171b20;border:1px solid #ffffff12;text-decoration:none}
@@ -15307,7 +15307,7 @@ function seerviCatalogueBuildCards(targetId,homeMode){
     target.innerHTML=homeMode?'<div class="seervi-home-catalogue-empty">No catalogues are available right now.</div>':'<div class="seervi-catalogue-empty">No catalogues are available right now.</div>';
     return;
   }
-  const source=homeMode ? seerviPublicCatalogues.concat(seerviPublicCatalogues) : seerviPublicCatalogues;
+  const source=homeMode && seerviPublicCatalogues.length>1 ? seerviPublicCatalogues.concat(seerviPublicCatalogues) : seerviPublicCatalogues;
   target.innerHTML=source.map((item,index)=>{
     const url=seerviCatalogueResolveUrl(item.url),name=seerviEscHtml(item.name||'Catalogue'),file=seerviEscHtml(seerviCatalogueFileName(item.url));
     const previewId=(homeMode?'seerviHomePdfPreview_':'seerviPdfPreview_')+index+'_'+Math.random().toString(36).slice(2,8);
@@ -15328,6 +15328,7 @@ function seerviCatalogueRenderPublic(){
   const wrap=document.getElementById('seerviHomeCatalogueTrackWrap'),track=document.getElementById('seerviHomeCatalogueTrack'),status=document.getElementById('seerviHomeCatalogueStatus');
   if(wrap&&track){
     seerviCatalogueBuildCards('seerviHomeCatalogueTrack',true);
+    track.classList.toggle('seervi-home-catalogue-single',seerviPublicCatalogues.length<=1);
     wrap.hidden=false;
     if(status)status.hidden=true;
   }
