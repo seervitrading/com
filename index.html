@@ -3434,7 +3434,7 @@ body.nav-is-scrolled{padding-top:76px;}
 .seervi-home-catalogue-more:hover{border-color:#f0c66a;color:#f0c66a}
 @keyframes seerviCatalogueSlide{0%{transform:translateX(0)}100%{transform:translateX(calc(-50% - 8px))}}
 @media(max-width:700px){
-  .seervi-home-catalogue-section{padding:48px 0}
+  .seervi-home-catalogue-section{display:none !important}
   .seervi-home-catalogue-head{display:block;margin-bottom:18px}
   .seervi-home-catalogue-head p{margin-top:8px;font-size:10px}
   .seervi-home-catalogue-card{width:82vw;grid-template-columns:105px minmax(0,1fr);gap:12px;min-height:160px;padding:10px}
@@ -3443,6 +3443,9 @@ body.nav-is-scrolled{padding-top:76px;}
   .seervi-home-catalogue-file{font-size:8px}
   .seervi-home-catalogue-open{margin-top:11px;padding:8px 10px;font-size:7px}
 }
+
+/* Mobile: the home-page catalogue slider is web-only. Catalogue remains a separate mobile view. */
+@media(max-width:600px){.seervi-home-catalogue-section{display:none !important}}
 
 #seerviCataloguePanel{position:fixed;inset:0;z-index:9990;display:none;background:#080a0d;color:#f2f4f6;overflow:hidden}
 #seerviCataloguePanel.show{display:block}
