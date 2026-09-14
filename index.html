@@ -7371,8 +7371,10 @@ function close(modal){if(!modal)return;state.activeModal=null;const t=state.last
 document.addEventListener('focusin',e=>{const m=state.activeModal||modalRoot();if(m&&visible(m)&&!m.contains(e.target)){(focusables(m)[0]||m).focus();}},true);
 document.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const m=state.activeModal||modalRoot();if(!m||!visible(m))return;const a=focusables(m);if(!a.length){e.preventDefault();m.focus();return;}if(e.shiftKey&&document.activeElement===a[0]){e.preventDefault();a[a.length-1].focus();}else if(!e.shiftKey&&document.activeElement===a[a.length-1]){e.preventDefault();a[0].focus();}},true);
 window.Seervi=window.Seervi||{};window.Seervi.accessibility={open,close};
-const observer=new MutationObserver(ms=>{for(const m of ms){const el=m.target;if(!el.matches?.('[role="dialog"],.product-modal,[id$="Modal"],[id$="modal"]'))continue;const isOpen=visible(el)&&(el.classList.contains('show')||el.getAttribute('aria-hidden')==='false');if(isOpen&&state.activeModal!==el)open(el,document.activeElement);if(!isOpen&&state.activeModal===el)close(el);}});
-observer.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class','aria-hidden','hidden']});
+function syncActiveModal(){const m=modalRoot();if(m&&visible(m)){if(state.activeModal!==m)open(m,document.activeElement);}else if(state.activeModal){close(state.activeModal);}}
+document.addEventListener('click',()=>requestAnimationFrame(syncActiveModal),true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')requestAnimationFrame(syncActiveModal);},true);
+window.addEventListener('hashchange',syncActiveModal);
 })();
 </script>
 <script id="seervi-notification-sound-core">
@@ -15964,8 +15966,8 @@ function seerviShowSaveSuccess(message){
   }
   function init(){
     syncTopbarHomeOnly();
-    const observer=new MutationObserver(syncTopbarHomeOnly);
-    observer.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class','aria-hidden','style','hidden']});
+    document.addEventListener('click',()=>requestAnimationFrame(syncTopbarHomeOnly),true);
+    window.addEventListener('popstate',syncTopbarHomeOnly);
     window.seerviSyncTopbarHomeOnly=syncTopbarHomeOnly;
     window.addEventListener('hashchange',syncTopbarHomeOnly);
   }
@@ -16365,7 +16367,6 @@ function seerviShowSaveSuccess(message){
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
   else install();
-  new MutationObserver(install).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
 <div aria-hidden="true" id="seerviAdminDocEditor">
@@ -16427,7 +16428,6 @@ function seerviShowSaveSuccess(message){
   function patchOriginalSave(){if(window.__seerviOriginalCrmSave)return;if(typeof window.crmSaveCurrentQuote==='function'){window.__seerviOriginalCrmSave=window.crmSaveCurrentQuote;}}
   function install(){patchOriginalSave();const ge=$id('seerviDocGstEnabled'),gr=$id('seerviDocGstRate');ge?.addEventListener('change',renderTotals);gr?.addEventListener('input',renderTotals);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
-  new MutationObserver(()=>{if(!$id('seerviDocEditorStatus'))return;patchOriginalSave();}).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
 <script id="seervi-premium-motion-script">
@@ -16531,10 +16531,8 @@ function seerviShowSaveSuccess(message){
         requestProgress();
       }
       bindCatalogueScroller();
-      if(window.MutationObserver){
-        var progressObserver=new MutationObserver(function(){bindCatalogueScroller();});
-        progressObserver.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','style','aria-hidden']});
-      }
+      document.addEventListener('click',function(){requestAnimationFrame(bindCatalogueScroller);},true);
+      window.addEventListener('hashchange',bindCatalogueScroller);
       window.addEventListener('load',requestProgress,{once:true,passive:true});
       requestProgress();
     }
@@ -16567,15 +16565,11 @@ function seerviShowSaveSuccess(message){
         });
       }
       bindProductTilt();
-      /* Catalogue is rendered dynamically, so observe only child additions under the document body. */
-      if(window.MutationObserver){
-        var observer=new MutationObserver(function(mutations){
-          for(var i=0;i<mutations.length;i++){
-            if(mutations[i].addedNodes&&mutations[i].addedNodes.length){bindProductTilt();break;}
-          }
-        });
-        observer.observe(document.body,{childList:true,subtree:true});
-      }
+      /* Catalogue cards are rendered dynamically. Bind lazily when the pointer first enters a new card. */
+      document.addEventListener('pointerover',function(e){
+        var card=e.target&&e.target.closest?e.target.closest('.seervi-public-product-card'):null;
+        if(card)bindProductTilt();
+      },{passive:true});
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initTopLevelMotion,{once:true});
