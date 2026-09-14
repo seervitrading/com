@@ -5301,6 +5301,17 @@ body.seervi-ai-open .float-support{display:none!important}
 
 <section id="profiles" class="firebase-public-catalog">
   <div class="wrap">
+    <div id="mobileCatalogueProductView" hidden>
+      <div class="catalog-title">
+        <div>
+          <div class="crm-kicker">SEERVI TRADING / DOCUMENTS</div>
+          <h2>Catalogues</h2>
+          <p>Browse our latest product catalogues and open the PDF you need.</p>
+        </div>
+      </div>
+      <div id="mobileCatalogueList" class="mobile-catalogue-list"><div class="seervi-catalogue-empty">Loading catalogues…</div></div>
+      <div class="seervi-catalogue-note">Catalogues are maintained by Seervi Trading. The PDF opens in a new browser tab.</div>
+    </div>
     <div class="catalog-title">
       <div>
         <div class="crm-kicker">SEERVI TRADING / PRODUCTS</div>
@@ -6792,7 +6803,15 @@ document.addEventListener('keydown',function(e){
   window.openCataloguePanel=function(){
     const m=document.getElementById('seerviCataloguePanel');if(!m)return;
     try{window.closeAccountDashboard?.();}catch(e){}
-    m.classList.add('show');m.setAttribute('aria-hidden','false');document.body.classList.add('modal-open','seervi-catalogue-open');if(window.innerWidth<=600)document.body.classList.add('mobile-catalogue-view');
+    if(window.innerWidth<=600){
+      m.classList.remove('show');m.setAttribute('aria-hidden','true');
+      document.body.classList.remove('modal-open','seervi-catalogue-open','mobile-products-view');
+      document.body.classList.add('mobile-catalogue-view');
+      if(typeof window.seerviLoadPublicCatalogues==='function')window.seerviLoadPublicCatalogues();
+      window.scrollTo({top:0,behavior:'smooth'});
+      return;
+    }
+    m.classList.add('show');m.setAttribute('aria-hidden','false');document.body.classList.add('modal-open','seervi-catalogue-open');
     if(typeof window.seerviLoadPublicCatalogues==='function')window.seerviLoadPublicCatalogues();
   };
   window.closeCataloguePanel=function(){
@@ -7270,11 +7289,48 @@ function aiQuick(q){
 
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSupportModal();});
 </script><script>
+
+/* ===== MOBILE CATALOGUE VIEW — uses the same #profiles/product-view shell ===== */
+@media(max-width:600px){
+  body.mobile-catalogue-view #home{display:none!important}
+  body.mobile-catalogue-view #how-seervi-works,
+  body.mobile-catalogue-view #about,
+  body.mobile-catalogue-view #why-seervi,
+  body.mobile-catalogue-view #contact,
+  body.mobile-catalogue-view #applications{display:none!important}
+  body.mobile-catalogue-view #profiles{display:block!important;min-height:100dvh;scroll-margin-top:0!important;padding-top:0!important}
+  body.mobile-catalogue-view #profiles > .wrap > *:not(#mobileCatalogueProductView){display:none!important}
+  body.mobile-catalogue-view #mobileCatalogueProductView{display:block!important}
+  #mobileCatalogueProductView{padding:34px 0 110px}
+  #mobileCatalogueProductView .catalog-title{margin-bottom:18px}
+  #mobileCatalogueProductView .catalog-title h2{font-size:25px;margin:10px 0 7px}
+  #mobileCatalogueProductView .mobile-catalogue-list{display:grid;gap:14px}
+  #mobileCatalogueProductView .seervi-catalogue-item{grid-template-columns:105px minmax(0,1fr);gap:13px;padding:10px}
+  #mobileCatalogueProductView .seervi-catalogue-preview{width:105px;height:145px}
+  #mobileCatalogueProductView .seervi-catalogue-info{padding:6px 5px 6px 0}
+  #mobileCatalogueProductView .seervi-catalogue-item-kicker{font-size:7px;margin-bottom:6px}
+  #mobileCatalogueProductView .seervi-catalogue-item-name{font-size:16px}
+  #mobileCatalogueProductView .seervi-catalogue-item-file{font-size:8px;margin-top:6px}
+  #mobileCatalogueProductView .seervi-catalogue-item-open{margin-top:13px;padding:9px 10px;font-size:8px}
+  #mobileCatalogueProductView .seervi-catalogue-note{font-size:9px;margin-top:18px}
+  body.mobile-catalogue-view .mobile-bottom-bar{display:flex!important}
+}
+
+/* Override the old catalogue overlay mobile rules: mobile catalogue is now the #profiles shell, not a modal. */
+@media(max-width:600px){
+  body.mobile-catalogue-view main{display:block!important;visibility:visible!important}
+  body.mobile-catalogue-view nav,body.mobile-catalogue-view footer{display:none!important;visibility:hidden!important}
+  body.mobile-catalogue-view #seerviVantaBackground{display:block!important;visibility:visible!important;opacity:.34!important;z-index:0!important}
+  body.mobile-catalogue-view #seerviCataloguePanel{display:none!important;visibility:hidden!important}
+  body.mobile-catalogue-view #profiles{position:relative;z-index:1}
+}
+
 /* ===== MOBILE HOME / PRODUCTS VIEWS ===== */
 (function(){
   window.showMobileProducts=function(e){
     if(window.innerWidth>600) return;
     if(e) e.preventDefault();
+    document.body.classList.remove('mobile-catalogue-view');
     document.body.classList.add('mobile-products-view');
     setTimeout(function(){ window.scrollTo({top:0,behavior:'smooth'}); },30);
   };
@@ -15352,7 +15408,8 @@ function seerviCatalogueBuildCards(targetId,homeMode){
   const source=homeMode && seerviPublicCatalogues.length>1 ? seerviPublicCatalogues.concat(seerviPublicCatalogues) : seerviPublicCatalogues;
   target.innerHTML=source.map((item,index)=>{
     const url=seerviCatalogueResolveUrl(item.url),name=seerviEscHtml(item.name||'Catalogue'),file=seerviEscHtml(seerviCatalogueFileName(item.url));
-    const previewId=(homeMode?'seerviHomePdfPreview_':'seerviPdfPreview_')+index+'_'+Math.random().toString(36).slice(2,8);
+    const previewPrefix=homeMode?'seerviHomePdfPreview_':(targetId==='mobileCatalogueList'?'seerviMobilePdfPreview_':'seerviPdfPreview_');
+    const previewId=previewPrefix+index+'_'+Math.random().toString(36).slice(2,8);
     if(homeMode){
       return `<article class="seervi-home-catalogue-card">
         <a class="seervi-home-catalogue-preview" id="${previewId}" href="${seerviEscHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${name}"><canvas></canvas><span class="seervi-pdf-loading">LOADING PDF…</span></a>
@@ -15367,6 +15424,7 @@ function seerviCatalogueBuildCards(targetId,homeMode){
 }
 function seerviCatalogueRenderPublic(){
   seerviCatalogueBuildCards('seerviCatalogueList',false);
+  seerviCatalogueBuildCards('mobileCatalogueList',false);
   const wrap=document.getElementById('seerviHomeCatalogueTrackWrap'),track=document.getElementById('seerviHomeCatalogueTrack'),status=document.getElementById('seerviHomeCatalogueStatus');
   if(wrap&&track){
     seerviCatalogueBuildCards('seerviHomeCatalogueTrack',true);
@@ -15375,6 +15433,10 @@ function seerviCatalogueRenderPublic(){
     if(status)status.hidden=true;
   }
   document.querySelectorAll('.seervi-catalogue-preview').forEach((el,index)=>{
+    const item=seerviPublicCatalogues[index];
+    if(item?.url && el.id)seerviRenderPdfThumbnail(el.id,seerviCatalogueResolveUrl(item.url));
+  });
+  document.querySelectorAll('#mobileCatalogueList .seervi-catalogue-preview').forEach((el,index)=>{
     const item=seerviPublicCatalogues[index];
     if(item?.url && el.id)seerviRenderPdfThumbnail(el.id,seerviCatalogueResolveUrl(item.url));
   });
@@ -16180,12 +16242,17 @@ function seerviShowSaveSuccess(message){
       document.body.classList.remove('mobile-products-view');
     }else if(view==='catalogue'){
       try{baseShowHome?.({preventDefault(){}});}catch(e){}
-      try{baseOpenCatalogue?.();}catch(e){}
+      try{baseCloseCatalogue?.();}catch(e){}
       document.body.classList.remove('mobile-products-view');
+      document.body.classList.add('mobile-catalogue-view');
+      if(typeof window.seerviLoadPublicCatalogues==='function')window.seerviLoadPublicCatalogues();
+      window.scrollTo({top:0,behavior:'smooth'});
     }else if(view==='products'){
       try{baseShowProducts?.({preventDefault(){}});}catch(e){}
+      document.body.classList.remove('mobile-catalogue-view');
     }else{
       try{baseShowHome?.({preventDefault(){}});}catch(e){}
+      document.body.classList.remove('mobile-catalogue-view');
     }
     setBar(view);
     window.seerviSyncTopbarHomeOnly?.();
