@@ -43,10 +43,7 @@ footer{padding:35px 0;color:#78818d;font-size:13px;border-top:1px solid #ffffff0
 .pill{display:inline-block;border:1px solid #ffffff66;color:var(--accent2);padding:7px 10px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:1.4px}
 @media(max-width:800px){.product-image{min-height:300px}}
 
-body{background:
-radial-gradient(circle at 75% 8%,#3b2b0d55 0,transparent 28%),
-radial-gradient(circle at 10% 35%,#151b22 0,transparent 25%),
-linear-gradient(180deg,#07090b,#0a0d11 45%,#080a0d)}
+body{background:#0b0d10}
 nav{border-bottom:1px solid #ffffff40;box-shadow:0 8px 30px #0007}
 .hero{min-height:690px;position:relative}
 .hero:before{content:"";position:absolute;inset:30px 0 0;background-image:linear-gradient(#ffffff05 1px,transparent 1px),linear-gradient(90deg,#ffffff05 1px,transparent 1px);background-size:70px 70px;mask-image:linear-gradient(90deg,black,transparent 72%);pointer-events:none}
@@ -3799,43 +3796,6 @@ nav>.wrap>#notificationBell{order:5!important;display:flex!important;align-items
 .crm-party-admin-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
 @media(max-width:700px){.crm-party-admin-actions{justify-content:flex-start;}.crm-party-admin-row{grid-template-columns:1fr!important;gap:6px;}}
 
-#seerviVantaBackground{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  overflow:hidden;
-  pointer-events:none;
-  background:#000;
-  opacity:.34;
-}
-#seerviVantaBackground canvas{
-  display:block!important;
-  width:100%!important;
-  height:100%!important;
-}
-main,#about,#why-seervi,#contact,footer{
-  position:relative;
-  z-index:1;
-}
-#home.bw-hero{
-  position:relative;
-  z-index:2;
-}
-#home.bw-hero .bw-hero-image,
-#home.bw-hero .bw-hero-wash,
-#home.bw-hero .bw-hero-vignette{
-  z-index:0;
-}
-#home.bw-hero .bw-hero-content,
-#home.bw-hero .bw-bottom-bar{
-  z-index:3;
-}
-@media(max-width:600px){
-  #seerviVantaBackground{opacity:.27}
-}
-@media(prefers-reduced-motion:reduce){
-  #seerviVantaBackground{opacity:.12}
-}
 
 .admin-backup-options-panel{max-width:760px}
 .admin-backup-options-list{margin-top:8px}
@@ -5338,7 +5298,7 @@ body.seervi-ai-open .float-support{display:none!important}
 
 
 
-</head><body><div aria-hidden="true" id="seerviVantaBackground"></div><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Current time and account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
+</head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Current time and account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><span aria-label="Current date and time" id="mobileTopDateTime">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
 </button></div></nav><main><section class="bw-hero" id="home"><div aria-hidden="true" class="bw-hero-image"></div><video aria-hidden="true" autoplay="" class="bw-hero-media-video" id="bwHeroVideo" loop="" muted="" playsinline="" preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br/><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
@@ -5446,7 +5406,7 @@ body.seervi-ai-open .float-support{display:none!important}
 <button class="account-dashboard-option" onclick="accountDashboardStock()" type="button"><span>▤</span><strong>STOCK</strong><small>Control catalogue item availability</small></button>
 <button class="account-dashboard-option" onclick="openAdminCatalogues()" type="button"><span>▤</span><strong>CATALOGUES</strong><small>Manage customer-facing PDF catalogues</small></button>
 <button class="account-dashboard-option" onclick="accountDashboardNotificationPost()" type="button"><span>🔔</span><strong>NOTIFICATION POST</strong><small>Send an important notice to everyone</small></button>
-<button class="account-dashboard-option" onclick="openAdminSettings()" type="button"><span>⚙</span><strong>SETTINGS</strong><small>Control global website, Vanta &amp; business settings</small></button>
+<button class="account-dashboard-option" onclick="openAdminSettings()" type="button"><span>⚙</span><strong>SETTINGS</strong><small>Control global website &amp; business settings</small></button>
 <button class="account-dashboard-option" onclick="openAdminActivity()" type="button"><span>◷</span><strong>ACTIVITY</strong><small>View meaningful admin &amp; customer activity</small></button>
 <button class="account-dashboard-option" onclick="openGstProfile()" type="button"><span>₹</span><strong>GST PROFILE</strong><small>Business details used on sale invoices</small></button>
 </div>
@@ -5543,7 +5503,7 @@ body.seervi-ai-open .float-support{display:none!important}
 </div>
 <div class="admin-settings-scroll">
 <div aria-label="Settings sections" class="admin-settings-subnav" role="tablist">
-<button class="active" data-settings-section="vanta" onclick="seerviSettingsSection('vanta')" type="button">VANTA</button>
+
 <button data-settings-section="homepage" onclick="seerviSettingsSection('homepage')" type="button">HOMEPAGE</button>
 <button data-settings-section="catalogue" onclick="seerviSettingsSection('catalogue')" type="button">PRODUCT SETTINGS</button>
 <button data-settings-section="catalogues" onclick="seerviSettingsSection('catalogues')" type="button">CATALOGUES</button>
@@ -5552,16 +5512,7 @@ body.seervi-ai-open .float-support{display:none!important}
 <button data-settings-section="pdf" onclick="seerviSettingsSection('pdf')" type="button">PDF LAYOUT</button>
 <button data-settings-section="advanced" onclick="seerviSettingsSection('advanced')" type="button">ADVANCED</button>
 </div>
-<section class="admin-settings-section" id="adminSettingsSectionVanta"><div class="crm-section-title">VANTA BACKGROUND</div><p class="admin-settings-help">These are the only Vanta controls. Changes are global and are saved to Firebase.</p>
-<div class="admin-settings-grid">
-<label>Color<input id="settingVantaColor" type="color"/></label>
-<label>Background Color<input id="settingVantaBg" type="color"/></label>
-<label>Points<input id="settingVantaPoints" max="100" min="1" step="1" type="number"/></label>
-<label>Max Distance<input id="settingVantaMax" max="100" min="1" step="1" type="number"/></label>
-<label>Spacing<input id="settingVantaSpacing" max="100" min="1" step="1" type="number"/></label>
-<label class="admin-settings-check"><input id="settingVantaDots" type="checkbox"/> Show Dots</label>
-</div>
-</section>
+
 <section class="admin-settings-section" hidden="" id="adminSettingsSectionHomepage"><div class="crm-section-title">HOMEPAGE / BUSINESS &amp; CONTACT</div><p class="admin-settings-help">Homepage content and the complete Seervi contact block are managed here. Contact details also update the site’s global business information.</p><div class="admin-settings-grid"><label>Company Name<input id="settingCompany" type="text"/></label><label>Email<input id="settingEmail" type="email"/></label><label>Contact 1 Name<input id="settingContact1Name" type="text"/></label><label>Contact 1 Mobile<input id="settingContact1Number" inputmode="numeric" type="text"/></label><label>Contact 2 Name<input id="settingContact2Name" type="text"/></label><label>Contact 2 Mobile<input id="settingContact2Number" inputmode="numeric" type="text"/></label><label class="full">Business Address<textarea id="settingContactAddress" maxlength="400" placeholder="Full business address"></textarea></label>
 <label>Hero Kicker<input id="settingHeroKicker" type="text"/></label><label>Hero Title<input id="settingHeroTitle" type="text"/></label><label>Hero Highlight<input id="settingHeroHighlight" type="text"/></label><label>Hero CTA<input id="settingHeroCta" type="text"/></label><label>Hero Media Type<select id="settingHeroMediaType"><option value="image">IMAGE</option><option value="video">VIDEO</option></select></label><label class="full">Hero Description<textarea id="settingHeroDescription"></textarea></label><label class="full">Hero Image Path<input id="settingHeroImage" placeholder="GitHub project path, e.g. images/hero.webp" type="text"/></label><label class="full">Hero Video Path<input id="settingHeroVideo" placeholder="GitHub project path, e.g. videos/hero.mp4" type="text"/></label>
 <label class="admin-settings-check"><input id="settingShowSupply" type="checkbox"/> Show Supply Flow</label><label class="admin-settings-check"><input id="settingShowAbout" type="checkbox"/> Show About</label><label class="admin-settings-check"><input id="settingShowWhy" type="checkbox"/> Show Why Seervi</label><label class="admin-settings-check"><input id="settingShowContact" type="checkbox"/> Show Contact</label>
@@ -5636,7 +5587,7 @@ body.seervi-ai-open .float-support{display:none!important}
 <label class="admin-settings-check"><input id="settingMaintenance" type="checkbox"/> Maintenance Mode</label><label class="full">Maintenance Message<textarea id="settingMaintenanceMessage"></textarea></label>
 </div><div class="admin-settings-readonly">Security: Admin access remains controlled by Firebase Authentication + Firestore Rules. This panel cannot change the authorised admin email.</div></section>
 </div>
-<div class="admin-settings-footer"><div class="crm-auth-status" id="adminSettingsStatus">Global settings</div><div class="admin-settings-actions"><button class="crm-secondary" onclick="seerviSettingsLoadFresh()" type="button">↻ LOAD</button><button class="crm-secondary" onclick="seerviResetAdminSettings()" type="button">RESET FORM</button><button class="crm-secondary" onclick="seerviPreviewVantaSettings()" type="button">LIVE VANTA</button><button class="crm-primary" onclick="seerviSaveAdminSettings()" type="button">SAVE ALL SETTINGS</button></div></div>
+<div class="admin-settings-footer"><div class="crm-auth-status" id="adminSettingsStatus">Global settings</div><div class="admin-settings-actions"><button class="crm-secondary" onclick="seerviSettingsLoadFresh()" type="button">↻ LOAD</button><button class="crm-secondary" onclick="seerviResetAdminSettings()" type="button">RESET FORM</button><button class="crm-primary" onclick="seerviSaveAdminSettings()" type="button">SAVE ALL SETTINGS</button></div></div>
 </div>
 </div>
 <div aria-hidden="true" class="crm-modal admin-backup-options-modal" id="adminBackupOptionsModal">
@@ -15038,7 +14989,6 @@ window.seerviCloseItemsPanel=function(){
    devices receive the same site configuration. Existing product/Firebase
    catalogue logic is intentionally untouched. */
 const SEERVI_SITE_SETTINGS_DEFAULTS={
-  vanta:{color:'#ff99c5',backgroundColor:'#000000',points:10,maxDistance:15,spacing:15,showDots:true},
   branding:{companyName:'Seervi Trading',tagline:'Sourced Globally. Supplied by Seervi.',email:'seervitrading@gmail.com',whatsapp:'917073741650',contact1Name:'KAILASH SEERVI',contact1Number:'917073741650',contact2Name:'SHRAVAN KUMAR',contact2Number:'9740598345'},
   homepage:{heroKicker:'SEERVI TRADING / FACTORY SOURCING & IMPORT',heroTitle:'YOU NEED IT.',heroHighlight:'WE SOURCE IT.',heroDescription:'We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.',heroCta:'Request a Product',heroMediaType:'image',heroImage:'images/00-old-products/product-image-001-055cde1217d3c801.webp',heroVideo:'',showSupplyFlow:true,showAbout:true,showWhy:true,showContact:true,companyName:'Seervi Trading',tagline:'Sourced Globally. Supplied by Seervi.',email:'seervitrading@gmail.com',whatsapp:'917073741650',contact1Name:'KAILASH SEERVI',contact1Number:'917073741650',contact2Name:'SHRAVAN KUMAR',contact2Number:'9740598345',contactAddress:'Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072, India'},
   catalogue:{sectionTitle:'Our Products',showCatalogue:true,showSearch:true,showSort:true,showCategoryFilter:true,showSubcategoryFilter:true},
@@ -15063,10 +15013,6 @@ function seerviSettingsMerge(base,extra){
 let seerviSiteSettings=seerviSettingsClone(SEERVI_SITE_SETTINGS_DEFAULTS);
 window.SeerviSiteSettings=seerviSiteSettings;
 
-function seerviNormaliseHex(value,fallback){
-  const v=String(value||'').trim();
-  return /^#[0-9a-f]{6}$/i.test(v)?v:fallback;
-}
 function seerviNormaliseSettings(raw){
   const s=seerviSettingsMerge(SEERVI_SITE_SETTINGS_DEFAULTS,raw||{});
   // Migrate the previous default hero copy to the new importer-focused positioning
@@ -15086,13 +15032,6 @@ function seerviNormaliseSettings(raw){
   if(s.homepage.heroHighlight===oldHero.heroHighlight)s.homepage.heroHighlight=newHero.heroHighlight;
   if(s.homepage.heroDescription===oldHero.heroDescription)s.homepage.heroDescription=newHero.heroDescription;
   if(s.homepage.heroCta===oldHero.heroCta)s.homepage.heroCta=newHero.heroCta;
-  s.vanta.color=seerviNormaliseHex(s.vanta.color,SEERVI_SITE_SETTINGS_DEFAULTS.vanta.color);
-  s.vanta.backgroundColor=seerviNormaliseHex(s.vanta.backgroundColor,SEERVI_SITE_SETTINGS_DEFAULTS.vanta.backgroundColor);
-  ['points','maxDistance','spacing'].forEach(k=>{
-    const n=Number(s.vanta[k]);
-    s.vanta[k]=Number.isFinite(n)?Math.max(1,Math.min(100,Math.round(n))):SEERVI_SITE_SETTINGS_DEFAULTS.vanta[k];
-  });
-  s.vanta.showDots=!!s.vanta.showDots;
   s.branding.companyName=String(s.branding.companyName||SEERVI_SITE_SETTINGS_DEFAULTS.branding.companyName).slice(0,120);
   s.branding.tagline=String(s.branding.tagline||SEERVI_SITE_SETTINGS_DEFAULTS.branding.tagline).slice(0,180);
   s.branding.email=String(s.branding.email||SEERVI_SITE_SETTINGS_DEFAULTS.branding.email).slice(0,160);
@@ -15136,7 +15075,6 @@ function seerviNormaliseSettings(raw){
 function seerviApplySiteSettings(raw){
   seerviSiteSettings=seerviNormaliseSettings(raw);
   window.SeerviSiteSettings=seerviSiteSettings;
-  const v=seerviSiteSettings.vanta;
   const root=document.documentElement;
   const hero=document.querySelector('#home .bw-hero-image');
   const heroVideo=document.getElementById('bwHeroVideo');
@@ -15264,7 +15202,7 @@ window.openAdminSettings=function(){
   const modal=document.getElementById('adminSettingsModal');
   if(!modal)return;
   seerviSettingsFillForm();
-  seerviSettingsSection('vanta');
+  seerviSettingsSection('homepage');
   modal.classList.add('show');modal.setAttribute('aria-hidden','false');
   document.body.classList.add('modal-open');
 };
@@ -15302,7 +15240,7 @@ window.seerviPdfLayoutSection=function(section){
   });
 };
 window.seerviSettingsSection=function(section){
-  const map={vanta:'adminSettingsSectionVanta',homepage:'adminSettingsSectionHomepage',catalogue:'adminSettingsSectionCatalogue',customer:'adminSettingsSectionCustomer',notifications:'adminSettingsSectionNotifications',pdf:'adminSettingsSectionPdf',advanced:'adminSettingsSectionAdvanced'};
+  const map={homepage:'adminSettingsSectionHomepage',catalogue:'adminSettingsSectionCatalogue',customer:'adminSettingsSectionCustomer',notifications:'adminSettingsSectionNotifications',pdf:'adminSettingsSectionPdf',advanced:'adminSettingsSectionAdvanced'};
   Object.entries(map).forEach(([key,id])=>{const el=document.getElementById(id);if(el)el.hidden=key!==section;});
   document.querySelectorAll('.admin-settings-subnav button[data-settings-section]').forEach(btn=>{const active=btn.dataset.settingsSection===section;btn.classList.toggle('active',active);btn.setAttribute('aria-selected',active?'true':'false');});
   if(section==='pdf')seerviPdfLayoutSection('quotation');
@@ -15527,7 +15465,6 @@ This removes it from the customer-facing catalogue list. The GitHub PDF itself w
 function seerviSettingsFillForm(){
   const s=seerviSiteSettings;
   const vals={
-    settingVantaColor:s.vanta.color,settingVantaBg:s.vanta.backgroundColor,settingVantaPoints:s.vanta.points,settingVantaMax:s.vanta.maxDistance,settingVantaSpacing:s.vanta.spacing,settingVantaDots:s.vanta.showDots,
     settingCompany:s.homepage.companyName||s.branding.companyName,settingEmail:s.homepage.email||s.branding.email,settingContact1Name:s.homepage.contact1Name||s.branding.contact1Name,settingContact1Number:s.homepage.contact1Number||s.branding.contact1Number,settingContact2Name:s.homepage.contact2Name||s.branding.contact2Name,settingContact2Number:s.homepage.contact2Number||s.branding.contact2Number,settingContactAddress:s.homepage.contactAddress||SEERVI_SITE_SETTINGS_DEFAULTS.homepage.contactAddress,
     settingHeroKicker:s.homepage.heroKicker,settingHeroTitle:s.homepage.heroTitle,settingHeroHighlight:s.homepage.heroHighlight,settingHeroDescription:s.homepage.heroDescription,settingHeroCta:s.homepage.heroCta,settingHeroMediaType:s.homepage.heroMediaType,settingHeroImage:s.homepage.heroImage,settingHeroVideo:s.homepage.heroVideo,settingShowSupply:s.homepage.showSupplyFlow,settingShowAbout:s.homepage.showAbout,settingShowWhy:s.homepage.showWhy,settingShowContact:s.homepage.showContact,
     settingCatalogueTitle:s.catalogue.sectionTitle,settingShowCatalogue:s.catalogue.showCatalogue,settingShowSearch:s.catalogue.showSearch,settingShowSort:s.catalogue.showSort,settingShowCategory:s.catalogue.showCategoryFilter,settingShowSubcategory:s.catalogue.showSubcategoryFilter,
@@ -15540,17 +15477,10 @@ function seerviSettingsFillForm(){
   const status=seerviSettingsField('adminSettingsStatus');if(status)status.textContent='Global settings loaded from Firebase.';
 }
 
-window.seerviPreviewVantaSettings=function(){
-  try{seerviRequireSettingsAdmin();}catch(e){return;}
-  const v={color:seerviSettingsField('settingVantaColor')?.value,backgroundColor:seerviSettingsField('settingVantaBg')?.value,points:Number(seerviSettingsField('settingVantaPoints')?.value),maxDistance:Number(seerviSettingsField('settingVantaMax')?.value),spacing:Number(seerviSettingsField('settingVantaSpacing')?.value),showDots:!!seerviSettingsField('settingVantaDots')?.checked};
-  const preview=seerviSettingsMerge(seerviSiteSettings,{vanta:v});
-  seerviApplySiteSettings(preview);
-};
+
 window.seerviSaveAdminSettings=async function(){
   try{seerviRequireSettingsAdmin();}catch(e){seerviToastAlert(e.message||'Admin access required.');return;}
-  const s=seerviSettingsMerge(SEERVI_SITE_SETTINGS_DEFAULTS,{vanta:{
-    color:seerviSettingsField('settingVantaColor')?.value,backgroundColor:seerviSettingsField('settingVantaBg')?.value,points:Number(seerviSettingsField('settingVantaPoints')?.value),maxDistance:Number(seerviSettingsField('settingVantaMax')?.value),spacing:Number(seerviSettingsField('settingVantaSpacing')?.value),showDots:!!seerviSettingsField('settingVantaDots')?.checked
-  },branding:{
+  const s=seerviSettingsMerge(SEERVI_SITE_SETTINGS_DEFAULTS,{branding:{
     companyName:seerviSettingsField('settingCompany')?.value,email:seerviSettingsField('settingEmail')?.value,contact1Name:seerviSettingsField('settingContact1Name')?.value,contact1Number:seerviSettingsField('settingContact1Number')?.value,contact2Name:seerviSettingsField('settingContact2Name')?.value,contact2Number:seerviSettingsField('settingContact2Number')?.value
   },homepage:{
     companyName:seerviSettingsField('settingCompany')?.value,email:seerviSettingsField('settingEmail')?.value,contact1Name:seerviSettingsField('settingContact1Name')?.value,contact1Number:seerviSettingsField('settingContact1Number')?.value,contact2Name:seerviSettingsField('settingContact2Name')?.value,contact2Number:seerviSettingsField('settingContact2Number')?.value,contactAddress:seerviSettingsField('settingContactAddress')?.value,
@@ -16316,56 +16246,6 @@ function seerviShowSaveSuccess(message){
     if(history.state && history.state[STATE_KEY]) history.back();
     else closeLayers();
   };
-})();
-</script>
-<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js"></script>
-<script id="seervi-vanta-background-init">
-(function(){
-  'use strict';
-  var started=false;
-  function hexToInt(hex,fallback){
-    var value=String(hex||'').replace('#','');
-    return /^[0-9a-f]{6}$/i.test(value)?parseInt(value,16):fallback;
-  }
-  function initSeerviVanta(settings){
-    var target=document.getElementById('seerviVantaBackground');
-    if(!target || typeof VANTA==='undefined' || typeof VANTA.NET!=='function') return;
-    var reduced=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if(reduced) return;
-    var cfg=(settings&&settings.vanta)||{};
-    try{
-      if(window.SeerviVantaEffect && typeof window.SeerviVantaEffect.destroy==='function'){
-        window.SeerviVantaEffect.destroy();
-      }
-      window.SeerviVantaEffect=VANTA.NET({
-        el:target,
-        mouseControls:false,
-        touchControls:false,
-        gyroControls:false,
-        minHeight:200,
-        minWidth:200,
-        scale:1,
-        scaleMobile:1,
-        color:hexToInt(cfg.color,0xff3f81),
-        backgroundColor:hexToInt(cfg.backgroundColor,0x23153c),
-        points:Number(cfg.points)||10,
-        maxDistance:Number(cfg.maxDistance)||20,
-        spacing:Number(cfg.spacing)||15,
-        showDots:cfg.showDots!==false
-      });
-      started=true;
-    }catch(error){
-      console.warn('[Seervi] Vanta background failed to initialize.',error);
-    }
-  }
-  function boot(){
-    if(window.SeerviSiteSettings) initSeerviVanta(window.SeerviSiteSettings);
-    else initSeerviVanta(null);
-  }
-  window.addEventListener('seervi:global-settings-ready',function(e){initSeerviVanta(e.detail||window.SeerviSiteSettings||null);},{passive:true});
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
-  else boot();
 })();
 </script>
 <script id="seervi-ai-input-touch-guard">
