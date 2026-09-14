@@ -12428,23 +12428,12 @@ function inventoryApplyToHome(){
 }
 
 async function inventoryLoadPublic(){
-  try{
-    const snap=await seerviCachedRead('public:inventory:2000',()=>getDocs(query(collection(db,'inventory'),where('public','==',true),limit(2000))),60000);
-    const next=Object.create(null);
-    const qty=Object.create(null);
-    snap.forEach(d=>{
-      const data=d.data()||{};
-      next[d.id]=data.stock!==false;
-      if(Number.isFinite(Number(data.availableQty))) qty[d.id]=Math.max(0,Number(data.availableQty));
-    });
-    seerviInventoryState=next;
-    seerviInventoryQty=qty;
-  }catch(e){
-    console.warn('Inventory availability load skipped:',e?.message||e);
-    seerviInventoryState=Object.create(null);
-    seerviInventoryQty=Object.create(null);
+  // Public inventory is loaded lazily with the selected product category.
+  // This compatibility function no longer performs a full 2000-document read.
+  if(seerviPublicSelectedCategory!=='all'){
+    await seerviPublicLoadCategoryInventory(seerviPublicSelectedCategory);
+    inventoryApplyToHome();
   }
-  inventoryApplyToHome();
 }
 
 function inventorySubcategoryKey(item){
@@ -12541,10 +12530,26 @@ function inventoryRenderAdmin(){
   });
 }
 
+async function inventoryLoadAllForAdmin(){
+  try{
+    const snap=await seerviCachedRead('admin:inventory:2000',()=>getDocs(query(collection(db,'inventory'),limit(2000))),60000);
+    seerviInventoryState=Object.create(null);
+    seerviInventoryQty=Object.create(null);
+    snap.forEach(d=>{
+      const data=d.data()||{};
+      seerviInventoryState[d.id]=data.stock!==false;
+      if(Number.isFinite(Number(data.availableQty)))seerviInventoryQty[d.id]=Math.max(0,Number(data.availableQty));
+    });
+  }catch(e){
+    console.warn('Admin inventory load skipped:',e?.message||e);
+  }
+}
+
 async function inventoryEnsureItemsLoaded(){
   if(!crmUser||!isAuthorisedAdmin(crmUser))throw new Error('Admin login required.');
   if(!Array.isArray(seerviItemsCache)||!seerviItemsCache.length) await seerviItemsLoadAll();
   if(!Array.isArray(seerviItemCategoriesCache)||!seerviItemCategoriesCache.length) await seerviItemsLoadCategories();
+  await inventoryLoadAllForAdmin();
 }
 
 window.setInventorySubcategoryStock=async function(categoryId,subcategoryId,stock,input){
@@ -12713,9 +12718,8 @@ window.refreshInventoryStock=async function(){
   if(crmUser){try{await inventoryEnsureItemsLoaded();inventoryRenderAdmin();}catch(e){console.warn('Admin stock refresh:',e);}}
 };
 
-document.addEventListener('DOMContentLoaded',()=>{
-  inventoryLoadPublic().catch(()=>{});
-});
+// No public inventory bootstrap here. Stock is fetched only for a selected
+// category, which prevents a second large Firestore read on page startup.
 
 /* ===== END FIREBASE ITEMS / STOCK BRIDGE ===== */
 
@@ -14252,21 +14256,42 @@ function seerviPublicMillis(v){
   return Number(v)||0;
 }
 
+// Public catalogue is now category-first and lazy-loaded.
+// Initial page load reads ONLY active categories. Product documents are fetched
+// only when a visitor opens a category, so the browser never receives the full
+// catalogue just to display the homepage.
+const seerviPublicCategoryItemCache=new Map();
+const seerviPublicCategoryLoadPromises=new Map();
+let seerviPublicAllItemsLoaded=false;
+let seerviPublicAllItemsLoadPromise=null;
+
+function seerviPublicMergeItems(items){
+  const map=new Map(seerviPublicItems.map(item=>[String(item.id),item]));
+  items.forEach(item=>map.set(String(item.id),item));
+  seerviPublicItems=[...map.values()].sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
+}
+
 async function seerviPublicLoadCatalogue(){
   const status=$('seerviPublicCatalogueStatus');
   try{
-    if(status)status.textContent='Loading products…';
+    if(status)status.textContent='Loading categories…';
 
-    const [catSnap,itemSnap]=await Promise.all([
-      seerviCachedRead('public:itemCategories:500',()=>getDocs(query(collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),where('active','==',true),limit(500))),60000),
-      seerviCachedRead('public:items:1000',()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000))),60000)
-    ]);
+    const catSnap=await seerviCachedRead(
+      'public:itemCategories:500',
+      ()=>getDocs(query(
+        collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),
+        where('active','==',true),
+        limit(500)
+      )),
+      60000
+    );
 
     seerviPublicCategories=catSnap.docs.map(d=>({id:d.id,...d.data()}))
       .sort((a,b)=>Number(a.sortOrder||0)-Number(b.sortOrder||0)||String(a.name||'').localeCompare(String(b.name||'')));
 
-    seerviPublicItems=itemSnap.docs.map(d=>({id:d.id,...d.data()}))
-      .sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
+    // No public item documents are read during bootstrap.
+    seerviPublicItems=[];
+    seerviPublicAllItemsLoaded=false;
 
     window.seerviGetPublicCatalogue=()=>({items:seerviPublicItems,categories:seerviPublicCategories});
 
@@ -14274,14 +14299,91 @@ async function seerviPublicLoadCatalogue(){
     seerviPublicRenderSubcategories();
     seerviPublicRenderItems();
 
-    if(status)status.textContent=`${seerviPublicItems.length} product${seerviPublicItems.length===1?'':'s'} available.`;
+    if(status)status.textContent=`${seerviPublicCategories.filter(x=>x.type==='category').length} categor${seerviPublicCategories.filter(x=>x.type==='category').length===1?'y':'ies'} available.`;
   }catch(e){
     console.error('Seervi public catalogue:',e);
     if(status){
       status.textContent='Products are temporarily unavailable.';
       status.style.color='#f28b8b';
     }
+    throw e;
   }
+}
+
+async function seerviPublicLoadCategoryItems(categoryId){
+  const id=String(categoryId||'').trim();
+  if(!id)return [];
+  if(seerviPublicCategoryItemCache.has(id))return seerviPublicCategoryItemCache.get(id);
+  if(seerviPublicCategoryLoadPromises.has(id))return seerviPublicCategoryLoadPromises.get(id);
+
+  const status=$('seerviPublicCatalogueStatus');
+  const promise=(async()=>{
+    if(status)status.textContent='Loading category products…';
+    try{
+      // Query by category only. Filtering active items client-side avoids a
+      // composite Firestore index requirement while still keeping the read
+      // scoped to the selected category.
+      const itemSnap=await seerviCachedRead(
+        `public:items:category:${id}:500`,
+        ()=>getDocs(query(
+          collection(db,SEERVI_ITEMS_COLLECTION),
+          where('categoryId','==',id),
+          limit(500)
+        )),
+        60000
+      );
+      const items=itemSnap.docs
+        .map(d=>({id:d.id,...d.data()}))
+        .filter(item=>item.active!==false)
+        .sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
+
+      seerviPublicCategoryItemCache.set(id,items);
+      seerviPublicMergeItems(items);
+      return items;
+    }finally{
+      seerviPublicCategoryLoadPromises.delete(id);
+    }
+  })();
+  seerviPublicCategoryLoadPromises.set(id,promise);
+  return promise;
+}
+
+async function seerviPublicLoadCategoryInventory(categoryId){
+  const id=String(categoryId||'').trim();
+  if(!id)return;
+  try{
+    // Inventory is not needed while the category cards are being shown. Read
+    // only the selected category when its products are opened.
+    const snap=await seerviCachedRead(
+      `public:inventory:category:${id}:500`,
+      ()=>getDocs(query(collection(db,'inventory'),where('categoryId','==',id),limit(500))),
+      60000
+    );
+    snap.forEach(d=>{
+      const data=d.data()||{};
+      seerviInventoryState[d.id]=data.stock!==false;
+      if(Number.isFinite(Number(data.availableQty)))seerviInventoryQty[d.id]=Math.max(0,Number(data.availableQty));
+    });
+  }catch(e){
+    console.warn('Category inventory load skipped:',e?.message||e);
+  }
+}
+
+async function seerviPublicLoadAllItemsForAI(){
+  if(seerviPublicAllItemsLoaded)return seerviPublicItems;
+  if(seerviPublicAllItemsLoadPromise)return seerviPublicAllItemsLoadPromise;
+  seerviPublicAllItemsLoadPromise=(async()=>{
+    const snap=await seerviCachedRead(
+      'public:items:all:1000',
+      ()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000))),
+      60000
+    );
+    const items=snap.docs.map(d=>({id:d.id,...d.data()}));
+    seerviPublicMergeItems(items);
+    seerviPublicAllItemsLoaded=true;
+    return seerviPublicItems;
+  })().finally(()=>{seerviPublicAllItemsLoadPromise=null;});
+  return seerviPublicAllItemsLoadPromise;
 }
 
 function seerviPublicCategoryName(id){
@@ -14504,7 +14606,7 @@ seerviPublicRenderSubcategories=function(){
     }).join('');
 }
 
-seerviPublicSelectCategory=function(categoryId){
+seerviPublicSelectCategory=async function(categoryId){
   seerviPublicSelectedCategory=categoryId||'all';
   seerviPublicSelectedSubcategory='all';
   seerviPublicSearchQuery='';
@@ -14512,7 +14614,24 @@ seerviPublicSelectCategory=function(categoryId){
   if(search)search.value='';
   const toolbar=$('seerviPublicToolbar');
   if(toolbar)toolbar.hidden=seerviPublicSelectedCategory==='all';
+
   seerviPublicRenderCategories();
+  seerviPublicRenderSubcategories();
+
+  if(seerviPublicSelectedCategory!=='all'){
+    const grid=$('seerviPublicProductGrid');
+    if(grid)grid.innerHTML='<div class="seervi-public-empty">Loading products…</div>';
+    try{
+      await Promise.all([
+        seerviPublicLoadCategoryItems(seerviPublicSelectedCategory),
+        seerviPublicLoadCategoryInventory(seerviPublicSelectedCategory)
+      ]);
+    }catch(e){
+      console.error('Seervi category load:',e);
+      if(grid)grid.innerHTML='<div class="seervi-public-empty">Products are temporarily unavailable.</div>';
+    }
+  }
+
   seerviPublicRenderSubcategories();
   seerviPublicRenderItems();
 
@@ -14918,6 +15037,7 @@ if(document.readyState==='loading'){
    public Products page before performing any AI product/category search. */
 window.seerviEnsurePublicCatalogue=async function(){
   await seerviBootPublicCatalogue();
+  await seerviPublicLoadAllItemsForAI();
   return window.seerviGetPublicCatalogue?.() || {items:[],categories:[]};
 };
 /* ===== END SEERVI PUBLIC CATALOGUE BOOTSTRAP / FINAL FIX ===== */
