@@ -12630,6 +12630,10 @@ function seerviCatalogueBuildCards(targetId,homeMode){
     return `<article class="seervi-catalogue-item"><a class="seervi-catalogue-preview" id="${previewId}" href="${seerviEscHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${name}"><canvas></canvas><span class="seervi-pdf-loading">LOADING PDF…</span></a><div class="seervi-catalogue-info"><div class="seervi-catalogue-item-kicker">SEERVI TRADING / PDF CATALOGUE</div><div class="seervi-catalogue-item-name">${name}</div><div class="seervi-catalogue-item-file">${file}</div><a class="seervi-catalogue-item-open" href="${seerviEscHtml(url)}" target="_blank" rel="noopener noreferrer">VIEW CATALOGUE ↗</a></div></article>`;
   }).join('');
 }
+const SEERVI_PUBLIC_CATALOGUE_CACHE_KEY='seervi:public:catalogues:v2';
+function seerviCatalogueSaveLocalCache(){try{localStorage.setItem(SEERVI_PUBLIC_CATALOGUE_CACHE_KEY,JSON.stringify({time:Date.now(),items:seerviPublicCatalogues}));}catch(_){} }
+function seerviCatalogueReadLocalCache(){try{const raw=localStorage.getItem(SEERVI_PUBLIC_CATALOGUE_CACHE_KEY);if(!raw)return false;const data=JSON.parse(raw);if(!Array.isArray(data?.items)||!data.items.length)return false;const items=data.items.filter(x=>x?.active!==false&&seerviCatalogueValidUrl(x.url));if(!items.length)return false;seerviPublicCatalogues=items;return true;}catch(_){return false;}}
+function seerviCatalogueQueueThumbnails(){const run=()=>{document.querySelectorAll('.seervi-catalogue-preview').forEach((el,index)=>{const item=seerviPublicCatalogues[index];if(item?.url&&el.id)seerviRenderPdfThumbnail(el.id,seerviCatalogueResolveUrl(item.url));});document.querySelectorAll('.seervi-home-catalogue-preview').forEach((el,index)=>{const item=seerviPublicCatalogues[index%Math.max(1,seerviPublicCatalogues.length)];if(item?.url&&el.id)seerviRenderPdfThumbnail(el.id,seerviCatalogueResolveUrl(item.url));});};if('requestIdleCallback'in window)requestIdleCallback(run,{timeout:1200});else setTimeout(run,80);}
 function seerviCatalogueRenderPublic(){
   seerviCatalogueBuildCards('seerviCatalogueList',false);
   const wrap=document.getElementById('seerviHomeCatalogueTrackWrap'),track=document.getElementById('seerviHomeCatalogueTrack'),status=document.getElementById('seerviHomeCatalogueStatus');
@@ -12639,14 +12643,7 @@ function seerviCatalogueRenderPublic(){
     wrap.hidden=false;
     if(status)status.hidden=true;
   }
-  document.querySelectorAll('.seervi-catalogue-preview').forEach((el,index)=>{
-    const item=seerviPublicCatalogues[index];
-    if(item?.url && el.id)seerviRenderPdfThumbnail(el.id,seerviCatalogueResolveUrl(item.url));
-  });
-  document.querySelectorAll('.seervi-home-catalogue-preview').forEach((el,index)=>{
-    const item=seerviPublicCatalogues[index % Math.max(1,seerviPublicCatalogues.length)];
-    if(item?.url && el.id)seerviRenderPdfThumbnail(el.id,seerviCatalogueResolveUrl(item.url));
-  });
+  seerviCatalogueQueueThumbnails();
 }
 
 let seerviPdfJsPromise=null;
@@ -12687,18 +12684,17 @@ async function seerviRenderPdfThumbnail(previewId,url){
 }
 
 window.seerviLoadPublicCatalogues=async function(){
-  if(window.SeerviGlobalSettingsReady){try{await window.SeerviGlobalSettingsReady;}catch(_){}}
+  if(window.SeerviGlobalSettingsReady){try{await window.SeerviGlobalSettingsReady;}catch(_) {}}
   if(window.SeerviSiteSettings?.catalogue?.show!==true)return;
   const list=document.getElementById('seerviCatalogueList');
+  const hadLocal=seerviPublicCatalogues.length>0||seerviCatalogueReadLocalCache();
+  if(hadLocal){seerviCatalogueRenderPublic();if(list)list.dataset.seerviCatalogueCached='1';}
+  else if(list)list.innerHTML='<div class="seervi-catalogue-empty">Loading catalogues…</div>';
   try{
-    if(list && !seerviPublicCatalogues.length)list.innerHTML='<div class="seervi-catalogue-empty">Loading catalogues…</div>';
     const snap=await getDocs(query(collection(db,SEERVI_CATALOGUES_COLLECTION),where('active','==',true),limit(500)));
     seerviPublicCatalogues=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>x.active!==false&&seerviCatalogueValidUrl(x.url)).sort((a,b)=>Number(a.sortOrder||0)-Number(b.sortOrder||0)||String(a.name||'').localeCompare(String(b.name||'')));
+    seerviCatalogueSaveLocalCache();
     seerviCatalogueRenderPublic();
-    document.querySelectorAll('.seervi-catalogue-preview').forEach((el,index)=>{
-      const item=seerviPublicCatalogues[index];
-      if(item?.url && el.id)seerviRenderPdfThumbnail(el.id,seerviCatalogueResolveUrl(item.url));
-    });
   }catch(error){
     console.error('Seervi public catalogues:',error);
     if(list)list.innerHTML='<div class="seervi-catalogue-empty">Catalogues are temporarily unavailable.</div>';
