@@ -12647,13 +12647,19 @@ function seerviCatalogueQueueThumbnails(selector='.seervi-home-catalogue-preview
   const run=el=>{
     const index=els.indexOf(el);
     const item=seerviPublicCatalogues[homeMode ? index % Math.max(1,seerviPublicCatalogues.length) : index];
-    if(item?.url&&el.id)seerviRenderPdfThumbnail(el.id,seerviCatalogueResolveUrl(item.url));
+    if(item?.url&&el.id&&!el.classList.contains('pdf-ready'))seerviRenderPdfThumbnail(el.id,seerviCatalogueResolveUrl(item.url));
   };
+  /* Always render the first visible card immediately. A transformed horizontal
+     carousel can otherwise delay IntersectionObserver callbacks on mobile. */
+  run(els[0]);
+  if(els.length>1 && window.innerWidth<=900)run(els[1]);
+  const remaining=els.slice((window.innerWidth<=900)?2:1);
+  if(!remaining.length)return;
   if('IntersectionObserver' in window){
-    const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){io.unobserve(entry.target);run(entry.target);}}),{rootMargin:'300px 0px'});
-    els.forEach(el=>io.observe(el));
-  }else if('requestIdleCallback' in window){requestIdleCallback(()=>els.forEach(run),{timeout:1500});}
-  else setTimeout(()=>els.forEach(run),100);
+    const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){io.unobserve(entry.target);run(entry.target);}}),{rootMargin:'600px 0px'});
+    remaining.forEach(el=>io.observe(el));
+  }else if('requestIdleCallback' in window){requestIdleCallback(()=>remaining.forEach(run),{timeout:2000});}
+  else setTimeout(()=>remaining.forEach(run),150);
 }
 function seerviRenderCataloguePanelThumbnails(){
   if(seerviCataloguePanelThumbsReady)return;
@@ -12700,25 +12706,39 @@ function seerviLoadPdfJs(){
   return seerviPdfJsPromise;
 }
 async function seerviRenderPdfThumbnail(previewId,url){
-  const box=document.getElementById(previewId);if(!box)return;
+  const box=document.getElementById(previewId);if(!box||!url)return;
+  if(box.dataset.pdfRendering==='1'||box.classList.contains('pdf-ready'))return;
+  box.dataset.pdfRendering='1';
+  box.classList.remove('pdf-failed');
   try{
     const pdfjs=await seerviLoadPdfJs();
     let pdfPromise=seerviPdfDocumentCache.get(url);
-    if(!pdfPromise){pdfPromise=pdfjs.getDocument({url}).promise;seerviPdfDocumentCache.set(url,pdfPromise);}
+    if(!pdfPromise){
+      const loadingTask=pdfjs.getDocument({url,disableAutoFetch:false,disableStream:false});
+      pdfPromise=loadingTask.promise;
+      seerviPdfDocumentCache.set(url,pdfPromise);
+      pdfPromise.catch(()=>{if(seerviPdfDocumentCache.get(url)===pdfPromise)seerviPdfDocumentCache.delete(url);});
+    }
     const pdf=await pdfPromise;
     const page=await pdf.getPage(1);
     const canvas=box.querySelector('canvas');if(!canvas)return;
     const rect=box.getBoundingClientRect();
     const base=page.getViewport({scale:1});
-    const scale=Math.min((rect.width*2)/base.width,(rect.height*2)/base.height);
+    const width=Math.max(1,rect.width||150),height=Math.max(1,rect.height||190);
+    const scale=Math.min((width*2)/base.width,(height*2)/base.height);
     const viewport=page.getViewport({scale:Math.max(scale,1)});
     canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);
-    await page.render({canvasContext:canvas.getContext('2d',{alpha:false}),viewport}).promise;
+    canvas.style.width='100%';canvas.style.height='100%';
+    const ctx=canvas.getContext('2d',{alpha:false});
+    if(!ctx)throw new Error('Canvas 2D context unavailable');
+    await page.render({canvasContext:ctx,viewport}).promise;
     box.classList.add('pdf-ready');
   }catch(error){
     console.warn('Seervi PDF thumbnail:',error);
     box.classList.add('pdf-failed');
     const loading=box.querySelector('.seervi-pdf-loading');if(loading)loading.textContent='OPEN PDF ↗';
+  }finally{
+    delete box.dataset.pdfRendering;
   }
 }
 
