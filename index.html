@@ -3413,7 +3413,7 @@ body.nav-is-scrolled{padding-top:76px;}
 .seervi-home-catalogue-preview canvas{display:block;width:100%;height:100%;background:#fff;object-fit:contain}
 .seervi-home-catalogue-preview .seervi-pdf-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#7f8995;font-size:8px;font-weight:900;letter-spacing:.7px;background:#171b20}
 .seervi-home-catalogue-preview.pdf-ready .seervi-pdf-loading{display:none}
-.seervi-home-catalogue-preview.pdf-failed .seervi-pdf-loading{color:#d8b45a}.seervi-home-catalogue-preview.seervi-pdf-preview-disabled canvas{display:none}.seervi-home-catalogue-preview.seervi-pdf-preview-disabled .seervi-pdf-loading{display:flex;color:#d8b45a}
+.seervi-home-catalogue-preview.pdf-failed .seervi-pdf-loading{color:#d8b45a}
 .seervi-home-catalogue-preview::after{content:'PDF ↗';position:absolute;right:7px;bottom:7px;padding:5px 7px;border-radius:6px;background:#080a0dcc;color:#fff;font-size:7px;font-weight:900;letter-spacing:.6px}
 .seervi-home-catalogue-info{min-width:0;display:flex;flex-direction:column;justify-content:center;padding-right:6px}
 .seervi-home-catalogue-kicker{color:#8d97a2;font-size:8px;font-weight:900;letter-spacing:1.1px;margin-bottom:7px}
@@ -3458,7 +3458,7 @@ body.nav-is-scrolled{padding-top:76px;}
 .seervi-catalogue-preview canvas{display:block;width:100%;height:100%;background:#fff;object-fit:contain}
 .seervi-catalogue-preview .seervi-pdf-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#7f8995;font-size:9px;font-weight:900;letter-spacing:.7px;background:#171b20}
 .seervi-catalogue-preview.pdf-ready .seervi-pdf-loading{display:none}
-.seervi-catalogue-preview.pdf-failed .seervi-pdf-loading{color:#d8b45a}.seervi-catalogue-preview.seervi-pdf-preview-disabled canvas{display:none}.seervi-catalogue-preview.seervi-pdf-preview-disabled .seervi-pdf-loading{display:flex;color:#d8b45a}
+.seervi-catalogue-preview.pdf-failed .seervi-pdf-loading{color:#d8b45a}
 .seervi-catalogue-preview::after{content:'PDF ↗';position:absolute;right:8px;bottom:8px;padding:6px 8px;border-radius:7px;background:#080a0dcc;color:#fff;font-size:8px;font-weight:900;letter-spacing:.7px;backdrop-filter:blur(5px)}
 .seervi-catalogue-info{min-width:0;display:flex;flex-direction:column;justify-content:center;padding:10px 12px 10px 0}
 .seervi-catalogue-item-kicker{color:#8d97a2;font-size:9px;font-weight:900;letter-spacing:1.2px;margin-bottom:8px}
@@ -5315,7 +5315,7 @@ body.seervi-ai-open .float-support{display:none!important}
 <div class="seervi-home-catalogue-track-wrap" hidden="" id="seerviHomeCatalogueTrackWrap">
 <div class="seervi-home-catalogue-track" id="seerviHomeCatalogueTrack"></div>
 </div>
-<button class="seervi-home-catalogue-more" data-seervi-catalogue-entry="1" onclick="openCataloguePanel()" type="button">VIEW ALL CATALOGUES ↗</button>
+<button class="seervi-home-catalogue-more" onclick="openCataloguePanel()" type="button">VIEW ALL CATALOGUES ↗</button>
 </div>
 </section>
 <section class="firebase-public-catalog" id="profiles">
@@ -5351,7 +5351,7 @@ body.seervi-ai-open .float-support{display:none!important}
 </select>
 </label>
 </div>
-<div class="crm-auth-status" id="seerviPublicProductsStatus">Loading products…</div>
+<div class="crm-auth-status" id="seerviPublicCatalogueStatus">Loading products…</div>
 <div class="home-product-grid seervi-public-product-grid" id="seerviPublicProductGrid"></div>
 </div>
 </div>
@@ -5382,7 +5382,7 @@ body.seervi-ai-open .float-support{display:none!important}
 <div class="seervi-footer-heading">SEERVI TRADING</div>
 <p>Global sourcing for retailers, wholesalers, businesses and project requirements.</p>
 <div class="seervi-address-block"><span class="seervi-contact-label">ADDRESS</span><span>Nagarbhavi Circle,<br/>Jannabharathi Main Road,<br/>Bengaluru – 566072<br/>India</span></div>
-<button class="seervi-footer-wa" data-seervi-catalogue-entry="1" onclick="openCataloguePanel()" type="button">VIEW CATALOGUES ↗</button>
+<button class="seervi-footer-wa" onclick="openCataloguePanel()" type="button">VIEW CATALOGUES ↗</button>
 </div>
 </div>
 <div class="seervi-footer-social-row">
@@ -5403,7 +5403,7 @@ body.seervi-ai-open .float-support{display:none!important}
 <button class="account-dashboard-option" onclick="accountDashboardItems()" type="button"><span>▤</span><strong>ITEMS</strong><small>Manage Firebase items &amp; categories</small></button>
 <button class="account-dashboard-option" onclick="accountDashboardNewParty()" type="button"><span>＋</span><strong>NEW PARTY</strong><small>Create a new customer / party</small></button>
 <button class="account-dashboard-option" onclick="accountDashboardBackup()" type="button"><span>⇩</span><strong>BACKUP DATA</strong><small>Backup items, categories, quotations &amp; invoices</small></button>
-<button class="account-dashboard-option" onclick="accountDashboardStock()" type="button"><span>▤</span><strong>STOCK</strong><small>Control product item availability</small></button>
+<button class="account-dashboard-option" onclick="accountDashboardStock()" type="button"><span>▤</span><strong>STOCK</strong><small>Control catalogue item availability</small></button>
 <button class="account-dashboard-option" onclick="openAdminCatalogues()" type="button"><span>▤</span><strong>CATALOGUES</strong><small>Manage customer-facing PDF catalogues</small></button>
 <button class="account-dashboard-option" onclick="accountDashboardNotificationPost()" type="button"><span>🔔</span><strong>NOTIFICATION POST</strong><small>Send an important notice to everyone</small></button>
 <button class="account-dashboard-option" onclick="openAdminSettings()" type="button"><span>⚙</span><strong>SETTINGS</strong><small>Control global website &amp; business settings</small></button>
@@ -5505,7 +5505,7 @@ body.seervi-ai-open .float-support{display:none!important}
 <div aria-label="Settings sections" class="admin-settings-subnav" role="tablist">
 
 <button data-settings-section="homepage" onclick="seerviSettingsSection('homepage')" type="button">HOMEPAGE</button>
-<button data-settings-section="products" onclick="seerviSettingsSection('products')" type="button">PRODUCT SETTINGS</button>
+<button data-settings-section="catalogue" onclick="seerviSettingsSection('catalogue')" type="button">PRODUCT SETTINGS</button>
 <button data-settings-section="catalogues" onclick="seerviSettingsSection('catalogues')" type="button">CATALOGUES</button>
 <button data-settings-section="customer" onclick="seerviSettingsSection('customer')" type="button">CUSTOMER / ORDER</button>
 <button data-settings-section="notifications" onclick="seerviSettingsSection('notifications')" type="button">NOTIFICATIONS</button>
@@ -5517,18 +5517,8 @@ body.seervi-ai-open .float-support{display:none!important}
 <label>Hero Kicker<input id="settingHeroKicker" type="text"/></label><label>Hero Title<input id="settingHeroTitle" type="text"/></label><label>Hero Highlight<input id="settingHeroHighlight" type="text"/></label><label>Hero CTA<input id="settingHeroCta" type="text"/></label><label>Hero Media Type<select id="settingHeroMediaType"><option value="image">IMAGE</option><option value="video">VIDEO</option></select></label><label class="full">Hero Description<textarea id="settingHeroDescription"></textarea></label><label class="full">Hero Image Path<input id="settingHeroImage" placeholder="GitHub project path, e.g. images/hero.webp" type="text"/></label><label class="full">Hero Video Path<input id="settingHeroVideo" placeholder="GitHub project path, e.g. videos/hero.mp4" type="text"/></label>
 <label class="admin-settings-check"><input id="settingShowSupply" type="checkbox"/> Show Supply Flow</label><label class="admin-settings-check"><input id="settingShowAbout" type="checkbox"/> Show About</label><label class="admin-settings-check"><input id="settingShowWhy" type="checkbox"/> Show Why Seervi</label><label class="admin-settings-check"><input id="settingShowContact" type="checkbox"/> Show Contact</label>
 </div></section>
-<section aria-labelledby="adminSettingsProductsLabel" aria-hidden="true" class="admin-settings-section" hidden="" id="adminSettingsSectionProducts"><div class="crm-section-title" id="adminSettingsProductsLabel">PRODUCTS</div><div class="admin-settings-grid">
-<label>Products Section Title<input id="settingProductsTitle" type="text"/></label><label class="admin-settings-check"><input id="settingShowProducts" type="checkbox"/> Show Products</label><label class="admin-settings-check"><input id="settingShowSearch" type="checkbox"/> Show Search</label><label class="admin-settings-check"><input id="settingShowSort" type="checkbox"/> Show Sort</label><label class="admin-settings-check"><input id="settingShowCategory" type="checkbox"/> Show Category Filter</label><label class="admin-settings-check"><input id="settingShowSubcategory" type="checkbox"/> Show Subcategory Filter</label>
-</div></section>
-<section aria-labelledby="adminSettingsCataloguesLabel" aria-hidden="true" class="admin-settings-section" hidden="" id="adminSettingsSectionCatalogues"><div class="crm-section-title" id="adminSettingsCataloguesLabel">CATALOGUES</div><p class="admin-settings-help">These settings control the separate PDF Catalogue system. Product settings above do not affect Catalogues, and Catalogue settings do not affect Products.</p><div class="admin-settings-grid">
-<label>Catalogue Section Title<input id="settingCataloguesTitle" maxlength="120" type="text"/></label>
-<label class="full">Catalogue Section Description<textarea id="settingCataloguesDescription" maxlength="300"></textarea></label>
-<label class="admin-settings-check"><input id="settingShowCatalogues" type="checkbox"/> Show Catalogues</label>
-<label class="admin-settings-check"><input id="settingShowCatalogueHomepage" type="checkbox"/> Show Catalogue Section on Homepage</label>
-<label class="admin-settings-check"><input id="settingShowCatalogueViewAll" type="checkbox"/> Show View All Catalogues Button</label>
-<label class="admin-settings-check"><input id="settingCatalogueAutoSlide" type="checkbox"/> Auto Slide Catalogues</label>
-<label>Auto Slide Speed (seconds)<input id="settingCatalogueSlideSeconds" max="120" min="10" step="1" type="number"/></label>
-<label class="admin-settings-check"><input id="settingCataloguePdfPreview" type="checkbox"/> Show PDF Preview</label>
+<section class="admin-settings-section" hidden="" id="adminSettingsSectionCatalogue"><div class="crm-section-title">CATALOGUE</div><div class="admin-settings-grid">
+<label>Products Section Title<input id="settingCatalogueTitle" type="text"/></label><label class="admin-settings-check"><input id="settingShowCatalogue" type="checkbox"/> Show Catalogue</label><label class="admin-settings-check"><input id="settingShowSearch" type="checkbox"/> Show Search</label><label class="admin-settings-check"><input id="settingShowSort" type="checkbox"/> Show Sort</label><label class="admin-settings-check"><input id="settingShowCategory" type="checkbox"/> Show Category Filter</label><label class="admin-settings-check"><input id="settingShowSubcategory" type="checkbox"/> Show Subcategory Filter</label>
 </div></section>
 <section class="admin-settings-section" hidden="" id="adminSettingsSectionCustomer"><div class="crm-section-title">CUSTOMER / ORDER</div><div class="admin-settings-grid">
 <label class="admin-settings-check"><input id="settingLogin" type="checkbox"/> Customer Login</label><label class="admin-settings-check"><input id="settingSignup" type="checkbox"/> Customer Sign Up</label><label>Order WhatsApp Number<input id="settingOrderWhatsapp" inputmode="numeric" type="text"/></label>
@@ -5699,7 +5689,7 @@ body.seervi-ai-open .float-support{display:none!important}
 <div class="inventory-stock-head-copy">
 <div class="crm-section-title">ITEM STOCK CONTROL</div>
 <h4>Catalogue Availability</h4>
-<p>Turn an item OFF when it is out of stock. OFF items disappear from the customer Home / Products section until you turn them back ON.</p>
+<p>Turn an item OFF when it is out of stock. OFF items disappear from the customer Home / Products catalogue until you turn them back ON.</p>
 </div>
 <div class="inventory-stock-meta" id="inventoryStockMeta">Loading catalogue…</div>
 </div>
@@ -5728,7 +5718,7 @@ body.seervi-ai-open .float-support{display:none!important}
 <div>
 <div class="crm-section-title">SEERVI ADMIN / ITEMS</div>
 <h3 class="admin-items-title">ITEM MANAGEMENT</h3>
-<p class="admin-items-subtitle">Firebase-based Category → Subcategory → Product system. No hard-coded product taxonomy.</p>
+<p class="admin-items-subtitle">Firebase-based Category → Subcategory → Item catalogue. No hard-coded product taxonomy.</p>
 </div>
 <div class="admin-items-head-actions">
 <button class="crm-secondary admin-universal-back" onclick="seerviAdminBackToPrevious()" type="button">← BACK</button>
@@ -6640,7 +6630,7 @@ document.addEventListener('keydown',function(e){
     if(typeof closeProfile==='function') closeProfile();
   }
 });
-</script><button aria-label="Open Seervi AI Assistance" class="float-support" onclick="openSupportModal()" type="button"><span aria-hidden="true" class="support-icon">✦</span><span class="float-support-label">AI Assistance</span></button><div aria-label="Mobile quick navigation" class="mobile-bottom-bar"><a href="#home" onclick="showMobileHome(event)"><b>⌂</b><span>HOME</span></a><button aria-label="Open catalogues" data-seervi-catalogue-entry="1" onclick="openCataloguePanel()" type="button"><b>▤</b><span>CATALOGUE</span></button><a href="#profiles" onclick="showMobileProducts(event)"><b>▦</b><span>PRODUCTS</span></a><button onclick="openCart()" type="button"><b>🛒</b><span>CART</span></button></div><script>
+</script><button aria-label="Open Seervi AI Assistance" class="float-support" onclick="openSupportModal()" type="button"><span aria-hidden="true" class="support-icon">✦</span><span class="float-support-label">AI Assistance</span></button><div aria-label="Mobile quick navigation" class="mobile-bottom-bar"><a href="#home" onclick="showMobileHome(event)"><b>⌂</b><span>HOME</span></a><button aria-label="Open catalogues" onclick="openCataloguePanel()" type="button"><b>▤</b><span>CATALOGUE</span></button><a href="#profiles" onclick="showMobileProducts(event)"><b>▦</b><span>PRODUCTS</span></a><button onclick="openCart()" type="button"><b>🛒</b><span>CART</span></button></div><script>
 /* ===== V42 UX ENHANCEMENTS ===== */
 (function(){
   const input = document.querySelector('.catalog-search input');
@@ -6807,7 +6797,7 @@ function addAIMessage(role,text){
 }
 function aiGetCatalogue(){
   try{
-    const data=window.seerviGetPublicProducts?.();
+    const data=window.seerviGetPublicCatalogue?.();
     return {
       items:Array.isArray(data?.items)?data.items:[],
       categories:Array.isArray(data?.categories)?data.categories:[]
@@ -7013,7 +7003,7 @@ function aiAddSubcategoryOption(sub,category,lang){
     lang==='ta'?'Keela irukkum button-ai tap panni indha subcategory products-ai paarkkalam.':
     lang==='te'?'Kindha button ni tap chesi ee subcategory products choodandi.':
     lang==='bn'?'নিচের button চাপলে এই subcategory-র products দেখাবে।':
-    'Use the button below to open this subcategory in the Products section.';
+    'Use the button below to open this subcategory in the catalogue.';
   box.appendChild(note);
   const btn=document.createElement('button');btn.type='button';btn.className='ai-category-option';
   btn.textContent=lang==='hinglish'||lang==='hi'?'OPEN SUBCATEGORY →':'OPEN SUBCATEGORY →';
@@ -7126,8 +7116,8 @@ function aiReply(q){
 
   if(isGreeting){
     return lang==='hinglish'||lang==='hi'
-      ?'Haan bhai, bolo. Product ka name, exact model, size, material ya specification bhejo — main live Seervi products mein search karke direct item dikha dunga.'
-      :'Hello. Tell me the product name, exact model, size, material or specification and I will search the live Seervi products.';
+      ?'Haan bhai, bolo. Product ka name, exact model, size, material ya specification bhejo — main live Seervi catalogue mein search karke direct item dikha dunga.'
+      :'Hello. Tell me the product name, exact model, size, material or specification and I will search the live Seervi catalogue.';
   }
 
   /* Catalogue search starts only after non-product website intents have
@@ -7141,16 +7131,16 @@ function aiReply(q){
     const name=String(product.name||product.model||'this product');
     const msg=
       lang==='hinglish'||lang==='hi'
-        ?`Haan bhai, “${name}” live products mein mil gaya. Neeche PRODUCT DETAILS dabao — seedha isi item par chale jaoge.`
+        ?`Haan bhai, “${name}” live catalogue mein mil gaya. Neeche PRODUCT DETAILS dabao — seedha isi item par chale jaoge.`
         :lang==='kn'
-        ?`“${name}” live products nalli sigide. Kelagina button tap maadi direct product details open maadi.`
+        ?`“${name}” live catalogue nalli sigide. Kelagina button tap maadi direct product details open maadi.`
         :lang==='ta'
-        ?`“${name}” live products-ல் கிடைக்கிறது. கீழே உள்ள button-ஐ tap செய்தால் நேராக product details திறக்கும்.`
+        ?`“${name}” live catalogue-ல் கிடைக்கிறது. கீழே உள்ள button-ஐ tap செய்தால் நேராக product details திறக்கும்.`
         :lang==='te'
-        ?`“${name}” live products lo dorikindi. Kindha button ni tap chesi direct product details open cheyyandi.`
+        ?`“${name}” live catalogue lo dorikindi. Kindha button ni tap chesi direct product details open cheyyandi.`
         :lang==='bn'
-        ?`“${name}” live products-এ পাওয়া গেছে। নিচের button চাপলে সরাসরি product details খুলবে।`
-        :`I found “${name}” in the live Seervi products. Tap below to open this exact product.`;
+        ?`“${name}” live catalogue-এ পাওয়া গেছে। নিচের button চাপলে সরাসরি product details খুলবে।`
+        :`I found “${name}” in the live Seervi catalogue. Tap below to open this exact product.`;
     addAIMessage('bot',msg);
     aiAddProductResult(product,lang);
     return null;
@@ -7180,7 +7170,7 @@ function aiReply(q){
     const msg=
       lang==='hinglish'||lang==='hi'
         ?`Haan bhai, “${subcategory.name}” subcategory mil gayi. Neeche tap karo aur isi section ke products dekho.`
-        :`I found the “${subcategory.name}” subcategory. Use the button below to open it in the Products section.`;
+        :`I found the “${subcategory.name}” subcategory. Use the button below to open it in the catalogue.`;
     addAIMessage('bot',msg);
     aiAddSubcategoryOption(subcategory,parent,lang);
     return null;
@@ -7190,23 +7180,23 @@ function aiReply(q){
 
   if(asksProduct){
     return lang==='hinglish'||lang==='hi'
-      ?'Bhai exact item nahi mila. Product ka naam, model code, size, material ya specification thoda aur specific bhejo — main live products mein search karunga.'
-      :'I could not find an exact item. Send a more specific product name, model code, size, material or specification and I will search the live products.';
+      ?'Bhai exact item nahi mila. Product ka naam, model code, size, material ya specification thoda aur specific bhejo — main live catalogue mein search karunga.'
+      :'I could not find an exact item. Send a more specific product name, model code, size, material or specification and I will search the live catalogue.';
   }
 
   if(/price|rate|cost|moq|minimum|wholesale/i.test(l)){
     return lang==='hinglish'||lang==='hi'
-      ?'Exact rate ke liye product ya model code bhejo. Main live products mein exact item identify karunga.'
-      :'For an exact rate, send the product or model code and I will identify the exact item from the live products.';
+      ?'Exact rate ke liye product ya model code bhejo. Main live catalogue mein exact item identify karunga.'
+      :'For an exact rate, send the product or model code and I will identify the exact item from the live catalogue.';
   }
 
-  if(lang==='hinglish')return'Samajh gaya bhai. Product/model, category, size ya specification specific bhejo; main live Seervi products se exact information dhoondhunga.';
-  if(lang==='hi')return'Samajh gaya। Product ka naam/model, category, size ya specification likh do; main live Seervi products se exact information dhoondhunga.';
-  if(lang==='kn')return'Arthaayitu. Product hesaru, model, category athava specification heli; live Seervi products inda exact information hudukuttini.';
-  if(lang==='ta')return'Purindhadhu. Product peyar, model, category allathu specification anuppunga; live Seervi products-il thedugiren.';
-  if(lang==='te')return'Artham ayyindi. Product peru, model, category leda specification pampandi; live Seervi products nundi exact information search chestanu.';
-  if(lang==='bn')return'বুঝেছি। Product-এর নাম, model, category বা specification পাঠান; live Seervi products থেকে exact information খুঁজে দেব।';
-  return'I understand. Tell me the product name, model, category, size or specification and I’ll search the live Seervi products.';
+  if(lang==='hinglish')return'Samajh gaya bhai. Product/model, category, size ya specification specific bhejo; main live Seervi catalogue se exact information dhoondhunga.';
+  if(lang==='hi')return'Samajh gaya। Product ka naam/model, category, size ya specification likh do; main live Seervi catalogue se exact information dhoondhunga.';
+  if(lang==='kn')return'Arthaayitu. Product hesaru, model, category athava specification heli; live Seervi catalogue inda exact information hudukuttini.';
+  if(lang==='ta')return'Purindhadhu. Product peyar, model, category allathu specification anuppunga; live Seervi catalogue-il thedugiren.';
+  if(lang==='te')return'Artham ayyindi. Product peru, model, category leda specification pampandi; live Seervi catalogue nundi exact information search chestanu.';
+  if(lang==='bn')return'বুঝেছি। Product-এর নাম, model, category বা specification পাঠান; live Seervi catalogue থেকে exact information খুঁজে দেব।';
+  return'I understand. Tell me the product name, model, category, size or specification and I’ll search the live Seervi catalogue.';
 }
 async function sendAIMessage(e){
   if(e)e.preventDefault();
@@ -7217,7 +7207,7 @@ async function sendAIMessage(e){
   if(input){input.value='';input.focus({preventScroll:true});}
   const typing=document.getElementById('aiTyping');if(typing)typing.classList.add('show');
   try{
-    if(typeof window.seerviEnsurePublicProducts==='function')await window.seerviEnsurePublicProducts();
+    if(typeof window.seerviEnsurePublicCatalogue==='function')await window.seerviEnsurePublicCatalogue();
   }catch(e){
     console.warn('AI catalogue readiness:',e);
   }
@@ -9099,7 +9089,7 @@ function ensureAdminUtilityModals(){
       stockModal.id='adminStockModal';
       stockModal.className='crm-modal admin-utility-modal';
       stockModal.setAttribute('aria-hidden','true');
-      stockModal.innerHTML='<div class="crm-backdrop" onclick="closeAdminStock()"></div><div class="crm-panel admin-utility-panel" role="dialog" aria-modal="true" aria-labelledby="adminStockTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / STOCK</div><h3 id="adminStockTitle">Stock</h3><div class="crm-auth-status">Control product availability without opening the main Admin Panel.</div></div><button class="crm-secondary admin-universal-back" type="button" onclick="seerviAdminBackToPrevious()">← BACK</button></div></div>';
+      stockModal.innerHTML='<div class="crm-backdrop" onclick="closeAdminStock()"></div><div class="crm-panel admin-utility-panel" role="dialog" aria-modal="true" aria-labelledby="adminStockTitle"><div class="crm-head"><div><div class="crm-kicker">SEERVI ADMIN / STOCK</div><h3 id="adminStockTitle">Stock</h3><div class="crm-auth-status">Control catalogue availability without opening the main Admin Panel.</div></div><button class="crm-secondary admin-universal-back" type="button" onclick="seerviAdminBackToPrevious()">← BACK</button></div></div>';
       document.body.appendChild(stockModal);
     }
     if(stockModal && stock){
@@ -12397,8 +12387,8 @@ window.crmAddLedgerEntry = async function(){
   }
 };
 /* ===== FIREBASE ITEMS / STOCK BRIDGE =====
-   Stock is driven by the Firebase `items` product collection.
-   Inventory document id = Firebase item id. No legacy hard-coded product taxonomy.
+   Stock is driven by the Firebase `items` catalogue.
+   Inventory document id = Firebase item id. No legacy hard-coded catalogue taxonomy.
 */
 let seerviInventoryState=Object.create(null);
 let seerviInventoryQty=Object.create(null);
@@ -14238,7 +14228,7 @@ window.seerviDeleteCategoryConfirm=async function(categoryId){
 };
 /* ===== END SEERVI CATEGORY MANAGEMENT / STEP 6 ===== */
 
-/* ===== SEERVI PUBLIC FIREBASE PRODUCTS / STEP 7 ===== */
+/* ===== SEERVI PUBLIC FIREBASE CATALOGUE / STEP 7 ===== */
 let seerviPublicItems=[];
 let seerviPublicCategories=[];
 let seerviPublicSelectedCategory='all';
@@ -14251,10 +14241,10 @@ function seerviPublicMillis(v){
   return Number(v)||0;
 }
 
-// Public Products are now category-first and lazy-loaded.
+// Public catalogue is now category-first and lazy-loaded.
 // Initial page load reads ONLY active categories. Product documents are fetched
 // only when a visitor opens a category, so the browser never receives the full
-// Products just to display the homepage.
+// catalogue just to display the homepage.
 const seerviPublicCategoryItemCache=new Map();
 const seerviPublicCategoryLoadPromises=new Map();
 let seerviPublicAllItemsLoaded=false;
@@ -14266,8 +14256,8 @@ function seerviPublicMergeItems(items){
   seerviPublicItems=[...map.values()].sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
 }
 
-async function seerviPublicLoadProducts(){
-  const status=$('seerviPublicProductsStatus');
+async function seerviPublicLoadCatalogue(){
+  const status=$('seerviPublicCatalogueStatus');
   try{
     if(status)status.textContent='Loading categories…';
 
@@ -14288,7 +14278,7 @@ async function seerviPublicLoadProducts(){
     seerviPublicItems=[];
     seerviPublicAllItemsLoaded=false;
 
-    window.seerviGetPublicProducts=()=>({items:seerviPublicItems,categories:seerviPublicCategories});
+    window.seerviGetPublicCatalogue=()=>({items:seerviPublicItems,categories:seerviPublicCategories});
 
     seerviPublicRenderCategories();
     seerviPublicRenderSubcategories();
@@ -14311,7 +14301,7 @@ async function seerviPublicLoadCategoryItems(categoryId){
   if(seerviPublicCategoryItemCache.has(id))return seerviPublicCategoryItemCache.get(id);
   if(seerviPublicCategoryLoadPromises.has(id))return seerviPublicCategoryLoadPromises.get(id);
 
-  const status=$('seerviPublicProductsStatus');
+  const status=$('seerviPublicCatalogueStatus');
   const promise=(async()=>{
     if(status)status.textContent='Loading category products…';
     try{
@@ -14446,9 +14436,9 @@ let seerviPublicRenderItems=function(){};
 /* Legacy public item action implementations removed from the duplicate render path.
    Final multi-image item actions below are the single runtime implementation. */
 
-/* ===== END SEERVI PUBLIC FIREBASE PRODUCTS / STEP 7 ===== */
+/* ===== END SEERVI PUBLIC FIREBASE CATALOGUE / STEP 7 ===== */
 
-/* ===== SEERVI PUBLIC PRODUCTS UX / STEP 8 ===== */
+/* ===== SEERVI PUBLIC CATALOGUE UX / STEP 8 ===== */
 let seerviPublicSearchQuery='';
 let seerviPublicSortMode='name';
 
@@ -14499,9 +14489,9 @@ if(document.readyState==='loading'){
 }else{
   seerviPublicWireSearch();
 }
-/* ===== END SEERVI PUBLIC PRODUCTS UX / STEP 8 ===== */
+/* ===== END SEERVI PUBLIC CATALOGUE UX / STEP 8 ===== */
 
-/* ===== SEERVI CATEGORY-FIRST PUBLIC PRODUCTS / STEP 12 ===== */
+/* ===== SEERVI CATEGORY-FIRST PUBLIC CATALOGUE / STEP 12 ===== */
 function seerviPublicCategoryImage(category){
   return String(category?.imageWebpUrl||'').trim();
 }
@@ -14656,7 +14646,7 @@ seerviPublicSelectSubcategory=function(subcategoryId){
 }
 
 Seervi.expose('seerviPublicBackToCategories', seerviPublicBackToCategories);
-/* ===== END SEERVI CATEGORY-FIRST PUBLIC PRODUCTS / STEP 12 ===== */
+/* ===== END SEERVI CATEGORY-FIRST PUBLIC CATALOGUE / STEP 12 ===== */
 
 /* ===== SEERVI FIREBASE CART BRIDGE / STEP 9 ===== */
 function seerviFirebaseCartItem(item){
@@ -14681,34 +14671,34 @@ function seerviFirebaseCartItem(item){
 /* ===== END SEERVI FIREBASE CART BRIDGE / STEP 9 ===== */
 
 /* ===== SEERVI CATALOGUE STATE / STEP 10 ===== */
-let seerviPublicProductsReady=false;
-let seerviPublicProductsError='';
+let seerviPublicCatalogueReady=false;
+let seerviPublicCatalogueError='';
 
-const seerviPublicLoadProductsStep10=seerviPublicLoadProducts;
-seerviPublicLoadProducts=async function(){
-  seerviPublicProductsReady=false;
-  seerviPublicProductsError='';
+const seerviPublicLoadCatalogueStep10=seerviPublicLoadCatalogue;
+seerviPublicLoadCatalogue=async function(){
+  seerviPublicCatalogueReady=false;
+  seerviPublicCatalogueError='';
   try{
-    await seerviPublicLoadProductsStep10();
-    seerviPublicProductsReady=Array.isArray(seerviPublicItems);
+    await seerviPublicLoadCatalogueStep10();
+    seerviPublicCatalogueReady=Array.isArray(seerviPublicItems);
   }catch(e){
-    seerviPublicProductsError=e?.message||'Products unavailable';
+    seerviPublicCatalogueError=e?.message||'Catalogue unavailable';
     throw e;
   }
 };
 
-function seerviPublicProductsStatusText(){
-  if(seerviPublicProductsError)return 'Products temporarily unavailable.';
-  if(!seerviPublicProductsReady)return 'Products are loading…';
+function seerviPublicCatalogueStatusText(){
+  if(seerviPublicCatalogueError)return 'Catalogue temporarily unavailable.';
+  if(!seerviPublicCatalogueReady)return 'Catalogue is loading…';
   return `${seerviPublicItems.length} live product${seerviPublicItems.length===1?'':'s'}.`;
 }
-/* ===== END SEERVI PRODUCTS STATE / STEP 10 ===== */
+/* ===== END SEERVI CATALOGUE STATE / STEP 10 ===== */
 
 /* ===== SEERVI FINAL FIREBASE PRODUCT SYSTEM / STEP 11 ===== */
 /*
   Final architecture:
-  Admin -> Firebase itemCategories/items -> Public Products -> Cart/Quotation.
-  The public Products system is the single source of truth for new products.
+  Admin -> Firebase itemCategories/items -> Public catalogue -> Cart/Quotation.
+  The public catalogue is the single source of truth for new products.
   Legacy hard-coded product filter logic has been removed.
 */
 window.seerviProductSystemReady=true;
@@ -14750,7 +14740,7 @@ window.SEERVI_SINGLE_ADMIN_EMAIL='seervitrading@gmail.com';
  /* ===== END SEERVI ITEMS TAB CLICK HARDENING ===== */
 
 /* ===== SEERVI PUBLIC CATALOGUE GLOBAL EVENT BRIDGE =====
-   Public Products code runs inside the module script. Dynamic category,
+   Public catalogue code runs inside the module script. Dynamic category,
    subcategory and product cards use inline onclick handlers, so these final
    handlers must be explicitly exposed on window.
 */
@@ -15004,38 +14994,38 @@ seerviPublicRenderItems=function(){
   }).join('');
 };
 
-/* ===== SEERVI PUBLIC PRODUCTS BOOTSTRAP / FINAL FIX =====
+/* ===== SEERVI PUBLIC CATALOGUE BOOTSTRAP / FINAL FIX =====
    The catalogue renderer is defined inside this Firebase module, so its initial
    Firestore load must also be started from this same module scope. The previous
    cleanup left the loader defined but never invoked, which resulted in an empty
    Our Products section even though the Firebase query/rendering code was valid.
 */
-let seerviPublicProductsBooted=false;
-async function seerviBootPublicProducts(){
-  if(seerviPublicProductsBooted)return;
-  seerviPublicProductsBooted=true;
+let seerviPublicCatalogueBooted=false;
+async function seerviBootPublicCatalogue(){
+  if(seerviPublicCatalogueBooted)return;
+  seerviPublicCatalogueBooted=true;
   try{
-    await seerviPublicLoadProducts();
+    await seerviPublicLoadCatalogue();
   }catch(e){
-    // seerviPublicLoadProducts already updates the visible status and logs the
+    // seerviPublicLoadCatalogue already updates the visible status and logs the
     // original Firebase error. Keep boot failure isolated from the rest of CRM.
     console.error('Seervi public catalogue bootstrap failed:',e);
   }
 }
 if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',seerviBootPublicProducts,{once:true});
+  document.addEventListener('DOMContentLoaded',seerviBootPublicCatalogue,{once:true});
 }else{
-  seerviBootPublicProducts();
+  seerviBootPublicCatalogue();
 }
 
-/* AI/catalogue bridge: wait for the same live Firebase Products system used by the
+/* AI/catalogue bridge: wait for the same live Firebase catalogue used by the
    public Products page before performing any AI product/category search. */
-window.seerviEnsurePublicProducts=async function(){
-  await seerviBootPublicProducts();
+window.seerviEnsurePublicCatalogue=async function(){
+  await seerviBootPublicCatalogue();
   await seerviPublicLoadAllItemsForAI();
-  return window.seerviGetPublicProducts?.() || {items:[],categories:[]};
+  return window.seerviGetPublicCatalogue?.() || {items:[],categories:[]};
 };
-/* ===== END SEERVI PUBLIC PRODUCTS BOOTSTRAP / FINAL FIX ===== */
+/* ===== END SEERVI PUBLIC CATALOGUE BOOTSTRAP / FINAL FIX ===== */
 
 /* ===== END SEERVI FINAL MULTI-IMAGE ITEM SYSTEM ===== */
 
@@ -15101,13 +15091,12 @@ window.seerviCloseItemsPanel=function(){
 
 /* ===== GLOBAL SITE SETTINGS =====
    Admin-only editor. Public visitors read the same Firebase document so all
-   devices receive the same site configuration. Product settings and PDF
-   Catalogue settings are stored and applied as separate sections. */
+   devices receive the same site configuration. Existing product/Firebase
+   catalogue logic is intentionally untouched. */
 const SEERVI_SITE_SETTINGS_DEFAULTS={
   branding:{companyName:'Seervi Trading',tagline:'Sourced Globally. Supplied by Seervi.',email:'seervitrading@gmail.com',whatsapp:'917073741650',contact1Name:'KAILASH SEERVI',contact1Number:'917073741650',contact2Name:'SHRAVAN KUMAR',contact2Number:'9740598345'},
   homepage:{heroKicker:'SEERVI TRADING / FACTORY SOURCING & IMPORT',heroTitle:'YOU NEED IT.',heroHighlight:'WE SOURCE IT.',heroDescription:'We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.',heroCta:'Request a Product',heroMediaType:'image',heroImage:'images/00-old-products/product-image-001-055cde1217d3c801.webp',heroVideo:'',showSupplyFlow:true,showAbout:true,showWhy:true,showContact:true,companyName:'Seervi Trading',tagline:'Sourced Globally. Supplied by Seervi.',email:'seervitrading@gmail.com',whatsapp:'917073741650',contact1Name:'KAILASH SEERVI',contact1Number:'917073741650',contact2Name:'SHRAVAN KUMAR',contact2Number:'9740598345',contactAddress:'Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072, India'},
-  products:{sectionTitle:'Our Products',showProducts:true,showSearch:true,showSort:true,showCategoryFilter:true,showSubcategoryFilter:true},
-  catalogues:{sectionTitle:'Product Catalogues',sectionDescription:'Browse our latest catalogues and open the PDF you need.',showCatalogues:true,showHomepageSection:true,showViewAllButton:true,autoSlide:true,autoSlideSeconds:34,showPdfPreview:true},
+  catalogue:{sectionTitle:'Our Products',showCatalogue:true,showSearch:true,showSort:true,showCategoryFilter:true,showSubcategoryFilter:true},
   customer:{loginEnabled:true,signupEnabled:true},
   notifications:{enabled:true,soundEnabled:true},
   pdf:{quotationLayout:'standard',invoiceLayout:'standard',quotation:{marginTop:17,marginRight:15,marginBottom:10,marginLeft:15,headerFont:22,bodyFont:8.5,tableFont:8,totalFont:9,grandFont:12,footerFont:8,rowMin:8,rowLine:4.3,rowPad:3},invoice:{marginTop:12,marginRight:15,marginBottom:8,marginLeft:15,headerFont:12.5,bodyFont:6.7,tableFont:7.1,totalFont:7.8,grandFont:10.5,footerFont:7.4,rowMin:6,rowLine:3.1,rowPad:1.5,headerH:36,billH:33}},
@@ -15130,11 +15119,7 @@ let seerviSiteSettings=seerviSettingsClone(SEERVI_SITE_SETTINGS_DEFAULTS);
 window.SeerviSiteSettings=seerviSiteSettings;
 
 function seerviNormaliseSettings(raw){
-  const incoming=(raw&&typeof raw==='object')?seerviSettingsClone(raw):{};
-  // Migrate the old Global Settings key 'catalogue' to the correct Product Settings key.
-  // The separate Firebase 'catalogues' collection remains untouched.
-  if(!incoming.products && incoming.catalogue && typeof incoming.catalogue==='object') incoming.products=incoming.catalogue;
-  const s=seerviSettingsMerge(SEERVI_SITE_SETTINGS_DEFAULTS,incoming);
+  const s=seerviSettingsMerge(SEERVI_SITE_SETTINGS_DEFAULTS,raw||{});
   // Migrate the previous default hero copy to the new importer-focused positioning
   // without overwriting a custom hero configured by the admin.
   const oldHero={
@@ -15175,13 +15160,8 @@ function seerviNormaliseSettings(raw){
   s.homepage.contactAddress=String(s.homepage.contactAddress||SEERVI_SITE_SETTINGS_DEFAULTS.homepage.contactAddress).slice(0,400);
   s.branding.companyName=s.homepage.companyName; s.branding.tagline=s.homepage.tagline; s.branding.email=s.homepage.email; s.branding.whatsapp=s.homepage.contact1Number||s.homepage.whatsapp; s.branding.contact1Name=s.homepage.contact1Name; s.branding.contact1Number=s.homepage.contact1Number; s.branding.contact2Name=s.homepage.contact2Name; s.branding.contact2Number=s.homepage.contact2Number;
   ['showSupplyFlow','showAbout','showWhy','showContact'].forEach(k=>s.homepage[k]=!!s.homepage[k]);
-  s.products.sectionTitle=String(s.products.sectionTitle||SEERVI_SITE_SETTINGS_DEFAULTS.products.sectionTitle).slice(0,100);
-  ['showProducts','showSearch','showSort','showCategoryFilter','showSubcategoryFilter'].forEach(k=>s.products[k]=!!s.products[k]);
-  s.catalogues.sectionTitle=String(s.catalogues.sectionTitle||SEERVI_SITE_SETTINGS_DEFAULTS.catalogues.sectionTitle).slice(0,120);
-  s.catalogues.sectionDescription=String(s.catalogues.sectionDescription||SEERVI_SITE_SETTINGS_DEFAULTS.catalogues.sectionDescription).slice(0,300);
-  ['showCatalogues','showHomepageSection','showViewAllButton','autoSlide','showPdfPreview'].forEach(k=>s.catalogues[k]=!!s.catalogues[k]);
-  const slideSeconds=Number(s.catalogues.autoSlideSeconds);
-  s.catalogues.autoSlideSeconds=Number.isFinite(slideSeconds)?Math.max(10,Math.min(120,slideSeconds)):SEERVI_SITE_SETTINGS_DEFAULTS.catalogues.autoSlideSeconds;
+  s.catalogue.sectionTitle=String(s.catalogue.sectionTitle||SEERVI_SITE_SETTINGS_DEFAULTS.catalogue.sectionTitle).slice(0,100);
+  ['showCatalogue','showSearch','showSort','showCategoryFilter','showSubcategoryFilter'].forEach(k=>s.catalogue[k]=!!s.catalogue[k]);
   s.customer.loginEnabled=!!s.customer.loginEnabled;
   s.customer.signupEnabled=!!s.customer.signupEnabled;
   s.notifications.enabled=!!s.notifications.enabled;
@@ -15231,39 +15211,17 @@ function seerviApplySiteSettings(raw){
   if(h1) h1.innerHTML=`${seerviEscHtml(seerviSiteSettings.homepage.heroTitle)}<br><span>${seerviEscHtml(seerviSiteSettings.homepage.heroHighlight)}</span>`;
   if(desc) desc.textContent=seerviSiteSettings.homepage.heroDescription;
   if(cta){cta.childNodes[0].nodeValue=seerviSiteSettings.homepage.heroCta+' ';}
-  if(productTitle) productTitle.textContent=seerviSiteSettings.products.sectionTitle;
-  const productSection=document.getElementById('profiles');
-  if(productSection) productSection.hidden=!seerviSiteSettings.products.showProducts;
-  const catalogueSection=document.getElementById('homeCatalogues');
-  const catalogueTitle=document.getElementById('homeCataloguesTitle');
-  const catalogueDescription=catalogueSection?.querySelector('.seervi-home-catalogue-head p');
-  const catalogueMore=document.querySelector('.seervi-home-catalogue-more');
-  const catalogueSettings=seerviSiteSettings.catalogues;
-  if(catalogueTitle) catalogueTitle.textContent=catalogueSettings.sectionTitle;
-  if(catalogueDescription) catalogueDescription.textContent=catalogueSettings.sectionDescription;
-  if(catalogueSection) catalogueSection.hidden=!catalogueSettings.showCatalogues || !catalogueSettings.showHomepageSection;
-  if(catalogueMore) catalogueMore.hidden=!catalogueSettings.showCatalogues || !catalogueSettings.showViewAllButton;
-  const cataloguePanelTitle=document.getElementById('seerviCatalogueTitle');
-  const cataloguePanelDescription=document.querySelector('#seerviCataloguePanel .seervi-catalogue-sub');
-  if(cataloguePanelTitle) cataloguePanelTitle.textContent=catalogueSettings.sectionTitle;
-  if(cataloguePanelDescription) cataloguePanelDescription.textContent=catalogueSettings.sectionDescription;
-  const cataloguePanel=document.getElementById('seerviCataloguePanel');
-  if(cataloguePanel) cataloguePanel.dataset.seerviCataloguesVisible=catalogueSettings.showCatalogues?'1':'0';
-  document.querySelectorAll('[data-seervi-catalogue-entry]').forEach(el=>{el.hidden=!catalogueSettings.showCatalogues;});
-  const catalogueTrack=document.getElementById('seerviHomeCatalogueTrack');
-  if(catalogueTrack){
-    catalogueTrack.style.animationName=catalogueSettings.autoSlide?'seerviCatalogueSlide':'none';
-    catalogueTrack.style.animationDuration=Math.max(10,Number(catalogueSettings.autoSlideSeconds)||34)+'s';
-    catalogueTrack.style.animationPlayState=catalogueSettings.autoSlide?'running':'paused';
-  }
+  if(productTitle) productTitle.textContent=seerviSiteSettings.catalogue.sectionTitle;
+  const catalog=document.getElementById('profiles');
+  if(catalog) catalog.hidden=!seerviSiteSettings.catalogue.showCatalogue;
   const search=document.querySelector('#seerviPublicToolbar .seervi-public-search');
   const sort=document.querySelector('#seerviPublicToolbar .seervi-public-sort');
-  if(search) search.hidden=!seerviSiteSettings.products.showSearch;
-  if(sort) sort.hidden=!seerviSiteSettings.products.showSort;
+  if(search) search.hidden=!seerviSiteSettings.catalogue.showSearch;
+  if(sort) sort.hidden=!seerviSiteSettings.catalogue.showSort;
   const categoryBar=document.getElementById('seerviPublicCategoryBar');
-  if(categoryBar) categoryBar.hidden=!seerviSiteSettings.products.showCategoryFilter;
+  if(categoryBar) categoryBar.hidden=!seerviSiteSettings.catalogue.showCategoryFilter;
   const subcategoryBar=document.getElementById('seerviPublicSubcategoryBar');
-  if(subcategoryBar) subcategoryBar.hidden=!seerviSiteSettings.products.showSubcategoryFilter && subcategoryBar.childElementCount===0;
+  if(subcategoryBar) subcategoryBar.hidden=!seerviSiteSettings.catalogue.showSubcategoryFilter && subcategoryBar.childElementCount===0;
   const sections={
     'how-seervi-works':seerviSiteSettings.homepage.showSupplyFlow,
     about:seerviSiteSettings.homepage.showAbout,
@@ -15387,23 +15345,9 @@ window.seerviPdfLayoutSection=function(section){
   });
 };
 window.seerviSettingsSection=function(section){
-  const map={homepage:'adminSettingsSectionHomepage',products:'adminSettingsSectionProducts',catalogues:'adminSettingsSectionCatalogues',customer:'adminSettingsSectionCustomer',notifications:'adminSettingsSectionNotifications',pdf:'adminSettingsSectionPdf',advanced:'adminSettingsSectionAdvanced'};
-  if(!map[section])section='homepage';
-  Object.entries(map).forEach(([key,id])=>{
-    const el=document.getElementById(id);
-    if(!el)return;
-    const active=key===section;
-    el.hidden=!active;
-    el.toggleAttribute('hidden',!active);
-    el.setAttribute('aria-hidden',active?'false':'true');
-    if(active)el.style.removeProperty('display');
-    else el.style.display='none';
-  });
-  document.querySelectorAll('.admin-settings-subnav button[data-settings-section]').forEach(btn=>{
-    const active=btn.dataset.settingsSection===section;
-    btn.classList.toggle('active',active);
-    btn.setAttribute('aria-selected',active?'true':'false');
-  });
+  const map={homepage:'adminSettingsSectionHomepage',catalogue:'adminSettingsSectionCatalogue',customer:'adminSettingsSectionCustomer',notifications:'adminSettingsSectionNotifications',pdf:'adminSettingsSectionPdf',advanced:'adminSettingsSectionAdvanced'};
+  Object.entries(map).forEach(([key,id])=>{const el=document.getElementById(id);if(el)el.hidden=key!==section;});
+  document.querySelectorAll('.admin-settings-subnav button[data-settings-section]').forEach(btn=>{const active=btn.dataset.settingsSection===section;btn.classList.toggle('active',active);btn.setAttribute('aria-selected',active?'true':'false');});
   if(section==='pdf')seerviPdfLayoutSection('quotation');
 };
 window.openAdminCatalogues=function(){
@@ -15458,12 +15402,12 @@ function seerviCatalogueBuildCards(targetId,homeMode){
     const previewId=(homeMode?'seerviHomePdfPreview_':'seerviPdfPreview_')+index+'_'+Math.random().toString(36).slice(2,8);
     if(homeMode){
       return `<article class="seervi-home-catalogue-card">
-        <a class="seervi-home-catalogue-preview${seerviSiteSettings?.catalogues?.showPdfPreview===false?' seervi-pdf-preview-disabled':''}" id="${previewId}" href="${seerviEscHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${name}"><canvas></canvas><span class="seervi-pdf-loading">${seerviSiteSettings?.catalogues?.showPdfPreview===false?'OPEN PDF ↗':'LOADING PDF…'}</span></a>
+        <a class="seervi-home-catalogue-preview" id="${previewId}" href="${seerviEscHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${name}"><canvas></canvas><span class="seervi-pdf-loading">LOADING PDF…</span></a>
         <div class="seervi-home-catalogue-info"><div class="seervi-home-catalogue-kicker">SEERVI TRADING / PDF CATALOGUE</div><div class="seervi-home-catalogue-name">${name}</div><div class="seervi-home-catalogue-file">${file}</div><a class="seervi-home-catalogue-open" href="${seerviEscHtml(url)}" target="_blank" rel="noopener noreferrer">VIEW CATALOGUE ↗</a></div>
       </article>`;
     }
     return `<article class="seervi-catalogue-item">
-      <a class="seervi-catalogue-preview${seerviSiteSettings?.catalogues?.showPdfPreview===false?' seervi-pdf-preview-disabled':''}" id="${previewId}" href="${seerviEscHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${name}"><canvas></canvas><span class="seervi-pdf-loading">${seerviSiteSettings?.catalogues?.showPdfPreview===false?'OPEN PDF ↗':'LOADING PDF…'}</span></a>
+      <a class="seervi-catalogue-preview" id="${previewId}" href="${seerviEscHtml(url)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${name}"><canvas></canvas><span class="seervi-pdf-loading">LOADING PDF…</span></a>
       <div class="seervi-catalogue-info"><div class="seervi-catalogue-item-kicker">SEERVI TRADING / PDF CATALOGUE</div><div class="seervi-catalogue-item-name">${name}</div><div class="seervi-catalogue-item-file">${file}</div><a class="seervi-catalogue-item-open" href="${seerviEscHtml(url)}" target="_blank" rel="noopener noreferrer">VIEW CATALOGUE ↗</a></div>
     </article>`;
   }).join('');
@@ -15477,17 +15421,14 @@ function seerviCatalogueRenderPublic(){
     wrap.hidden=false;
     if(status)status.hidden=true;
   }
-  if(seerviSiteSettings?.catalogues?.showPdfPreview){
-      document.querySelectorAll('.seervi-catalogue-preview').forEach((el,index)=>{
-        const item=seerviPublicCatalogues[index];
-        if(item?.url && el.id)seerviRenderPdfThumbnail(el.id,seerviCatalogueResolveUrl(item.url));
-      });
-    }
-    document.querySelectorAll('.seervi-home-catalogue-preview').forEach((el,index)=>{
-      const item=seerviPublicCatalogues[index % Math.max(1,seerviPublicCatalogues.length)];
-      if(item?.url && el.id)seerviRenderPdfThumbnail(el.id,seerviCatalogueResolveUrl(item.url));
-    });
-  }
+  document.querySelectorAll('.seervi-catalogue-preview').forEach((el,index)=>{
+    const item=seerviPublicCatalogues[index];
+    if(item?.url && el.id)seerviRenderPdfThumbnail(el.id,seerviCatalogueResolveUrl(item.url));
+  });
+  document.querySelectorAll('.seervi-home-catalogue-preview').forEach((el,index)=>{
+    const item=seerviPublicCatalogues[index % Math.max(1,seerviPublicCatalogues.length)];
+    if(item?.url && el.id)seerviRenderPdfThumbnail(el.id,seerviCatalogueResolveUrl(item.url));
+  });
 }
 
 let seerviPdfJsPromise=null;
@@ -15631,8 +15572,7 @@ function seerviSettingsFillForm(){
   const vals={
     settingCompany:s.homepage.companyName||s.branding.companyName,settingEmail:s.homepage.email||s.branding.email,settingContact1Name:s.homepage.contact1Name||s.branding.contact1Name,settingContact1Number:s.homepage.contact1Number||s.branding.contact1Number,settingContact2Name:s.homepage.contact2Name||s.branding.contact2Name,settingContact2Number:s.homepage.contact2Number||s.branding.contact2Number,settingContactAddress:s.homepage.contactAddress||SEERVI_SITE_SETTINGS_DEFAULTS.homepage.contactAddress,
     settingHeroKicker:s.homepage.heroKicker,settingHeroTitle:s.homepage.heroTitle,settingHeroHighlight:s.homepage.heroHighlight,settingHeroDescription:s.homepage.heroDescription,settingHeroCta:s.homepage.heroCta,settingHeroMediaType:s.homepage.heroMediaType,settingHeroImage:s.homepage.heroImage,settingHeroVideo:s.homepage.heroVideo,settingShowSupply:s.homepage.showSupplyFlow,settingShowAbout:s.homepage.showAbout,settingShowWhy:s.homepage.showWhy,settingShowContact:s.homepage.showContact,
-    settingProductsTitle:s.products.sectionTitle,settingShowProducts:s.products.showProducts,settingShowSearch:s.products.showSearch,settingShowSort:s.products.showSort,settingShowCategory:s.products.showCategoryFilter,settingShowSubcategory:s.products.showSubcategoryFilter,
-    settingCataloguesTitle:s.catalogues.sectionTitle,settingCataloguesDescription:s.catalogues.sectionDescription,settingShowCatalogues:s.catalogues.showCatalogues,settingShowCatalogueHomepage:s.catalogues.showHomepageSection,settingShowCatalogueViewAll:s.catalogues.showViewAllButton,settingCatalogueAutoSlide:s.catalogues.autoSlide,settingCatalogueSlideSeconds:s.catalogues.autoSlideSeconds,settingCataloguePdfPreview:s.catalogues.showPdfPreview,
+    settingCatalogueTitle:s.catalogue.sectionTitle,settingShowCatalogue:s.catalogue.showCatalogue,settingShowSearch:s.catalogue.showSearch,settingShowSort:s.catalogue.showSort,settingShowCategory:s.catalogue.showCategoryFilter,settingShowSubcategory:s.catalogue.showSubcategoryFilter,
     settingLogin:s.customer.loginEnabled,settingSignup:s.customer.signupEnabled,settingNotifications:s.notifications.enabled,settingSound:s.notifications.soundEnabled,settingQuotationPdfLayout:s.pdf.quotationLayout,settingInvoicePdfLayout:s.pdf.invoiceLayout,
     settingQuoteMarginTop:s.pdf.quotation.marginTop,settingQuoteMarginRight:s.pdf.quotation.marginRight,settingQuoteMarginBottom:s.pdf.quotation.marginBottom,settingQuoteMarginLeft:s.pdf.quotation.marginLeft,settingQuoteHeaderFont:s.pdf.quotation.headerFont,settingQuoteBodyFont:s.pdf.quotation.bodyFont,settingQuoteTableFont:s.pdf.quotation.tableFont,settingQuoteTotalFont:s.pdf.quotation.totalFont,settingQuoteGrandFont:s.pdf.quotation.grandFont,settingQuoteFooterFont:s.pdf.quotation.footerFont,settingQuoteRowMin:s.pdf.quotation.rowMin,settingQuoteRowLine:s.pdf.quotation.rowLine,settingQuoteRowPad:s.pdf.quotation.rowPad,
     settingInvoiceMarginTop:s.pdf.invoice.marginTop,settingInvoiceMarginRight:s.pdf.invoice.marginRight,settingInvoiceMarginBottom:s.pdf.invoice.marginBottom,settingInvoiceMarginLeft:s.pdf.invoice.marginLeft,settingInvoiceHeaderFont:s.pdf.invoice.headerFont,settingInvoiceBodyFont:s.pdf.invoice.bodyFont,settingInvoiceTableFont:s.pdf.invoice.tableFont,settingInvoiceTotalFont:s.pdf.invoice.totalFont,settingInvoiceGrandFont:s.pdf.invoice.grandFont,settingInvoiceFooterFont:s.pdf.invoice.footerFont,settingInvoiceRowMin:s.pdf.invoice.rowMin,settingInvoiceRowLine:s.pdf.invoice.rowLine,settingInvoiceRowPad:s.pdf.invoice.rowPad,settingInvoiceHeaderH:s.pdf.invoice.headerH,settingInvoiceBillH:s.pdf.invoice.billH,settingOrderWhatsapp:s.order.whatsappNumber,
@@ -15650,10 +15590,8 @@ window.seerviSaveAdminSettings=async function(){
   },homepage:{
     companyName:seerviSettingsField('settingCompany')?.value,email:seerviSettingsField('settingEmail')?.value,contact1Name:seerviSettingsField('settingContact1Name')?.value,contact1Number:seerviSettingsField('settingContact1Number')?.value,contact2Name:seerviSettingsField('settingContact2Name')?.value,contact2Number:seerviSettingsField('settingContact2Number')?.value,contactAddress:seerviSettingsField('settingContactAddress')?.value,
     heroKicker:seerviSettingsField('settingHeroKicker')?.value,heroTitle:seerviSettingsField('settingHeroTitle')?.value,heroHighlight:seerviSettingsField('settingHeroHighlight')?.value,heroDescription:seerviSettingsField('settingHeroDescription')?.value,heroCta:seerviSettingsField('settingHeroCta')?.value,heroMediaType:seerviSettingsField('settingHeroMediaType')?.value,heroImage:seerviSettingsField('settingHeroImage')?.value,heroVideo:seerviSettingsField('settingHeroVideo')?.value,showSupplyFlow:!!seerviSettingsField('settingShowSupply')?.checked,showAbout:!!seerviSettingsField('settingShowAbout')?.checked,showWhy:!!seerviSettingsField('settingShowWhy')?.checked,showContact:!!seerviSettingsField('settingShowContact')?.checked
-  },products:{
-    sectionTitle:seerviSettingsField('settingProductsTitle')?.value,showProducts:!!seerviSettingsField('settingShowProducts')?.checked,showSearch:!!seerviSettingsField('settingShowSearch')?.checked,showSort:!!seerviSettingsField('settingShowSort')?.checked,showCategoryFilter:!!seerviSettingsField('settingShowCategory')?.checked,showSubcategoryFilter:!!seerviSettingsField('settingShowSubcategory')?.checked
-  },catalogues:{
-    sectionTitle:seerviSettingsField('settingCataloguesTitle')?.value,sectionDescription:seerviSettingsField('settingCataloguesDescription')?.value,showCatalogues:!!seerviSettingsField('settingShowCatalogues')?.checked,showHomepageSection:!!seerviSettingsField('settingShowCatalogueHomepage')?.checked,showViewAllButton:!!seerviSettingsField('settingShowCatalogueViewAll')?.checked,autoSlide:!!seerviSettingsField('settingCatalogueAutoSlide')?.checked,autoSlideSeconds:Number(seerviSettingsField('settingCatalogueSlideSeconds')?.value),showPdfPreview:!!seerviSettingsField('settingCataloguePdfPreview')?.checked
+  },catalogue:{
+    sectionTitle:seerviSettingsField('settingCatalogueTitle')?.value,showCatalogue:!!seerviSettingsField('settingShowCatalogue')?.checked,showSearch:!!seerviSettingsField('settingShowSearch')?.checked,showSort:!!seerviSettingsField('settingShowSort')?.checked,showCategoryFilter:!!seerviSettingsField('settingShowCategory')?.checked,showSubcategoryFilter:!!seerviSettingsField('settingShowSubcategory')?.checked
   },customer:{loginEnabled:!!seerviSettingsField('settingLogin')?.checked,signupEnabled:!!seerviSettingsField('settingSignup')?.checked},notifications:{enabled:!!seerviSettingsField('settingNotifications')?.checked,soundEnabled:!!seerviSettingsField('settingSound')?.checked},pdf:{quotationLayout:seerviSettingsField('settingQuotationPdfLayout')?.value,invoiceLayout:seerviSettingsField('settingInvoicePdfLayout')?.value,quotation:{marginTop:Number(seerviSettingsField('settingQuoteMarginTop')?.value),marginRight:Number(seerviSettingsField('settingQuoteMarginRight')?.value),marginBottom:Number(seerviSettingsField('settingQuoteMarginBottom')?.value),marginLeft:Number(seerviSettingsField('settingQuoteMarginLeft')?.value),headerFont:Number(seerviSettingsField('settingQuoteHeaderFont')?.value),bodyFont:Number(seerviSettingsField('settingQuoteBodyFont')?.value),tableFont:Number(seerviSettingsField('settingQuoteTableFont')?.value),totalFont:Number(seerviSettingsField('settingQuoteTotalFont')?.value),grandFont:Number(seerviSettingsField('settingQuoteGrandFont')?.value),footerFont:Number(seerviSettingsField('settingQuoteFooterFont')?.value),rowMin:Number(seerviSettingsField('settingQuoteRowMin')?.value),rowLine:Number(seerviSettingsField('settingQuoteRowLine')?.value),rowPad:Number(seerviSettingsField('settingQuoteRowPad')?.value)},invoice:{marginTop:Number(seerviSettingsField('settingInvoiceMarginTop')?.value),marginRight:Number(seerviSettingsField('settingInvoiceMarginRight')?.value),marginBottom:Number(seerviSettingsField('settingInvoiceMarginBottom')?.value),marginLeft:Number(seerviSettingsField('settingInvoiceMarginLeft')?.value),headerFont:Number(seerviSettingsField('settingInvoiceHeaderFont')?.value),bodyFont:Number(seerviSettingsField('settingInvoiceBodyFont')?.value),tableFont:Number(seerviSettingsField('settingInvoiceTableFont')?.value),totalFont:Number(seerviSettingsField('settingInvoiceTotalFont')?.value),grandFont:Number(seerviSettingsField('settingInvoiceGrandFont')?.value),footerFont:Number(seerviSettingsField('settingInvoiceFooterFont')?.value),rowMin:Number(seerviSettingsField('settingInvoiceRowMin')?.value),rowLine:Number(seerviSettingsField('settingInvoiceRowLine')?.value),rowPad:Number(seerviSettingsField('settingInvoiceRowPad')?.value),headerH:Number(seerviSettingsField('settingInvoiceHeaderH')?.value),billH:Number(seerviSettingsField('settingInvoiceBillH')?.value)}},order:{whatsappNumber:seerviSettingsField('settingOrderWhatsapp')?.value},advanced:{maintenanceMode:!!seerviSettingsField('settingMaintenance')?.checked,maintenanceMessage:seerviSettingsField('settingMaintenanceMessage')?.value}});
   const clean=seerviNormaliseSettings(s);
   const status=seerviSettingsField('adminSettingsStatus');
