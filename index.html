@@ -5505,11 +5505,10 @@ body.seervi-ai-open .float-support{display:none!important}
 <div aria-label="Settings sections" class="admin-settings-subnav" role="tablist">
 
 <button data-settings-section="homepage" onclick="seerviSettingsSection('homepage')" type="button">HOMEPAGE</button>
-<button data-settings-section="catalogue" onclick="seerviSettingsSection('catalogue')" type="button">PRODUCT SETTINGS</button>
-<button data-settings-section="catalogues" onclick="seerviSettingsSection('catalogues')" type="button">CATALOGUES</button>
+<button data-settings-section="product" onclick="seerviSettingsSection('product')" type="button">PRODUCT</button>
+<button data-settings-section="catalogue" onclick="seerviSettingsSection('catalogue')" type="button">CATALOGUE</button>
 <button data-settings-section="customer" onclick="seerviSettingsSection('customer')" type="button">CUSTOMER / ORDER</button>
 <button data-settings-section="notifications" onclick="seerviSettingsSection('notifications')" type="button">NOTIFICATIONS</button>
-<button data-settings-section="pdf" onclick="seerviSettingsSection('pdf')" type="button">PDF LAYOUT</button>
 <button data-settings-section="advanced" onclick="seerviSettingsSection('advanced')" type="button">ADVANCED</button>
 </div>
 
@@ -5517,72 +5516,29 @@ body.seervi-ai-open .float-support{display:none!important}
 <label>Hero Kicker<input id="settingHeroKicker" type="text"/></label><label>Hero Title<input id="settingHeroTitle" type="text"/></label><label>Hero Highlight<input id="settingHeroHighlight" type="text"/></label><label>Hero CTA<input id="settingHeroCta" type="text"/></label><label>Hero Media Type<select id="settingHeroMediaType"><option value="image">IMAGE</option><option value="video">VIDEO</option></select></label><label class="full">Hero Description<textarea id="settingHeroDescription"></textarea></label><label class="full">Hero Image Path<input id="settingHeroImage" placeholder="GitHub project path, e.g. images/hero.webp" type="text"/></label><label class="full">Hero Video Path<input id="settingHeroVideo" placeholder="GitHub project path, e.g. videos/hero.mp4" type="text"/></label>
 <label class="admin-settings-check"><input id="settingShowSupply" type="checkbox"/> Show Supply Flow</label><label class="admin-settings-check"><input id="settingShowAbout" type="checkbox"/> Show About</label><label class="admin-settings-check"><input id="settingShowWhy" type="checkbox"/> Show Why Seervi</label><label class="admin-settings-check"><input id="settingShowContact" type="checkbox"/> Show Contact</label>
 </div></section>
-<section class="admin-settings-section" hidden="" id="adminSettingsSectionCatalogue"><div class="crm-section-title">CATALOGUE</div><div class="admin-settings-grid">
-<label>Products Section Title<input id="settingCatalogueTitle" type="text"/></label><label class="admin-settings-check"><input id="settingShowCatalogue" type="checkbox"/> Show Catalogue</label><label class="admin-settings-check"><input id="settingShowSearch" type="checkbox"/> Show Search</label><label class="admin-settings-check"><input id="settingShowSort" type="checkbox"/> Show Sort</label><label class="admin-settings-check"><input id="settingShowCategory" type="checkbox"/> Show Category Filter</label><label class="admin-settings-check"><input id="settingShowSubcategory" type="checkbox"/> Show Subcategory Filter</label>
-</div></section>
+<section class="admin-settings-section" hidden="" id="adminSettingsSectionProduct">
+<div class="crm-section-title">PRODUCT</div>
+<p class="admin-settings-help">Product controls apply only to the product system: Category → Subcategory → Item.</p>
+<div class="admin-settings-grid">
+<label class="admin-settings-check"><input id="settingShowProduct" type="checkbox"/> Show Product</label>
+</div>
+<div class="admin-settings-readonly"><strong>PRODUCT STRUCTURE</strong><br/>Category → Subcategory → Item.</div>
+</section>
+<section class="admin-settings-section" hidden="" id="adminSettingsSectionCatalogue">
+<div class="crm-section-title">CATALOGUE / FIREBASE PDF</div>
+<p class="admin-settings-help">Catalogue control applies only to PDF catalogues stored in the Firebase <code>catalogues</code> collection. It does not control quotation or invoice PDF generation.</p>
+<div class="admin-settings-grid">
+<label class="admin-settings-check"><input id="settingShowCatalogue" type="checkbox"/> Show Catalogue</label>
+</div>
+<div class="admin-settings-readonly"><strong>FIREBASE CATALOGUE PDF</strong><br/>When enabled, active Firebase catalogue PDFs are visible to website visitors. When disabled, the catalogue section, catalogue buttons and catalogue panel are hidden from the public website.</div>
+</section>
 <section class="admin-settings-section" hidden="" id="adminSettingsSectionCustomer"><div class="crm-section-title">CUSTOMER / ORDER</div><div class="admin-settings-grid">
 <label class="admin-settings-check"><input id="settingLogin" type="checkbox"/> Customer Login</label><label class="admin-settings-check"><input id="settingSignup" type="checkbox"/> Customer Sign Up</label><label>Order WhatsApp Number<input id="settingOrderWhatsapp" inputmode="numeric" type="text"/></label>
 </div></section>
 <section class="admin-settings-section" hidden="" id="adminSettingsSectionNotifications"><div class="crm-section-title">NOTIFICATIONS</div><div class="admin-settings-grid">
 <label class="admin-settings-check"><input id="settingNotifications" type="checkbox"/> Notifications Enabled</label><label class="admin-settings-check"><input id="settingSound" type="checkbox"/> Notification Sound Enabled</label>
 </div></section>
-<section class="admin-settings-section" hidden="" id="adminSettingsSectionPdf"><div class="crm-section-title">PDF LAYOUT</div><p class="admin-settings-help">Choose the document first. STANDARD is the current final PDF format. Quotation and Invoice keep their existing design, sizing and pagination behavior unless CUSTOM is selected.</p>
-<div aria-label="PDF layout options" class="pdf-layout-subnav" role="tablist">
-<button class="active" data-pdf-layout-section="quotation" onclick="seerviPdfLayoutSection('quotation')" type="button">QUOTATION</button>
-<button data-pdf-layout-section="invoice" onclick="seerviPdfLayoutSection('invoice')" type="button">INVOICE</button>
-</div>
-<div class="pdf-layout-option" id="pdfQuotationSettings">
-<div class="crm-section-title">QUOTATION PDF</div>
-<div class="admin-settings-grid">
-<label>PDF Layout<select id="settingQuotationPdfLayout"><option value="standard">STANDARD</option><option value="compact">COMPACT</option><option value="spacious">SPACIOUS</option><option value="custom">CUSTOM</option></select></label>
-</div>
-<div class="pdf-custom-settings">
-<div class="crm-section-title">QUOTATION CUSTOM SETTINGS</div>
-<div class="admin-settings-grid">
-<label>Top Margin / Start (mm)<input id="settingQuoteMarginTop" max="60" min="5" step="0.5" type="number"/></label>
-<label>Right Margin (mm)<input id="settingQuoteMarginRight" max="50" min="5" step="0.5" type="number"/></label>
-<label>Bottom Margin (mm)<input id="settingQuoteMarginBottom" max="50" min="5" step="0.5" type="number"/></label>
-<label>Left Margin (mm)<input id="settingQuoteMarginLeft" max="50" min="5" step="0.5" type="number"/></label>
-<label>Header Font (pt)<input id="settingQuoteHeaderFont" max="40" min="6" step="0.5" type="number"/></label>
-<label>Customer / Body Font (pt)<input id="settingQuoteBodyFont" max="20" min="5" step="0.5" type="number"/></label>
-<label>Table Font (pt)<input id="settingQuoteTableFont" max="20" min="5" step="0.5" type="number"/></label>
-<label>Total Font (pt)<input id="settingQuoteTotalFont" max="20" min="5" step="0.5" type="number"/></label>
-<label>Grand Total Font (pt)<input id="settingQuoteGrandFont" max="30" min="6" step="0.5" type="number"/></label>
-<label>Footer Font (pt)<input id="settingQuoteFooterFont" max="16" min="5" step="0.5" type="number"/></label>
-<label>Minimum Row Height (mm)<input id="settingQuoteRowMin" max="20" min="3" step="0.5" type="number"/></label>
-<label>Row Line Spacing (mm)<input id="settingQuoteRowLine" max="10" min="1" step="0.1" type="number"/></label>
-<label>Row Padding (mm)<input id="settingQuoteRowPad" max="10" min="0" step="0.1" type="number"/></label>
-</div>
-</div>
-</div>
-<div class="pdf-layout-option" hidden="" id="pdfInvoiceSettings">
-<div class="crm-section-title">INVOICE PDF</div>
-<div class="admin-settings-grid">
-<label>PDF Layout<select id="settingInvoicePdfLayout"><option value="standard">STANDARD</option><option value="compact">COMPACT</option><option value="spacious">SPACIOUS</option><option value="custom">CUSTOM</option></select></label>
-</div>
-<div class="pdf-custom-settings">
-<div class="crm-section-title">INVOICE CUSTOM SETTINGS</div>
-<div class="admin-settings-grid">
-<label>Top Margin / Start (mm)<input id="settingInvoiceMarginTop" max="40" min="5" step="0.5" type="number"/></label>
-<label>Right Margin (mm)<input id="settingInvoiceMarginRight" max="50" min="5" step="0.5" type="number"/></label>
-<label>Bottom Margin (mm)<input id="settingInvoiceMarginBottom" max="40" min="5" step="0.5" type="number"/></label>
-<label>Left Margin (mm)<input id="settingInvoiceMarginLeft" max="50" min="5" step="0.5" type="number"/></label>
-<label>Header Font (pt)<input id="settingInvoiceHeaderFont" max="30" min="6" step="0.5" type="number"/></label>
-<label>Body Font (pt)<input id="settingInvoiceBodyFont" max="16" min="5" step="0.5" type="number"/></label>
-<label>Table Font (pt)<input id="settingInvoiceTableFont" max="16" min="5" step="0.5" type="number"/></label>
-<label>Total Font (pt)<input id="settingInvoiceTotalFont" max="16" min="5" step="0.5" type="number"/></label>
-<label>Grand Total Font (pt)<input id="settingInvoiceGrandFont" max="24" min="6" step="0.5" type="number"/></label>
-<label>Footer Font (pt)<input id="settingInvoiceFooterFont" max="16" min="5" step="0.5" type="number"/></label>
-<label>Minimum Row Height (mm)<input id="settingInvoiceRowMin" max="20" min="3" step="0.5" type="number"/></label>
-<label>Row Line Spacing (mm)<input id="settingInvoiceRowLine" max="10" min="1" step="0.1" type="number"/></label>
-<label>Row Padding (mm)<input id="settingInvoiceRowPad" max="10" min="0" step="0.1" type="number"/></label>
-<label>Header Height (mm)<input id="settingInvoiceHeaderH" max="70" min="20" step="0.5" type="number"/></label>
-<label>Bill / Ship Box Height (mm)<input id="settingInvoiceBillH" max="70" min="20" step="0.5" type="number"/></label>
-</div>
-</div>
-</div>
-<div class="admin-settings-readonly"><strong>STANDARD = CURRENT FINAL FORMAT</strong><br/>Quotation: current quotation layout with Round Off. Invoice: current natural item-flow layout — Page 1 items continue as far as the A4 page allows, then Notes + Totals + Round Off + Amount in Words + HSN/SAC + Bank / QR / Authorised Signatory follow immediately below; Page 2 onward uses normal flow. Custom values are used only when that document is set to CUSTOM. Changes apply to new quotation/invoice PDFs; existing PDF files are not modified.</div>
-</section>
+
 <section class="admin-settings-section" hidden="" id="adminSettingsSectionAdvanced"><div class="crm-section-title">ADVANCED</div><div class="admin-settings-grid">
 <label class="admin-settings-check"><input id="settingMaintenance" type="checkbox"/> Maintenance Mode</label><label class="full">Maintenance Message<textarea id="settingMaintenanceMessage"></textarea></label>
 </div><div class="admin-settings-readonly">Security: Admin access remains controlled by Firebase Authentication + Firestore Rules. This panel cannot change the authorised admin email.</div></section>
@@ -6747,6 +6703,7 @@ document.addEventListener('keydown',function(e){
 <script id="seervi-catalogue-panel-script">
 (function(){
   window.openCataloguePanel=function(){
+    if(window.SeerviSiteSettings?.catalogue?.show!==true)return;
     const m=document.getElementById('seerviCataloguePanel');if(!m)return;
     try{window.closeAccountDashboard?.();}catch(e){}
     m.classList.add('show');m.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
@@ -14257,6 +14214,8 @@ function seerviPublicMergeItems(items){
 }
 
 async function seerviPublicLoadCatalogue(){
+  if(window.SeerviGlobalSettingsReady){try{await window.SeerviGlobalSettingsReady;}catch(_){}}
+  if(window.SeerviSiteSettings?.product?.show!==true)return;
   const status=$('seerviPublicCatalogueStatus');
   try{
     if(status)status.textContent='Loading categories…';
@@ -14296,6 +14255,7 @@ async function seerviPublicLoadCatalogue(){
 }
 
 async function seerviPublicLoadCategoryItems(categoryId){
+  if(window.SeerviSiteSettings?.product?.show!==true)return [];
   const id=String(categoryId||'').trim();
   if(!id)return [];
   if(seerviPublicCategoryItemCache.has(id))return seerviPublicCategoryItemCache.get(id);
@@ -14334,6 +14294,7 @@ async function seerviPublicLoadCategoryItems(categoryId){
 }
 
 async function seerviPublicLoadCategoryInventory(categoryId){
+  if(window.SeerviSiteSettings?.product?.show!==true)return;
   const id=String(categoryId||'').trim();
   if(!id)return;
   try{
@@ -14355,6 +14316,7 @@ async function seerviPublicLoadCategoryInventory(categoryId){
 }
 
 async function seerviPublicLoadAllItemsForAI(){
+  if(window.SeerviSiteSettings?.product?.show!==true)return [];
   if(seerviPublicAllItemsLoaded)return seerviPublicItems;
   if(seerviPublicAllItemsLoadPromise)return seerviPublicAllItemsLoadPromise;
   seerviPublicAllItemsLoadPromise=(async()=>{
@@ -15096,7 +15058,8 @@ window.seerviCloseItemsPanel=function(){
 const SEERVI_SITE_SETTINGS_DEFAULTS={
   branding:{companyName:'Seervi Trading',tagline:'Sourced Globally. Supplied by Seervi.',email:'seervitrading@gmail.com',whatsapp:'917073741650',contact1Name:'KAILASH SEERVI',contact1Number:'917073741650',contact2Name:'SHRAVAN KUMAR',contact2Number:'9740598345'},
   homepage:{heroKicker:'SEERVI TRADING / FACTORY SOURCING & IMPORT',heroTitle:'YOU NEED IT.',heroHighlight:'WE SOURCE IT.',heroDescription:'We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.',heroCta:'Request a Product',heroMediaType:'image',heroImage:'images/00-old-products/product-image-001-055cde1217d3c801.webp',heroVideo:'',showSupplyFlow:true,showAbout:true,showWhy:true,showContact:true,companyName:'Seervi Trading',tagline:'Sourced Globally. Supplied by Seervi.',email:'seervitrading@gmail.com',whatsapp:'917073741650',contact1Name:'KAILASH SEERVI',contact1Number:'917073741650',contact2Name:'SHRAVAN KUMAR',contact2Number:'9740598345',contactAddress:'Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072, India'},
-  catalogue:{sectionTitle:'Our Products',showCatalogue:true,showSearch:true,showSort:true,showCategoryFilter:true,showSubcategoryFilter:true},
+  product:{show:true},
+  catalogue:{show:true},
   customer:{loginEnabled:true,signupEnabled:true},
   notifications:{enabled:true,soundEnabled:true},
   pdf:{quotationLayout:'standard',invoiceLayout:'standard',quotation:{marginTop:17,marginRight:15,marginBottom:10,marginLeft:15,headerFont:22,bodyFont:8.5,tableFont:8,totalFont:9,grandFont:12,footerFont:8,rowMin:8,rowLine:4.3,rowPad:3},invoice:{marginTop:12,marginRight:15,marginBottom:8,marginLeft:15,headerFont:12.5,bodyFont:6.7,tableFont:7.1,totalFont:7.8,grandFont:10.5,footerFont:7.4,rowMin:6,rowLine:3.1,rowPad:1.5,headerH:36,billH:33}},
@@ -15160,8 +15123,8 @@ function seerviNormaliseSettings(raw){
   s.homepage.contactAddress=String(s.homepage.contactAddress||SEERVI_SITE_SETTINGS_DEFAULTS.homepage.contactAddress).slice(0,400);
   s.branding.companyName=s.homepage.companyName; s.branding.tagline=s.homepage.tagline; s.branding.email=s.homepage.email; s.branding.whatsapp=s.homepage.contact1Number||s.homepage.whatsapp; s.branding.contact1Name=s.homepage.contact1Name; s.branding.contact1Number=s.homepage.contact1Number; s.branding.contact2Name=s.homepage.contact2Name; s.branding.contact2Number=s.homepage.contact2Number;
   ['showSupplyFlow','showAbout','showWhy','showContact'].forEach(k=>s.homepage[k]=!!s.homepage[k]);
-  s.catalogue.sectionTitle=String(s.catalogue.sectionTitle||SEERVI_SITE_SETTINGS_DEFAULTS.catalogue.sectionTitle).slice(0,100);
-  ['showCatalogue','showSearch','showSort','showCategoryFilter','showSubcategoryFilter'].forEach(k=>s.catalogue[k]=!!s.catalogue[k]);
+  s.product.show=!!s.product.show;
+  s.catalogue.show=!!s.catalogue.show;
   s.customer.loginEnabled=!!s.customer.loginEnabled;
   s.customer.signupEnabled=!!s.customer.signupEnabled;
   s.notifications.enabled=!!s.notifications.enabled;
@@ -15211,17 +15174,26 @@ function seerviApplySiteSettings(raw){
   if(h1) h1.innerHTML=`${seerviEscHtml(seerviSiteSettings.homepage.heroTitle)}<br><span>${seerviEscHtml(seerviSiteSettings.homepage.heroHighlight)}</span>`;
   if(desc) desc.textContent=seerviSiteSettings.homepage.heroDescription;
   if(cta){cta.childNodes[0].nodeValue=seerviSiteSettings.homepage.heroCta+' ';}
-  if(productTitle) productTitle.textContent=seerviSiteSettings.catalogue.sectionTitle;
-  const catalog=document.getElementById('profiles');
-  if(catalog) catalog.hidden=!seerviSiteSettings.catalogue.showCatalogue;
-  const search=document.querySelector('#seerviPublicToolbar .seervi-public-search');
-  const sort=document.querySelector('#seerviPublicToolbar .seervi-public-sort');
-  if(search) search.hidden=!seerviSiteSettings.catalogue.showSearch;
-  if(sort) sort.hidden=!seerviSiteSettings.catalogue.showSort;
-  const categoryBar=document.getElementById('seerviPublicCategoryBar');
-  if(categoryBar) categoryBar.hidden=!seerviSiteSettings.catalogue.showCategoryFilter;
-  const subcategoryBar=document.getElementById('seerviPublicSubcategoryBar');
-  if(subcategoryBar) subcategoryBar.hidden=!seerviSiteSettings.catalogue.showSubcategoryFilter && subcategoryBar.childElementCount===0;
+  if(productTitle) productTitle.textContent='Our Products';
+  const productVisible=seerviSiteSettings.product.show===true;
+  const catalogVisible=seerviSiteSettings.catalogue.show===true;
+  const productSection=document.getElementById('profiles');
+  if(productSection) productSection.hidden=!productVisible;
+  document.querySelectorAll('a[href="#profiles"]').forEach(el=>{el.hidden=!productVisible;});
+  const catalogueHome=document.getElementById('homeCatalogues');
+  if(catalogueHome) catalogueHome.hidden=!catalogVisible;
+  const cataloguePanel=document.getElementById('seerviCataloguePanel');
+  if(cataloguePanel && !catalogVisible){cataloguePanel.classList.remove('show');cataloguePanel.setAttribute('aria-hidden','true');}
+  document.querySelectorAll('[onclick*="openCataloguePanel"]').forEach(el=>{el.hidden=!catalogVisible;});
+  if(!productVisible){
+    seerviPublicItems=[];
+    if(typeof seerviPublicRenderItems==='function')try{seerviPublicRenderItems();}catch(_){}
+  }
+  if(!catalogVisible){
+    seerviPublicCatalogues=[];
+    const publicList=document.getElementById('seerviCatalogueList');
+    if(publicList)publicList.innerHTML='';
+  }
   const sections={
     'how-seervi-works':seerviSiteSettings.homepage.showSupplyFlow,
     about:seerviSiteSettings.homepage.showAbout,
@@ -15469,6 +15441,8 @@ async function seerviRenderPdfThumbnail(previewId,url){
 }
 
 window.seerviLoadPublicCatalogues=async function(){
+  if(window.SeerviGlobalSettingsReady){try{await window.SeerviGlobalSettingsReady;}catch(_){}}
+  if(window.SeerviSiteSettings?.catalogue?.show!==true)return;
   const list=document.getElementById('seerviCatalogueList');
   try{
     if(list && !seerviPublicCatalogues.length)list.innerHTML='<div class="seervi-catalogue-empty">Loading catalogues…</div>';
@@ -15490,8 +15464,10 @@ window.seerviLoadPublicCatalogues=async function(){
 
 (function seerviBootHomeCatalogues(){
   let loaded=false;
-  function load(){
+  async function load(){
     if(typeof window.seerviLoadPublicCatalogues!=='function')return;
+    if(window.SeerviGlobalSettingsReady){try{await window.SeerviGlobalSettingsReady;}catch(_){}}
+    if(window.SeerviSiteSettings?.catalogue?.show!==true)return;
     window.seerviLoadPublicCatalogues().finally(()=>{loaded=true;});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load,{once:true});else load();
@@ -15572,8 +15548,7 @@ function seerviSettingsFillForm(){
   const vals={
     settingCompany:s.homepage.companyName||s.branding.companyName,settingEmail:s.homepage.email||s.branding.email,settingContact1Name:s.homepage.contact1Name||s.branding.contact1Name,settingContact1Number:s.homepage.contact1Number||s.branding.contact1Number,settingContact2Name:s.homepage.contact2Name||s.branding.contact2Name,settingContact2Number:s.homepage.contact2Number||s.branding.contact2Number,settingContactAddress:s.homepage.contactAddress||SEERVI_SITE_SETTINGS_DEFAULTS.homepage.contactAddress,
     settingHeroKicker:s.homepage.heroKicker,settingHeroTitle:s.homepage.heroTitle,settingHeroHighlight:s.homepage.heroHighlight,settingHeroDescription:s.homepage.heroDescription,settingHeroCta:s.homepage.heroCta,settingHeroMediaType:s.homepage.heroMediaType,settingHeroImage:s.homepage.heroImage,settingHeroVideo:s.homepage.heroVideo,settingShowSupply:s.homepage.showSupplyFlow,settingShowAbout:s.homepage.showAbout,settingShowWhy:s.homepage.showWhy,settingShowContact:s.homepage.showContact,
-    settingCatalogueTitle:s.catalogue.sectionTitle,settingShowCatalogue:s.catalogue.showCatalogue,settingShowSearch:s.catalogue.showSearch,settingShowSort:s.catalogue.showSort,settingShowCategory:s.catalogue.showCategoryFilter,settingShowSubcategory:s.catalogue.showSubcategoryFilter,
-    settingLogin:s.customer.loginEnabled,settingSignup:s.customer.signupEnabled,settingNotifications:s.notifications.enabled,settingSound:s.notifications.soundEnabled,settingQuotationPdfLayout:s.pdf.quotationLayout,settingInvoicePdfLayout:s.pdf.invoiceLayout,
+    settingShowProduct:s.product.show,settingShowCatalogue:s.catalogue.show,settingLogin:s.customer.loginEnabled,settingSignup:s.customer.signupEnabled,settingNotifications:s.notifications.enabled,settingSound:s.notifications.soundEnabled,
     settingQuoteMarginTop:s.pdf.quotation.marginTop,settingQuoteMarginRight:s.pdf.quotation.marginRight,settingQuoteMarginBottom:s.pdf.quotation.marginBottom,settingQuoteMarginLeft:s.pdf.quotation.marginLeft,settingQuoteHeaderFont:s.pdf.quotation.headerFont,settingQuoteBodyFont:s.pdf.quotation.bodyFont,settingQuoteTableFont:s.pdf.quotation.tableFont,settingQuoteTotalFont:s.pdf.quotation.totalFont,settingQuoteGrandFont:s.pdf.quotation.grandFont,settingQuoteFooterFont:s.pdf.quotation.footerFont,settingQuoteRowMin:s.pdf.quotation.rowMin,settingQuoteRowLine:s.pdf.quotation.rowLine,settingQuoteRowPad:s.pdf.quotation.rowPad,
     settingInvoiceMarginTop:s.pdf.invoice.marginTop,settingInvoiceMarginRight:s.pdf.invoice.marginRight,settingInvoiceMarginBottom:s.pdf.invoice.marginBottom,settingInvoiceMarginLeft:s.pdf.invoice.marginLeft,settingInvoiceHeaderFont:s.pdf.invoice.headerFont,settingInvoiceBodyFont:s.pdf.invoice.bodyFont,settingInvoiceTableFont:s.pdf.invoice.tableFont,settingInvoiceTotalFont:s.pdf.invoice.totalFont,settingInvoiceGrandFont:s.pdf.invoice.grandFont,settingInvoiceFooterFont:s.pdf.invoice.footerFont,settingInvoiceRowMin:s.pdf.invoice.rowMin,settingInvoiceRowLine:s.pdf.invoice.rowLine,settingInvoiceRowPad:s.pdf.invoice.rowPad,settingInvoiceHeaderH:s.pdf.invoice.headerH,settingInvoiceBillH:s.pdf.invoice.billH,settingOrderWhatsapp:s.order.whatsappNumber,
     settingMaintenance:s.advanced.maintenanceMode,settingMaintenanceMessage:s.advanced.maintenanceMessage
@@ -15590,9 +15565,7 @@ window.seerviSaveAdminSettings=async function(){
   },homepage:{
     companyName:seerviSettingsField('settingCompany')?.value,email:seerviSettingsField('settingEmail')?.value,contact1Name:seerviSettingsField('settingContact1Name')?.value,contact1Number:seerviSettingsField('settingContact1Number')?.value,contact2Name:seerviSettingsField('settingContact2Name')?.value,contact2Number:seerviSettingsField('settingContact2Number')?.value,contactAddress:seerviSettingsField('settingContactAddress')?.value,
     heroKicker:seerviSettingsField('settingHeroKicker')?.value,heroTitle:seerviSettingsField('settingHeroTitle')?.value,heroHighlight:seerviSettingsField('settingHeroHighlight')?.value,heroDescription:seerviSettingsField('settingHeroDescription')?.value,heroCta:seerviSettingsField('settingHeroCta')?.value,heroMediaType:seerviSettingsField('settingHeroMediaType')?.value,heroImage:seerviSettingsField('settingHeroImage')?.value,heroVideo:seerviSettingsField('settingHeroVideo')?.value,showSupplyFlow:!!seerviSettingsField('settingShowSupply')?.checked,showAbout:!!seerviSettingsField('settingShowAbout')?.checked,showWhy:!!seerviSettingsField('settingShowWhy')?.checked,showContact:!!seerviSettingsField('settingShowContact')?.checked
-  },catalogue:{
-    sectionTitle:seerviSettingsField('settingCatalogueTitle')?.value,showCatalogue:!!seerviSettingsField('settingShowCatalogue')?.checked,showSearch:!!seerviSettingsField('settingShowSearch')?.checked,showSort:!!seerviSettingsField('settingShowSort')?.checked,showCategoryFilter:!!seerviSettingsField('settingShowCategory')?.checked,showSubcategoryFilter:!!seerviSettingsField('settingShowSubcategory')?.checked
-  },customer:{loginEnabled:!!seerviSettingsField('settingLogin')?.checked,signupEnabled:!!seerviSettingsField('settingSignup')?.checked},notifications:{enabled:!!seerviSettingsField('settingNotifications')?.checked,soundEnabled:!!seerviSettingsField('settingSound')?.checked},pdf:{quotationLayout:seerviSettingsField('settingQuotationPdfLayout')?.value,invoiceLayout:seerviSettingsField('settingInvoicePdfLayout')?.value,quotation:{marginTop:Number(seerviSettingsField('settingQuoteMarginTop')?.value),marginRight:Number(seerviSettingsField('settingQuoteMarginRight')?.value),marginBottom:Number(seerviSettingsField('settingQuoteMarginBottom')?.value),marginLeft:Number(seerviSettingsField('settingQuoteMarginLeft')?.value),headerFont:Number(seerviSettingsField('settingQuoteHeaderFont')?.value),bodyFont:Number(seerviSettingsField('settingQuoteBodyFont')?.value),tableFont:Number(seerviSettingsField('settingQuoteTableFont')?.value),totalFont:Number(seerviSettingsField('settingQuoteTotalFont')?.value),grandFont:Number(seerviSettingsField('settingQuoteGrandFont')?.value),footerFont:Number(seerviSettingsField('settingQuoteFooterFont')?.value),rowMin:Number(seerviSettingsField('settingQuoteRowMin')?.value),rowLine:Number(seerviSettingsField('settingQuoteRowLine')?.value),rowPad:Number(seerviSettingsField('settingQuoteRowPad')?.value)},invoice:{marginTop:Number(seerviSettingsField('settingInvoiceMarginTop')?.value),marginRight:Number(seerviSettingsField('settingInvoiceMarginRight')?.value),marginBottom:Number(seerviSettingsField('settingInvoiceMarginBottom')?.value),marginLeft:Number(seerviSettingsField('settingInvoiceMarginLeft')?.value),headerFont:Number(seerviSettingsField('settingInvoiceHeaderFont')?.value),bodyFont:Number(seerviSettingsField('settingInvoiceBodyFont')?.value),tableFont:Number(seerviSettingsField('settingInvoiceTableFont')?.value),totalFont:Number(seerviSettingsField('settingInvoiceTotalFont')?.value),grandFont:Number(seerviSettingsField('settingInvoiceGrandFont')?.value),footerFont:Number(seerviSettingsField('settingInvoiceFooterFont')?.value),rowMin:Number(seerviSettingsField('settingInvoiceRowMin')?.value),rowLine:Number(seerviSettingsField('settingInvoiceRowLine')?.value),rowPad:Number(seerviSettingsField('settingInvoiceRowPad')?.value),headerH:Number(seerviSettingsField('settingInvoiceHeaderH')?.value),billH:Number(seerviSettingsField('settingInvoiceBillH')?.value)}},order:{whatsappNumber:seerviSettingsField('settingOrderWhatsapp')?.value},advanced:{maintenanceMode:!!seerviSettingsField('settingMaintenance')?.checked,maintenanceMessage:seerviSettingsField('settingMaintenanceMessage')?.value}});
+  },product:{show:!!seerviSettingsField('settingShowProduct')?.checked},catalogue:{show:!!seerviSettingsField('settingShowCatalogue')?.checked},customer:{loginEnabled:!!seerviSettingsField('settingLogin')?.checked,signupEnabled:!!seerviSettingsField('settingSignup')?.checked},notifications:{enabled:!!seerviSettingsField('settingNotifications')?.checked,soundEnabled:!!seerviSettingsField('settingSound')?.checked},pdf:seerviSettingsClone(seerviSiteSettings.pdf||SEERVI_SITE_SETTINGS_DEFAULTS.pdf),order:{whatsappNumber:seerviSettingsField('settingOrderWhatsapp')?.value},advanced:{maintenanceMode:!!seerviSettingsField('settingMaintenance')?.checked,maintenanceMessage:seerviSettingsField('settingMaintenanceMessage')?.value}});
   const clean=seerviNormaliseSettings(s);
   const status=seerviSettingsField('adminSettingsStatus');
   if(status)status.textContent='Saving global settings…';
