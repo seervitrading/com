@@ -3510,7 +3510,7 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
 <div class="seervi-footer-heading">SEERVI TRADING</div>
 <p>Global sourcing for retailers, wholesalers, businesses and project requirements.</p>
 <div class="seervi-address-block"><span class="seervi-contact-label">ADDRESS</span><span>Nagarbhavi Circle,<br/>Jannabharathi Main Road,<br/>Bengaluru – 566072<br/>India</span></div>
-<button class="seervi-footer-wa" onclick="openCataloguePanel()" type="button">VIEW CATALOGUES ↗</button>
+<a class="seervi-footer-wa" href="https://wa.me/917073741650" id="seerviFooterContact1WhatsApp" rel="noopener" target="_blank">WHATSAPP US ↗</a>
 </div>
 </div>
 <div class="seervi-footer-social-row">
@@ -13385,7 +13385,7 @@ function seerviApplySiteSettings(raw){
   const fmtContact=n=>{const d=String(n||'').replace(/\D/g,'').replace(/^91/,'');return d.length===10?'+91 '+d.slice(0,5)+' '+d.slice(5):'+'+String(n||'').replace(/\D/g,'');};
   const waNumber=n=>{const d=String(n||'').replace(/\D/g,'');return d.length===10?'91'+d:(d.startsWith('91')?d:d);}; const homeContact=seerviSiteSettings.homepage||{};
   if(c1n)c1n.textContent=homeContact.contact1Name||seerviSiteSettings.branding.contact1Name; if(c1num)c1num.textContent=fmtContact(homeContact.contact1Number||seerviSiteSettings.branding.contact1Number); if(c1link)c1link.href='https://wa.me/'+waNumber(homeContact.contact1Number||seerviSiteSettings.branding.contact1Number);
-  if(c2n)c2n.textContent=homeContact.contact2Name||seerviSiteSettings.branding.contact2Name; if(c2num)c2num.textContent=fmtContact(homeContact.contact2Number||seerviSiteSettings.branding.contact2Number); if(c2link)c2link.href='https://wa.me/'+waNumber(homeContact.contact2Number||seerviSiteSettings.branding.contact2Number);
+  if(c2n)c2n.textContent=homeContact.contact2Name||seerviSiteSettings.branding.contact2Name; if(c2num)c2num.textContent=fmtContact(homeContact.contact2Number||seerviSiteSettings.branding.contact2Number); if(c2link)c2link.href='https://wa.me/'+waNumber(homeContact.contact2Number||seerviSiteSettings.branding.contact2Number); const footerC1=document.getElementById('seerviFooterContact1WhatsApp'); if(footerC1)footerC1.href='https://wa.me/'+waNumber(homeContact.contact1Number||seerviSiteSettings.branding.contact1Number);
   const contactEmail=document.getElementById('contactEmailLink'); if(contactEmail){const em=homeContact.email||seerviSiteSettings.branding.email;contactEmail.textContent=em;contactEmail.href='mailto:'+em;}
   const addressBlock=document.querySelector('#contact .seervi-address-block > span:last-child'); if(addressBlock){const a=homeContact.contactAddress||SEERVI_SITE_SETTINGS_DEFAULTS.homepage.contactAddress;addressBlock.innerHTML=seerviEscHtml(a).replace(/,\s*/g,',<br>');}
   const footerBrand=document.querySelector('footer .wrap span:first-child');
