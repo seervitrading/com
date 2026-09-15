@@ -4166,7 +4166,11 @@ document.addEventListener('keydown',function(e){
     const m=document.getElementById('seerviCataloguePanel');if(!m)return;
     try{window.closeAccountDashboard?.();}catch(e){}
     m.classList.add('show');m.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
-    if(typeof window.seerviLoadPublicCatalogues==='function')window.seerviLoadPublicCatalogues().then(()=>seerviRenderCataloguePanelThumbnails());
+    if(typeof window.seerviLoadPublicCatalogues==='function')window.seerviLoadPublicCatalogues().then(()=>{
+      seerviCatalogueBuildCards('seerviCatalogueList',false);
+      seerviCataloguePanelThumbsReady=false;
+      seerviRenderCataloguePanelThumbnails();
+    });
   };
   window.closeCataloguePanel=function(){
     const m=document.getElementById('seerviCataloguePanel');if(!m)return;
