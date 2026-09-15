@@ -5249,8 +5249,7 @@ body.seervi-ai-open .float-support{display:none!important}
   #seerviScrollProgress{display:none}
   .importer-home-section:not(:first-of-type):before{transition:none!important;transform:translateX(-50%) scaleX(1)!important}
 }
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script type="application/ld+json">
+</style><script type="application/ld+json">
 {
   "@context":"https://schema.org",
   "@type":"Organization",
@@ -6156,14 +6155,11 @@ function quotationNumber(){
   return 'SVQ-'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'-'+pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds());
 }
 
-function downloadCartPDF(){
+async function downloadCartPDF(){
   if(!seerviCart.length){openCart();return;}
   if(!validateQuoteCustomer() || !validateQuoteRates()) return;
 
-  if(!window.jspdf || !window.jspdf.jsPDF){
-    seerviToastAlert('PDF engine is not available. Please check your internet connection and try again.');
-    return;
-  }
+  try{await window.SeerviAssets.ensurePdf();}catch(e){seerviToastAlert(e?.message||'PDF engine is not available.');return;}
 
   const c=getQuoteCustomer();
   const p=getCartPricing();
@@ -7403,7 +7399,36 @@ document.addEventListener('touchstart',unlockSeerviAudio,{capture:true,passive:t
 document.addEventListener('keydown',unlockSeerviAudio,{capture:true,passive:true});
 })();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script>
+// Lazy-load heavy admin-only libraries only when their feature is actually used.
+window.SeerviAssets=window.SeerviAssets||{};
+(()=>{
+  const cache={};
+  const load=(key,src,ready)=>{
+    if(ready())return Promise.resolve();
+    if(cache[key])return cache[key];
+    cache[key]=new Promise((resolve,reject)=>{
+      const existing=document.querySelector(`script[data-seervi-lib="${key}"]`);
+      if(existing){
+        existing.addEventListener('load',()=>ready()?resolve():reject(new Error(key+' library loaded but is unavailable.')), {once:true});
+        existing.addEventListener('error',()=>reject(new Error('Unable to load '+key+' library.')), {once:true});
+        return;
+      }
+      const script=document.createElement('script');
+      script.src=src;
+      script.async=true;
+      script.dataset.seerviLib=key;
+      script.onload=()=>ready()?resolve():reject(new Error(key+' library loaded but is unavailable.'));
+      script.onerror=()=>reject(new Error('Unable to load '+key+' library. Please check your internet connection.'));
+      document.head.appendChild(script);
+    });
+    return cache[key];
+  };
+  window.SeerviAssets.ensurePdf=()=>load('jspdf','https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',()=>!!(window.jspdf&&window.jspdf.jsPDF));
+  window.SeerviAssets.ensureXlsx=()=>load('xlsx','https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',()=>typeof window.XLSX!=='undefined');
+  window.SeerviAssets.ensureQr=()=>load('qrious','https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js',()=>typeof window.QRious==='function');
+})();
+</script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
@@ -8785,8 +8810,8 @@ function seerviBackupDownloadJson(filename,payload){
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
-function seerviBackupDownloadXlsx(filename,workbook){
-  if(typeof XLSX==='undefined')throw new Error('Excel export library is not loaded. Refresh the page and try again.');
+async function seerviBackupDownloadXlsx(filename,workbook){
+  await window.SeerviAssets.ensureXlsx();
   XLSX.writeFile(workbook,filename);
 }
 
@@ -8888,7 +8913,7 @@ window.seerviBackupItems=async function(){
     XLSX.utils.book_append_sheet(wb,notesWs,'Instructions');
 
     const stamp=new Date().toISOString().slice(0,10);
-    seerviBackupDownloadXlsx(`Seervi_Items_Backup_${stamp}.xlsx`,wb);
+    await seerviBackupDownloadXlsx(`Seervi_Items_Backup_${stamp}.xlsx`,wb);
     seerviBackupSetStatus(`Items Excel backup downloaded: ${items.length} item(s), import-ready format.`);
   }catch(e){
     console.error('Seervi items Excel backup:',e);
@@ -8922,7 +8947,7 @@ window.seerviBackupCategories=async function(){
     XLSX.utils.book_append_sheet(wb,notesWs,'Instructions');
 
     const stamp=new Date().toISOString().slice(0,10);
-    seerviBackupDownloadXlsx(`Seervi_Categories_Backup_${stamp}.xlsx`,wb);
+    await seerviBackupDownloadXlsx(`Seervi_Categories_Backup_${stamp}.xlsx`,wb);
 
     const categories=documents.filter(x=>x.type==='category').length;
     const subcategories=documents.filter(x=>x.type==='subcategory').length;
@@ -10202,12 +10227,8 @@ window.crmDownloadPartyLedger=async function(){
   const credit=tx.filter(x=>x.type==='credit').reduce((s,x)=>s+Number(x.amount||0),0);
   const outstanding=debit-credit;
 
-  if(!window.jspdf || !window.jspdf.jsPDF){
-    seerviToastAlert('PDF engine is not available. Please check your internet connection and try again.');
-    return;
-  }
-
   try{
+    await window.SeerviAssets.ensurePdf();
     const {jsPDF}=window.jspdf;
     const doc=new jsPDF({unit:'mm',format:'a4'});
     const left=15,right=195;
@@ -10400,12 +10421,8 @@ window.crmDownloadQuote=async function(id){
               crmParties.find(p=>p.id===q.partyId) ||
               q.customer || {};
 
-  if(!window.jspdf || !window.jspdf.jsPDF){
-    seerviToastAlert('PDF engine is not available. Please check your internet connection and try again.');
-    return;
-  }
-
   try{
+    await window.SeerviAssets.ensurePdf();
     const {jsPDF}=window.jspdf;
     const doc=new jsPDF({unit:'mm',format:'a4'});
     const W=210,H=297;
@@ -11047,8 +11064,8 @@ function seerviInvoiceAmountInWords(amount){
   return result+' Only';
 }
 
-function seerviGenerateSaleInvoicePDF(invoice,profile){
-  if(!window.jspdf || !window.jspdf.jsPDF)throw new Error('PDF engine is not available.');
+async function seerviGenerateSaleInvoicePDF(invoice,profile){
+  await window.SeerviAssets.ensurePdf();
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({unit:'mm',format:'a4'});
   const W=210,H=297;
@@ -11343,6 +11360,7 @@ function seerviGenerateSaleInvoicePDF(invoice,profile){
     doc.setFont('helvetica','bold');doc.setFontSize(pdfLayout.totalFont);doc.setTextColor(18,22,27);doc.text('Payment QR Code',left+bankW+3,boxTop+5);
     if(profile.upiId){
       doc.setFont('helvetica','normal');doc.setFontSize(6.3);doc.setTextColor(70,78,86);doc.text(seerviInvoiceSafe(profile.upiId).slice(0,32),left+bankW+39,boxTop+5);
+      try{await window.SeerviAssets.ensureQr();}catch(_){ }
       if(window.QRious){try{const qrCanvas=document.createElement('canvas');new QRious({element:qrCanvas,value:'upi://pay?pa='+encodeURIComponent(profile.upiId)+'&pn='+encodeURIComponent(profile.businessName||'Seervi Trading'),size:220,level:'M'});doc.addImage(qrCanvas.toDataURL('image/png'),'PNG',qrCenterX-10,boxTop+6.5,20,20);}catch(qrErr){console.warn('QR generation failed:',qrErr);}}
     }
     const sigCenter=left+bankW+qrW+sigW/2;
@@ -11536,7 +11554,7 @@ window.crmConvertQuoteToInvoice=async function(id){
     // Creation/conversion should use the same sound as invoice edits.
     window.Seervi?.notify?.play('invoice');
     if(typeof seerviLogActivity==='function')await seerviLogActivity('quotation_converted_to_invoice','invoices','Converted quotation '+(q.quoteNo||q.id)+' to Sale Invoice '+invoiceNo,crmUser);
-    seerviGenerateSaleInvoicePDF(invoice,profile);
+    await seerviGenerateSaleInvoicePDF(invoice,profile);
   }catch(e){
     console.error('Invoice conversion failed:',e);
     seerviToastAlert('Could not convert quotation to invoice: '+(e?.message||'Check Firebase rules.'));
@@ -11554,7 +11572,7 @@ window.crmDownloadInvoiceByQuotation=async function(id){
     if(!snap.exists()){seerviToastAlert('Invoice record is missing from Firebase.');return;}
     const invoice={id:snap.id,...snap.data()};
     const profile=invoice.gstProfile || await seerviLoadInvoiceProfile();
-    seerviGenerateSaleInvoicePDF(invoice,profile);
+    await seerviGenerateSaleInvoicePDF(invoice,profile);
   }catch(e){
     console.error('Invoice PDF failed:',e);
     seerviToastAlert('Invoice PDF failed: '+(e?.message||'Check Firebase connection.'));
@@ -11764,7 +11782,7 @@ window.crmDownloadInvoiceById=async function(id){
     if(!snap.exists()){seerviToastAlert('Invoice record is missing from Firebase.');return;}
     const invoice={id:snap.id,...snap.data()};
     const profile=invoice.gstProfile || await seerviLoadInvoiceProfile();
-    seerviGenerateSaleInvoicePDF(invoice,profile);
+    await seerviGenerateSaleInvoicePDF(invoice,profile);
   }catch(e){
     console.error('Invoice PDF failed:',e);
     seerviToastAlert('Invoice PDF failed: '+(e?.message||'Check Firebase connection.'));
@@ -13595,11 +13613,11 @@ function seerviCategoryBulkRenderPreview(){
 }
 
 window.seerviCategoryBulkReadFile=async function(){
+  await window.SeerviAssets.ensureXlsx();
   try{
     seerviItemsAdminGuard();
     const file=$('seerviCategoryBulkFile')?.files?.[0];
     if(!file)throw new Error('Select a Category/Subcategory Excel or CSV file first.');
-    if(typeof XLSX==='undefined')throw new Error('Excel reader is not loaded. Refresh the page and try again.');
 
     const status=$('seerviCategoryBulkFileStatus');
     if(status)status.textContent='Reading category file…';
@@ -13711,7 +13729,8 @@ window.seerviCategoryBulkImport=async function(){
   }
 };
 
-window.seerviCategoryBulkDownloadTemplate=function(){
+window.seerviCategoryBulkDownloadTemplate=async function(){
+  await window.SeerviAssets.ensureXlsx();
   if(typeof XLSX==='undefined'){
     seerviToastAlert('Excel template generator is not loaded. Refresh the page and try again.');
     return;
@@ -13753,7 +13772,7 @@ window.seerviBulkReadFile=async function(){
     seerviItemsAdminGuard();
     const file=$('seerviBulkFile')?.files?.[0];
     if(!file)throw new Error('Select an Excel or CSV file first.');
-    if(typeof XLSX==='undefined')throw new Error('Excel reader is not loaded. Refresh the page and try again.');
+    await window.SeerviAssets.ensureXlsx();
     const status=$('seerviBulkFileStatus');
     if(status)status.textContent='Reading file…';
     const buffer=await file.arrayBuffer();
@@ -13820,7 +13839,8 @@ window.seerviBulkImport=async function(){
   }
 };
 
-window.seerviBulkDownloadTemplate=function(){
+window.seerviBulkDownloadTemplate=async function(){
+  await window.SeerviAssets.ensureXlsx();
   if(typeof XLSX==='undefined'){
     seerviToastAlert('Excel template generator is not loaded. Refresh the page and try again.');
     return;
