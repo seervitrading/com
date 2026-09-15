@@ -15317,7 +15317,7 @@ window.seerviPdfLayoutSection=function(section){
   });
 };
 window.seerviSettingsSection=function(section){
-  const map={homepage:'adminSettingsSectionHomepage',catalogue:'adminSettingsSectionCatalogue',customer:'adminSettingsSectionCustomer',notifications:'adminSettingsSectionNotifications',pdf:'adminSettingsSectionPdf',advanced:'adminSettingsSectionAdvanced'};
+  const map={homepage:'adminSettingsSectionHomepage',product:'adminSettingsSectionProduct',catalogue:'adminSettingsSectionCatalogue',customer:'adminSettingsSectionCustomer',notifications:'adminSettingsSectionNotifications',pdf:'adminSettingsSectionPdf',advanced:'adminSettingsSectionAdvanced'};
   Object.entries(map).forEach(([key,id])=>{const el=document.getElementById(id);if(el)el.hidden=key!==section;});
   document.querySelectorAll('.admin-settings-subnav button[data-settings-section]').forEach(btn=>{const active=btn.dataset.settingsSection===section;btn.classList.toggle('active',active);btn.setAttribute('aria-selected',active?'true':'false');});
   if(section==='pdf')seerviPdfLayoutSection('quotation');
