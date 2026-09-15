@@ -12658,7 +12658,17 @@ function seerviCatalogueQueueThumbnails(selector='.seervi-home-catalogue-preview
 function seerviRenderCataloguePanelThumbnails(){
   if(seerviCataloguePanelThumbsReady)return;
   seerviCataloguePanelThumbsReady=true;
-  seerviCatalogueQueueThumbnails('.seervi-catalogue-preview',false);
+  const run=()=>{
+    document.querySelectorAll('.seervi-catalogue-preview').forEach((el,index)=>{
+      const item=seerviPublicCatalogues[index];
+      if(item?.url&&el.id)seerviRenderPdfThumbnail(el.id,seerviCatalogueResolveUrl(item.url));
+    });
+  };
+  if(document.getElementById('seerviCataloguePanel')?.classList.contains('show')){
+    requestAnimationFrame(()=>requestAnimationFrame(run));
+  }else{
+    setTimeout(run,0);
+  }
 }
 function seerviCatalogueRenderPublic(){
   seerviCatalogueBuildCards('seerviCatalogueList',false);
