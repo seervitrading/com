@@ -5170,11 +5170,11 @@ function aiReply(q){
 
   if(isContact){
     return lang==='hinglish'||lang==='hi'
-      ?'Bilkul bhai. Seervi Trading contact: '+seerviContactDisplay()+' Email: '+seerviSiteSettings.branding.email+'. Address: Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.'
+      ?'Bilkul bhai. Seervi Trading contact: '+seerviContactDisplay()+' Email: '+seerviSiteSettings.branding.email+'. Address: '+(seerviSiteSettings.homepage?.contactAddress||seerviSiteSettings.branding?.contactAddress||'Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072, India')+'.'
       :lang==='kn'
-      ?'Seervi Trading contact: '+seerviContactDisplay()+', Email '+seerviSiteSettings.branding.email+'. Address: Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.'
+      ?'Seervi Trading contact: '+seerviContactDisplay()+', Email '+seerviSiteSettings.branding.email+'. Address: '+(seerviSiteSettings.homepage?.contactAddress||seerviSiteSettings.branding?.contactAddress||'Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072, India')+'.'
       :lang==='ta'
-      ?'Seervi Trading contact: '+seerviContactDisplay()+', Email '+seerviSiteSettings.branding.email+'. Address: Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.'
+      ?'Seervi Trading contact: '+seerviContactDisplay()+', Email '+seerviSiteSettings.branding.email+'. Address: '+(seerviSiteSettings.homepage?.contactAddress||seerviSiteSettings.branding?.contactAddress||'Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072, India')+'.'
       :`Seervi Trading: ${seerviContactDisplay()} | Email ${seerviSiteSettings.branding.email} | Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072.`;
   }
 
@@ -5258,7 +5258,7 @@ function aiReply(q){
     return null;
   }
 
-  const asksProduct=/(product|products|item|items|model|profile|blade|cutting|mount|stand|auger|stock|available|size|material|spec|specification|aluminium|aluminum|screw|ladder|steel|iron|curtain|rod|tv|chair|table|kya|kaunsa|chahiye|dikhao|show|find|search|need|want)/i.test(x);
+  const asksProduct=/(product|products|item|items|model|profile|blade|cutting|mount|stand|auger|stock|available|size|material|spec|specification|aluminium|aluminum|screw|ladder|steel|iron|curtain|rod|tv|chair|table|catalogue|catalog|kya|kaunsa|chahiye|dikhao|show|find|search|need|want)/i.test(x);
 
   if(asksProduct){
     return lang==='hinglish'||lang==='hi'
@@ -5288,17 +5288,27 @@ async function sendAIMessage(e){
   addAIMessage('user',q);
   if(input){input.value='';input.focus({preventScroll:true});}
   const typing=document.getElementById('aiTyping');if(typing)typing.classList.add('show');
-  try{
-    if(typeof window.seerviEnsurePublicCatalogue==='function')await window.seerviEnsurePublicCatalogue();
-  }catch(e){
-    console.warn('AI catalogue readiness:',e);
+
+  /* Website-support questions must never wait for the product catalogue.
+     This keeps Contact/Login/Cart/Quote replies instant even when Firebase
+     product data is slow or temporarily unavailable. Only product/category
+     questions trigger the full live catalogue read. */
+  const l=q.toLowerCase();
+  const needsCatalogue=/\b(product|products|item|items|model|profile|blade|cutting|mount|stand|auger|stock|available|size|material|spec|specification|aluminium|aluminum|screw|ladder|steel|iron|curtain|rod|tv|chair|table|catalogue|catalog|kya|kaunsa|chahiye|dikhao|show|find|search|need|want)\b/i.test(q);
+  if(needsCatalogue){
+    try{
+      if(typeof window.seerviEnsurePublicCatalogue==='function')await window.seerviEnsurePublicCatalogue();
+    }catch(err){
+      console.warn('AI catalogue readiness:',err);
+    }
   }
-  await new Promise(r=>setTimeout(r,180));
+
+  await new Promise(r=>setTimeout(r,120));
   if(typing)typing.classList.remove('show');
   const before=document.getElementById('supportChat')?.children.length||0;
   const reply=aiReply(q);if(reply)addAIMessage('bot',reply);
   if((document.getElementById('supportChat')?.children.length||0)===before)
-    addAIMessage('bot','I’m here to help. Try a specific category, product name or model code.');
+    addAIMessage('bot','I’m here to help. Try a specific category, product name, model code, or ask about Contact, Cart, Login or Quotation.');
 }
 
 function aiQuick(q){
