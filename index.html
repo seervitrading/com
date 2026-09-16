@@ -3562,6 +3562,7 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
 </div>
 <div class="admin-settings-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
 <button class="crm-secondary small" onclick="seerviNewCatalogueCategory()" type="button">+ NEW CATEGORY</button>
+<button class="crm-secondary small" onclick="seerviEditSelectedCatalogueCategory()" type="button">✎ EDIT CATEGORY</button>
 <span class="admin-settings-help" style="align-self:center;margin:0">Select a category for this PDF. It will stay under the same category after saving.</span>
 </div>
 <div class="admin-settings-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
@@ -13537,6 +13538,37 @@ window.seerviNewCatalogueCategory=function(){
   const value=seerviCatalogueCleanCategory(window.prompt('Enter new catalogue category:','Electrical'));
   if(!value)return;
   seerviCatalogueRefreshCategorySelect(value);
+};
+
+window.seerviEditSelectedCatalogueCategory=async function(){
+  try{seerviRequireSettingsAdmin();}catch(e){return;}
+  const select=document.getElementById('settingCatalogueCategory');
+  const oldCategory=seerviCatalogueCleanCategory(select?.value||'General');
+  if(!oldCategory)return;
+  if(oldCategory==='General'){seerviToastAlert('General is the default category. Select another category to rename it.');return;}
+  const categories=seerviCatalogueAdminCategories();
+  if(!categories.includes(oldCategory)){seerviToastAlert('Category not found.');return;}
+  const next=seerviCatalogueCleanCategory(window.prompt(`Rename catalogue category "${oldCategory}" to:`,oldCategory));
+  if(!next || next===oldCategory)return;
+  if(categories.includes(next)){seerviToastAlert(`Category "${next}" already exists. Choose a different name.`);return;}
+  const affected=seerviAdminCatalogues.filter(x=>seerviCatalogueCleanCategory(x.category)===oldCategory);
+  if(!affected.length){seerviToastAlert('No catalogues are saved under this category yet.');return;}
+  const status=document.getElementById('seerviCataloguesStatus');
+  try{
+    if(status)status.textContent=`Renaming category to ${next}…`;
+    await Promise.all(affected.map(item=>updateDoc(doc(db,SEERVI_CATALOGUES_COLLECTION,item.id),{category:next,updatedAt:serverTimestamp()})));
+    seerviAdminCatalogues=seerviAdminCatalogues.map(item=>seerviCatalogueCleanCategory(item.category)===oldCategory?{...item,category:next}:item);
+    seerviCatalogueRefreshCategorySelect(next);
+    seerviCatalogueRenderAdmin();
+    seerviPublicCatalogues=[];
+    seerviCatalogueCacheClear();
+    seerviInvalidateCache('public:catalogues:active:500');
+    if(typeof window.seerviLoadPublicCatalogues==='function')window.seerviLoadPublicCatalogues(true);
+    if(status)status.textContent=`Category renamed to "${next}" successfully.`;
+  }catch(error){
+    console.error('Catalogue category rename failed:',error);
+    if(status)status.textContent='Category rename failed: '+(error?.message||'Check Firestore Security Rules.');
+  }
 };
 window.seerviCatalogueFilterCategory=function(value){seerviCatalogueSelectedCategory=seerviCatalogueCleanCategory(value==='all'?'all':value);seerviCatalogueRenderPublic();};
 function seerviCatalogueRefreshPublicCategoryFilter(){
