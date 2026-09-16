@@ -5805,6 +5805,7 @@ window.seerviUpdateItem=async function(itemId,input={}){
   await updateDoc(doc(db,SEERVI_ITEMS_COLLECTION,id),payload);
   seerviInvalidateCache('items:');
   seerviInvalidateCache('public:items:');
+  seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CACHE_PREFIX);seerviBrowserCacheClear(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
   return {id,...payload};
 };
 
@@ -5815,6 +5816,7 @@ window.seerviDeleteItem=async function(itemId){
   await deleteDoc(doc(db,SEERVI_ITEMS_COLLECTION,id));
   seerviInvalidateCache('items:');
   seerviInvalidateCache('public:items:');
+  seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CACHE_PREFIX);seerviBrowserCacheClear(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
   return true;
 };
 
@@ -5868,6 +5870,7 @@ window.seerviUpdateItemCategory=async function(categoryId,input={}){
   await updateDoc(doc(db,SEERVI_ITEM_CATEGORIES_COLLECTION,id),payload);
   seerviInvalidateCache('itemCategories:');
   seerviInvalidateCache('public:itemCategories:');
+  seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CATEGORIES_KEY);seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CACHE_PREFIX);
   return {id,...payload};
 };
 
@@ -5878,6 +5881,7 @@ window.seerviDeleteItemCategory=async function(categoryId){
   await deleteDoc(doc(db,SEERVI_ITEM_CATEGORIES_COLLECTION,id));
   seerviInvalidateCache('itemCategories:');
   seerviInvalidateCache('public:itemCategories:');
+  seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CATEGORIES_KEY);seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CACHE_PREFIX);
   return true;
 };
 /* ===== END FIREBASE ITEMS DATA LAYER / STEP 2 ===== */
@@ -12353,6 +12357,19 @@ window.seerviDeleteCategoryConfirm=async function(categoryId){
 /* ===== END SEERVI CATEGORY MANAGEMENT / STEP 6 ===== */
 
 /* ===== SEERVI PUBLIC FIREBASE CATALOGUE / STEP 7 ===== */
+/* Persistent browser cache: Firebase remains the source of truth, while fresh
+   cached data is used immediately after refresh to keep the public UI smooth. */
+const SEERVI_BROWSER_SETTINGS_CACHE_KEY='seervi:site-settings:v2';
+const SEERVI_BROWSER_PRODUCT_CATEGORIES_KEY='seervi:product-categories:v2';
+const SEERVI_BROWSER_PRODUCT_CACHE_PREFIX='seervi:products:category:v2:';
+const SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY='seervi:products:all:v2';
+const SEERVI_BROWSER_CACHE_TTL=86400000;
+function seerviBrowserCacheRead(key){
+  try{const raw=localStorage.getItem(key);if(!raw)return null;const data=JSON.parse(raw);return data&&typeof data==='object'?{time:Number(data.time)||0,value:data.value}:null;}catch(_){return null;}
+}
+function seerviBrowserCacheWrite(key,value){try{localStorage.setItem(key,JSON.stringify({time:Date.now(),value}));return true;}catch(_){return false;}}
+function seerviBrowserCacheClear(prefix){try{const keys=[];for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key&&(!prefix||key.startsWith(prefix)))keys.push(key);}keys.forEach(key=>localStorage.removeItem(key));}catch(_){}}
+function seerviBrowserProductCacheKey(categoryId){return SEERVI_BROWSER_PRODUCT_CACHE_PREFIX+String(categoryId||'').trim();}
 let seerviPublicItems=[];
 let seerviPublicCategories=[];
 let seerviPublicSelectedCategory='all';
@@ -12381,85 +12398,56 @@ function seerviPublicMergeItems(items){
 }
 
 async function seerviPublicLoadCatalogue(){
-  if(window.SeerviGlobalSettingsReady){try{await window.SeerviGlobalSettingsReady;}catch(_){}}
+  if(window.SeerviGlobalSettingsReady){try{await window.SeerviGlobalSettingsReady;}catch(_){} }
   if(window.SeerviSiteSettings?.product?.show!==true)return;
   const status=$('seerviPublicCatalogueStatus');
-  try{
-    if(status)status.textContent='Loading categories…';
-
-    const catSnap=await seerviCachedRead(
-      'public:itemCategories:500',
-      ()=>getDocs(query(
-        collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),
-        where('active','==',true),
-        limit(500)
-      )),
-      60000
-    );
-
-    seerviPublicCategories=catSnap.docs.map(d=>({id:d.id,...d.data()}))
-      .sort((a,b)=>Number(a.sortOrder||0)-Number(b.sortOrder||0)||String(a.name||'').localeCompare(String(b.name||'')));
-
-    // No public item documents are read during bootstrap.
-    seerviPublicItems=[];
-    seerviPublicAllItemsLoaded=false;
-
+  const cached=seerviBrowserCacheRead(SEERVI_BROWSER_PRODUCT_CATEGORIES_KEY);
+  if(Array.isArray(cached?.value?.categories)){
+    seerviPublicCategories=cached.value.categories;
+    seerviPublicItems=[];seerviPublicAllItemsLoaded=false;
     window.seerviGetPublicCatalogue=()=>({items:seerviPublicItems,categories:seerviPublicCategories});
-
-    seerviPublicRenderCategories();
-    seerviPublicRenderSubcategories();
-    seerviPublicRenderItems();
-
+    seerviPublicRenderCategories();seerviPublicRenderSubcategories();seerviPublicRenderItems();
+    if(status)status.textContent=`${seerviPublicCategories.filter(x=>x.type==='category').length} categor${seerviPublicCategories.filter(x=>x.type==='category').length===1?'y':'ies'} available.`;
+    if(Date.now()-cached.time<SEERVI_BROWSER_CACHE_TTL)return;
+  }else if(status)status.textContent='Loading categories…';
+  try{
+    const catSnap=await seerviCachedRead('public:itemCategories:500',()=>getDocs(query(collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),where('active','==',true),limit(500))),60000);
+    seerviPublicCategories=catSnap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>Number(a.sortOrder||0)-Number(b.sortOrder||0)||String(a.name||'').localeCompare(String(b.name||'')));
+    seerviBrowserCacheWrite(SEERVI_BROWSER_PRODUCT_CATEGORIES_KEY,{categories:seerviPublicCategories});
+    seerviPublicItems=[];seerviPublicAllItemsLoaded=false;
+    window.seerviGetPublicCatalogue=()=>({items:seerviPublicItems,categories:seerviPublicCategories});
+    seerviPublicRenderCategories();seerviPublicRenderSubcategories();seerviPublicRenderItems();
     if(status)status.textContent=`${seerviPublicCategories.filter(x=>x.type==='category').length} categor${seerviPublicCategories.filter(x=>x.type==='category').length===1?'y':'ies'} available.`;
   }catch(e){
     console.error('Seervi public catalogue:',e);
-    if(status){
-      status.textContent='Products are temporarily unavailable.';
-      status.style.color='#f28b8b';
-    }
-    throw e;
+    if(status){status.textContent=Array.isArray(cached?.value?.categories)?'Using saved product categories.':'Products are temporarily unavailable.';status.style.color=Array.isArray(cached?.value?.categories)?'':'#f28b8b';}
+    if(!Array.isArray(cached?.value?.categories))throw e;
   }
 }
-
 async function seerviPublicLoadCategoryItems(categoryId){
   if(window.SeerviSiteSettings?.product?.show!==true)return [];
-  const id=String(categoryId||'').trim();
-  if(!id)return [];
+  const id=String(categoryId||'').trim();if(!id)return [];
   if(seerviPublicCategoryItemCache.has(id))return seerviPublicCategoryItemCache.get(id);
   if(seerviPublicCategoryLoadPromises.has(id))return seerviPublicCategoryLoadPromises.get(id);
-
   const status=$('seerviPublicCatalogueStatus');
-  const promise=(async()=>{
-    if(status)status.textContent='Loading category products…';
-    try{
-      // Query by category only. Filtering active items client-side avoids a
-      // composite Firestore index requirement while still keeping the read
-      // scoped to the selected category.
-      const itemSnap=await seerviCachedRead(
-        `public:items:category:${id}:500`,
-        ()=>getDocs(query(
-          collection(db,SEERVI_ITEMS_COLLECTION),
-          where('categoryId','==',id),
-          limit(500)
-        )),
-        60000
-      );
-      const items=itemSnap.docs
-        .map(d=>({id:d.id,...d.data()}))
-        .filter(item=>item.active!==false)
-        .sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
-
-      seerviPublicCategoryItemCache.set(id,items);
-      seerviPublicMergeItems(items);
-      return items;
-    }finally{
-      seerviPublicCategoryLoadPromises.delete(id);
-    }
-  })();
+  const cacheKey=seerviBrowserProductCacheKey(id);const cached=seerviBrowserCacheRead(cacheKey);
+  if(Array.isArray(cached?.value?.items)){
+    const cachedItems=cached.value.items.filter(item=>item&&item.active!==false);
+    seerviPublicCategoryItemCache.set(id,cachedItems);seerviPublicMergeItems(cachedItems);seerviPublicRenderItems();
+    if(status)status.textContent=`${cachedItems.length} saved product${cachedItems.length===1?'':'s'} loaded.`;
+    if(Date.now()-cached.time<SEERVI_BROWSER_CACHE_TTL)return cachedItems;
+    /* Stale-while-revalidate is handled by the shared promise below; the cached
+       products stay rendered while Firebase refreshes. */
+  }else if(status)status.textContent='Loading category products…';
+  const promise=(async()=>{try{
+    const itemSnap=await seerviCachedRead(`public:items:category:${id}:500`,()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('categoryId','==',id),limit(500))),60000);
+    const items=itemSnap.docs.map(d=>({id:d.id,...d.data()})).filter(item=>item.active!==false).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
+    seerviPublicCategoryItemCache.set(id,items);seerviPublicMergeItems(items);seerviBrowserCacheWrite(cacheKey,{items});return items;
+  }finally{seerviPublicCategoryLoadPromises.delete(id);}})();
   seerviPublicCategoryLoadPromises.set(id,promise);
+  if(Array.isArray(cached?.value?.items) && Date.now()-Number(cached.time||0)>=SEERVI_BROWSER_CACHE_TTL)return cached.value.items.filter(item=>item&&item.active!==false);
   return promise;
 }
-
 async function seerviPublicLoadCategoryInventory(categoryId){
   if(window.SeerviSiteSettings?.product?.show!==true)return;
   const id=String(categoryId||'').trim();
@@ -12486,20 +12474,18 @@ async function seerviPublicLoadAllItemsForAI(){
   if(window.SeerviSiteSettings?.product?.show!==true)return [];
   if(seerviPublicAllItemsLoaded)return seerviPublicItems;
   if(seerviPublicAllItemsLoadPromise)return seerviPublicAllItemsLoadPromise;
-  seerviPublicAllItemsLoadPromise=(async()=>{
-    const snap=await seerviCachedRead(
-      'public:items:all:1000',
-      ()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000))),
-      60000
-    );
-    const items=snap.docs.map(d=>({id:d.id,...d.data()}));
-    seerviPublicMergeItems(items);
+  const cached=seerviBrowserCacheRead(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
+  if(Array.isArray(cached?.value?.items)){
+    seerviPublicMergeItems(cached.value.items.filter(item=>item&&item.active!==false));
     seerviPublicAllItemsLoaded=true;
-    return seerviPublicItems;
+    if(Date.now()-cached.time<SEERVI_BROWSER_CACHE_TTL)return seerviPublicItems;
+  }
+  seerviPublicAllItemsLoadPromise=(async()=>{
+    const snap=await seerviCachedRead('public:items:all:1000',()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000))),60000);
+    const items=snap.docs.map(d=>({id:d.id,...d.data()}));seerviPublicMergeItems(items);seerviBrowserCacheWrite(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY,{items});seerviPublicAllItemsLoaded=true;return seerviPublicItems;
   })().finally(()=>{seerviPublicAllItemsLoadPromise=null;});
   return seerviPublicAllItemsLoadPromise;
 }
-
 function seerviPublicCategoryName(id){
   return seerviPublicCategories.find(x=>x.id===id)?.name||'';
 }
@@ -13425,13 +13411,23 @@ window.SeerviRefreshMaintenance=function(){
 };
 
 window.SeerviGlobalSettingsReady=(async function(){
+  const cached=seerviBrowserCacheRead(SEERVI_BROWSER_SETTINGS_CACHE_KEY);
+  if(cached?.value){try{seerviApplySiteSettings(cached.value);}catch(error){console.warn('[Seervi] Saved settings cache invalid.',error);}}
+  const hasCachedSettings=!!cached?.value;
+  if(hasCachedSettings && Date.now()-cached.time<SEERVI_BROWSER_CACHE_TTL)return seerviSiteSettings;
+  const refresh=async()=>{try{
+    const snap=await getDoc(doc(db,'siteSettings','global'));
+    const fresh=snap.exists()?snap.data():SEERVI_SITE_SETTINGS_DEFAULTS;
+    seerviApplySiteSettings(fresh);seerviBrowserCacheWrite(SEERVI_BROWSER_SETTINGS_CACHE_KEY,seerviSiteSettings);
+  }catch(error){console.warn('[Seervi] Global settings refresh failed; keeping saved/default settings.',error);}};
+  if(hasCachedSettings){refresh();return seerviSiteSettings;}
   try{
     const snap=await getDoc(doc(db,'siteSettings','global'));
-    if(snap.exists()) seerviApplySiteSettings(snap.data());
-    else seerviApplySiteSettings(SEERVI_SITE_SETTINGS_DEFAULTS);
+    const fresh=snap.exists()?snap.data():SEERVI_SITE_SETTINGS_DEFAULTS;
+    seerviApplySiteSettings(fresh);seerviBrowserCacheWrite(SEERVI_BROWSER_SETTINGS_CACHE_KEY,seerviSiteSettings);
   }catch(error){
-    console.warn('[Seervi] Global settings read failed; using defaults.',error);
-    seerviApplySiteSettings(SEERVI_SITE_SETTINGS_DEFAULTS);
+    console.warn('[Seervi] Global settings read failed; using saved/default settings.',error);
+    if(!cached?.value)seerviApplySiteSettings(SEERVI_SITE_SETTINGS_DEFAULTS);
   }
   return seerviSiteSettings;
 })();
@@ -13812,6 +13808,7 @@ window.seerviSaveAdminSettings=async function(){
   try{
     await setDoc(doc(db,'siteSettings','global'),clean);
     seerviApplySiteSettings(clean);
+    seerviBrowserCacheWrite(SEERVI_BROWSER_SETTINGS_CACHE_KEY,seerviSiteSettings);
     if(status)status.textContent='Saved successfully. All visitors will use these settings.';
     window.Seervi?.notify?.play('quotation');
   }catch(error){
@@ -13830,6 +13827,7 @@ window.seerviSettingsLoadFresh=async function(){
   try{
     const snap=await getDoc(doc(db,'siteSettings','global'));
     seerviApplySiteSettings(snap.exists()?snap.data():SEERVI_SITE_SETTINGS_DEFAULTS);
+    seerviBrowserCacheWrite(SEERVI_BROWSER_SETTINGS_CACHE_KEY,seerviSiteSettings);
     seerviSettingsFillForm();
   }catch(error){if(status)status.textContent='Load failed: '+(error?.message||'Check connection.');}
 };
