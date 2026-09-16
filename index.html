@@ -6470,6 +6470,15 @@ window.customerSignIn=async function(){
     crmUser=null;
 
     customerUser=(await signInWithEmailAndPassword(publicSignupAuth,email,pass)).user;
+    // Firebase authentication has succeeded at this point. Update the public
+    // navigation immediately instead of waiting for the customer party/order
+    // data read below. This prevents My Dashboard from appearing only after a
+    // manual page refresh on slower mobile connections.
+    updateAuthNav();
+    closeCustomerLogin();
+    closePartySignup?.();
+    closeCRM?.();
+    goHomeAfterAuth();
     await customerLoadDashboard();
 
     if(customerParty?.accountDisabled){
