@@ -6797,14 +6797,21 @@ function updateAuthNav(){
   hideGlobalActionLoader();
   const loggedIn=!!(crmUser||customerUser);
   // Keep the public flow strict: before login show Login + Sign Up; after login show only My Dashboard.
-  const loginEl=$('bwNavLogin'), signupEl=$('bwNavSignup'), dashboardEl=$('bwNavDashboard');
-  const settingsForNav=window.SeerviSiteSettings||{};
-  if(loginEl) loginEl.hidden=loggedIn || settingsForNav.customer?.loginEnabled===false;
-  if(signupEl) signupEl.hidden=loggedIn || settingsForNav.customer?.signupEnabled===false;
-  if(dashboardEl){ dashboardEl.hidden=!loggedIn; dashboardEl.textContent='My Dashboard'; }
-  ['mobileNavLogin'].forEach(id=>{const el=$(id);if(el)el.hidden=loggedIn || settingsForNav.customer?.loginEnabled===false;});
-  ['mobileNavSignup'].forEach(id=>{const el=$(id);if(el)el.hidden=loggedIn || settingsForNav.customer?.signupEnabled===false;});
-  ['mobileNavDashboard'].forEach(id=>{const el=$(id);if(el){el.hidden=!loggedIn;el.textContent='My Dashboard';}});
+  const apply=()=>{
+    const loginEl=$('bwNavLogin'), signupEl=$('bwNavSignup'), dashboardEl=$('bwNavDashboard');
+    const settingsForNav=window.SeerviSiteSettings||{};
+    if(loginEl) loginEl.hidden=loggedIn || settingsForNav.customer?.loginEnabled===false;
+    if(signupEl) signupEl.hidden=loggedIn || settingsForNav.customer?.signupEnabled===false;
+    if(dashboardEl){ dashboardEl.hidden=!loggedIn; dashboardEl.textContent='My Dashboard'; }
+    ['mobileNavLogin'].forEach(id=>{const el=$(id);if(el)el.hidden=loggedIn || settingsForNav.customer?.loginEnabled===false;});
+    ['mobileNavSignup'].forEach(id=>{const el=$(id);if(el)el.hidden=loggedIn || settingsForNav.customer?.signupEnabled===false;});
+    ['mobileNavDashboard'].forEach(id=>{const el=$(id);if(el){el.hidden=!loggedIn;el.textContent='My Dashboard';}});
+  };
+  // Firebase auth can settle in the same frame as the Home navigation. Apply
+  // immediately and once again after the DOM/layout settles so My Dashboard
+  // never depends on a manual refresh to become visible.
+  apply();
+  if(loggedIn) requestAnimationFrame(()=>setTimeout(apply,0));
   const identity=$('bwAccountIdentity');
   if(identity){
     const email=(crmUser?.email||customerUser?.email||'seervitrading@gmail.com').trim();
