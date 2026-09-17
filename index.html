@@ -5821,7 +5821,7 @@ window.seerviCreateItem=async function(input={}){
   const ref=await addDoc(collection(db,SEERVI_ITEMS_COLLECTION),payload);
   seerviInvalidateCache('items:');
   seerviInvalidateCache('public:items:');
-  /* New items must invalidate the persistent public browser cache too. */
+  /* A newly-created item must not remain hidden behind the old browser product cache. */
   if(typeof seerviBrowserCacheClear==='function'){
     seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CACHE_PREFIX);
     seerviBrowserCacheClear(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
@@ -5899,13 +5899,6 @@ window.seerviCreateItemCategory=async function(input={}){
   const ref=await addDoc(collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),payload);
   seerviInvalidateCache('itemCategories:');
   seerviInvalidateCache('public:itemCategories:');
-  /* New categories must appear on the public Home immediately, even when the
-     previous category list was still inside the 24-hour browser cache. */
-  if(typeof seerviBrowserCacheClear==='function'){
-    seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CATEGORIES_KEY);
-    seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CACHE_PREFIX);
-    seerviBrowserCacheClear(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
-  }
   return {id:ref.id,...payload};
 };
 
@@ -12443,10 +12436,9 @@ function seerviPublicMillis(v){
   return Number(v)||0;
 }
 
-// Public catalogue is now category-first and lazy-loaded.
-// Initial page load reads ONLY active categories. Product documents are fetched
-// only when a visitor opens a category, so the browser never receives the full
-// catalogue just to display the homepage.
+// Public catalogue keeps category controls category-first, while the homepage
+// also loads the active product list once and persists it in the browser cache.
+// Category-specific inventory remains lazy-loaded.
 const seerviPublicCategoryItemCache=new Map();
 const seerviPublicCategoryLoadPromises=new Map();
 let seerviPublicAllItemsLoaded=false;
@@ -12469,6 +12461,10 @@ async function seerviPublicLoadCatalogue(){
     window.seerviGetPublicCatalogue=()=>({items:seerviPublicItems,categories:seerviPublicCategories});
     seerviPublicRenderCategories();seerviPublicRenderSubcategories();seerviPublicRenderItems();
     if(status)status.textContent=`${seerviPublicCategories.filter(x=>x.type==='category').length} categor${seerviPublicCategories.filter(x=>x.type==='category').length===1?'y':'ies'} available.`;
+    /* Home Products must have data even while the category-first controls remain in place.
+       Use the same browser cache as AI, then refresh from Firebase when stale/missing. */
+    await seerviPublicLoadAllItemsForAI();
+    seerviPublicRenderItems();
     if(Date.now()-cached.time<SEERVI_BROWSER_CACHE_TTL)return;
   }else if(status)status.textContent='Loading categories…';
   try{
@@ -12478,6 +12474,9 @@ async function seerviPublicLoadCatalogue(){
     seerviPublicItems=[];seerviPublicAllItemsLoaded=false;
     window.seerviGetPublicCatalogue=()=>({items:seerviPublicItems,categories:seerviPublicCategories});
     seerviPublicRenderCategories();seerviPublicRenderSubcategories();seerviPublicRenderItems();
+    /* Load the active products once for the homepage. Subsequent refreshes use the persistent browser cache. */
+    await seerviPublicLoadAllItemsForAI();
+    seerviPublicRenderItems();
     if(status)status.textContent=`${seerviPublicCategories.filter(x=>x.type==='category').length} categor${seerviPublicCategories.filter(x=>x.type==='category').length===1?'y':'ies'} available.`;
   }catch(e){
     console.error('Seervi public catalogue:',e);
