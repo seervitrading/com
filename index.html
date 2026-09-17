@@ -5821,6 +5821,11 @@ window.seerviCreateItem=async function(input={}){
   const ref=await addDoc(collection(db,SEERVI_ITEMS_COLLECTION),payload);
   seerviInvalidateCache('items:');
   seerviInvalidateCache('public:items:');
+  /* New items must invalidate the persistent public browser cache too. */
+  if(typeof seerviBrowserCacheClear==='function'){
+    seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CACHE_PREFIX);
+    seerviBrowserCacheClear(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
+  }
   return {id:ref.id,...payload};
 };
 
@@ -5894,6 +5899,13 @@ window.seerviCreateItemCategory=async function(input={}){
   const ref=await addDoc(collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),payload);
   seerviInvalidateCache('itemCategories:');
   seerviInvalidateCache('public:itemCategories:');
+  /* New categories must appear on the public Home immediately, even when the
+     previous category list was still inside the 24-hour browser cache. */
+  if(typeof seerviBrowserCacheClear==='function'){
+    seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CATEGORIES_KEY);
+    seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CACHE_PREFIX);
+    seerviBrowserCacheClear(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
+  }
   return {id:ref.id,...payload};
 };
 
