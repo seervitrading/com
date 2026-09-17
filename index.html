@@ -12531,6 +12531,10 @@ async function seerviPublicLoadCategoryInventory(categoryId){
 }
 
 async function seerviPublicLoadAllItemsForAI(){
+  /* Public products must never depend on a fragile filtered query alone.
+     Read the active set first; if that query is rejected for any reason,
+     fall back to the normal items read and filter active records client-side. */
+  if(window.SeerviGlobalSettingsReady){try{await window.SeerviGlobalSettingsReady;}catch(_){} }
   if(window.SeerviSiteSettings?.product?.show!==true)return [];
   if(seerviPublicAllItemsLoaded)return seerviPublicItems;
   if(seerviPublicAllItemsLoadPromise)return seerviPublicAllItemsLoadPromise;
@@ -12541,8 +12545,19 @@ async function seerviPublicLoadAllItemsForAI(){
     if(Date.now()-cached.time<SEERVI_BROWSER_CACHE_TTL)return seerviPublicItems;
   }
   seerviPublicAllItemsLoadPromise=(async()=>{
-    const snap=await seerviCachedRead('public:items:all:1000',()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000))),60000);
-    const items=snap.docs.map(d=>({id:d.id,...d.data()}));seerviPublicMergeItems(items);seerviBrowserCacheWrite(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY,{items});seerviPublicAllItemsLoaded=true;return seerviPublicItems;
+    let items=[];
+    try{
+      const snap=await seerviCachedRead('public:items:all:1000',()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000))),60000);
+      items=snap.docs.map(d=>({id:d.id,...d.data()}));
+    }catch(primaryError){
+      console.warn('Seervi public active-item query failed; using fallback items read:',primaryError?.message||primaryError);
+      const snap=await getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),limit(1000)));
+      items=snap.docs.map(d=>({id:d.id,...d.data()})).filter(item=>item.active!==false);
+    }
+    seerviPublicMergeItems(items);
+    seerviBrowserCacheWrite(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY,{items});
+    seerviPublicAllItemsLoaded=true;
+    return seerviPublicItems;
   })().finally(()=>{seerviPublicAllItemsLoadPromise=null;});
   return seerviPublicAllItemsLoadPromise;
 }
@@ -13219,22 +13234,39 @@ seerviPublicRenderItems=function(){
    Our Products section even though the Firebase query/rendering code was valid.
 */
 let seerviPublicCatalogueBooted=false;
+let seerviPublicCatalogueBootPromise=null;
 async function seerviBootPublicCatalogue(){
-  if(seerviPublicCatalogueBooted)return;
-  seerviPublicCatalogueBooted=true;
-  try{
-    await seerviPublicLoadCatalogue();
-  }catch(e){
-    // seerviPublicLoadCatalogue already updates the visible status and logs the
-    // original Firebase error. Keep boot failure isolated from the rest of CRM.
-    console.error('Seervi public catalogue bootstrap failed:',e);
-  }
+  if(seerviPublicCatalogueBootPromise)return seerviPublicCatalogueBootPromise;
+  seerviPublicCatalogueBootPromise=(async()=>{
+    try{
+      /* Wait for global settings before deciding whether Products are enabled.
+         This prevents the initial default/settings race from permanently
+         skipping the public product loader. */
+      if(window.SeerviGlobalSettingsReady){try{await window.SeerviGlobalSettingsReady;}catch(_){} }
+      if(window.SeerviSiteSettings?.product?.show!==true){
+        seerviPublicCatalogueBooted=false;
+        return;
+      }
+      await seerviPublicLoadCatalogue();
+      seerviPublicCatalogueBooted=true;
+    }catch(e){
+      seerviPublicCatalogueBooted=false;
+      console.error('Seervi public catalogue bootstrap failed:',e);
+    }finally{
+      seerviPublicCatalogueBootPromise=null;
+    }
+  })();
+  return seerviPublicCatalogueBootPromise;
+}
+function seerviRetryPublicCatalogueAfterSettings(){
+  if(window.SeerviSiteSettings?.product?.show===true && !seerviPublicCatalogueBooted)seerviBootPublicCatalogue();
 }
 if(document.readyState==='loading'){
   document.addEventListener('DOMContentLoaded',seerviBootPublicCatalogue,{once:true});
 }else{
   seerviBootPublicCatalogue();
 }
+window.addEventListener('seervi:global-settings-ready',seerviRetryPublicCatalogueAfterSettings);
 
 /* AI/catalogue bridge: wait for the same live Firebase catalogue used by the
    public Products page before performing any AI product/category search. */
