@@ -2179,7 +2179,8 @@ nav > .wrap > .nav-dashboard-slot .bw-nav-dashboard {
   body.mobile-products-view #homeCatalogues{display:none!important}
   body:not(.mobile-products-view) #tvMounts{display:none!important}
   body.mobile-products-view #tvMounts{display:block!important}
-}body.seervi-non-home-view nav{display:none !important;}.cart-close.cart-back-btn,
+}body.seervi-non-home-view nav{display:none !important;}
+@media(max-width:600px){body.seervi-admin-panel-open nav,body.seervi-admin-panel-open .mobile-bottom-bar{display:none !important;}body.seervi-admin-panel-open{padding-top:0 !important;overflow:hidden !important;}}.cart-close.cart-back-btn,
 .admin-universal-back{
   width:96px !important;
   min-width:96px !important;
@@ -14366,6 +14367,9 @@ function seerviShowSaveSuccess(message){
     return cs.display!=='none' && cs.visibility!=='hidden' && cs.opacity!=='0';
   }
   function syncTopbarHomeOnly(){
+    const adminIds=['adminCataloguesModal','adminSettingsModal','adminBackupOptionsModal','gstProfileModal','seerviActivityModal','notificationModal','notificationPostModal','crmModal','seerviItemsModal','seerviInvoiceInputModal','adminNewPartyModal','adminStockModal','crmQuoteViewModal','crmPartyLedgerViewModal','crmDeleteConfirmModal'];
+    const adminOpen=adminIds.some(id=>isOpen(document.getElementById(id)));
+    document.body.classList.toggle('seervi-admin-panel-open',adminOpen);
     const nonHome = document.body.classList.contains('mobile-products-view') || document.body.classList.contains('seervi-category-active') || isOpen(document.getElementById('motherCategoryPanel')) || VIEW_IDS.some(id=>isOpen(document.getElementById(id)));
     document.body.classList.toggle('seervi-non-home-view', nonHome);
   }
