@@ -4485,7 +4485,7 @@ function seerviQuotationItemLabel(item){
 }
 
 function seerviQuotationItemColour(item){
-  const direct=item?.colour??item?.color??item?.selectedColour??item?.selectedColor??item?.variantName??item?.variant;
+  const direct=item?.colourVariant??item?.colour??item?.color??item?.selectedColour??item?.selectedColor??item?.variantName??item?.variant;
   if(Array.isArray(direct)) return direct.map(v=>String(v?.name??v?.label??v??'').trim()).filter(Boolean).join(', ');
   if(direct && typeof direct==='object') return String(direct.name??direct.label??direct.value??'').trim();
   return String(direct??'').trim();
