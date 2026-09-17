@@ -5821,11 +5821,6 @@ window.seerviCreateItem=async function(input={}){
   const ref=await addDoc(collection(db,SEERVI_ITEMS_COLLECTION),payload);
   seerviInvalidateCache('items:');
   seerviInvalidateCache('public:items:');
-  /* A newly-created item must not remain hidden behind the old browser product cache. */
-  if(typeof seerviBrowserCacheClear==='function'){
-    seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CACHE_PREFIX);
-    seerviBrowserCacheClear(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
-  }
   return {id:ref.id,...payload};
 };
 
@@ -12436,9 +12431,10 @@ function seerviPublicMillis(v){
   return Number(v)||0;
 }
 
-// Public catalogue keeps category controls category-first, while the homepage
-// also loads the active product list once and persists it in the browser cache.
-// Category-specific inventory remains lazy-loaded.
+// Public catalogue is now category-first and lazy-loaded.
+// Initial page load reads ONLY active categories. Product documents are fetched
+// only when a visitor opens a category, so the browser never receives the full
+// catalogue just to display the homepage.
 const seerviPublicCategoryItemCache=new Map();
 const seerviPublicCategoryLoadPromises=new Map();
 let seerviPublicAllItemsLoaded=false;
@@ -12461,10 +12457,6 @@ async function seerviPublicLoadCatalogue(){
     window.seerviGetPublicCatalogue=()=>({items:seerviPublicItems,categories:seerviPublicCategories});
     seerviPublicRenderCategories();seerviPublicRenderSubcategories();seerviPublicRenderItems();
     if(status)status.textContent=`${seerviPublicCategories.filter(x=>x.type==='category').length} categor${seerviPublicCategories.filter(x=>x.type==='category').length===1?'y':'ies'} available.`;
-    /* Home Products must have data even while the category-first controls remain in place.
-       Use the same browser cache as AI, then refresh from Firebase when stale/missing. */
-    await seerviPublicLoadAllItemsForAI();
-    seerviPublicRenderItems();
     if(Date.now()-cached.time<SEERVI_BROWSER_CACHE_TTL)return;
   }else if(status)status.textContent='Loading categories…';
   try{
@@ -12474,9 +12466,6 @@ async function seerviPublicLoadCatalogue(){
     seerviPublicItems=[];seerviPublicAllItemsLoaded=false;
     window.seerviGetPublicCatalogue=()=>({items:seerviPublicItems,categories:seerviPublicCategories});
     seerviPublicRenderCategories();seerviPublicRenderSubcategories();seerviPublicRenderItems();
-    /* Load the active products once for the homepage. Subsequent refreshes use the persistent browser cache. */
-    await seerviPublicLoadAllItemsForAI();
-    seerviPublicRenderItems();
     if(status)status.textContent=`${seerviPublicCategories.filter(x=>x.type==='category').length} categor${seerviPublicCategories.filter(x=>x.type==='category').length===1?'y':'ies'} available.`;
   }catch(e){
     console.error('Seervi public catalogue:',e);
@@ -12531,10 +12520,6 @@ async function seerviPublicLoadCategoryInventory(categoryId){
 }
 
 async function seerviPublicLoadAllItemsForAI(){
-  /* Public products must never depend on a fragile filtered query alone.
-     Read the active set first; if that query is rejected for any reason,
-     fall back to the normal items read and filter active records client-side. */
-  if(window.SeerviGlobalSettingsReady){try{await window.SeerviGlobalSettingsReady;}catch(_){} }
   if(window.SeerviSiteSettings?.product?.show!==true)return [];
   if(seerviPublicAllItemsLoaded)return seerviPublicItems;
   if(seerviPublicAllItemsLoadPromise)return seerviPublicAllItemsLoadPromise;
@@ -12545,19 +12530,8 @@ async function seerviPublicLoadAllItemsForAI(){
     if(Date.now()-cached.time<SEERVI_BROWSER_CACHE_TTL)return seerviPublicItems;
   }
   seerviPublicAllItemsLoadPromise=(async()=>{
-    let items=[];
-    try{
-      const snap=await seerviCachedRead('public:items:all:1000',()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000))),60000);
-      items=snap.docs.map(d=>({id:d.id,...d.data()}));
-    }catch(primaryError){
-      console.warn('Seervi public active-item query failed; using fallback items read:',primaryError?.message||primaryError);
-      const snap=await getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),limit(1000)));
-      items=snap.docs.map(d=>({id:d.id,...d.data()})).filter(item=>item.active!==false);
-    }
-    seerviPublicMergeItems(items);
-    seerviBrowserCacheWrite(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY,{items});
-    seerviPublicAllItemsLoaded=true;
-    return seerviPublicItems;
+    const snap=await seerviCachedRead('public:items:all:1000',()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000))),60000);
+    const items=snap.docs.map(d=>({id:d.id,...d.data()}));seerviPublicMergeItems(items);seerviBrowserCacheWrite(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY,{items});seerviPublicAllItemsLoaded=true;return seerviPublicItems;
   })().finally(()=>{seerviPublicAllItemsLoadPromise=null;});
   return seerviPublicAllItemsLoadPromise;
 }
@@ -13234,39 +13208,20 @@ seerviPublicRenderItems=function(){
    Our Products section even though the Firebase query/rendering code was valid.
 */
 let seerviPublicCatalogueBooted=false;
-let seerviPublicCatalogueBootPromise=null;
 async function seerviBootPublicCatalogue(){
-  if(seerviPublicCatalogueBootPromise)return seerviPublicCatalogueBootPromise;
-  seerviPublicCatalogueBootPromise=(async()=>{
-    try{
-      /* Wait for global settings before deciding whether Products are enabled.
-         This prevents the initial default/settings race from permanently
-         skipping the public product loader. */
-      if(window.SeerviGlobalSettingsReady){try{await window.SeerviGlobalSettingsReady;}catch(_){} }
-      if(window.SeerviSiteSettings?.product?.show!==true){
-        seerviPublicCatalogueBooted=false;
-        return;
-      }
-      await seerviPublicLoadCatalogue();
-      seerviPublicCatalogueBooted=true;
-    }catch(e){
-      seerviPublicCatalogueBooted=false;
-      console.error('Seervi public catalogue bootstrap failed:',e);
-    }finally{
-      seerviPublicCatalogueBootPromise=null;
-    }
-  })();
-  return seerviPublicCatalogueBootPromise;
+  if(seerviPublicCatalogueBooted)return;
+  seerviPublicCatalogueBooted=true;
+  try{
+    await seerviPublicLoadCatalogue();
+  }catch(e){
+    // seerviPublicLoadCatalogue already updates the visible status and logs the
+    // original Firebase error. Keep boot failure isolated from the rest of CRM.
+    console.error('Seervi public catalogue bootstrap failed:',e);
+  }
 }
-function seerviRetryPublicCatalogueAfterSettings(){
-  if(window.SeerviSiteSettings?.product?.show===true && !seerviPublicCatalogueBooted)seerviBootPublicCatalogue();
-}
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',seerviBootPublicCatalogue,{once:true});
-}else{
-  seerviBootPublicCatalogue();
-}
-window.addEventListener('seervi:global-settings-ready',seerviRetryPublicCatalogueAfterSettings);
+/* Bootstrap is intentionally started after the global settings promise is
+   created below. This prevents the Product visibility guard from running
+   before Firebase/global settings have been applied on a fresh mobile load. */
 
 /* AI/catalogue bridge: wait for the same live Firebase catalogue used by the
    public Products page before performing any AI product/category search. */
@@ -13568,6 +13523,18 @@ window.SeerviGlobalSettingsReady=(async function(){
   }
   return seerviSiteSettings;
 })();
+
+/* FINAL PRODUCT BOOTSTRAP:
+   Start the public Product catalogue only after global settings have been
+   created/applied. This fixes the first-load race where Product cards could
+   remain empty until refresh or navigation. */
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',function(){
+    seerviBootPublicCatalogue().catch(e=>console.error('Seervi public catalogue bootstrap failed:',e));
+  },{once:true});
+}else{
+  seerviBootPublicCatalogue().catch(e=>console.error('Seervi public catalogue bootstrap failed:',e));
+}
 
 function seerviRequireSettingsAdmin(){
   if(!crmUser || !isAuthorisedAdmin(crmUser)) throw new Error('Admin access required.');
