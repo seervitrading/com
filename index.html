@@ -9480,11 +9480,28 @@ async function seerviGenerateSaleInvoicePDF(invoice,profile){
   const hasSignatory=profile.signatoryName||profile.businessName;
   const hasFooterBox=!!(hasBank||hasPayment||hasSignatory);
 
-  // Estimate the complete lower block. It follows the last item instead of
-  // reserving a large blank area above it. If it cannot fit on the current
-  // page, move the complete block to the next page.
+  // The complete lower block is treated as one non-splittable section.
+  // On page 1, if it fits, anchor the whole section to the A4 bottom line so
+  // the available space above it is used by the item table. If it does not
+  // fit, let the item table use the remaining page-1 space and move the
+  // complete lower block to the next available page. Pages after page 1 use
+  // normal document flow and are not bottom-anchored.
   const lowerBlockH=1+summaryH+3+amountWordsH+(hsnRows.length?(14.5+hsnRows.length*5.5+2):0)+(hasFooterBox?28:0);
-  if(hasFooterBox && y+lowerBlockH>contentBottom-1){
+  const lowerBlockFitsCurrentPage=(y+lowerBlockH<=contentBottom-1);
+
+  if(invoicePage===1){
+    if(lowerBlockFitsCurrentPage){
+      // Reserve only the exact space needed by the complete lower block.
+      // Everything above this point remains available to the item table.
+      y=Math.max(y,contentBottom-lowerBlockH);
+    }else{
+      // Page 1 is already used as far as possible by the item table.
+      // Start the complete lower block on page 2; it must never be split.
+      addInvoicePage();
+    }
+  }else if(!lowerBlockFitsCurrentPage){
+    // If a later page is also full because of remaining items, continue to a
+    // fresh page. No bottom-anchor rule is applied after page 1.
     addInvoicePage();
   }
 
