@@ -4359,6 +4359,7 @@ async function downloadCartPDF(){
   }
 
   // Table
+  y+=12; // keep quotation table comfortably below customer/header content
   const tableTop=y;
   doc.setFillColor(242,244,246);
   doc.roundedRect(left,tableTop-5,right-left,9,1,1,'F');
@@ -8720,6 +8721,7 @@ window.crmDownloadQuote=async function(id){
     y+=Math.max(7,addrLines.length*4.3);
 
     // Items
+    y+=12; // requested 12px visual gap before quotation item table
     const items=q.items||[];
     const drawHeader=()=>{
       if(y>H-pdfLayout.bottomMargin-37){
@@ -8957,6 +8959,7 @@ window.customerDownloadQuote=async function(id){
     y+=Math.max(7,addrLines.length*4.3);
 
     // Items
+    y+=12; // requested 12px visual gap before quotation item table
     const items=q.items||[];
     const drawHeader=()=>{
       if(y>H-pdfLayout.bottomMargin-37){
