@@ -6795,8 +6795,8 @@ window.customerViewQuote=function(id){
   if(!title||!meta||!body||!dl)return;
   title.textContent=q.quoteNo||'Quotation';
   meta.textContent=(q.dateISO?new Date(q.dateISO).toLocaleDateString('en-IN'):'')+' · '+(party.company||party.name||'');
-  const rows=(q.items||[]).map((item,i)=>`<tr><td>${i+1}</td><td>${esc(item.model||item.name||'Item')}</td><td>${esc(item.spec||'—')}</td><td class="num">${Number(item.qty||0)}</td><td class="num">${money(item.rate)}</td><td class="num">${money(item.amount ?? Number(item.qty||0)*Number(item.rate||0))}</td></tr>`).join('');
-  body.innerHTML=`<div class="crm-qv-customer"><div class="crm-qv-box"><small>Party</small><strong>${esc(party.company||party.name||'—')}</strong></div><div class="crm-qv-box"><small>Contact</small><strong>${esc(party.name||party.phone||'—')}</strong></div><div class="crm-qv-box"><small>City</small><strong>${esc(party.city||'—')}</strong></div></div><table class="crm-qv-table"><thead><tr><th>#</th><th>Product / Model</th><th>Spec</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead><tbody>${rows||'<tr><td colspan="6">No items in this quotation.</td></tr>'}</tbody></table><div class="crm-qv-totals"><div class="crm-qv-total"><span>Subtotal</span><strong>${money(q.subtotal)}</strong></div>${q.gstEnabled?`<div class="crm-qv-total"><span>GST (${Number(q.gstRate||0)}%)</span><strong>${money(q.gst)}</strong></div>`:''}<div class="crm-qv-total"><span>Round Off</span><strong>${money(seerviRoundOff(Number(q.grandTotal ?? Number(q.subtotal||0)+Number(q.gst||0))))}</strong></div><div class="crm-qv-total crm-qv-grand"><span>Grand Total</span><strong>${money(seerviRoundedTotal(Number(q.grandTotal ?? Number(q.subtotal||0)+Number(q.gst||0))))}</strong></div></div>`;
+  const rows=(q.items||[]).map((item,i)=>`<tr><td>${i+1}</td><td>${esc(item.model||item.name||'Item')}</td><td>${esc(item.spec||'—')}</td><td>${esc(seerviQuotationItemColour(item)||'—')}</td><td class="num">${Number(item.qty||0)}</td><td class="num">${money(item.rate)}</td><td class="num">${money(item.amount ?? Number(item.qty||0)*Number(item.rate||0))}</td></tr>`).join('');
+  body.innerHTML=`<div class="crm-qv-customer"><div class="crm-qv-box"><small>Party</small><strong>${esc(party.company||party.name||'—')}</strong></div><div class="crm-qv-box"><small>Contact</small><strong>${esc(party.name||party.phone||'—')}</strong></div><div class="crm-qv-box"><small>City</small><strong>${esc(party.city||'—')}</strong></div></div><table class="crm-qv-table"><thead><tr><th>#</th><th>Product / Model</th><th>Spec</th><th>Colour</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead><tbody>${rows||'<tr><td colspan="7">No items in this quotation.</td></tr>'}</tbody></table><div class="crm-qv-totals"><div class="crm-qv-total"><span>Subtotal</span><strong>${money(q.subtotal)}</strong></div>${q.gstEnabled?`<div class="crm-qv-total"><span>GST (${Number(q.gstRate||0)}%)</span><strong>${money(q.gst)}</strong></div>`:''}<div class="crm-qv-total"><span>Round Off</span><strong>${money(seerviRoundOff(Number(q.grandTotal ?? Number(q.subtotal||0)+Number(q.gst||0))))}</strong></div><div class="crm-qv-total crm-qv-grand"><span>Grand Total</span><strong>${money(seerviRoundedTotal(Number(q.grandTotal ?? Number(q.subtotal||0)+Number(q.gst||0))))}</strong></div></div>`;
   if(statusBar)statusBar.hidden=true;
   dl.textContent='DOWNLOAD PDF';dl.onclick=()=>customerDownloadQuote(id);
   const m=$('crmQuoteViewModal');m?.classList.add('show');m?.setAttribute('aria-hidden','false');
@@ -8235,7 +8235,9 @@ window.crmEditQuote=async function(id){
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
     image:'',
-    manual:!!x.manual
+    manual:!!x.manual,
+    colourVariant:x.colourVariant||x.color||x.selectedColour||x.selectedColor||'',
+    colourVariants:Array.isArray(x.colourVariants)?x.colourVariants.map(v=>String(v?.name??v??'').trim()).filter(Boolean):[]
   }));
   localStorage.setItem('seerviCart',JSON.stringify(seerviCart));
 
@@ -9860,7 +9862,9 @@ window.crmEditInvoice=async function(id){
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
     image:'',
-    manual:!!x.manual
+    manual:!!x.manual,
+    colourVariant:x.colourVariant||x.color||x.selectedColour||x.selectedColor||'',
+    colourVariants:Array.isArray(x.colourVariants)?x.colourVariants.map(v=>String(v?.name??v??'').trim()).filter(Boolean):[]
   }));
 
   localStorage.setItem('seerviCart',JSON.stringify(seerviCart));
@@ -9966,8 +9970,8 @@ window.crmViewInvoice=function(id){
       <div><small>ROUND OFF</small><strong>${money(seerviRoundOff(Number(inv.grandTotal ?? Number(inv.subtotal||0)+Number(inv.gst||0))))}</strong></div><div><small>GRAND TOTAL</small><strong>${money(seerviRoundedTotal(Number(inv.grandTotal ?? Number(inv.subtotal||0)+Number(inv.gst||0))))}</strong></div>
     </div>
     <div class="crm-quote-view-note">${inv.notes?'<strong>NOTES:</strong> '+crmSafeEsc(inv.notes):'No notes saved.'}</div>
-    <table class="crm-quote-view-table"><thead><tr><th>#</th><th>PRODUCT / MODEL</th><th>HSN</th><th>QTY</th><th>RATE</th><th>AMOUNT</th></tr></thead><tbody>${
-      items.map((item,i)=>`<tr><td>${i+1}</td><td>${crmSafeEsc(seerviQuotationItemLabel(item)||item.model||item.name||'Item')}</td><td>${crmSafeEsc(item.hsnCode||item.hsn||'—')}</td><td>${Number(item.qty||0)}</td><td>${money(item.rate)}</td><td>${money(item.amount??Number(item.qty||0)*Number(item.rate||0))}</td></tr>`).join('')
+    <table class="crm-quote-view-table"><thead><tr><th>#</th><th>PRODUCT / MODEL</th><th>COLOUR</th><th>HSN</th><th>QTY</th><th>RATE</th><th>AMOUNT</th></tr></thead><tbody>${
+      items.map((item,i)=>`<tr><td>${i+1}</td><td>${crmSafeEsc(seerviQuotationItemLabel(item)||item.model||item.name||'Item')}</td><td>${crmSafeEsc(seerviQuotationItemColour(item)||'—')}</td><td>${crmSafeEsc(item.hsnCode||item.hsn||'—')}</td><td>${Number(item.qty||0)}</td><td>${money(item.rate)}</td><td>${money(item.amount??Number(item.qty||0)*Number(item.rate||0))}</td></tr>`).join('')
     }</tbody></table>`;
   dl.textContent='DOWNLOAD INVOICE PDF';
   dl.onclick=()=>crmDownloadInvoiceById(id);
@@ -10162,7 +10166,9 @@ window.crmSaveCurrentQuote = async function(){
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
     amount:getLineTotal(x),
-    manual:!!x.manual
+    manual:!!x.manual,
+    colourVariant:x.colourVariant||x.color||x.selectedColour||x.selectedColor||'',
+    colourVariants:Array.isArray(x.colourVariants)?x.colourVariants.map(v=>String(v?.name??v??'').trim()).filter(Boolean):[]
   }));
 
   let stockApplied=[];
@@ -14758,8 +14764,8 @@ function seerviShowSaveSuccess(message){
 <div class="seervi-doc-section-title">BILL TO / CUSTOMER DETAILS</div>
 <div class="seervi-doc-customer"><div class="seervi-doc-field"><label>Party / Customer Name</label><input id="seerviDocPartyName"/></div><div class="seervi-doc-field"><label>Company / Shop</label><input id="seerviDocCompany"/></div><div class="seervi-doc-field"><label>Phone / WhatsApp</label><input id="seerviDocPhone"/></div><div class="seervi-doc-field"><label>Email</label><input id="seerviDocEmail"/></div><div class="seervi-doc-field"><label>City</label><input id="seerviDocCity"/></div><div class="seervi-doc-field"><label>GSTIN</label><input id="seerviDocGstin"/></div><div class="seervi-doc-field full"><label>Address</label><textarea id="seerviDocAddress"></textarea></div></div>
 <div id="seerviDocShipSection"><div class="seervi-doc-section-title">SHIP TO</div><div class="seervi-doc-customer"><div class="seervi-doc-field"><label>Name</label><input id="seerviDocShipName"/></div><div class="seervi-doc-field"><label>Company / Shop</label><input id="seerviDocShipCompany"/></div><div class="seervi-doc-field"><label>Phone / WhatsApp</label><input id="seerviDocShipPhone"/></div><div class="seervi-doc-field"><label>Email</label><input id="seerviDocShipEmail"/></div><div class="seervi-doc-field"><label>City</label><input id="seerviDocShipCity"/></div><div class="seervi-doc-field"><label>GSTIN</label><input id="seerviDocShipGstin"/></div><div class="seervi-doc-field full"><label>Address</label><textarea id="seerviDocShipAddress"></textarea></div></div></div>
-<div class="seervi-doc-section-title">ITEMS</div><div class="seervi-doc-error" id="seerviDocEditorError"></div><table class="seervi-doc-items"><thead><tr><th>#</th><th>PRODUCT / MODEL</th><th>SPECIFICATION</th><th>HSN</th><th>QTY</th><th>RATE</th><th>AMOUNT</th><th></th></tr></thead><tbody id="seerviDocItemsBody"></tbody></table><div class="seervi-doc-add-row"><button onclick="seerviDocAddItem()" type="button">+ ADD ITEM</button></div>
-<div class="seervi-doc-bottom"><div class="seervi-doc-field"><label>Notes / Requirement</label><textarea class="seervi-doc-note" id="seerviDocNotes"></textarea><div class="seervi-doc-hint">Item quantity, rate, specification, HSN, customer details, document number/date and applicable document fields can be edited here.</div></div><div class="seervi-doc-totals"><div class="seervi-doc-gst"><input id="seerviDocGstEnabled" type="checkbox"/><label for="seerviDocGstEnabled">ADD GST</label><input class="seervi-doc-gst-rate" id="seerviDocGstRate" max="100" min="0" step="0.01" type="number"/><span>%</span></div><div class="seervi-doc-total"><span>Subtotal</span><strong id="seerviDocSubtotal">INR 0.00</strong></div><div class="seervi-doc-total" id="seerviDocGstRow"><span>GST</span><strong id="seerviDocGst">INR 0.00</strong></div><div class="seervi-doc-total"><span>Round Off</span><strong id="seerviDocRoundOff">INR 0.00</strong></div><div class="seervi-doc-total seervi-doc-grand"><span>GRAND TOTAL</span><strong id="seerviDocGrand">INR 0.00</strong></div></div></div>
+<div class="seervi-doc-section-title">ITEMS</div><div class="seervi-doc-error" id="seerviDocEditorError"></div><table class="seervi-doc-items"><thead><tr><th>#</th><th>PRODUCT / MODEL</th><th>SPECIFICATION</th><th>COLOUR</th><th>HSN</th><th>QTY</th><th>RATE</th><th>AMOUNT</th><th></th></tr></thead><tbody id="seerviDocItemsBody"></tbody></table><div class="seervi-doc-add-row"><button onclick="seerviDocAddItem()" type="button">+ ADD ITEM</button></div>
+<div class="seervi-doc-bottom"><div class="seervi-doc-field"><label>Notes / Requirement</label><textarea class="seervi-doc-note" id="seerviDocNotes"></textarea><div class="seervi-doc-hint">Item quantity, rate, specification, colour, HSN, customer details, document number/date and applicable document fields can be edited here.</div></div><div class="seervi-doc-totals"><div class="seervi-doc-gst"><input id="seerviDocGstEnabled" type="checkbox"/><label for="seerviDocGstEnabled">ADD GST</label><input class="seervi-doc-gst-rate" id="seerviDocGstRate" max="100" min="0" step="0.01" type="number"/><span>%</span></div><div class="seervi-doc-total"><span>Subtotal</span><strong id="seerviDocSubtotal">INR 0.00</strong></div><div class="seervi-doc-total" id="seerviDocGstRow"><span>GST</span><strong id="seerviDocGst">INR 0.00</strong></div><div class="seervi-doc-total"><span>Round Off</span><strong id="seerviDocRoundOff">INR 0.00</strong></div><div class="seervi-doc-total seervi-doc-grand"><span>GRAND TOTAL</span><strong id="seerviDocGrand">INR 0.00</strong></div></div></div>
 </div></div>
 </div>
 <script id="seervi-admin-document-editor">
@@ -14773,7 +14779,7 @@ function seerviShowSaveSuccess(message){
   function showEditor(){const m=$id('seerviAdminDocEditor');if(!m)return;const cart=$id('cartDrawer');if(cart){cart.classList.remove('show');cart.setAttribute('aria-hidden','true');}document.body.classList.remove('cart-open');try{if(typeof closeCRM==='function')closeCRM();}catch(e){}try{if(typeof crmShowWorkspace==='function')crmShowWorkspace();}catch(e){}m.classList.add('show');m.setAttribute('aria-hidden','false');document.body.classList.add('seervi-document-editing');window.scrollTo({top:0,behavior:'auto'});}
   window.seerviCloseDocumentEditor=function(){const m=$id('seerviAdminDocEditor');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');}document.body.classList.remove('cart-open','seervi-document-editing');S.mode='';S.id='';S.record=null;S.party=null;S.items=[];window.__seerviEditorMeta=null;try{if(typeof crmShowWorkspace==='function')crmShowWorkspace();}catch(e){}};
   function customerFromParty(p){return {name:p?.name||'',company:p?.company||'',phone:p?.phone||p?.whatsapp||'',email:p?.email||'',city:p?.city||'',address:p?.address||p?.fullAddress||'',gstin:p?.gstin||p?.gst||'',pan:p?.pan||''};}
-  function renderItems(){const body=$id('seerviDocItemsBody');if(!body)return;body.innerHTML=S.items.map((x,i)=>`<tr data-index="${i}"><td>${i+1}</td><td><input data-k="model" value="${escv(x.model||x.name||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"></td><td><input data-k="spec" value="${escv(x.spec||x.thickness||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"></td><td><input data-k="hsnCode" value="${escv(x.hsnCode||x.hsn||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"></td><td><input class="qty" data-k="qty" type="number" min="0" step="1" value="${Number(x.qty||0)}"></td><td><input class="rate" data-k="rate" type="number" min="0" step="0.01" value="${Number(x.rate||0)}"></td><td class="amount">${money2(Number(x.qty||0)*Number(x.rate||0))}</td><td><button class="seervi-doc-item-remove" type="button" onclick="seerviDocRemoveItem(${i})">×</button></td></tr>`).join('');
+  function renderItems(){const body=$id('seerviDocItemsBody');if(!body)return;body.innerHTML=S.items.map((x,i)=>`<tr data-index="${i}"><td>${i+1}</td><td><input data-k="model" value="${escv(x.model||x.name||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"></td><td><input data-k="spec" value="${escv(x.spec||x.thickness||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"></td><td><input data-k="colourVariant" value="${escv(x.colourVariant||x.color||x.selectedColour||x.selectedColor||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"></td><td><input data-k="hsnCode" value="${escv(x.hsnCode||x.hsn||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"></td><td><input class="qty" data-k="qty" type="number" min="0" step="1" value="${Number(x.qty||0)}"></td><td><input class="rate" data-k="rate" type="number" min="0" step="0.01" value="${Number(x.rate||0)}"></td><td class="amount">${money2(Number(x.qty||0)*Number(x.rate||0))}</td><td><button class="seervi-doc-item-remove" type="button" onclick="seerviDocRemoveItem(${i})">×</button></td></tr>`).join('');
     body.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',()=>{syncItemsFromDom();renderTotals();}));
     renderTotals();
   }
