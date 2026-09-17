@@ -2180,7 +2180,7 @@ nav > .wrap > .nav-dashboard-slot .bw-nav-dashboard {
   body:not(.mobile-products-view) #tvMounts{display:none!important}
   body.mobile-products-view #tvMounts{display:block!important}
 }body.seervi-non-home-view nav{display:none !important;}
-@media(max-width:600px){body.seervi-admin-panel-open nav,body.seervi-admin-panel-open .mobile-bottom-bar{display:none !important;}body.seervi-admin-panel-open{padding-top:0 !important;overflow:hidden !important;}}.cart-close.cart-back-btn,
+body.seervi-admin-panel-open nav{display:none !important;}body.seervi-admin-panel-open{padding-top:0 !important;}@media(max-width:600px){body.seervi-admin-panel-open .mobile-bottom-bar{display:none !important;}body.seervi-admin-panel-open{overflow:hidden !important;}}.cart-close.cart-back-btn,
 .admin-universal-back{
   width:96px !important;
   min-width:96px !important;
@@ -14982,6 +14982,173 @@ function seerviShowSaveSuccess(message){
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initTopLevelMotion,{once:true});
   else initTopLevelMotion();
+})();
+</script>
+<script id="seervi-admin-standard-panel-flow">
+(function(){
+  const PANEL_IDS=[
+    'adminCataloguesModal','adminSettingsModal','adminBackupOptionsModal','gstProfileModal',
+    'seerviActivityModal','notificationPostModal','adminStockModal','seerviItemsModal',
+    'seerviInvoiceInputModal','adminNewPartyModal','crmModal','crmQuoteViewModal',
+    'crmPartyLedgerViewModal','crmDeleteConfirmModal'
+  ];
+  const RETURNABLE=[
+    'openAdminCatalogues','openAdminSettings','openGstProfile','openAdminActivity',
+    'openNotificationPost','toggleInventoryStock','seerviOpenItemsPanel','crmNewParty'
+  ];
+  const CLOSES=[
+    'closeAdminCatalogues','closeAdminSettings','closeAdminBackupOptions','closeGstProfile',
+    'closeAdminActivity','closeNotificationPost','closeAdminStock','seerviCloseItemsPanel',
+    'closeAdminNewParty'
+  ];
+  const originals={};
+  let switching=false;
+
+  function $(id){return document.getElementById(id);}
+  function isOpen(el){
+    if(!el)return false;
+    const aria=el.getAttribute('aria-hidden');
+    if(aria==='false')return true;
+    const cs=getComputedStyle(el);
+    return cs.display!=='none' && cs.visibility!=='hidden' && cs.opacity!=='0';
+  }
+  function dashboardOpen(){return isOpen($('accountDashboardModal'));}
+  function setAdminState(on){
+    document.body.classList.toggle('seervi-admin-panel-open',!!on);
+    document.body.classList.toggle('modal-open',!!on);
+    if(typeof window.seerviSyncTopbarHomeOnly==='function')window.seerviSyncTopbarHomeOnly();
+  }
+  function closeRaw(name){
+    const fn=originals[name];
+    if(typeof fn!=='function')return;
+    switching=true;
+    try{fn.apply(window,Array.prototype.slice.call(arguments,1));}catch(e){console.warn('[Seervi] admin close failed:',name,e);}
+    finally{switching=false;}
+  }
+  function closeAllRaw(except){
+    PANEL_IDS.forEach(id=>{
+      if(id===except)return;
+      const el=$(id);if(!isOpen(el))return;
+      const names={
+        adminCataloguesModal:'closeAdminCatalogues',adminSettingsModal:'closeAdminSettings',
+        adminBackupOptionsModal:'closeAdminBackupOptions',gstProfileModal:'closeGstProfile',
+        seerviActivityModal:'closeAdminActivity',notificationPostModal:'closeNotificationPost',
+        adminStockModal:'closeAdminStock',seerviItemsModal:'seerviCloseItemsPanel',
+        seerviInvoiceInputModal:null,adminNewPartyModal:'closeAdminNewParty',crmModal:'closeCRM',
+        crmQuoteViewModal:null,crmPartyLedgerViewModal:null,crmDeleteConfirmModal:null
+      }[id];
+      if(names)closeRaw(names);
+      else {el.classList.remove('show');el.setAttribute('aria-hidden','true');el.hidden=true;}
+    });
+    const dash=$('accountDashboardModal');
+    if(dash && isOpen(dash))closeAccountDashboard();
+  }
+  function openWrap(name, original){
+    originals[name]=original;
+    window[name]=function(){
+      const fromDashboard=dashboardOpen();
+      window.seerviAdminOpenedFromDashboard=!!fromDashboard;
+      window.seerviAdminReturnTarget=fromDashboard?'dashboard':'home';
+      closeAllRaw();
+      switching=true;
+      try{return original.apply(this,arguments);}
+      finally{switching=false;setAdminState(true);}
+    };
+  }
+  function closeWrap(name, original){
+    originals[name]=original;
+    window[name]=function(){
+      const returnToDashboard=!!window.seerviAdminOpenedFromDashboard && window.seerviAdminReturnTarget==='dashboard';
+      const result=original.apply(this,arguments);
+      if(switching)return result;
+      setAdminState(false);
+      if(returnToDashboard && window.crmUser && typeof window.isAuthorisedAdmin==='function' && window.isAuthorisedAdmin(window.crmUser)){
+        window.seerviAdminOpenedFromDashboard=false;
+        window.seerviAdminReturnTarget='dashboard';
+        requestAnimationFrame(()=>window.openAccountDashboard('admin'));
+      }else{
+        window.seerviAdminOpenedFromDashboard=false;
+        window.seerviAdminReturnTarget='home';
+      }
+      return result;
+    };
+  }
+  function install(){
+    RETURNABLE.forEach(name=>{
+      if(typeof window[name]==='function' && !window[name].__seerviStandardFlow){
+        const original=window[name];
+        const wrapped=function(){
+          const fromDashboard=dashboardOpen();
+          window.seerviAdminOpenedFromDashboard=!!fromDashboard;
+          window.seerviAdminReturnTarget=fromDashboard?'dashboard':'home';
+          closeAllRaw();
+          const r=original.apply(this,arguments);
+          setAdminState(true);
+          return r;
+        };
+        wrapped.__seerviStandardFlow=true;
+        originals[name]=original;window[name]=wrapped;
+      }
+    });
+    CLOSES.forEach(name=>{
+      if(typeof window[name]==='function' && !window[name].__seerviStandardFlow){
+        const original=window[name];
+        const wrapped=function(){
+          const returnToDashboard=!window.seerviAdminBackInProgress && !!window.seerviAdminOpenedFromDashboard && window.seerviAdminReturnTarget==='dashboard';
+          const r=original.apply(this,arguments);
+          if(switching)return r;
+          setAdminState(false);
+          if(returnToDashboard && window.crmUser && typeof window.isAuthorisedAdmin==='function' && window.isAuthorisedAdmin(window.crmUser)){
+            window.seerviAdminOpenedFromDashboard=false;
+            requestAnimationFrame(()=>window.openAccountDashboard('admin'));
+          }else{
+            window.seerviAdminOpenedFromDashboard=false;
+            window.seerviAdminReturnTarget='home';
+          }
+          return r;
+        };
+        wrapped.__seerviStandardFlow=true;
+        originals[name]=original;window[name]=wrapped;
+      }
+    });
+    // Dashboard buttons that directly implement their own launcher must also use the same return state.
+    ['accountDashboardBackup','accountDashboardNotificationPost'].forEach(name=>{
+      if(typeof window[name]==='function' && !window[name].__seerviStandardFlow){
+        const original=window[name];
+        const wrapped=function(){
+          window.seerviAdminOpenedFromDashboard=true;
+          window.seerviAdminReturnTarget='dashboard';
+          closeAllRaw();
+          const r=original.apply(this,arguments);setAdminState(true);return r;
+        };
+        wrapped.__seerviStandardFlow=true;window[name]=wrapped;
+      }
+    });
+    if(typeof window.seerviAdminBackToPrevious==='function' && !window.seerviAdminBackToPrevious.__seerviStandardFlow){
+      const originalBack=window.seerviAdminBackToPrevious;
+      const wrappedBack=function(){
+        window.seerviAdminBackInProgress=true;
+        try{return originalBack.apply(this,arguments);}
+        finally{window.seerviAdminBackInProgress=false;}
+      };
+      wrappedBack.__seerviStandardFlow=true;
+      window.seerviAdminBackToPrevious=wrappedBack;
+    }
+    setAdminState(PANEL_IDS.some(id=>isOpen($(id))));
+  }
+  function observe(){
+    const observer=new MutationObserver(function(){
+      if(switching)return;
+      const open=PANEL_IDS.filter(id=>isOpen($(id)));
+      if(open.length>1){
+        const keep=open[open.length-1];closeAllRaw(keep);
+      }
+      setAdminState(open.length>0);
+    });
+    observer.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class','style','aria-hidden','hidden']});
+  }
+  function boot(){install();observe();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
 </body>
