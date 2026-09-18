@@ -2181,6 +2181,8 @@ nav > .wrap > .nav-dashboard-slot .bw-nav-dashboard {
   body.mobile-products-view #tvMounts{display:block!important}
 }body.seervi-non-home-view nav{display:none !important;}
 body.seervi-admin-panel-open nav{display:none !important;}
+/* Admin navigation is button-only; no X close controls. */
+#crmModal .crm-close,#adminCataloguesModal .crm-close,#adminSettingsModal .crm-close,#seerviActivityModal .crm-close,#gstProfileModal .crm-close,#adminBackupOptionsModal .crm-close,#adminNewPartyModal .crm-close,#adminStockModal .crm-close,#notificationPostModal .crm-close,#seerviItemsModal .crm-close,#seerviInvoiceInputModal .crm-close,#crmQuoteViewModal .crm-close,#crmPartyLedgerViewModal .crm-close{display:none!important;}
 body.seervi-admin-panel-open{padding-top:0 !important;}
 @media(max-width:600px){body.seervi-admin-panel-open .mobile-bottom-bar{display:none !important;}}.cart-close.cart-back-btn,
 .admin-universal-back{
@@ -6899,21 +6901,21 @@ let seerviAdminReturnTarget='home';
 let seerviAdminOpenedFromDashboard=false;
 
 window.seerviAdminBackToPrevious=function(){
-  const returnToDashboard=seerviAdminOpenedFromDashboard || seerviAdminReturnTarget==='dashboard';
-  try{if(typeof closeAdminNewParty==='function')closeAdminNewParty();}catch(e){console.warn('Back: New Party close failed',e);}
-  try{if(typeof closeAdminStock==='function')closeAdminStock();}catch(e){console.warn('Back: Stock close failed',e);}
-  try{if(typeof seerviCloseItemsPanel==='function')seerviCloseItemsPanel();}catch(e){console.warn('Back: Items close failed',e);}
-  try{if(typeof closeNotificationPost==='function')closeNotificationPost();}catch(e){console.warn('Back: Notification close failed',e);}
-  try{if(typeof closeCRM==='function')closeCRM();}catch(e){console.warn('Back: Panel close failed',e);}
-  if(returnToDashboard && crmUser && isAuthorisedAdmin(crmUser)){
-    seerviAdminReturnTarget='dashboard';
-    seerviAdminOpenedFromDashboard=false;
-    openAccountDashboard('admin');
-    return;
+  const nested=[['crmQuoteViewModal','crmCloseQuoteView'],['crmPartyLedgerViewModal','crmClosePartyLedgerView'],['seerviInvoiceInputModal','seerviCloseInvoiceInputModal']];
+  for(const [id,closeName] of nested){
+    const el=document.getElementById(id);
+    if(el&&el.classList.contains('show')){try{if(typeof window[closeName]==='function'){window[closeName]();return;}}catch(e){console.warn('Admin nested back failed:',e);} el.classList.remove('show');el.setAttribute('aria-hidden','true');return;}
   }
-  seerviAdminOpenedFromDashboard=false;
-  seerviAdminReturnTarget='home';
-  closeAccountDashboard();
+  const top=[['adminCataloguesModal','closeAdminCatalogues'],['adminSettingsModal','closeAdminSettings'],['seerviActivityModal','closeAdminActivity'],['gstProfileModal','closeGstProfile'],['adminBackupOptionsModal','closeAdminBackupOptions'],['adminNewPartyModal','closeAdminNewParty'],['adminStockModal','closeAdminStock'],['notificationPostModal','closeNotificationPost'],['seerviItemsModal','seerviCloseItemsPanel'],['crmModal','closeCRM']];
+  for(const [id,closeName] of top){
+    const el=document.getElementById(id);
+    if(el&&el.classList.contains('show')){
+      try{if(typeof window[closeName]==='function')window[closeName]();else{el.classList.remove('show');el.setAttribute('aria-hidden','true');}}catch(e){console.warn('Admin panel back failed:',e);}
+      if(seerviAdminOpenedFromDashboard&&crmUser&&isAuthorisedAdmin(crmUser)){seerviAdminOpenedFromDashboard=false;seerviAdminReturnTarget='dashboard';openAccountDashboard('admin');}
+      else{seerviAdminOpenedFromDashboard=false;seerviAdminReturnTarget='home';}
+      return;
+    }
+  }
 };
 
 function seerviOpenAdminDataPanel(tab){
