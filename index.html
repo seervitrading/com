@@ -3552,7 +3552,7 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
 <div aria-labelledby="adminCataloguesTitle" aria-modal="true" class="crm-panel admin-settings-panel" role="dialog">
 <div class="crm-head">
 <div><div class="crm-kicker">SEERVI TRADING / ADMIN DASHBOARD</div><h3 id="adminCataloguesTitle">Catalogues</h3><div class="crm-auth-status">Add customer-facing PDF catalogues. Upload the PDF to GitHub and enter its URL / path, just like product images.</div></div>
-<button class="crm-close" onclick="closeAdminCatalogues()" type="button">×</button>
+<button class="crm-secondary small admin-universal-back" onclick="closeAdminCatalogues()" type="button">← BACK</button><button class="crm-close" onclick="closeAdminCatalogues()" type="button">×</button>
 </div>
 <div class="admin-settings-scroll">
 <section class="admin-settings-section">
@@ -3589,7 +3589,7 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
 <h3 id="gstProfileTitle">GST Profile</h3>
 <div class="crm-auth-status">These business details are saved in Firebase and appear on Sale Invoices.</div>
 </div>
-<button class="crm-close" onclick="closeGstProfile()" type="button">×</button>
+<button class="crm-secondary small admin-universal-back" onclick="closeGstProfile()" type="button">← BACK</button><button class="crm-close" onclick="closeGstProfile()" type="button">×</button>
 </div>
 <div class="gst-profile-scroll">
 <section class="admin-settings-section">
@@ -3635,7 +3635,7 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
 <div aria-labelledby="adminSettingsTitle" aria-modal="true" class="crm-panel admin-settings-panel" role="dialog">
 <div class="crm-head">
 <div><div class="crm-kicker">SEERVI ADMIN / SETTINGS</div><h3 id="adminSettingsTitle">Global Settings</h3><div class="crm-auth-status">Only the authorised admin can change these settings. Saved values apply to all visitors.</div></div>
-<button class="crm-close" onclick="closeAdminSettings()" type="button">×</button>
+<button class="crm-secondary small admin-universal-back" onclick="closeAdminSettings()" type="button">← BACK</button><button class="crm-close" onclick="closeAdminSettings()" type="button">×</button>
 </div>
 <div class="admin-settings-scroll">
 <div aria-label="Settings sections" class="admin-settings-subnav" role="tablist">
@@ -14130,7 +14130,7 @@ function seerviWrapActivity(name,module,action,description){const original=windo
 seerviWrapActivity('seerviCreateItem','items','item_created',r=>`Added product: ${r?.name||'New item'}`);seerviWrapActivity('seerviUpdateItem','items','item_updated',r=>`Updated product: ${r?.name||r?.id||'Item'}`);seerviWrapActivity('seerviDeleteItem','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviCreateItemCategory','categories','category_created',r=>`Added ${r?.type||'category'}: ${r?.name||'Category'}`);seerviWrapActivity('seerviUpdateItemCategory','categories','category_updated',r=>`Updated ${r?.type||'category'}: ${r?.name||r?.id||'Category'}`);seerviWrapActivity('seerviDeleteItemCategory','categories','category_deleted',(_,a)=>`Deleted category/subcategory: ${a?.[0]||'Category'}`);seerviWrapActivity('crmSaveParty','parties','party_saved',()=>`Saved party/customer: ${document.getElementById('crmPartyName')?.value||'Party'}`);seerviWrapActivity('crmSaveCurrentQuote','quotations','quotation_saved',()=>`Saved quotation`);seerviWrapActivity('crmSaveQuoteStatus','quotations','quotation_status_updated',()=>`Updated quotation status`);seerviWrapActivity('crmDeleteParty','parties','party_deleted',(_,a)=>`Deleted party/customer: ${a?.[0]||'Party'}`);seerviWrapActivity('crmEditInvoice','invoices','invoice_edit_opened',(_,a)=>`Editing invoice: ${a?.[0]||'Invoice'}`);seerviWrapActivity('crmDeleteInvoice','invoices','invoice_deleted',(_,a)=>`Deleted invoice: ${a?.[0]||'Invoice'}`);seerviWrapActivity('crmDeleteQuote','quotations','quotation_deleted',(_,a)=>`Deleted quotation: ${a?.[0]||'Quotation'}`);seerviWrapActivity('crmDeleteLedgerEntry','ledger','ledger_entry_deleted',(_,a)=>`Deleted ledger entry: ${a?.[0]||'Entry'}`);seerviWrapActivity('crmAddLedgerEntry','ledger','ledger_entry_added',()=>`Added payment/ledger entry`);seerviWrapActivity('submitNotificationPost','notifications','notification_posted',()=>`Posted notification`);seerviWrapActivity('seerviToggleItemActive','items','item_status_changed',(_,a)=>`Changed item active status: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviDuplicateItem','items','item_duplicated',(_,a)=>`Duplicated product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveItemForm','items','item_saved',()=>`Saved product from Items panel`);seerviWrapActivity('seerviDeleteItemConfirm','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveAdminSettings','settings','settings_updated',()=>`Updated global website settings`);seerviWrapActivity('seerviBackupItems','backup','items_backup',()=>`Created items backup`);seerviWrapActivity('seerviBackupCategories','backup','categories_backup',()=>`Created categories backup`);seerviWrapActivity('seerviBackupQuotationsWithParty','backup','quotations_backup',()=>`Created quotations backup`);seerviWrapActivity('setInventorySubcategoryStock','inventory','subcategory_stock_updated',(_,a)=>`Updated subcategory stock: ${a?.[1]||a?.[0]||'Subcategory'}`);seerviWrapActivity('setInventoryCategoryStock','inventory','category_stock_updated',(_,a)=>`Updated category stock: ${a?.[0]||'Category'}`);seerviWrapActivity('setInventoryQuantity','inventory','inventory_quantity_updated',(_,a)=>`Updated inventory quantity: ${a?.[0]||'Item'}`);seerviWrapActivity('setInventoryStock','inventory','inventory_stock_updated',(_,a)=>`Updated stock status: ${a?.[0]||'Item'}`);seerviWrapActivity('toggleInventoryStock','inventory','inventory_stock_toggled',()=>`Toggled inventory stock status`);seerviWrapActivity('seerviBulkImport','items','bulk_items_imported',()=>`Imported products in bulk`);seerviWrapActivity('seerviCategoryBulkImport','categories','bulk_categories_imported',()=>`Imported categories/subcategories in bulk`);
 seerviWrapActivity('saveCustomerCartRequest','quotations','quotation_requested',()=>`Requested a quotation`);seerviWrapActivity('customerSaveProfile','profile','profile_updated',()=>`Updated customer profile`);seerviWrapActivity('crmSignIn','auth','admin_signed_in',()=>`Admin signed in`);seerviWrapActivity('customerSignIn','auth','customer_signed_in',()=>`Customer signed in`);
 
-</script><div aria-hidden="true" class="crm-quote-view-modal" id="crmPartyLedgerViewModal"><div class="crm-quote-view-backdrop" onclick="crmClosePartyLedgerView()"></div><div aria-labelledby="crmPartyLedgerViewTitle" aria-modal="true" class="crm-quote-view-card crm-party-ledger-view-card" role="dialog"><div class="crm-quote-view-head"><div><div class="crm-kicker">PARTY LEDGER</div><h3 id="crmPartyLedgerViewTitle">Party Ledger</h3><div class="crm-quote-view-meta" id="crmPartyLedgerViewMeta"></div></div><button class="crm-close" onclick="crmClosePartyLedgerView()" type="button">×</button></div><div class="crm-ledger-view-toolbar"><div class="crm-ledger-filter-group"><button class="crm-ledger-filter active" data-range="all" onclick="crmSetPartyLedgerFilter('all')" type="button">ALL</button><button class="crm-ledger-filter" data-range="weekly" onclick="crmSetPartyLedgerFilter('weekly')" type="button">WEEKLY</button><button class="crm-ledger-filter" data-range="monthly" onclick="crmSetPartyLedgerFilter('monthly')" type="button">MONTHLY</button><button class="crm-ledger-filter" data-range="quarterly" onclick="crmSetPartyLedgerFilter('quarterly')" type="button">QUARTERLY</button><button class="crm-ledger-filter" data-range="yearly" onclick="crmSetPartyLedgerFilter('yearly')" type="button">YEARLY</button></div><button class="crm-primary small" id="crmPartyLedgerDownload" onclick="crmDownloadPartyLedger()" type="button">DOWNLOAD LEDGER</button></div><div class="crm-quote-view-body" id="crmPartyLedgerViewBody"></div></div></div><div aria-hidden="true" class="crm-quote-view-modal" id="crmQuoteViewModal"><div class="crm-quote-view-backdrop" onclick="crmCloseQuoteView()"></div><div aria-labelledby="crmQuoteViewTitle" aria-modal="true" class="crm-quote-view-card" role="dialog"><div class="crm-quote-view-head"><div><div class="crm-kicker">QUOTATION VIEW</div><h3 id="crmQuoteViewTitle">Quotation</h3><div class="crm-quote-view-meta" id="crmQuoteViewMeta"></div></div><button class="crm-close" onclick="crmCloseQuoteView()" type="button">×</button></div><div class="crm-quote-status-bar" id="crmQuoteViewStatusBar"><span>STATUS</span><select id="crmQuoteViewStatus"><option value="saved">SAVED</option><option value="sent">SENT</option><option value="confirmed">CONFIRMED</option><option value="cancelled">CANCELLED</option></select><button class="crm-secondary small" onclick="crmSaveQuoteStatus()" type="button">SAVE STATUS</button></div><div class="crm-quote-view-body" id="crmQuoteViewBody"></div><div class="crm-quote-view-actions"><button class="crm-secondary" onclick="crmCloseQuoteView()" type="button">CLOSE</button><button class="crm-primary" id="crmQuoteViewDownload" type="button">DOWNLOAD PDF</button></div></div></div><div aria-hidden="true" class="crm-modal" id="seerviActivityModal"><div class="crm-backdrop" onclick="closeAdminActivity()"></div><div aria-labelledby="seerviActivityTitle" aria-modal="true" class="crm-panel seervi-activity-panel" role="dialog"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / ACTIVITY</div><h3 id="seerviActivityTitle">Activity Log</h3><div class="crm-auth-status">Meaningful updates from admin and customers.</div></div><button class="crm-close" onclick="closeAdminActivity()" type="button">×</button></div><div class="seervi-activity-toolbar"><div class="seervi-activity-filters"><button class="seervi-activity-filter active" data-activity-filter="all" onclick="seerviActivityFilter('all')" type="button">ALL</button><button class="seervi-activity-filter" data-activity-filter="admin" onclick="seerviActivityFilter('admin')" type="button">ADMIN</button><button class="seervi-activity-filter" data-activity-filter="customer" onclick="seerviActivityFilter('customer')" type="button">CUSTOMER</button></div><button class="crm-secondary small" onclick="loadAdminActivity()" type="button">↻ REFRESH</button></div><div class="crm-muted" id="seerviActivityStatus"></div><div class="seervi-activity-list" id="seerviActivityList"></div></div></div>
+</script><div aria-hidden="true" class="crm-quote-view-modal" id="crmPartyLedgerViewModal"><div class="crm-quote-view-backdrop" onclick="crmClosePartyLedgerView()"></div><div aria-labelledby="crmPartyLedgerViewTitle" aria-modal="true" class="crm-quote-view-card crm-party-ledger-view-card" role="dialog"><div class="crm-quote-view-head"><div><div class="crm-kicker">PARTY LEDGER</div><h3 id="crmPartyLedgerViewTitle">Party Ledger</h3><div class="crm-quote-view-meta" id="crmPartyLedgerViewMeta"></div></div><button class="crm-close" onclick="crmClosePartyLedgerView()" type="button">×</button></div><div class="crm-ledger-view-toolbar"><div class="crm-ledger-filter-group"><button class="crm-ledger-filter active" data-range="all" onclick="crmSetPartyLedgerFilter('all')" type="button">ALL</button><button class="crm-ledger-filter" data-range="weekly" onclick="crmSetPartyLedgerFilter('weekly')" type="button">WEEKLY</button><button class="crm-ledger-filter" data-range="monthly" onclick="crmSetPartyLedgerFilter('monthly')" type="button">MONTHLY</button><button class="crm-ledger-filter" data-range="quarterly" onclick="crmSetPartyLedgerFilter('quarterly')" type="button">QUARTERLY</button><button class="crm-ledger-filter" data-range="yearly" onclick="crmSetPartyLedgerFilter('yearly')" type="button">YEARLY</button></div><button class="crm-primary small" id="crmPartyLedgerDownload" onclick="crmDownloadPartyLedger()" type="button">DOWNLOAD LEDGER</button></div><div class="crm-quote-view-body" id="crmPartyLedgerViewBody"></div></div></div><div aria-hidden="true" class="crm-quote-view-modal" id="crmQuoteViewModal"><div class="crm-quote-view-backdrop" onclick="crmCloseQuoteView()"></div><div aria-labelledby="crmQuoteViewTitle" aria-modal="true" class="crm-quote-view-card" role="dialog"><div class="crm-quote-view-head"><div><div class="crm-kicker">QUOTATION VIEW</div><h3 id="crmQuoteViewTitle">Quotation</h3><div class="crm-quote-view-meta" id="crmQuoteViewMeta"></div></div><button class="crm-close" onclick="crmCloseQuoteView()" type="button">×</button></div><div class="crm-quote-status-bar" id="crmQuoteViewStatusBar"><span>STATUS</span><select id="crmQuoteViewStatus"><option value="saved">SAVED</option><option value="sent">SENT</option><option value="confirmed">CONFIRMED</option><option value="cancelled">CANCELLED</option></select><button class="crm-secondary small" onclick="crmSaveQuoteStatus()" type="button">SAVE STATUS</button></div><div class="crm-quote-view-body" id="crmQuoteViewBody"></div><div class="crm-quote-view-actions"><button class="crm-secondary" onclick="crmCloseQuoteView()" type="button">CLOSE</button><button class="crm-primary" id="crmQuoteViewDownload" type="button">DOWNLOAD PDF</button></div></div></div><div aria-hidden="true" class="crm-modal" id="seerviActivityModal"><div class="crm-backdrop" onclick="closeAdminActivity()"></div><div aria-labelledby="seerviActivityTitle" aria-modal="true" class="crm-panel seervi-activity-panel" role="dialog"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / ACTIVITY</div><h3 id="seerviActivityTitle">Activity Log</h3><div class="crm-auth-status">Meaningful updates from admin and customers.</div></div><button class="crm-secondary small admin-universal-back" onclick="closeAdminActivity()" type="button">← BACK</button><button class="crm-close" onclick="closeAdminActivity()" type="button">×</button></div><div class="seervi-activity-toolbar"><div class="seervi-activity-filters"><button class="seervi-activity-filter active" data-activity-filter="all" onclick="seerviActivityFilter('all')" type="button">ALL</button><button class="seervi-activity-filter" data-activity-filter="admin" onclick="seerviActivityFilter('admin')" type="button">ADMIN</button><button class="seervi-activity-filter" data-activity-filter="customer" onclick="seerviActivityFilter('customer')" type="button">CUSTOMER</button></div><button class="crm-secondary small" onclick="loadAdminActivity()" type="button">↻ REFRESH</button></div><div class="crm-muted" id="seerviActivityStatus"></div><div class="seervi-activity-list" id="seerviActivityList"></div></div></div>
 <script>document.addEventListener('DOMContentLoaded',()=>{try{updateAuthNav();}catch(e){}});</script><script id="seervi-smooth-loading-compat">
 (function(){
   'use strict';
@@ -14984,171 +14984,117 @@ function seerviShowSaveSuccess(message){
   else initTopLevelMotion();
 })();
 </script>
+<style id="seervi-admin-standard-flow-css">
+/* One consistent full-screen Admin inner-panel workspace. */
+body.seervi-admin-panel-open nav{display:none!important;}
+body.seervi-admin-panel-open{padding-top:0!important;overflow:hidden!important;}
+@media(max-width:600px){body.seervi-admin-panel-open .mobile-bottom-bar{display:none!important;}}
+#adminCataloguesModal,#adminSettingsModal,#seerviActivityModal,#gstProfileModal{z-index:5000!important;}
+#adminCataloguesModal.show,#adminSettingsModal.show,#seerviActivityModal.show,#gstProfileModal.show{display:flex!important;visibility:visible!important;opacity:1!important;}
+#adminCataloguesModal .crm-panel,#adminSettingsModal .crm-panel,#seerviActivityModal .crm-panel,#gstProfileModal .crm-panel{display:block!important;visibility:visible!important;opacity:1!important;max-height:calc(100vh - 32px);}
+.admin-universal-back{white-space:nowrap;min-width:88px;justify-content:center;}
+</style>
 <script id="seervi-admin-standard-panel-flow">
 (function(){
-  const PANEL_IDS=[
-    'adminCataloguesModal','adminSettingsModal','adminBackupOptionsModal','gstProfileModal',
-    'seerviActivityModal','notificationPostModal','adminStockModal','seerviItemsModal',
-    'seerviInvoiceInputModal','adminNewPartyModal','crmModal','crmQuoteViewModal',
-    'crmPartyLedgerViewModal','crmDeleteConfirmModal'
-  ];
-  const RETURNABLE=[
-    'openAdminCatalogues','openAdminSettings','openGstProfile','openAdminActivity',
-    'openNotificationPost','toggleInventoryStock','seerviOpenItemsPanel','crmNewParty'
-  ];
-  const CLOSES=[
-    'closeAdminCatalogues','closeAdminSettings','closeAdminBackupOptions','closeGstProfile',
-    'closeAdminActivity','closeNotificationPost','closeAdminStock','seerviCloseItemsPanel',
-    'closeAdminNewParty'
-  ];
-  const originals={};
-  let switching=false;
+  const INNER={
+    adminCataloguesModal:'closeAdminCatalogues',
+    adminSettingsModal:'closeAdminSettings',
+    seerviActivityModal:'closeAdminActivity',
+    gstProfileModal:'closeGstProfile'
+  };
+  const ALL=[...Object.keys(INNER),'adminBackupOptionsModal','adminStockModal','seerviItemsModal','seerviInvoiceInputModal','adminNewPartyModal','notificationPostModal','crmModal','crmQuoteViewModal','crmPartyLedgerViewModal','crmDeleteConfirmModal'];
+  const wrapped=new Set();
+  let internal=false;
 
-  function $(id){return document.getElementById(id);}
-  function isOpen(el){
-    if(!el)return false;
-    const aria=el.getAttribute('aria-hidden');
-    if(aria==='false')return true;
-    const cs=getComputedStyle(el);
-    return cs.display!=='none' && cs.visibility!=='hidden' && cs.opacity!=='0';
+  function el(id){return document.getElementById(id);}
+  function isOpen(x){
+    if(!x)return false;
+    if(x.getAttribute('aria-hidden')==='false')return true;
+    const cs=getComputedStyle(x);
+    return cs.display!=='none'&&cs.visibility!=='hidden'&&cs.opacity!=='0';
   }
-  function dashboardOpen(){return isOpen($('accountDashboardModal'));}
-  function setAdminState(on){
+  function dashboardOpen(){return isOpen(el('accountDashboardModal'));}
+  function setState(on){
     document.body.classList.toggle('seervi-admin-panel-open',!!on);
     document.body.classList.toggle('modal-open',!!on);
     if(typeof window.seerviSyncTopbarHomeOnly==='function')window.seerviSyncTopbarHomeOnly();
   }
-  function closeRaw(name){
-    const fn=originals[name];
-    if(typeof fn!=='function')return;
-    switching=true;
-    try{fn.apply(window,Array.prototype.slice.call(arguments,1));}catch(e){console.warn('[Seervi] admin close failed:',name,e);}
-    finally{switching=false;}
+  function hideElement(id){
+    const x=el(id);if(!x)return;
+    x.classList.remove('show');x.setAttribute('aria-hidden','true');
+    if(x.hidden!==undefined)x.hidden=true;
   }
-  function closeAllRaw(except){
-    PANEL_IDS.forEach(id=>{
-      if(id===except)return;
-      const el=$(id);if(!isOpen(el))return;
-      const names={
-        adminCataloguesModal:'closeAdminCatalogues',adminSettingsModal:'closeAdminSettings',
-        adminBackupOptionsModal:'closeAdminBackupOptions',gstProfileModal:'closeGstProfile',
-        seerviActivityModal:'closeAdminActivity',notificationPostModal:'closeNotificationPost',
-        adminStockModal:'closeAdminStock',seerviItemsModal:'seerviCloseItemsPanel',
-        seerviInvoiceInputModal:null,adminNewPartyModal:'closeAdminNewParty',crmModal:'closeCRM',
-        crmQuoteViewModal:null,crmPartyLedgerViewModal:null,crmDeleteConfirmModal:null
-      }[id];
-      if(names)closeRaw(names);
-      else {el.classList.remove('show');el.setAttribute('aria-hidden','true');el.hidden=true;}
-    });
-    const dash=$('accountDashboardModal');
-    if(dash && isOpen(dash))closeAccountDashboard();
+  function closeOthers(keep){
+    ALL.forEach(id=>{if(id!==keep)hideElement(id);});
+    const d=el('accountDashboardModal');
+    if(d&&isOpen(d))hideElement('accountDashboardModal');
   }
-  function openWrap(name, original){
-    originals[name]=original;
+  function backToDashboard(){
+    if(typeof window.openAccountDashboard==='function'){
+      requestAnimationFrame(function(){window.openAccountDashboard('admin');setState(false);});
+    }else if(typeof window.crmShowWorkspace==='function'){
+      requestAnimationFrame(function(){window.crmShowWorkspace();setState(false);});
+    }
+  }
+  function wrapOpen(name,id){
+    if(wrapped.has('o:'+name)||typeof window[name]!=='function')return;
+    const original=window[name];
     window[name]=function(){
-      const fromDashboard=dashboardOpen();
-      window.seerviAdminOpenedFromDashboard=!!fromDashboard;
-      window.seerviAdminReturnTarget=fromDashboard?'dashboard':'home';
-      closeAllRaw();
-      switching=true;
+      const fromDash=dashboardOpen();
+      window.seerviAdminReturnTarget=fromDash?'dashboard':'home';
+      closeOthers(id);
+      internal=true;
+      try{
+        const result=original.apply(this,arguments);
+        const m=el(id);
+        if(m){m.hidden=false;m.classList.add('show');m.setAttribute('aria-hidden','false');m.style.display='flex';m.style.visibility='visible';m.style.opacity='1';}
+        setState(true);
+        return result;
+      }finally{internal=false;}
+    };
+    wrapped.add('o:'+name);
+  }
+  function wrapClose(name,id){
+    if(wrapped.has('c:'+name)||typeof window[name]!=='function')return;
+    const original=window[name];
+    window[name]=function(){
+      const returnDash=window.seerviAdminReturnTarget==='dashboard';
+      internal=true;
       try{return original.apply(this,arguments);}
-      finally{switching=false;setAdminState(true);}
-    };
-  }
-  function closeWrap(name, original){
-    originals[name]=original;
-    window[name]=function(){
-      const returnToDashboard=!!window.seerviAdminOpenedFromDashboard && window.seerviAdminReturnTarget==='dashboard';
-      const result=original.apply(this,arguments);
-      if(switching)return result;
-      setAdminState(false);
-      if(returnToDashboard && window.crmUser && typeof window.isAuthorisedAdmin==='function' && window.isAuthorisedAdmin(window.crmUser)){
-        window.seerviAdminOpenedFromDashboard=false;
-        window.seerviAdminReturnTarget='dashboard';
-        requestAnimationFrame(()=>window.openAccountDashboard('admin'));
-      }else{
-        window.seerviAdminOpenedFromDashboard=false;
-        window.seerviAdminReturnTarget='home';
+      finally{
+        internal=false;
+        const m=el(id);if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true');m.hidden=true;m.style.display='none';}
+        setState(false);
+        if(returnDash){window.seerviAdminReturnTarget='';backToDashboard();}
+        else window.seerviAdminReturnTarget='';
       }
-      return result;
     };
+    wrapped.add('c:'+name);
   }
   function install(){
-    RETURNABLE.forEach(name=>{
-      if(typeof window[name]==='function' && !window[name].__seerviStandardFlow){
-        const original=window[name];
-        const wrapped=function(){
-          const fromDashboard=dashboardOpen();
-          window.seerviAdminOpenedFromDashboard=!!fromDashboard;
-          window.seerviAdminReturnTarget=fromDashboard?'dashboard':'home';
-          closeAllRaw();
-          const r=original.apply(this,arguments);
-          setAdminState(true);
-          return r;
-        };
-        wrapped.__seerviStandardFlow=true;
-        originals[name]=original;window[name]=wrapped;
-      }
-    });
-    CLOSES.forEach(name=>{
-      if(typeof window[name]==='function' && !window[name].__seerviStandardFlow){
-        const original=window[name];
-        const wrapped=function(){
-          const returnToDashboard=!window.seerviAdminBackInProgress && !!window.seerviAdminOpenedFromDashboard && window.seerviAdminReturnTarget==='dashboard';
-          const r=original.apply(this,arguments);
-          if(switching)return r;
-          setAdminState(false);
-          if(returnToDashboard && window.crmUser && typeof window.isAuthorisedAdmin==='function' && window.isAuthorisedAdmin(window.crmUser)){
-            window.seerviAdminOpenedFromDashboard=false;
-            requestAnimationFrame(()=>window.openAccountDashboard('admin'));
-          }else{
-            window.seerviAdminOpenedFromDashboard=false;
-            window.seerviAdminReturnTarget='home';
-          }
-          return r;
-        };
-        wrapped.__seerviStandardFlow=true;
-        originals[name]=original;window[name]=wrapped;
-      }
-    });
-    // Dashboard buttons that directly implement their own launcher must also use the same return state.
-    ['accountDashboardBackup','accountDashboardNotificationPost'].forEach(name=>{
-      if(typeof window[name]==='function' && !window[name].__seerviStandardFlow){
-        const original=window[name];
-        const wrapped=function(){
-          window.seerviAdminOpenedFromDashboard=true;
-          window.seerviAdminReturnTarget='dashboard';
-          closeAllRaw();
-          const r=original.apply(this,arguments);setAdminState(true);return r;
-        };
-        wrapped.__seerviStandardFlow=true;window[name]=wrapped;
-      }
-    });
-    if(typeof window.seerviAdminBackToPrevious==='function' && !window.seerviAdminBackToPrevious.__seerviStandardFlow){
-      const originalBack=window.seerviAdminBackToPrevious;
-      const wrappedBack=function(){
-        window.seerviAdminBackInProgress=true;
-        try{return originalBack.apply(this,arguments);}
-        finally{window.seerviAdminBackInProgress=false;}
-      };
-      wrappedBack.__seerviStandardFlow=true;
-      window.seerviAdminBackToPrevious=wrappedBack;
-    }
-    setAdminState(PANEL_IDS.some(id=>isOpen($(id))));
+    wrapOpen('openAdminCatalogues','adminCataloguesModal');
+    wrapOpen('openAdminSettings','adminSettingsModal');
+    wrapOpen('openAdminActivity','seerviActivityModal');
+    wrapOpen('openGstProfile','gstProfileModal');
+    wrapClose('closeAdminCatalogues','adminCataloguesModal');
+    wrapClose('closeAdminSettings','adminSettingsModal');
+    wrapClose('closeAdminActivity','seerviActivityModal');
+    wrapClose('closeGstProfile','gstProfileModal');
+    setState(Object.keys(INNER).some(id=>isOpen(el(id))));
   }
   function observe(){
     const observer=new MutationObserver(function(){
-      if(switching)return;
-      const open=PANEL_IDS.filter(id=>isOpen($(id)));
+      if(internal)return;
+      const open=Object.keys(INNER).filter(id=>isOpen(el(id)));
       if(open.length>1){
-        const keep=open[open.length-1];closeAllRaw(keep);
+        const keep=open[open.length-1];Object.keys(INNER).forEach(id=>{if(id!==keep)hideElement(id);});
       }
-      setAdminState(open.length>0);
+      setState(open.length>0);
     });
     observer.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class','style','aria-hidden','hidden']});
   }
   function boot(){install();observe();}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
 </body>
