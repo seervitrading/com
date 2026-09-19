@@ -5822,6 +5822,9 @@ window.seerviCreateItem=async function(input={}){
   const ref=await addDoc(collection(db,SEERVI_ITEMS_COLLECTION),payload);
   seerviInvalidateCache('items:');
   seerviInvalidateCache('public:items:');
+  seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CACHE_PREFIX);
+  seerviBrowserCacheClear(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
+  seerviPublicProductDataChanged();
   return {id:ref.id,...payload};
 };
 
@@ -5850,6 +5853,7 @@ window.seerviUpdateItem=async function(itemId,input={}){
   seerviInvalidateCache('items:');
   seerviInvalidateCache('public:items:');
   seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CACHE_PREFIX);seerviBrowserCacheClear(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
+  seerviPublicProductDataChanged();
   return {id,...payload};
 };
 
@@ -5861,6 +5865,7 @@ window.seerviDeleteItem=async function(itemId){
   seerviInvalidateCache('items:');
   seerviInvalidateCache('public:items:');
   seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CACHE_PREFIX);seerviBrowserCacheClear(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
+  seerviPublicProductDataChanged();
   return true;
 };
 
@@ -11577,6 +11582,19 @@ function seerviBulkSpecColumns(row){
   });
   return specs;
 }
+function seerviBulkColourVariants(row){
+  const values=[];
+  const combined=seerviBulkCell(row,'Colour Variants','Color Variants','Variants','Variant Names');
+  if(combined)values.push(combined);
+  Object.keys(row||{}).forEach(key=>{
+    const h=seerviBulkNormaliseHeader(key);
+    if(/^(colour|color)?\s*variant\s*\d+(?:\s*name)?$/.test(h) || /^variant\s*\d+\s*name$/.test(h)){
+      const value=String(row[key]??'').trim();
+      if(value)values.push(value);
+    }
+  });
+  return seerviNormaliseColourVariants(values);
+}
 function seerviBulkSlug(v){
   return String(v||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
 }
@@ -11608,6 +11626,7 @@ async function seerviBulkPrepare(){
     const image=seerviBulkCell(row,'WEBP Image URL / Path','Main WEBP Image URL / Path','WEBP URL','Image WebP URL','Image URL');
     const galleryRaw=seerviBulkCell(row,'Gallery Images','Gallery Image URLs / Paths','Additional WEBP Images','Additional Images');
     const description=seerviBulkCell(row,'Description');
+    const colourVariants=seerviBulkColourVariants(row);
     const category=seerviBulkFindCategory(categoryName);
     const subcategory=subcategoryName ? (category ? seerviBulkFindSubcategory(subcategoryName,category.id) : null) : null;
     const errors=[];
@@ -11636,6 +11655,7 @@ async function seerviBulkPrepare(){
       data:{
         categoryId:category?.id||'', subcategoryId:subcategory?.id||'',
         name, model, hsnCode, description, imageWebpUrl:image, galleryImages,
+        colourVariants,
         specifications:seerviBulkSpecColumns(row),
         active:!['false','0','no','inactive'].includes(seerviBulkCell(row,'Active','Status').toLowerCase())
       },
@@ -11664,7 +11684,7 @@ function seerviBulkRenderPreview(){
     ? `${valid.length} valid row(s). ${errorRows.length} row(s) require correction.`
     : `${valid.length} row(s) ready to import.`;
   table.innerHTML=`<table class="seervi-bulk-table">
-    <thead><tr><th>ROW</th><th>STATUS</th><th>CATEGORY</th><th>SUBCATEGORY</th><th>ITEM</th><th>MODEL</th><th>HSN</th><th>MAIN IMAGE</th><th>GALLERY</th><th>SPECS</th><th>ERRORS</th></tr></thead>
+    <thead><tr><th>ROW</th><th>STATUS</th><th>CATEGORY</th><th>SUBCATEGORY</th><th>ITEM</th><th>MODEL</th><th>HSN</th><th>MAIN IMAGE</th><th>GALLERY</th><th>VARIANTS</th><th>SPECS</th><th>ERRORS</th></tr></thead>
     <tbody>${seerviBulkValidation.map(x=>{
       const status=x.errors.length?'ERROR':x.duplicate?'DUPLICATE':'READY';
       const cls=x.errors.length?'bulk-row-error':x.duplicate?'bulk-row-duplicate':'';
@@ -11679,6 +11699,7 @@ function seerviBulkRenderPreview(){
         <td>${seerviItemsEsc(x.data.hsnCode||'—')}</td>
         <td>${seerviItemsEsc(x.data.imageWebpUrl)}</td>
         <td>${(x.data.galleryImages||[]).length} image(s)</td>
+        <td>${(x.data.colourVariants||[]).length} colour(s)</td>
         <td>${Object.keys(x.data.specifications||{}).length}</td>
         <td class="seervi-bulk-error-text">${seerviItemsEsc(x.errors.join(' · '))}</td>
       </tr>`;
@@ -12080,6 +12101,10 @@ window.seerviBulkDownloadTemplate=async function(){
     'WEBP Image URL / Path':'images/items/example-main.webp',
     'Gallery Images':'images/items/example-02.webp|images/items/example-03.webp|images/items/example-04.webp',
     'Description':'Example item description',
+    'Colour Variants':'Black|White|Silver',
+    'Colour Variant 1':'Black',
+    'Colour Variant 2':'White',
+    'Colour Variant 3':'Silver',
     'Active':'TRUE',
     'Spec 1 Name':'Material',
     'Spec 1 Value':'Aluminium',
@@ -12090,8 +12115,8 @@ window.seerviBulkDownloadTemplate=async function(){
   };
   const ws=XLSX.utils.json_to_sheet([row]);
   ws['!cols']=[
-    {wch:24},{wch:24},{wch:30},{wch:18},{wch:48},{wch:72},{wch:45},{wch:12},
-    {wch:20},{wch:24},{wch:20},{wch:24},{wch:20},{wch:24}
+    {wch:24},{wch:24},{wch:30},{wch:18},{wch:48},{wch:72},{wch:45},{wch:42},
+    {wch:22},{wch:22},{wch:22},{wch:12},{wch:20},{wch:24},{wch:20},{wch:24},{wch:20},{wch:24}
   ];
   const notes=[
     ['SEERVI ITEM BULK ADD — IMPORTANT'],
@@ -12100,6 +12125,8 @@ window.seerviBulkDownloadTemplate=async function(){
     ['If Category/Subcategory does not match existing Firebase taxonomy, the row will show ERROR and cannot be imported.'],
     ['Main WEBP Image URL / Path is required. Gallery Images is optional and supports unlimited additional WEBP paths.'],
     ['Separate multiple Gallery Images with the | character. Example: image-02.webp|image-03.webp|image-04.webp'],
+    ['Colour Variants is optional. Separate multiple colours with |, for example: Black|White|Silver.'],
+    ['You can also use separate Colour Variant 1, Colour Variant 2, Colour Variant 3 columns. Both formats are supported.'],
     ['Use the separate Category / Subcategory Bulk Import to create taxonomy first.']
   ];
   const notesWs=XLSX.utils.aoa_to_sheet(notes);
@@ -12472,6 +12499,25 @@ function seerviPublicMergeItems(items){
   seerviPublicItems=[...map.values()].sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
 }
 
+async function seerviPublicProductDataChanged(){
+  // Firebase is the source of truth. Clear only product caches/state; do not
+  // touch site settings, catalogue PDFs, cart, CRM or any other subsystem.
+  seerviPublicCategoryItemCache.clear();
+  seerviPublicCategoryLoadPromises.clear();
+  seerviPublicAllItemsLoaded=false;
+  seerviPublicAllItemsLoadPromise=null;
+  seerviPublicItems=[];
+  try{
+    if(window.SeerviSiteSettings?.product?.show!==true)return;
+    if(seerviPublicSelectedCategory!=='all') await seerviPublicLoadCategoryItems(seerviPublicSelectedCategory);
+    seerviPublicRenderItems();
+    seerviPublicRenderSubcategories();
+  }catch(error){
+    console.warn('[Seervi] Product refresh after save failed:',error);
+  }
+  window.dispatchEvent(new CustomEvent('seervi:product-data-changed'));
+}
+
 async function seerviPublicLoadCatalogue(){
   if(window.SeerviGlobalSettingsReady){try{await window.SeerviGlobalSettingsReady;}catch(_){} }
   if(window.SeerviSiteSettings?.product?.show!==true)return;
@@ -12483,7 +12529,9 @@ async function seerviPublicLoadCatalogue(){
     window.seerviGetPublicCatalogue=()=>({items:seerviPublicItems,categories:seerviPublicCategories});
     seerviPublicRenderCategories();seerviPublicRenderSubcategories();seerviPublicRenderItems();
     if(status)status.textContent=`${seerviPublicCategories.filter(x=>x.type==='category').length} categor${seerviPublicCategories.filter(x=>x.type==='category').length===1?'y':'ies'} available.`;
-    if(Date.now()-cached.time<SEERVI_BROWSER_CACHE_TTL)return;
+    // Do not return on the 24-hour cache window. Cached categories render immediately,
+    // but Firebase is always checked so newly added products/categories appear without delay.
+
   }else if(status)status.textContent='Loading categories…';
   try{
     const catSnap=await seerviCachedRead('public:itemCategories:500',()=>getDocs(query(collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),where('active','==',true),limit(500))),60000);
@@ -12510,9 +12558,8 @@ async function seerviPublicLoadCategoryItems(categoryId){
     const cachedItems=cached.value.items.filter(item=>item&&item.active!==false);
     seerviPublicCategoryItemCache.set(id,cachedItems);seerviPublicMergeItems(cachedItems);seerviPublicRenderItems();
     if(status)status.textContent=`${cachedItems.length} saved product${cachedItems.length===1?'':'s'} loaded.`;
-    if(Date.now()-cached.time<SEERVI_BROWSER_CACHE_TTL)return cachedItems;
-    /* Stale-while-revalidate is handled by the shared promise below; the cached
-       products stay rendered while Firebase refreshes. */
+    /* Cached products stay rendered immediately, but Firebase is always
+       re-queried so a newly added product is not hidden for 24 hours. */
   }else if(status)status.textContent='Loading category products…';
   const promise=(async()=>{try{
     const itemSnap=await seerviCachedRead(`public:items:category:${id}:500`,()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('categoryId','==',id),limit(500))),60000);
@@ -12520,7 +12567,6 @@ async function seerviPublicLoadCategoryItems(categoryId){
     seerviPublicCategoryItemCache.set(id,items);seerviPublicMergeItems(items);seerviBrowserCacheWrite(cacheKey,{items});return items;
   }finally{seerviPublicCategoryLoadPromises.delete(id);}})();
   seerviPublicCategoryLoadPromises.set(id,promise);
-  if(Array.isArray(cached?.value?.items) && Date.now()-Number(cached.time||0)>=SEERVI_BROWSER_CACHE_TTL)return cached.value.items.filter(item=>item&&item.active!==false);
   return promise;
 }
 async function seerviPublicLoadCategoryInventory(categoryId){
@@ -12553,7 +12599,8 @@ async function seerviPublicLoadAllItemsForAI(){
   if(Array.isArray(cached?.value?.items)){
     seerviPublicMergeItems(cached.value.items.filter(item=>item&&item.active!==false));
     seerviPublicAllItemsLoaded=true;
-    if(Date.now()-cached.time<SEERVI_BROWSER_CACHE_TTL)return seerviPublicItems;
+    // Keep cached items visible while Firebase is refreshed below.
+
   }
   seerviPublicAllItemsLoadPromise=(async()=>{
     const snap=await seerviCachedRead('public:items:all:1000',()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000))),60000);
