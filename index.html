@@ -204,6 +204,10 @@ a:active,
 
   body.mobile-products-view #profiles{scroll-margin-top:8px}
   body.mobile-products-view #profileSearch{outline:none}
+  .seervi-mobile-products-back{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;white-space:nowrap}
+  .firebase-public-catalog .catalog-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .firebase-public-catalog .catalog-title>div{min-width:0}
+
 
   .cart-drawer .cart-panel{
     width:100vw!important;
@@ -3427,7 +3431,7 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
 }
 </script>
 
-</head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Current time and account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
+<style id="seervi-public-product-back-style">.seervi-mobile-products-back{display:none}.product-modal-box>.seervi-public-product-back{position:absolute;right:16px;top:14px;z-index:2}@media(max-width:600px){.seervi-mobile-products-back{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;white-space:nowrap}}</style></head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Current time and account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><span aria-label="Current date and time" id="mobileTopDateTime">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
 </button></div></nav><main><section class="bw-hero" id="home"><div aria-hidden="true" class="bw-hero-image"></div><video aria-hidden="true" autoplay="" class="bw-hero-media-video" id="bwHeroVideo" loop="" muted="" playsinline="" preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br/><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
@@ -3454,6 +3458,7 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
 <div class="crm-kicker">SEERVI TRADING / PRODUCTS</div>
 <h2>Our Products</h2>
 </div>
+<button class="crm-secondary small seervi-mobile-products-back" onclick="window.seerviUniversalBack ? window.seerviUniversalBack() : window.showMobileHome?.()" type="button">← BACK</button>
 </div>
 <div aria-label="Product categories" class="seervi-public-category-cards" id="seerviPublicCategoryBar"></div>
 <div class="seervi-public-category-view" hidden="" id="seerviPublicCategoryView">
@@ -3634,7 +3639,7 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
 <div aria-labelledby="adminSettingsTitle" aria-modal="true" class="crm-panel admin-settings-panel" role="dialog">
 <div class="crm-head">
 <div><div class="crm-kicker">SEERVI ADMIN / SETTINGS</div><h3 id="adminSettingsTitle">Global Settings</h3><div class="crm-auth-status">Only the authorised admin can change these settings. Saved values apply to all visitors.</div></div>
-<button class="crm-close" onclick="closeAdminSettings()" type="button">×</button>
+<button class="crm-secondary admin-universal-back" onclick="seerviAdminBackToPrevious()" type="button">← BACK</button>
 </div>
 <div class="admin-settings-scroll">
 <div aria-label="Settings sections" class="admin-settings-subnav" role="tablist">
@@ -6913,6 +6918,7 @@ window.seerviAdminBackToPrevious=function(){
   try{if(typeof closeAdminActivity==='function')closeAdminActivity();}catch(e){console.warn('Back: Activity close failed',e);}
   try{if(typeof closeGstProfile==='function')closeGstProfile();}catch(e){console.warn('Back: GST Profile close failed',e);}
   try{if(typeof closeAdminCatalogues==='function')closeAdminCatalogues();}catch(e){console.warn('Back: Catalogues close failed',e);}
+  try{if(typeof closeAdminSettings==='function')closeAdminSettings();}catch(e){console.warn('Back: Settings close failed',e);}
   try{if(typeof closeCRM==='function')closeCRM();}catch(e){console.warn('Back: Panel close failed',e);}
   if(returnToDashboard && crmUser && isAuthorisedAdmin(crmUser)){
     seerviAdminReturnTarget='dashboard';
@@ -13251,7 +13257,7 @@ window.seerviPublicOpenItem=function(itemId){
     modal=document.createElement('div');
     modal.id='seerviPublicItemModal';
     modal.className='product-modal';
-    modal.innerHTML='<div class="product-modal-box"><button class="modal-close" type="button" aria-label="Close" onclick="seerviPublicCloseItem()">×</button><div id="seerviPublicItemModalContent"></div></div>';
+    modal.innerHTML='<div class="product-modal-box"><button class="crm-secondary admin-universal-back seervi-public-product-back" type="button" aria-label="Back to previous page" onclick="seerviPublicCloseItem()">← BACK</button><div id="seerviPublicItemModalContent"></div></div>';
     document.body.appendChild(modal);
   }
   const specs=Object.entries(item.specifications||{});
@@ -13651,8 +13657,10 @@ function seerviRequireSettingsAdmin(){
 }
 
 window.openAdminSettings=function(){
-  closeAccountDashboard();
   try{seerviRequireSettingsAdmin();}catch(e){seerviToastAlert(e.message||'Admin access required.');return;}
+  seerviAdminReturnTarget='dashboard';
+  seerviAdminOpenedFromDashboard=true;
+  closeAccountDashboard();
   const modal=document.getElementById('adminSettingsModal');
   if(!modal)return;
   seerviSettingsFillForm();
@@ -14444,6 +14452,7 @@ function seerviShowSaveSuccess(message){
     'seerviActivityModal',
     'gstProfileModal',
     'productModal',
+    'seerviPublicItemModal',
     'cartDrawer',
     'seerviCataloguePanel'
   ];
