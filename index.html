@@ -12797,7 +12797,7 @@ function seerviPublicCardCartControl(item){
   const id=String(item?.id||'');
   const variants=seerviNormaliseColourVariants(item?.colourVariants||item?.variants);
   if(variants.length){
-    return `<button class="crm-primary small seervi-card-add-to-cart" type="button" onclick="seerviPublicOpenItem('${seerviItemsEsc(id)}')">SELECT COLOUR</button>`;
+    return `<button class="crm-primary small seervi-card-add-to-cart" type="button" onclick="seerviPublicOpenItem('${seerviItemsEsc(id)}')">ADD TO CART</button>`;
   }
   const entry=(typeof seerviCart!=='undefined' && Array.isArray(seerviCart)) ? seerviCart.find(x=>String(x.firebaseItemId||'')===id && !x.colourVariant) : null;
   const qty=entry ? Math.max(1,Number(entry.qty)||1) : 0;
@@ -13302,10 +13302,50 @@ window.seerviPublicCloseItem=function(){
   document.body.classList.remove('modal-open');
 };
 
+window.seerviPublicVariantQtySync=function(){
+  const select=document.getElementById('seerviPublicColourSelect');
+  const input=document.getElementById('seerviPublicColourQty');
+  if(!input)return;
+  const colour=select?.value||'';
+  if(!colour){input.value='1';return;}
+  let decoded='';
+  try{decoded=decodeURIComponent(colour);}catch(_){decoded=colour;}
+  const existing=(typeof seerviCart!=='undefined' && Array.isArray(seerviCart))
+    ? seerviCart.find(x=>String(x.firebaseItemId||'')===String(window.__seerviVariantQtyItemId||'') && String(x.colourVariant||'').trim().toLowerCase()===String(decoded||'').trim().toLowerCase())
+    : null;
+  input.value=String(Math.max(1,Number(existing?.qty)||1));
+};
+
+window.seerviPublicVariantQtyChange=function(delta){
+  const select=document.getElementById('seerviPublicColourSelect');
+  const input=document.getElementById('seerviPublicColourQty');
+  if(!select || !input)return;
+  if(!select.value){seerviToastAlert('Please select a colour first.');select.focus();return;}
+  const current=Math.max(1,parseInt(String(input.value||'1'),10)||1);
+  input.value=String(Math.min(1000000,Math.max(1,current+Number(delta||0))));
+};
+
+window.seerviPublicVariantQtyNormalize=function(input){
+  if(!input)return;
+  const n=parseInt(String(input.value||'').trim(),10);
+  input.value=String(Number.isFinite(n)&&n>0?Math.min(n,1000000):1);
+};
+
 window.seerviPublicAddSelectedItemToCart=function(itemId){
   const select=document.getElementById('seerviPublicColourSelect');
-  if(select && !select.value){seerviToastAlert('Please select a colour first.');return false;}
+  const qtyInput=document.getElementById('seerviPublicColourQty');
+  if(select && !select.value){seerviToastAlert('Please select a colour first.');select.focus();return false;}
+  const qty=Math.min(1000000,Math.max(1,parseInt(String(qtyInput?.value||'1').trim(),10)||1));
+  if(qtyInput)qtyInput.value=String(qty);
   const ok=window.seerviPublicAddToCart(itemId,select?select.value:'');
+  if(ok!==false && select?.value){
+    let decoded='';
+    try{decoded=decodeURIComponent(select.value);}catch(_){decoded=select.value;}
+    const entry=(typeof seerviCart!=='undefined' && Array.isArray(seerviCart))
+      ? seerviCart.find(x=>String(x.firebaseItemId||'')===String(itemId||'') && String(x.colourVariant||'').trim().toLowerCase()===String(decoded||'').trim().toLowerCase())
+      : null;
+    if(entry){entry.qty=qty;saveCart();}
+  }
   if(ok!==false)window.seerviPublicCloseItem();
   return ok!==false;
 };
@@ -13323,7 +13363,9 @@ window.seerviPublicOpenItem=function(itemId){
   }
   const specs=Object.entries(item.specifications||{});
   const colourVariants=seerviNormaliseColourVariants(item.colourVariants||item.variants);
-  const colourHtml=colourVariants.length?`<div class="seervi-colour-select-wrap"><label for="seerviPublicColourSelect">SELECT COLOUR *</label><select class="seervi-colour-select" id="seerviPublicColourSelect"><option value="">Select Colour</option>${colourVariants.map(v=>`<option value="${seerviItemsEsc(encodeURIComponent(v.name))}">${seerviItemsEsc(v.name)}</option>`).join('')}</select></div>`:'';
+  window.__seerviVariantQtyItemId=String(item.id||'');
+  const colourHtml=colourVariants.length?`<div class="seervi-colour-select-wrap"><label for="seerviPublicColourSelect">SELECT COLOUR *</label><select class="seervi-colour-select" id="seerviPublicColourSelect" onchange="seerviPublicVariantQtySync()"><option value="">Select Colour</option>${colourVariants.map(v=>`<option value="${seerviItemsEsc(encodeURIComponent(v.name))}">${seerviItemsEsc(v.name)}</option>`).join('')}</select></div>
+    <div class="seervi-colour-select-wrap"><label for="seerviPublicColourQty">QUANTITY *</label><div class="seervi-public-qty-control seervi-variant-qty-control" data-variant-item-id="${seerviItemsEsc(item.id)}" aria-label="Quantity"><button type="button" class="cart-minus" onclick="seerviPublicVariantQtyChange(-1)" aria-label="Decrease quantity">−</button><input class="seervi-public-qty-input" id="seerviPublicColourQty" type="number" min="1" max="1000000" step="1" inputmode="numeric" value="1" aria-label="Quantity" onblur="seerviPublicVariantQtyNormalize(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();seerviPublicVariantQtyNormalize(this);this.blur();}"><button type="button" class="cart-plus" onclick="seerviPublicVariantQtyChange(1)" aria-label="Increase quantity">+</button></div><span class="seervi-public-qty-label">TYPE BULK QTY OR USE + / −</span></div>`:'';
   const specTable=specs.length?`<div style="margin-top:18px;border:1px solid #ffffff12;border-radius:10px;overflow:hidden"><table style="width:100%;border-collapse:collapse">${specs.map(([k,v])=>`<tr><td style="padding:9px;border-bottom:1px solid #ffffff0d;color:#8f99a4;width:35%">${seerviItemsEsc(k)}</td><td style="padding:9px;border-bottom:1px solid #ffffff0d;color:#f2f4f6">${seerviItemsEsc(v)}</td></tr>`).join('')}</table></div>`:'';
   $('seerviPublicItemModalContent').innerHTML=`${seerviPublicGalleryHtml(item)}
     <div class="modal-caption">
