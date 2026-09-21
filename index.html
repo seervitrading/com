@@ -14428,6 +14428,8 @@ function seerviShowSaveSuccess(message){
     'crmModal',
     'adminNewPartyModal',
     'adminStockModal',
+    'adminSettingsModal',
+    'adminCataloguesModal',
     'adminBackupOptionsModal',
     'seerviActivityModal',
     'gstProfileModal',
@@ -14444,8 +14446,18 @@ function seerviShowSaveSuccess(message){
     const cs=getComputedStyle(el);
     return cs.display!=='none' && cs.visibility!=='hidden' && cs.opacity!=='0';
   }
+  function hasOpenCrmModal(){
+    return Array.from(document.querySelectorAll('.crm-modal')).some(isOpen);
+  }
   function syncTopbarHomeOnly(){
-    const nonHome = document.body.classList.contains('mobile-products-view') || document.body.classList.contains('seervi-category-active') || isOpen(document.getElementById('motherCategoryPanel')) || VIEW_IDS.some(id=>isOpen(document.getElementById(id)));
+    // The top bar is a Home-only component. Do not maintain a fragile list of
+    // individual settings panels: any visible CRM modal/panel is a non-Home view.
+    const nonHome =
+      document.body.classList.contains('mobile-products-view') ||
+      document.body.classList.contains('seervi-category-active') ||
+      isOpen(document.getElementById('motherCategoryPanel')) ||
+      hasOpenCrmModal() ||
+      VIEW_IDS.some(id=>isOpen(document.getElementById(id)));
     document.body.classList.toggle('seervi-non-home-view', nonHome);
   }
   function init(){
@@ -14454,6 +14466,29 @@ function seerviShowSaveSuccess(message){
     window.addEventListener('popstate',syncTopbarHomeOnly);
     window.seerviSyncTopbarHomeOnly=syncTopbarHomeOnly;
     window.addEventListener('hashchange',syncTopbarHomeOnly);
+
+    // Utility panels such as New Party and Stock are created dynamically. Watch
+    // only modal-related DOM changes so the top bar follows the real panel state
+    // without polling or forcing any layout changes.
+    const observer=new MutationObserver(function(mutations){
+      for(const m of mutations){
+        if(m.type==='childList'){
+          for(const node of m.addedNodes){
+            if(node.nodeType===1 && (node.matches?.('.crm-modal') || node.querySelector?.('.crm-modal'))){
+              requestAnimationFrame(syncTopbarHomeOnly);
+              return;
+            }
+          }
+        }else if(m.type==='attributes'){
+          const t=m.target;
+          if(t?.matches?.('.crm-modal') || t?.closest?.('.crm-modal')){
+            requestAnimationFrame(syncTopbarHomeOnly);
+            return;
+          }
+        }
+      }
+    });
+    observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class','style','aria-hidden']});
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
   else init();
