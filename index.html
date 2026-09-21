@@ -4011,9 +4011,12 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
 <div class="crm-muted" style="margin:8px 0 12px;line-height:1.6">
             Required: <b>Category</b>, <b>Subcategory</b>, <b>Item Name</b>, <b>WEBP Image URL / Path</b>. <b>HSN Code</b> is optional.<br/>
             Specifications use paired columns:
-            <b>Spec 1 Name / Spec 1 Value</b>, <b>Spec 2 Name / Spec 2 Value</b>…
+            <b>Spec 1 Name / Spec 1 Value</b>, <b>Spec 2 Name / Spec 2 Value</b>…<br/>
+            <b>COLOUR VARIANTS</b> are supported in bulk: use <b>Colour Variants</b> with values separated by <b>|</b>, or use <b>Colour Variant 1</b>, <b>Colour Variant 2</b>, <b>Colour Variant 3</b>… columns.
+            The same variant data is saved to the Item as <b>colourVariants</b>, exactly like the single-item form.
           </div>
 <button class="crm-secondary" onclick="seerviBulkDownloadTemplate()" type="button">DOWNLOAD ITEM TEMPLATE</button>
+<div class="crm-muted" style="margin-top:10px;line-height:1.6"><b>VARIANT TEMPLATE:</b> Example: <code>Black|White|Silver</code> in <b>Colour Variants</b>, or separate variant columns. Unlimited variant columns are accepted by the importer.</div>
 </div>
 <div class="admin-items-category-card">
 <div class="crm-section-title">2. UPLOAD ITEM FILE</div>
@@ -12105,6 +12108,8 @@ window.seerviBulkDownloadTemplate=async function(){
     'Colour Variant 1':'Black',
     'Colour Variant 2':'White',
     'Colour Variant 3':'Silver',
+    'Colour Variant 4':'Gold',
+    'Colour Variant 5':'Grey',
     'Active':'TRUE',
     'Spec 1 Name':'Material',
     'Spec 1 Value':'Aluminium',
@@ -12126,7 +12131,8 @@ window.seerviBulkDownloadTemplate=async function(){
     ['Main WEBP Image URL / Path is required. Gallery Images is optional and supports unlimited additional WEBP paths.'],
     ['Separate multiple Gallery Images with the | character. Example: image-02.webp|image-03.webp|image-04.webp'],
     ['Colour Variants is optional. Separate multiple colours with |, for example: Black|White|Silver.'],
-    ['You can also use separate Colour Variant 1, Colour Variant 2, Colour Variant 3 columns. Both formats are supported.'],
+    ['You can also use separate Colour Variant 1, Colour Variant 2, Colour Variant 3… columns. Unlimited numbered variant columns are supported.'],
+    ['Bulk variant data is saved to the same colourVariants field used by the single-item Product form.'],
     ['Use the separate Category / Subcategory Bulk Import to create taxonomy first.']
   ];
   const notesWs=XLSX.utils.aoa_to_sheet(notes);
@@ -12490,6 +12496,7 @@ function seerviPublicMillis(v){
 // catalogue just to display the homepage.
 const seerviPublicCategoryItemCache=new Map();
 const seerviPublicCategoryLoadPromises=new Map();
+const seerviPublicCategoryUnsubscribers=new Map();
 let seerviPublicAllItemsLoaded=false;
 let seerviPublicAllItemsLoadPromise=null;
 
@@ -12502,6 +12509,8 @@ function seerviPublicMergeItems(items){
 async function seerviPublicProductDataChanged(){
   // Firebase is the source of truth. Clear only product caches/state; do not
   // touch site settings, catalogue PDFs, cart, CRM or any other subsystem.
+  // Realtime category listeners remain active so customers already viewing a
+  // category receive newly added/updated products without waiting for a cache TTL.
   seerviPublicCategoryItemCache.clear();
   seerviPublicCategoryLoadPromises.clear();
   seerviPublicAllItemsLoaded=false;
@@ -12562,9 +12571,29 @@ async function seerviPublicLoadCategoryItems(categoryId){
        re-queried so a newly added product is not hidden for 24 hours. */
   }else if(status)status.textContent='Loading category products…';
   const promise=(async()=>{try{
-    const itemSnap=await seerviCachedRead(`public:items:category:${id}:500`,()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('categoryId','==',id),limit(500))),60000);
+    // Product visibility must not wait for the old 24-hour browser cache.
+    // Read the current Firebase state, then keep this category on a realtime
+    // listener so a new product appears immediately on already-open pages.
+    const itemSnap=await getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('categoryId','==',id),limit(500)));
     const items=itemSnap.docs.map(d=>({id:d.id,...d.data()})).filter(item=>item.active!==false).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
-    seerviPublicCategoryItemCache.set(id,items);seerviPublicMergeItems(items);seerviBrowserCacheWrite(cacheKey,{items});return items;
+    seerviPublicCategoryItemCache.set(id,items);seerviPublicMergeItems(items);seerviBrowserCacheWrite(cacheKey,{items});
+
+    if(!seerviPublicCategoryUnsubscribers.has(id)){
+      const watchQuery=query(collection(db,SEERVI_ITEMS_COLLECTION),where('categoryId','==',id),limit(500));
+      const unsubscribe=onSnapshot(watchQuery,snap=>{
+        const liveItems=snap.docs.map(d=>({id:d.id,...d.data()})).filter(item=>item.active!==false).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
+        seerviPublicCategoryItemCache.set(id,liveItems);
+        seerviBrowserCacheWrite(cacheKey,{items:liveItems});
+        seerviPublicMergeItems(liveItems);
+        if(seerviPublicSelectedCategory===id){
+          seerviPublicRenderSubcategories();
+          seerviPublicRenderItems();
+        }
+        window.dispatchEvent(new CustomEvent('seervi:product-data-changed-live',{detail:{categoryId:id,items:liveItems}}));
+      },error=>console.warn('[Seervi] Realtime product listener:',error));
+      seerviPublicCategoryUnsubscribers.set(id,unsubscribe);
+    }
+    return items;
   }finally{seerviPublicCategoryLoadPromises.delete(id);}})();
   seerviPublicCategoryLoadPromises.set(id,promise);
   return promise;
