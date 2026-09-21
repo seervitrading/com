@@ -15146,6 +15146,21 @@ function seerviShowSaveSuccess(message){
       bar.innerHTML='<span></span>';
       document.body.appendChild(bar);
       var fill=bar.firstElementChild, ticking=false, boundCatalogueScroller=null, boundDashboardScroller=null;
+      var progressSuppressedIds=[
+        'seerviItemsModal',
+        'adminBackupOptionsModal',
+        'adminStockModal',
+        'notificationPostModal',
+        'seerviActivityModal',
+        'gstProfileModal'
+      ];
+      function isProgressSuppressed(){
+        for(var i=0;i<progressSuppressedIds.length;i++){
+          var el=document.getElementById(progressSuppressedIds[i]);
+          if(el&&el.classList.contains('show')) return true;
+        }
+        return false;
+      }
       function getProgressScroller(){
         var dashboard=document.getElementById('accountDashboardModal');
         var dashboardPanel=dashboard&&dashboard.querySelector('.account-dashboard-panel');
@@ -15157,6 +15172,11 @@ function seerviShowSaveSuccess(message){
       }
       function updateProgress(){
         ticking=false;
+        if(isProgressSuppressed()){
+          bar.style.display='none';
+          return;
+        }
+        bar.style.display='block';
         var scroller=getProgressScroller();
         var max,position;
         if(scroller===document.scrollingElement||scroller===document.documentElement){
@@ -15192,6 +15212,15 @@ function seerviShowSaveSuccess(message){
         requestProgress();
       }
       bindCatalogueScroller();
+      /* These admin panels open above the home/dashboard context and must never
+         show the global golden progress line inside their own scrolling area. */
+      if(window.MutationObserver){
+        var progressPanelObserver=new MutationObserver(function(){requestProgress();});
+        for(var psi=0;psi<progressSuppressedIds.length;psi++){
+          var progressPanel=document.getElementById(progressSuppressedIds[psi]);
+          if(progressPanel) progressPanelObserver.observe(progressPanel,{attributes:true,attributeFilter:['class','aria-hidden','hidden']});
+        }
+      }
       document.addEventListener('click',function(){requestAnimationFrame(bindCatalogueScroller);},true);
       window.addEventListener('hashchange',bindCatalogueScroller);
       window.addEventListener('load',requestProgress,{once:true,passive:true});
