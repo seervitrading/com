@@ -2856,24 +2856,13 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
   margin:0 !important;
   border-radius:0 !important;
   overflow:auto !important;
-  scrollbar-width:thin !important;
-  scrollbar-color:#d9ad50 transparent !important;
-  scrollbar-gutter:stable;
+  scrollbar-width:none !important;
+  -ms-overflow-style:none !important;
 }
 #accountDashboardModal .account-dashboard-panel::-webkit-scrollbar{
-  width:4px !important;
-  height:4px !important;
-}
-#accountDashboardModal .account-dashboard-panel::-webkit-scrollbar-track{
-  background:transparent !important;
-}
-#accountDashboardModal .account-dashboard-panel::-webkit-scrollbar-thumb{
-  background:linear-gradient(180deg,#d9ad50,#f0c66a,#fff0b0) !important;
-  border-radius:999px !important;
-  box-shadow:0 0 8px #f0c66a55 !important;
-}
-#accountDashboardModal .account-dashboard-panel::-webkit-scrollbar-thumb:hover{
-  background:linear-gradient(180deg,#f0c66a,#fff0b0,#d9ad50) !important;
+  width:0 !important;
+  height:0 !important;
+  display:none !important;
 }#accountDashboardModal .account-dashboard-options{
   width:min(1180px,calc(100% - 48px));
   margin:0 auto;
@@ -15156,8 +15145,11 @@ function seerviShowSaveSuccess(message){
       bar.id='seerviScrollProgress';
       bar.innerHTML='<span></span>';
       document.body.appendChild(bar);
-      var fill=bar.firstElementChild, ticking=false, boundCatalogueScroller=null;
+      var fill=bar.firstElementChild, ticking=false, boundCatalogueScroller=null, boundDashboardScroller=null;
       function getProgressScroller(){
+        var dashboard=document.getElementById('accountDashboardModal');
+        var dashboardPanel=dashboard&&dashboard.querySelector('.account-dashboard-panel');
+        if(dashboard&&dashboard.classList.contains('show')&&dashboardPanel&&dashboardPanel.scrollHeight>dashboardPanel.clientHeight) return dashboardPanel;
         var panel=document.getElementById('seerviCataloguePanel');
         var card=panel&&panel.querySelector('.seervi-catalogue-card');
         if(panel&&panel.classList.contains('show')&&card&&card.scrollHeight>card.clientHeight) return card;
@@ -15189,6 +15181,13 @@ function seerviShowSaveSuccess(message){
           if(boundCatalogueScroller)boundCatalogueScroller.removeEventListener('scroll',requestProgress);
           boundCatalogueScroller=card;
           card.addEventListener('scroll',requestProgress,{passive:true});
+        }
+        var dashboard=document.getElementById('accountDashboardModal');
+        var dashboardPanel=dashboard&&dashboard.querySelector('.account-dashboard-panel');
+        if(dashboardPanel&&dashboardPanel!==boundDashboardScroller){
+          if(boundDashboardScroller)boundDashboardScroller.removeEventListener('scroll',requestProgress);
+          boundDashboardScroller=dashboardPanel;
+          dashboardPanel.addEventListener('scroll',requestProgress,{passive:true});
         }
         requestProgress();
       }
