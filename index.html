@@ -2856,6 +2856,24 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
   margin:0 !important;
   border-radius:0 !important;
   overflow:auto !important;
+  scrollbar-width:thin !important;
+  scrollbar-color:#d9ad50 transparent !important;
+  scrollbar-gutter:stable;
+}
+#accountDashboardModal .account-dashboard-panel::-webkit-scrollbar{
+  width:4px !important;
+  height:4px !important;
+}
+#accountDashboardModal .account-dashboard-panel::-webkit-scrollbar-track{
+  background:transparent !important;
+}
+#accountDashboardModal .account-dashboard-panel::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,#d9ad50,#f0c66a,#fff0b0) !important;
+  border-radius:999px !important;
+  box-shadow:0 0 8px #f0c66a55 !important;
+}
+#accountDashboardModal .account-dashboard-panel::-webkit-scrollbar-thumb:hover{
+  background:linear-gradient(180deg,#f0c66a,#fff0b0,#d9ad50) !important;
 }#accountDashboardModal .account-dashboard-options{
   width:min(1180px,calc(100% - 48px));
   margin:0 auto;
