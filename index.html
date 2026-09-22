@@ -1,15 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" translate="no"><head>
-<script id="seervi-early-language-state">
-(function(){
-  try{
-    var m=document.cookie.match(/(?:^|; )seervilang=([^;]+)/);
-    var c=(m?decodeURIComponent(m[1]):'en').toLowerCase();
-    if(c && c!=='en')document.documentElement.lang=c;
-  }catch(_){}
-})();
-</script>
-<meta name="google" content="notranslate">
+<html lang="en"><head>
 <script id="seervi-global-namespace-core">
 /* Canonical application namespace.
    Legacy window aliases remain available for existing inline handlers,
@@ -2762,38 +2752,135 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
   #crmPartyLedgerViewModal .crm-quote-view-head h3,
   #seerviInvoiceInputModal .seervi-invoice-input-head h3{font-size:24px;}
 }#accountDashboardModal{
-  position:fixed !important;
-  inset:0 !important;
-  width:100vw !important;
-  height:100dvh !important;
-  max-width:none !important;
-  max-height:none !important;
-  margin:0 !important;
-  padding:0 !important;
-  border-radius:0 !important;
-  overflow:hidden !important;
-  z-index:99998 !important;
-}#accountDashboardModal .account-dashboard-panel{
-  width:100% !important;
-  max-width:none !important;
-  height:100% !important;
-  max-height:none !important;
-  margin:0 !important;
-  border-radius:0 !important;
-  overflow:auto !important;
-  scrollbar-width:none !important;
-  -ms-overflow-style:none !important;
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100dvh;
+  margin:0;
+  padding:0;
+  border-radius:0;
+  overflow:hidden;
+  z-index:99998;
+  align-items:stretch;
+  justify-content:flex-start;
+}
+#accountDashboardModal .crm-backdrop{
+  position:absolute;
+  inset:0;
+}
+#accountDashboardModal .account-dashboard-panel{
+  position:relative;
+  z-index:2;
+  width:min(320px,82vw);
+  max-width:none;
+  height:100%;
+  max-height:none;
+  margin:0;
+  border:0;
+  border-right:1px solid rgba(255,255,255,.10);
+  border-radius:0;
+  overflow:auto;
+  background:linear-gradient(180deg,#1b1f24 0%,#171a1f 55%,#13161a 100%);
+  box-shadow:18px 0 55px rgba(0,0,0,.35);
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  animation:seerviDashboardDrawerIn .24s cubic-bezier(.22,.61,.36,1);
 }
 #accountDashboardModal .account-dashboard-panel::-webkit-scrollbar{
-  width:0 !important;
-  height:0 !important;
-  display:none !important;
-}#accountDashboardModal .account-dashboard-options{
-  width:min(1180px,calc(100% - 48px));
-  margin:0 auto;
-}@media(max-width:600px){
+  width:0;
+  height:0;
+  display:none;
+}
+#accountDashboardModal .crm-head{
+  position:sticky;
+  top:0;
+  z-index:3;
+  padding:22px 16px 16px;
+  background:linear-gradient(180deg,#1b1f24 0%,#1b1f24f2 80%,#1b1f2400 100%);
+  border-bottom:1px solid rgba(255,255,255,.09);
+}
+#accountDashboardModal .crm-head h3{
+  font-size:19px;
+  margin:5px 0 3px;
+}
+#accountDashboardModal .crm-auth-status{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+#accountDashboardModal .account-dashboard-options{
+  width:100%;
+  margin:0;
+  padding:10px 12px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+#accountDashboardModal .account-dashboard-options:not([hidden]){
+  display:flex;
+}
+#accountDashboardModal .account-dashboard-option{
+  width:100%;
+  min-height:52px;
+  display:grid;
+  grid-template-columns:30px minmax(0,1fr);
+  grid-template-rows:auto auto;
+  column-gap:9px;
+  align-content:center;
+  padding:9px 12px;
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  color:#f1f3f5;
+  text-align:left;
+  transition:background .16s ease,color .16s ease;
+}
+#accountDashboardModal .account-dashboard-option:hover{
+  background:rgba(255,255,255,.07);
+  border-color:transparent;
+  transform:none;
+}
+#accountDashboardModal .account-dashboard-option span{
+  grid-row:1 / span 2;
+  align-self:center;
+  margin:0;
+  color:#f0c66a;
+  font-size:18px;
+  line-height:1;
+}
+#accountDashboardModal .account-dashboard-option strong{
+  font-size:11px;
+  line-height:1.2;
+  letter-spacing:.7px;
+}
+#accountDashboardModal .account-dashboard-option small{
+  margin-top:3px;
+  color:#7f8995;
+  font-size:8px;
+  line-height:1.35;
+}
+#accountDashboardModal .account-dashboard-option.danger span{color:#ff8b8b}
+#accountDashboardModal .account-dashboard-option.danger:hover{
+  background:rgba(255,127,117,.08);
+}
+#accountDashboardModal .customer-dashboard-back{
+  min-width:0;
+  padding:8px 10px;
+  font-size:9px;
+}
+@keyframes seerviDashboardDrawerIn{
+  from{transform:translateX(-102%)}
+  to{transform:translateX(0)}
+}
+@media(max-width:600px){
+  #accountDashboardModal .account-dashboard-panel{
+    width:min(310px,82vw);
+  }
+  #accountDashboardModal .crm-head{
+    padding:18px 14px 14px;
+  }
   #accountDashboardModal .account-dashboard-options{
-    width:calc(100% - 28px);
+    padding:8px 10px 14px;
   }
 }#adminNewPartyModal .crm-panel,
 #adminNewPartyModal .crm-panel *{font-family:inherit;}#adminNewPartyModal .crm-panel{font-size:14px;line-height:1.45;}#adminNewPartyModal .crm-section-title{font-size:13px;line-height:1.25;}#adminNewPartyModal .crm-auth-status,
@@ -4285,195 +4372,6 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
   document.getElementById('seerviMobileAccountMenuBackdrop')?.addEventListener('click',closeMenu);
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu();});
   window.addEventListener('resize',function(){if(window.innerWidth>600)closeMenu();},{passive:true});
-})();
-</script>
-<style id="seervi-mobile-language-switcher">
-/* Premium mobile language control — no Google Translate toolbar/banner. */
-@media(max-width:600px){
-  .seervi-mobile-language-box{
-    margin:0 8px 14px;
-    padding:0 0 14px;
-    border-bottom:1px solid rgba(255,255,255,.09);
-  }
-  .seervi-mobile-language-label{
-    display:block;
-    margin:0 0 7px;
-    color:#8f99a4;
-    font-size:9px;
-    font-weight:800;
-    letter-spacing:1.2px;
-    text-transform:uppercase;
-  }
-  .seervi-mobile-language-select{
-    width:100%;
-    height:40px;
-    padding:0 11px;
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:9px;
-    outline:0;
-    background:#10151a;
-    color:#f1f3f5;
-    font:600 12px Inter,Arial,sans-serif;
-    cursor:pointer;
-  }
-  .seervi-mobile-language-select:focus{border-color:#f0c66a66}
-}
-</style>
-<script id="seervi-mobile-language-script">
-(function(){
-  const languages=[
-    ['en','English'],
-    ['hi','हिन्दी'],
-    ['bn','বাংলা'],
-    ['mr','मराठी'],
-    ['te','తెలుగు'],
-    ['ta','தமிழ்'],
-    ['gu','ગુજરાતી'],
-    ['ur','اردو'],
-    ['kn','ಕನ್ನಡ']
-  ];
-  const CACHE_PREFIX='seervi:lang:v1:';
-  const SKIP_TAGS=new Set(['SCRIPT','STYLE','NOSCRIPT','TEXTAREA','OPTION','SELECT','SVG']);
-  const ATTRS=['placeholder','title','aria-label'];
-  let translating=false;
-  let observer=null;
-
-  function currentLanguage(){
-    try{
-      const match=document.cookie.match(/(?:^|; )seervilang=([^;]+)/);
-      return (match?decodeURIComponent(match[1]):'en').toLowerCase()||'en';
-    }catch(_){return 'en';}
-  }
-
-  function saveLanguage(code){
-    document.cookie='seervilang='+encodeURIComponent(code)+';path=/;max-age=31536000;SameSite=Lax';
-    document.documentElement.lang=code;
-  }
-
-  function cacheKey(lang,text){return CACHE_PREFIX+lang+':'+text;}
-
-  function shouldTranslateText(node){
-    if(!node || node.nodeType!==Node.TEXT_NODE)return false;
-    const parent=node.parentElement;
-    if(!parent || SKIP_TAGS.has(parent.tagName))return false;
-    if(!node.nodeValue || !node.nodeValue.trim())return false;
-    if(parent.closest('[data-no-translate],.notranslate,[translate="no"]'))return false;
-    return /[A-Za-z]/.test(node.nodeValue);
-  }
-
-  function collectTextNodes(){
-    const nodes=[];
-    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
-    let node;
-    while(node=walker.nextNode()){if(shouldTranslateText(node))nodes.push(node);}
-    return nodes;
-  }
-
-  function collectAttributeNodes(){
-    const items=[];
-    document.querySelectorAll('[placeholder],[title],[aria-label]').forEach(el=>{
-      if(el.closest('[data-no-translate],.notranslate,[translate="no"]'))return;
-      ATTRS.forEach(attr=>{
-        const value=el.getAttribute(attr);
-        if(value && /[A-Za-z]/.test(value))items.push({el,attr,value});
-      });
-    });
-    return items;
-  }
-
-  function splitText(text,max=1100){
-    const out=[];
-    let rest=String(text||'');
-    while(rest.length>max){
-      let cut=Math.max(rest.lastIndexOf('. ',max),rest.lastIndexOf(' ',max));
-      if(cut<200)cut=max;
-      out.push(rest.slice(0,cut));
-      rest=rest.slice(cut).replace(/^\s+/,'');
-    }
-    if(rest)out.push(rest);
-    return out;
-  }
-
-  async function translateChunk(text,lang){
-    const key=cacheKey(lang,text);
-    try{
-      const cached=localStorage.getItem(key);
-      if(cached)return cached;
-    }catch(_){}
-    const url='https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl='+encodeURIComponent(lang)+'&dt=t&q='+encodeURIComponent(text);
-    const response=await fetch(url,{mode:'cors',cache:'force-cache'});
-    if(!response.ok)throw new Error('Translation request failed');
-    const data=await response.json();
-    const translated=Array.isArray(data?.[0])?data[0].map(part=>part?.[0]||'').join(''):'';
-    if(!translated)throw new Error('Empty translation');
-    try{localStorage.setItem(key,translated);}catch(_){}
-    return translated;
-  }
-
-  async function translateValue(value,lang){
-    const parts=splitText(value);
-    const translated=[];
-    for(const part of parts)translated.push(await translateChunk(part,lang));
-    return translated.join(' ');
-  }
-
-  async function translatePage(lang){
-    if(translating)return;
-    if(lang==='en'){location.reload();return;}
-    translating=true;
-    const textNodes=collectTextNodes();
-    const attrs=collectAttributeNodes();
-    const unique=[...new Set([...textNodes.map(n=>n.nodeValue),...attrs.map(x=>x.value)])];
-    const map=new Map();
-    try{
-      for(let i=0;i<unique.length;i+=3){
-        const batch=unique.slice(i,i+3);
-        const results=await Promise.all(batch.map(text=>translateValue(text,lang)));
-        batch.forEach((text,index)=>map.set(text,results[index]));
-      }
-      textNodes.forEach(node=>{
-        const translated=map.get(node.nodeValue);
-        if(translated)node.nodeValue=translated;
-      });
-      attrs.forEach(item=>{
-        const translated=map.get(item.value);
-        if(translated)item.el.setAttribute(item.attr,translated);
-      });
-      saveLanguage(lang);
-    }catch(error){
-      console.warn('Seervi language translation unavailable:',error);
-      try{localStorage.removeItem(cacheKey(lang,''));}catch(_){}
-      location.reload();
-    }finally{
-      translating=false;
-    }
-  }
-
-  function addLanguageControl(){
-    const actions=document.getElementById('bwNavActions');
-    if(!actions || actions.querySelector('.seervi-mobile-language-box'))return;
-    const box=document.createElement('div');
-    box.className='seervi-mobile-language-box';
-    box.innerHTML='<label class="seervi-mobile-language-label" for="seerviMobileLanguageSelect">Language</label><select class="seervi-mobile-language-select" id="seerviMobileLanguageSelect" aria-label="Choose language">'+languages.map(([code,name])=>'<option value="'+code+'">'+name+'</option>').join('')+'</select>';
-    actions.insertBefore(box,actions.firstElementChild);
-    const select=box.querySelector('select');
-    if(select)select.value=currentLanguage();
-    select?.addEventListener('change',function(){
-      const code=this.value||'en';
-      saveLanguage(code);
-      if(code==='en')location.reload();
-      else translatePage(code);
-    });
-  }
-
-  function initLanguage(){
-    addLanguageControl();
-    const lang=currentLanguage();
-    if(lang!=='en')setTimeout(()=>translatePage(lang),350);
-  }
-
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initLanguage,{once:true});
-  else initLanguage();
 })();
 </script>
 <script id="seervi-nonblocking-alert-bridge">
