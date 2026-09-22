@@ -1,5 +1,16 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en" translate="no"><head>
+<script id="seervi-early-language-state">
+(function(){
+  try{
+    var m=document.cookie.match(/(?:^|; )googtrans=([^;]+)/);
+    var v=m?decodeURIComponent(m[1]):'';
+    var c=(v.split('/').pop()||'en').toLowerCase();
+    if(c && c!=='en')document.documentElement.lang=c;
+  }catch(_){}
+})();
+</script>
+<meta name="google" content="notranslate">
 <script id="seervi-global-namespace-core">
 /* Canonical application namespace.
    Legacy window aliases remain available for existing inline handlers,
@@ -4334,6 +4345,20 @@ body{top:0!important}
       return (value.split('/').pop()||'en').toLowerCase();
     }catch(_){return 'en';}
   }
+  function applyGoogleLanguage(code){
+    const wanted=(code||'en').toLowerCase();
+    const combo=document.querySelector('.goog-te-combo');
+    if(!combo)return false;
+    if(!Array.from(combo.options).some(option=>option.value===wanted))return false;
+    combo.value=wanted;
+    combo.dispatchEvent(new Event('change',{bubbles:true}));
+    return true;
+  }
+  function syncGoogleLanguage(){
+    const code=currentLanguage();
+    if(applyGoogleLanguage(code))return;
+    if(code!=='en')setTimeout(()=>applyGoogleLanguage(code),500);
+  }
   function addLanguageControl(){
     const actions=document.getElementById('bwNavActions');
     if(!actions || actions.querySelector('.seervi-mobile-language-box'))return;
@@ -4345,19 +4370,21 @@ body{top:0!important}
     if(select)select.value=currentLanguage();
     select?.addEventListener('change',function(){
       const code=this.value||'en';
+      document.documentElement.lang=code;
       if(code==='en'){
         document.cookie='googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
         document.cookie='googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain='+location.hostname;
       }else{
         document.cookie='googtrans=/en/'+code+';path=/';
       }
-      location.reload();
+      if(!applyGoogleLanguage(code))location.reload();
     });
   }
   window.seerviGoogleTranslateInit=function(){
     try{
       if(window.google?.translate?.TranslateElement){
         new google.translate.TranslateElement({pageLanguage:'en',includedLanguages:'en,hi,bn,mr,te,ta,gu,ur,kn',autoDisplay:false,multilanguagePage:true},'google_translate_element');
+        setTimeout(syncGoogleLanguage,300);
       }
     }catch(e){console.warn('Language translator unavailable:',e);}
   };
