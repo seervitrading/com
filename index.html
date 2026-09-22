@@ -3399,6 +3399,8 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
     min-height:38px !important;
   }
 }
+
+@media(max-width:600px){body.seervi-mobile-account-drawer-open{overflow:hidden!important}}
 </style><style id="seervi-full-panel-background-fix">
 /* Keep dashboard utility panels flush to the viewport like Quotation/Invoice. */
 #adminBackupOptionsModal,
@@ -3424,10 +3426,114 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
   box-sizing:border-box !important;
 }
 </style>
-</head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Current time and account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topGreeting">Good Morning</span><span id="topDateTime">20 Aug 2026 • 12:00 PM</span><span class="top-identity-sep">•</span><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button></div></div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
- CART <span id="cartCount">0</span></button><span aria-label="Current date and time" id="mobileTopDateTime">20 Aug 2026 • <span class="top-time-part">12:00 PM</span></span><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
+<style id="seervi-mobile-account-menu">
+/* Mobile account menu: ChatGPT-style left slide-out drawer. */
+.seervi-mobile-account-menu-toggle{display:none}
+.seervi-mobile-account-menu-backdrop{display:none}
+@media(max-width:600px){
+  /* Mobile top bar: only the left menu button and right notification button. */
+  body{padding-top:76px!important;}
+  nav{height:76px!important;min-height:76px!important;position:fixed!important;top:0!important;left:0!important;right:0!important;width:100%!important;z-index:99999!important;}
+  nav > .wrap{height:76px!important;min-height:76px!important;padding:0 10px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;position:relative!important;overflow:visible!important;}
+  nav>#mobileTopDateTime{display:none!important;}
+  nav .nav-left-group,
+  nav .navlinks,
+  nav .nav-contact,
+  nav .nav-quote,
+  nav .cart-nav-btn{display:none!important;}
+  nav .nav-dashboard-slot{position:absolute!important;left:10px!important;top:18px!important;display:flex!important;align-items:center!important;flex:0 0 auto!important;margin:0!important;}
+  nav > .wrap > .notification-bell{position:absolute!important;right:10px!important;top:18px!important;width:40px!important;height:40px!important;margin:0!important;display:inline-flex!important;}
+  nav .seervi-mobile-account-menu-toggle{
+    display:flex;width:40px;height:40px;min-height:40px;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+    padding:0;border:0;border-radius:9px;background:transparent;color:#f3f4f6;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  }
+  nav .seervi-mobile-account-menu-toggle span{display:block;width:19px;height:2px;border-radius:2px;background:#f1f2f4;transition:transform .2s ease,opacity .16s ease}
+  nav .seervi-mobile-account-menu-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  nav .seervi-mobile-account-menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+  nav .seervi-mobile-account-menu-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+  .seervi-mobile-account-menu-backdrop{
+    display:block;position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.22);backdrop-filter:none;
+    opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s ease;
+  }
+  .seervi-mobile-account-menu-backdrop.seervi-mobile-account-menu-open{opacity:1;visibility:visible;pointer-events:auto}
+
+  nav .nav-dashboard-slot .top-account-actions{
+    display:flex;position:fixed;left:0;top:0;bottom:0;right:auto;z-index:100001;
+    width:min(310px,82vw);min-width:0;height:100dvh;box-sizing:border-box;
+    flex-direction:column;align-items:stretch;gap:4px;padding:76px 14px 18px;
+    border:0;border-right:1px solid rgba(255,255,255,.10);border-radius:0;
+    background:linear-gradient(180deg,#1b1f24 0%,#171a1f 55%,#13161a 100%);
+    box-shadow:18px 0 55px rgba(0,0,0,.35);backdrop-filter:none;
+    opacity:1;visibility:visible;pointer-events:none;transform:translateX(-102%);
+    transform-origin:left center;transition:transform .24s cubic-bezier(.22,.61,.36,1);
+  }
+  nav .nav-dashboard-slot .top-account-actions.seervi-mobile-account-menu-open{pointer-events:auto;transform:translateX(0)}
+  nav .nav-dashboard-slot .top-account-actions::before{
+    content:'SEERVI TRADING';display:block;margin:0 8px 22px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.09);
+    color:#f0c66a;font-size:11px;font-weight:800;letter-spacing:2px;
+  }
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard{
+    width:100%;height:46px;min-height:46px;justify-content:flex-start;padding:0 14px;
+    border:0;border-radius:9px;background:transparent;color:#f1f3f5;font-size:13px;font-weight:600;letter-spacing:.1px;text-align:left;
+  }
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login:hover,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup:hover,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard:hover{background:rgba(255,255,255,.07);opacity:1}
+}
+</style>
+<style id="seervi-mobile-topbar-bottombar-match-final">
+@media(max-width:600px){
+  /* Keep the mobile topbar the same compact height as the bottom quick bar. */
+  body,body.nav-is-scrolled{padding-top:54px!important;}
+  nav,nav.nav-scrolled{
+    height:54px!important;
+    min-height:54px!important;
+    transition:none!important;
+    transform:none!important;
+    will-change:auto!important;
+  }
+  nav>.wrap,nav.nav-scrolled>.wrap{
+    height:54px!important;
+    min-height:54px!important;
+    padding:0 10px!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:0!important;
+    transform:none!important;
+  }
+  nav>.wrap>.nav-dashboard-slot{
+    width:40px!important;height:40px!important;min-width:40px!important;
+    flex:0 0 40px!important;margin:0!important;
+    display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  }
+  nav .seervi-mobile-account-menu-toggle{
+    width:40px!important;height:40px!important;margin:0!important;
+  }
+  nav>.wrap>#notificationBell{
+    width:40px!important;height:40px!important;min-width:40px!important;
+    flex:0 0 40px!important;margin:0!important;
+    display:inline-flex!important;align-items:center!important;justify-content:center!important;
+    transform:none!important;
+  }
+  nav>.wrap>.seervi-mobile-topbar-brand{
+    left:50%!important;top:50%!important;
+    transform:translate(-50%,-50%)!important;
+  }
+  /* Do not move/reflow the controls when the page crosses the scroll threshold. */
+  nav.nav-scrolled>.wrap>.nav-dashboard-slot,
+  nav.nav-scrolled>.wrap>#notificationBell{
+    position:static!important;
+    transform:none!important;
+  }
+}
+</style>
+</head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button></div></div><div class="seervi-mobile-topbar-brand" aria-label="Seervi Trading">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
+ CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
-</button></div></nav><main><section class="bw-hero" id="home"><div aria-hidden="true" class="bw-hero-image"></div><video aria-hidden="true" autoplay="" class="bw-hero-media-video" id="bwHeroVideo" loop="" muted="" playsinline="" preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br/><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
+</button></div></nav><div class="seervi-mobile-account-menu-backdrop" id="seerviMobileAccountMenuBackdrop" aria-hidden="true"></div><main><section class="bw-hero" id="home"><div aria-hidden="true" class="bw-hero-image"></div><video aria-hidden="true" autoplay="" class="bw-hero-media-video" id="bwHeroVideo" loop="" muted="" playsinline="" preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br/><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
 <section aria-labelledby="homeCataloguesTitle" class="seervi-home-catalogue-section" id="homeCatalogues">
 <div class="wrap">
 <div class="seervi-home-catalogue-head">
@@ -4082,6 +4188,194 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
 </div>
 
 <div aria-atomic="true" aria-live="polite" id="seerviNonBlockingToast" role="status"></div>
+
+
+<style id="seervi-mobile-topbar-brand">
+.seervi-mobile-topbar-brand{display:none}
+@media(max-width:600px){
+  nav>.wrap>.seervi-mobile-topbar-brand{display:block!important;position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;white-space:nowrap!important;pointer-events:none!important;color:#f2f3f5!important;font-size:13px!important;font-weight:800!important;letter-spacing:1.7px!important;text-shadow:0 0 8px rgba(214,177,82,.18)!important;animation:seerviBrandGlow 3.6s ease-in-out infinite!important}
+}
+@keyframes seerviBrandGlow{0%,100%{opacity:.82;text-shadow:0 0 5px rgba(214,177,82,.08);letter-spacing:1.7px}50%{opacity:1;text-shadow:0 0 12px rgba(214,177,82,.42);letter-spacing:2px}}
+@media(prefers-reduced-motion:reduce){.seervi-mobile-topbar-brand{animation:none!important}}
+</style>
+<style id="seervi-mobile-topbar-final-alignment">
+@media(max-width:600px){
+  /* One fixed mobile topbar size before and after scrolling. */
+  body,body.nav-is-scrolled{padding-top:54px!important;}
+  nav,nav.nav-scrolled{
+    position:fixed!important;
+    top:0!important;left:0!important;right:0!important;
+    width:100%!important;
+    height:54px!important;min-height:54px!important;
+    margin:0!important;padding:0!important;
+    transform:none!important;
+    transition:none!important;
+    z-index:99999!important;
+  }
+  nav>.wrap,nav.nav-scrolled>.wrap{
+    height:54px!important;min-height:54px!important;
+    padding:0 10px!important;
+    display:flex!important;align-items:center!important;justify-content:space-between!important;
+    position:relative!important;
+    transform:none!important;
+  }
+  nav>.wrap>.nav-dashboard-slot{
+    position:static!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;
+    width:40px!important;height:40px!important;margin:0!important;flex:0 0 40px!important;
+  }
+  nav .seervi-mobile-account-menu-toggle{
+    position:static!important;width:40px!important;height:40px!important;margin:0!important;
+  }
+  nav>.wrap>#notificationBell{
+    position:static!important;width:40px!important;height:40px!important;min-height:40px!important;
+    margin:0!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
+    flex:0 0 40px!important;transform:none!important;
+  }
+  nav>.wrap>.nav-left-group,
+  nav>.wrap>.navlinks,
+  nav>.wrap>.nav-contact,
+  nav>.wrap>.nav-quote,
+  nav>.wrap>.cart-nav-btn,
+  nav>.wrap>#mobileTopDateTime{display:none!important;}
+  nav .nav-dashboard-slot .top-account-actions{position:fixed!important;left:0!important;top:0!important;bottom:0!important;right:auto!important;}
+  nav.nav-scrolled>.wrap>.nav-dashboard-slot,
+  nav.nav-scrolled>.wrap>#notificationBell{position:static!important;transform:none!important;}
+  nav>.wrap>.seervi-mobile-topbar-brand{
+    left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;
+  }
+}
+</style>
+<script id="seervi-mobile-account-menu-script">
+(function(){
+  function closeMenu(){
+    const actions=document.getElementById('bwNavActions');
+    const toggle=document.getElementById('seerviMobileAccountMenuToggle');
+    const backdrop=document.getElementById('seerviMobileAccountMenuBackdrop');
+    if(actions)actions.classList.remove('seervi-mobile-account-menu-open');
+    if(toggle){toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open account menu');}
+    if(backdrop)backdrop.classList.remove('seervi-mobile-account-menu-open');
+    document.body.classList.remove('seervi-mobile-account-drawer-open');
+  }
+  window.seerviToggleMobileAccountMenu=function(e){
+    if(e){e.preventDefault();e.stopPropagation();}
+    if(window.innerWidth>600)return;
+    const actions=document.getElementById('bwNavActions');
+    const toggle=document.getElementById('seerviMobileAccountMenuToggle');
+    const backdrop=document.getElementById('seerviMobileAccountMenuBackdrop');
+    if(!actions||!toggle)return;
+    const open=actions.classList.toggle('seervi-mobile-account-menu-open');
+    toggle.setAttribute('aria-expanded',open?'true':'false');
+    toggle.setAttribute('aria-label',open?'Close account menu':'Open account menu');
+    if(backdrop)backdrop.classList.toggle('seervi-mobile-account-menu-open',open);
+    document.body.classList.toggle('seervi-mobile-account-drawer-open',open);
+  };
+  document.addEventListener('click',function(e){
+    if(e.target.closest && e.target.closest('#bwNavActions button'))closeMenu();
+  },true);
+  document.getElementById('seerviMobileAccountMenuBackdrop')?.addEventListener('click',closeMenu);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu();});
+  window.addEventListener('resize',function(){if(window.innerWidth>600)closeMenu();},{passive:true});
+})();
+</script>
+<style id="seervi-mobile-language-switcher">
+/* Compact language control inside the mobile slide-out menu. */
+@media(max-width:600px){
+  .seervi-mobile-language-box{
+    margin:0 8px 14px;
+    padding:0 0 14px;
+    border-bottom:1px solid rgba(255,255,255,.09);
+  }
+  .seervi-mobile-language-label{
+    display:block;
+    margin:0 0 7px;
+    color:#8f99a4;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+  }
+  .seervi-mobile-language-select{
+    width:100%;
+    height:40px;
+    padding:0 11px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:9px;
+    outline:0;
+    background:#10151a;
+    color:#f1f3f5;
+    font:600 12px Inter,Arial,sans-serif;
+    cursor:pointer;
+  }
+  .seervi-mobile-language-select:focus{border-color:#f0c66a66}
+}
+.goog-te-banner-frame,.goog-te-balloon-frame{display:none!important}
+body{top:0!important}
+.goog-tooltip,.goog-tooltip:hover{display:none!important}
+.goog-text-highlight{background:transparent!important;box-shadow:none!important}
+</style>
+<div id="google_translate_element" aria-hidden="true" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden"></div>
+<script id="seervi-mobile-language-script">
+(function(){
+  const languages=[
+    ['en','English'],
+    ['hi','हिन्दी'],
+    ['bn','বাংলা'],
+    ['mr','मराठी'],
+    ['te','తెలుగు'],
+    ['ta','தமிழ்'],
+    ['gu','ગુજરાતી'],
+    ['ur','اردو'],
+    ['kn','ಕನ್ನಡ']
+  ];
+  function currentLanguage(){
+    try{
+      const match=document.cookie.match(/(?:^|; )googtrans=([^;]+)/);
+      const value=match?decodeURIComponent(match[1]):'';
+      return (value.split('/').pop()||'en').toLowerCase();
+    }catch(_){return 'en';}
+  }
+  function addLanguageControl(){
+    const actions=document.getElementById('bwNavActions');
+    if(!actions || actions.querySelector('.seervi-mobile-language-box'))return;
+    const box=document.createElement('div');
+    box.className='seervi-mobile-language-box';
+    box.innerHTML='<label class="seervi-mobile-language-label" for="seerviMobileLanguageSelect">Language</label><select class="seervi-mobile-language-select" id="seerviMobileLanguageSelect" aria-label="Choose language">'+languages.map(([code,name])=>'<option value="'+code+'">'+name+'</option>').join('')+'</select>';
+    actions.insertBefore(box,actions.firstElementChild);
+    const select=box.querySelector('select');
+    if(select)select.value=currentLanguage();
+    select?.addEventListener('change',function(){
+      const code=this.value||'en';
+      if(code==='en'){
+        document.cookie='googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+        document.cookie='googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain='+location.hostname;
+      }else{
+        document.cookie='googtrans=/en/'+code+';path=/';
+      }
+      location.reload();
+    });
+  }
+  window.seerviGoogleTranslateInit=function(){
+    try{
+      if(window.google?.translate?.TranslateElement){
+        new google.translate.TranslateElement({pageLanguage:'en',includedLanguages:'en,hi,bn,mr,te,ta,gu,ur,kn',autoDisplay:false,multilanguagePage:true},'google_translate_element');
+      }
+    }catch(e){console.warn('Language translator unavailable:',e);}
+  };
+  function loadTranslator(){
+    addLanguageControl();
+    if(window.google?.translate?.TranslateElement){window.seerviGoogleTranslateInit();return;}
+    if(document.getElementById('seervi-google-translate-loader'))return;
+    const script=document.createElement('script');
+    script.id='seervi-google-translate-loader';
+    script.src='https://translate.google.com/translate_a/element.js?cb=seerviGoogleTranslateInit';
+    script.async=true;
+    script.onerror=function(){console.warn('Google Translate could not be loaded.');};
+    document.head.appendChild(script);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',loadTranslator,{once:true});
+  else loadTranslator();
+})();
+</script>
 <script id="seervi-nonblocking-alert-bridge">
 (function(){var timer=null;window.seerviToastAlert=function(message){var el=document.getElementById('seerviNonBlockingToast');if(!el)return;el.textContent=String(message==null?'':message);el.classList.add('show');clearTimeout(timer);timer=setTimeout(function(){el.classList.remove('show');},2600);};})();
 </script>
@@ -14639,7 +14933,7 @@ function seerviShowSaveSuccess(message){
 })();
 </script>
 <script id="mobile-latest-datetime-only">
-(function(){function update(){var el=document.getElementById('mobileTopDateTime');if(!el||window.innerWidth>600)return;var d=new Date(),m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],h=d.getHours(),ap=h>=12?'PM':'AM';h=h%12||12;var mm=String(d.getMinutes()).padStart(2,'0');el.innerHTML=d.getDate()+' '+m[d.getMonth()]+' '+d.getFullYear()+' • <span class="top-time-part">'+h+':'+mm+' '+ap+'</span>';}document.addEventListener('DOMContentLoaded',update);setInterval(update,1000);})();
+
 </script>
 <script id="seervi-public-item-qty-final">
 (function(){
