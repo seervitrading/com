@@ -12485,6 +12485,41 @@ function seerviBrowserCacheRead(key){
 function seerviBrowserCacheWrite(key,value){try{localStorage.setItem(key,JSON.stringify({time:Date.now(),value}));return true;}catch(_){return false;}}
 function seerviBrowserCacheClear(prefix){try{const keys=[];for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key&&(!prefix||key.startsWith(prefix)))keys.push(key);}keys.forEach(key=>localStorage.removeItem(key));}catch(_){}}
 function seerviBrowserProductCacheKey(categoryId){return SEERVI_BROWSER_PRODUCT_CACHE_PREFIX+String(categoryId||'').trim();}
+
+/* Product images are also warmed into the browser Cache API in the background.
+   This never blocks Firebase/product rendering. */
+const SEERVI_PRODUCT_IMAGE_CACHE_NAME='seervi-product-images-v1';
+const seerviProductImageCachePromises=new Map();
+function seerviProductImageUrls(items){
+  const urls=[];const seen=new Set();
+  (Array.isArray(items)?items:[]).forEach(item=>{
+    [item?.imageWebpUrl,...(Array.isArray(item?.galleryImages)?item.galleryImages:[])].forEach(url=>{
+      const value=String(url||'').trim();
+      if(value&&!seen.has(value)){seen.add(value);urls.push(value);}
+    });
+  });
+  return urls;
+}
+async function seerviWarmProductImageCache(items){
+  if(!('caches' in window))return;
+  let cache;
+  try{cache=await caches.open(SEERVI_PRODUCT_IMAGE_CACHE_NAME);}catch(_){return;}
+  const urls=seerviProductImageUrls(items);
+  for(let i=0;i<urls.length;i+=3){
+    await Promise.all(urls.slice(i,i+3).map(async url=>{
+      if(seerviProductImageCachePromises.has(url))return seerviProductImageCachePromises.get(url);
+      const task=(async()=>{
+        try{
+          if(await cache.match(url))return;
+          const response=await fetch(url,{cache:'force-cache',credentials:'same-origin'});
+          if(response.ok)await cache.put(url,response.clone());
+        }catch(_){}
+      })().finally(()=>seerviProductImageCachePromises.delete(url));
+      seerviProductImageCachePromises.set(url,task);
+      return task;
+    }));
+  }
+}
 let seerviPublicItems=[];
 let seerviPublicCategories=[];
 let seerviPublicSelectedCategory='all';
@@ -12633,14 +12668,17 @@ async function seerviPublicLoadAllItemsForAI(){
   if(seerviPublicAllItemsLoadPromise)return seerviPublicAllItemsLoadPromise;
   const cached=seerviBrowserCacheRead(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
   if(Array.isArray(cached?.value?.items)){
-    seerviPublicMergeItems(cached.value.items.filter(item=>item&&item.active!==false));
+    const cachedItems=cached.value.items.filter(item=>item&&item.active!==false);
+    seerviPublicMergeItems(cachedItems);
     seerviPublicAllItemsLoaded=true;
-    // Keep cached items visible while Firebase is refreshed below.
-
+    // Saved products render immediately; Firebase refresh continues below.
+    seerviPublicRenderSubcategories();
+    seerviPublicRenderItems();
+    seerviWarmProductImageCache(cachedItems);
   }
   seerviPublicAllItemsLoadPromise=(async()=>{
     const snap=await seerviCachedRead('public:items:all:1000',()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000))),60000);
-    const items=snap.docs.map(d=>({id:d.id,...d.data()}));seerviPublicMergeItems(items);seerviBrowserCacheWrite(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY,{items});seerviPublicAllItemsLoaded=true;return seerviPublicItems;
+    const items=snap.docs.map(d=>({id:d.id,...d.data()}));seerviPublicMergeItems(items);seerviBrowserCacheWrite(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY,{items});seerviPublicAllItemsLoaded=true;seerviPublicRenderSubcategories();seerviPublicRenderItems();seerviWarmProductImageCache(items);return seerviPublicItems;
   })().finally(()=>{seerviPublicAllItemsLoadPromise=null;});
   return seerviPublicAllItemsLoadPromise;
 }
@@ -13363,7 +13401,12 @@ async function seerviBootPublicCatalogue(){
   if(seerviPublicCatalogueBooted)return;
   seerviPublicCatalogueBooted=true;
   try{
-    await seerviPublicLoadCatalogue();
+    /* Categories and products start together. Saved product data renders first,
+       then Firebase refreshes it in the background. */
+    await Promise.allSettled([
+      seerviPublicLoadCatalogue(),
+      seerviPublicLoadAllItemsForAI()
+    ]);
   }catch(e){
     // seerviPublicLoadCatalogue already updates the visible status and logs the
     // original Firebase error. Keep boot failure isolated from the rest of CRM.
