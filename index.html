@@ -12485,41 +12485,6 @@ function seerviBrowserCacheRead(key){
 function seerviBrowserCacheWrite(key,value){try{localStorage.setItem(key,JSON.stringify({time:Date.now(),value}));return true;}catch(_){return false;}}
 function seerviBrowserCacheClear(prefix){try{const keys=[];for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key&&(!prefix||key.startsWith(prefix)))keys.push(key);}keys.forEach(key=>localStorage.removeItem(key));}catch(_){}}
 function seerviBrowserProductCacheKey(categoryId){return SEERVI_BROWSER_PRODUCT_CACHE_PREFIX+String(categoryId||'').trim();}
-
-/* Product images are also warmed into the browser Cache API in the background.
-   This never blocks Firebase/product rendering. */
-const SEERVI_PRODUCT_IMAGE_CACHE_NAME='seervi-product-images-v1';
-const seerviProductImageCachePromises=new Map();
-function seerviProductImageUrls(items){
-  const urls=[];const seen=new Set();
-  (Array.isArray(items)?items:[]).forEach(item=>{
-    [item?.imageWebpUrl,...(Array.isArray(item?.galleryImages)?item.galleryImages:[])].forEach(url=>{
-      const value=String(url||'').trim();
-      if(value&&!seen.has(value)){seen.add(value);urls.push(value);}
-    });
-  });
-  return urls;
-}
-async function seerviWarmProductImageCache(items){
-  if(!('caches' in window))return;
-  let cache;
-  try{cache=await caches.open(SEERVI_PRODUCT_IMAGE_CACHE_NAME);}catch(_){return;}
-  const urls=seerviProductImageUrls(items);
-  for(let i=0;i<urls.length;i+=3){
-    await Promise.all(urls.slice(i,i+3).map(async url=>{
-      if(seerviProductImageCachePromises.has(url))return seerviProductImageCachePromises.get(url);
-      const task=(async()=>{
-        try{
-          if(await cache.match(url))return;
-          const response=await fetch(url,{cache:'force-cache',credentials:'same-origin'});
-          if(response.ok)await cache.put(url,response.clone());
-        }catch(_){}
-      })().finally(()=>seerviProductImageCachePromises.delete(url));
-      seerviProductImageCachePromises.set(url,task);
-      return task;
-    }));
-  }
-}
 let seerviPublicItems=[];
 let seerviPublicCategories=[];
 let seerviPublicSelectedCategory='all';
@@ -12558,45 +12523,95 @@ async function seerviPublicProductDataChanged(){
   seerviPublicAllItemsLoaded=false;
   seerviPublicAllItemsLoadPromise=null;
   seerviPublicItems=[];
+  seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CACHE_PREFIX);
+  seerviBrowserCacheClear(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
+  seerviBrowserCacheClear(SEERVI_BROWSER_PRODUCT_CATEGORIES_KEY);
   try{
     if(window.SeerviSiteSettings?.product?.show!==true)return;
-    if(seerviPublicSelectedCategory!=='all') await seerviPublicLoadCategoryItems(seerviPublicSelectedCategory);
-    seerviPublicRenderItems();
-    seerviPublicRenderSubcategories();
+    await seerviPublicLoadCatalogue(true);
   }catch(error){
     console.warn('[Seervi] Product refresh after save failed:',error);
   }
   window.dispatchEvent(new CustomEvent('seervi:product-data-changed'));
 }
 
-async function seerviPublicLoadCatalogue(){
+async function seerviPublicLoadCatalogue(force=false){
   if(window.SeerviGlobalSettingsReady){try{await window.SeerviGlobalSettingsReady;}catch(_){} }
-  if(window.SeerviSiteSettings?.product?.show!==true)return;
-  const status=$('seerviPublicCatalogueStatus');
-  const cached=seerviBrowserCacheRead(SEERVI_BROWSER_PRODUCT_CATEGORIES_KEY);
-  if(Array.isArray(cached?.value?.categories)){
-    seerviPublicCategories=cached.value.categories;
-    seerviPublicItems=[];seerviPublicAllItemsLoaded=false;
-    window.seerviGetPublicCatalogue=()=>({items:seerviPublicItems,categories:seerviPublicCategories});
-    seerviPublicRenderCategories();seerviPublicRenderSubcategories();seerviPublicRenderItems();
-    if(status)status.textContent=`${seerviPublicCategories.filter(x=>x.type==='category').length} categor${seerviPublicCategories.filter(x=>x.type==='category').length===1?'y':'ies'} available.`;
-    // Do not return on the 24-hour cache window. Cached categories render immediately,
-    // but Firebase is always checked so newly added products/categories appear without delay.
+  if(window.SeerviSiteSettings?.product?.show!==true)return [];
+  if(seerviPublicAllItemsLoadPromise&&!force)return seerviPublicItems;
 
-  }else if(status)status.textContent='Loading categories…';
-  try{
-    const catSnap=await seerviCachedRead('public:itemCategories:500',()=>getDocs(query(collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),where('active','==',true),limit(500))),60000);
-    seerviPublicCategories=catSnap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>Number(a.sortOrder||0)-Number(b.sortOrder||0)||String(a.name||'').localeCompare(String(b.name||'')));
-    seerviBrowserCacheWrite(SEERVI_BROWSER_PRODUCT_CATEGORIES_KEY,{categories:seerviPublicCategories});
-    seerviPublicItems=[];seerviPublicAllItemsLoaded=false;
+  const status=$('seerviPublicCatalogueStatus');
+  const cachedCategories=seerviBrowserCacheRead(SEERVI_BROWSER_PRODUCT_CATEGORIES_KEY);
+  const cachedItems=seerviBrowserCacheRead(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
+  const hasCachedCategories=Array.isArray(cachedCategories?.value?.categories);
+  const hasCachedItems=Array.isArray(cachedItems?.value?.items);
+
+  if(!force && hasCachedCategories && hasCachedItems){
+    seerviPublicCategories=cachedCategories.value.categories;
+    seerviPublicItems=cachedItems.value.items.filter(item=>item&&item.active!==false);
+    seerviPublicAllItemsLoaded=true;
+    seerviPublicCategoryItemCache.clear();
+    seerviPublicItems.forEach(item=>{
+      const id=String(item.categoryId||'').trim();
+      if(!id)return;
+      const list=seerviPublicCategoryItemCache.get(id)||[];
+      list.push(item);
+      seerviPublicCategoryItemCache.set(id,list);
+    });
     window.seerviGetPublicCatalogue=()=>({items:seerviPublicItems,categories:seerviPublicCategories});
     seerviPublicRenderCategories();seerviPublicRenderSubcategories();seerviPublicRenderItems();
-    if(status)status.textContent=`${seerviPublicCategories.filter(x=>x.type==='category').length} categor${seerviPublicCategories.filter(x=>x.type==='category').length===1?'y':'ies'} available.`;
-  }catch(e){
-    console.error('Seervi public catalogue:',e);
-    if(status){status.textContent=Array.isArray(cached?.value?.categories)?'Using saved product categories.':'Products are temporarily unavailable.';status.style.color=Array.isArray(cached?.value?.categories)?'':'#f28b8b';}
-    if(!Array.isArray(cached?.value?.categories))throw e;
-  }
+    if(status)status.textContent=`${seerviPublicItems.length} product${seerviPublicItems.length===1?'':'s'} available.`;
+
+    const categoriesFresh=Date.now()-Number(cachedCategories.time||0)<SEERVI_CATALOGUE_CACHE_TTL;
+    const itemsFresh=Date.now()-Number(cachedItems.time||0)<SEERVI_CATALOGUE_CACHE_TTL;
+    if(categoriesFresh && itemsFresh)return seerviPublicItems;
+  }else if(status)status.textContent='Loading products…';
+
+  const run=async()=>{
+    try{
+      if(status && !seerviPublicItems.length)status.textContent='Loading products…';
+      const [catSnap,itemSnap]=await Promise.all([
+        seerviCachedRead('public:itemCategories:500',()=>getDocs(query(collection(db,SEERVI_ITEM_CATEGORIES_COLLECTION),where('active','==',true),limit(500))),86400000),
+        seerviCachedRead('public:items:all:1000',()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000))),86400000)
+      ]);
+
+      seerviPublicCategories=catSnap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>Number(a.sortOrder||0)-Number(b.sortOrder||0)||String(a.name||'').localeCompare(String(b.name||'')));
+      seerviPublicItems=itemSnap.docs.map(d=>({id:d.id,...d.data()})).filter(item=>item.active!==false).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
+      seerviPublicAllItemsLoaded=true;
+
+      seerviPublicCategoryItemCache.clear();
+      seerviPublicItems.forEach(item=>{
+        const id=String(item.categoryId||'').trim();
+        if(!id)return;
+        const list=seerviPublicCategoryItemCache.get(id)||[];
+        list.push(item);
+        seerviPublicCategoryItemCache.set(id,list);
+      });
+
+      seerviBrowserCacheWrite(SEERVI_BROWSER_PRODUCT_CATEGORIES_KEY,{categories:seerviPublicCategories});
+      seerviBrowserCacheWrite(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY,{items:seerviPublicItems});
+      window.seerviGetPublicCatalogue=()=>({items:seerviPublicItems,categories:seerviPublicCategories});
+      seerviPublicRenderCategories();seerviPublicRenderSubcategories();seerviPublicRenderItems();
+      if(status)status.textContent=`${seerviPublicItems.length} product${seerviPublicItems.length===1?'':'s'} available.`;
+      return seerviPublicItems;
+    }catch(e){
+      console.error('Seervi public products:',e);
+      if(status){
+        status.textContent=hasCachedItems?'Using saved products.':'Products are temporarily unavailable.';
+        status.style.color=hasCachedItems?'':'#f28b8b';
+      }
+      if(hasCachedItems){
+        seerviPublicItems=cachedItems.value.items.filter(item=>item&&item.active!==false);
+        seerviPublicAllItemsLoaded=true;
+        seerviPublicRenderItems();
+        return seerviPublicItems;
+      }
+      return [];
+    }
+  };
+
+  seerviPublicAllItemsLoadPromise=run();
+  try{return await seerviPublicAllItemsLoadPromise;}finally{seerviPublicAllItemsLoadPromise=null;}
 }
 async function seerviPublicLoadCategoryItems(categoryId){
   if(window.SeerviSiteSettings?.product?.show!==true)return [];
@@ -12668,17 +12683,14 @@ async function seerviPublicLoadAllItemsForAI(){
   if(seerviPublicAllItemsLoadPromise)return seerviPublicAllItemsLoadPromise;
   const cached=seerviBrowserCacheRead(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY);
   if(Array.isArray(cached?.value?.items)){
-    const cachedItems=cached.value.items.filter(item=>item&&item.active!==false);
-    seerviPublicMergeItems(cachedItems);
+    seerviPublicMergeItems(cached.value.items.filter(item=>item&&item.active!==false));
     seerviPublicAllItemsLoaded=true;
-    // Saved products render immediately; Firebase refresh continues below.
-    seerviPublicRenderSubcategories();
-    seerviPublicRenderItems();
-    seerviWarmProductImageCache(cachedItems);
+    // Keep cached items visible while Firebase is refreshed below.
+
   }
   seerviPublicAllItemsLoadPromise=(async()=>{
     const snap=await seerviCachedRead('public:items:all:1000',()=>getDocs(query(collection(db,SEERVI_ITEMS_COLLECTION),where('active','==',true),limit(1000))),60000);
-    const items=snap.docs.map(d=>({id:d.id,...d.data()}));seerviPublicMergeItems(items);seerviBrowserCacheWrite(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY,{items});seerviPublicAllItemsLoaded=true;seerviPublicRenderSubcategories();seerviPublicRenderItems();seerviWarmProductImageCache(items);return seerviPublicItems;
+    const items=snap.docs.map(d=>({id:d.id,...d.data()}));seerviPublicMergeItems(items);seerviBrowserCacheWrite(SEERVI_BROWSER_ALL_PRODUCTS_CACHE_KEY,{items});seerviPublicAllItemsLoaded=true;return seerviPublicItems;
   })().finally(()=>{seerviPublicAllItemsLoadPromise=null;});
   return seerviPublicAllItemsLoadPromise;
 }
@@ -13401,12 +13413,7 @@ async function seerviBootPublicCatalogue(){
   if(seerviPublicCatalogueBooted)return;
   seerviPublicCatalogueBooted=true;
   try{
-    /* Categories and products start together. Saved product data renders first,
-       then Firebase refreshes it in the background. */
-    await Promise.allSettled([
-      seerviPublicLoadCatalogue(),
-      seerviPublicLoadAllItemsForAI()
-    ]);
+    await seerviPublicLoadCatalogue();
   }catch(e){
     // seerviPublicLoadCatalogue already updates the visible status and logs the
     // original Firebase error. Keep boot failure isolated from the rest of CRM.
