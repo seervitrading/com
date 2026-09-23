@@ -3699,6 +3699,115 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
 <style id="seervi-visitor-stats-css">
 .seervi-visitor-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:13px}.seervi-visitor-stat{padding:11px 10px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.035)}.seervi-visitor-stat span{display:block;color:#8f99a4;font-size:9px;font-weight:900;letter-spacing:.12em}.seervi-visitor-stat strong{display:block;margin-top:5px;font-size:20px;line-height:1;color:#fff}@media(max-width:620px){.seervi-visitor-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
+
+<style id="seervi-mobile-taskbar-animation">
+@media (max-width:600px){
+  .mobile-bottom-bar{
+    --mobile-nav-index:0;
+    position:fixed;
+    isolation:isolate;
+    overflow:hidden;
+    transition:box-shadow .35s ease, background-color .35s ease, border-color .35s ease;
+  }
+
+  /* Sliding active-tab surface */
+  .mobile-bottom-bar::before{
+    content:"";
+    position:absolute;
+    z-index:0;
+    left:6px;
+    top:4px;
+    bottom:4px;
+    width:calc((100% - 12px) / 4);
+    border-radius:10px;
+    background:linear-gradient(145deg,#ffffff16,#f0c66a10);
+    border:1px solid #f0c66a22;
+    box-shadow:0 7px 20px #0006;
+    transform:translateX(calc(var(--mobile-nav-index) * 100%));
+    transition:transform .42s cubic-bezier(.22,.8,.2,1), opacity .25s ease;
+    pointer-events:none;
+  }
+
+  .mobile-bottom-bar a,
+  .mobile-bottom-bar button{
+    position:relative;
+    z-index:2;
+    transition:color .28s ease, transform .42s cubic-bezier(.22,.8,.2,1);
+  }
+
+  .mobile-bottom-bar a>b,
+  .mobile-bottom-bar button>b{
+    position:relative;
+    transition:
+      transform .42s cubic-bezier(.22,.8,.2,1),
+      color .28s ease,
+      background .28s ease,
+      box-shadow .35s ease;
+  }
+
+  .mobile-bottom-bar a.active,
+  .mobile-bottom-bar button.active{
+    background:transparent!important;
+    color:#f0c66a!important;
+    transform:translateY(-2px);
+  }
+
+  .mobile-bottom-bar a.active b,
+  .mobile-bottom-bar button.active b{
+    color:#0b0d10!important;
+    background:linear-gradient(145deg,#ffffff,#f0c66a);
+    border-radius:50%;
+    width:36px;
+    height:36px;
+    min-width:36px;
+    min-height:36px;
+    box-shadow:0 7px 20px #0009,0 0 0 3px #f0c66a18;
+    transform:translateY(-6px) scale(1.02);
+  }
+
+  .mobile-bottom-bar a.active>span,
+  .mobile-bottom-bar button.active>span{
+    color:#f0c66a!important;
+    transform:translateY(-3px);
+  }
+
+  /* Small bottom-edge glow/notch, matching the reference interaction */
+  .mobile-bottom-bar a.active::after,
+  .mobile-bottom-bar button.active::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-3px;
+    width:22px;
+    height:8px;
+    border-radius:50% 50% 0 0;
+    background:#f0c66a;
+    opacity:.9;
+    transform:translateX(-50%) scaleX(.7);
+    animation:seerviMobileNavNotch .42s cubic-bezier(.22,.8,.2,1);
+    pointer-events:none;
+  }
+
+  @keyframes seerviMobileNavNotch{
+    0%{opacity:0;transform:translateX(-50%) translateY(5px) scaleX(.25)}
+    65%{opacity:1;transform:translateX(-50%) translateY(-1px) scaleX(1)}
+    100%{opacity:.9;transform:translateX(-50%) translateY(0) scaleX(.7)}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .mobile-bottom-bar,
+    .mobile-bottom-bar::before,
+    .mobile-bottom-bar a,
+    .mobile-bottom-bar button,
+    .mobile-bottom-bar a>b,
+    .mobile-bottom-bar button>b{
+      transition:none!important;
+      animation:none!important;
+    }
+  }
+}
+</style>
+
 </head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button></div></div><div class="seervi-mobile-topbar-brand" aria-label="Seervi Trading">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
@@ -15212,11 +15321,14 @@ function seerviShowSaveSuccess(message){
     return s && s[STATE_KEY] ? s : {[STATE_KEY]:true,view:(isMobile()?'home':'page'),overlay:null};
   }
   function setBar(view){
+    const indexMap={home:0,catalogue:1,products:2,cart:3};
     document.querySelectorAll('.mobile-bottom-bar a,.mobile-bottom-bar button').forEach(function(el){
       el.classList.remove('active');
       const label=(el.textContent||'').trim().toLowerCase();
       if((view==='home'&&label==='home')||(view==='catalogue'&&label==='catalogue')||(view==='products'&&label==='products')||(view==='cart'&&label==='cart')) el.classList.add('active');
     });
+    const bar=document.querySelector('.mobile-bottom-bar');
+    if(bar) bar.style.setProperty('--mobile-nav-index',String(indexMap[view]??0));
   }
   function closeLayers(){
     try{baseCloseCatalogue?.();}catch(e){}
