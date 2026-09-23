@@ -4319,8 +4319,13 @@ body.seervi-mobile-account-drawer-open{overflow:hidden!important}
     document.body.classList.toggle('seervi-mobile-account-drawer-open',open);
   };
   document.addEventListener('click',function(e){
-    if(e.target.closest && e.target.closest('#bwNavActions button'))closeMenu();
-  },true);
+    /* Let the button's own onclick run first (Login / Sign Up / Dashboard),
+       then close only the drawer. Capture-phase closing could interrupt the
+       existing account handlers on some browsers. */
+    if(e.target.closest && e.target.closest('#bwNavActions button')){
+      window.setTimeout(closeMenu,0);
+    }
+  },false);
   document.getElementById('seerviMobileAccountMenuBackdrop')?.addEventListener('click',closeMenu);
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu();});
   window.addEventListener('resize',function(){/* Drawer works at every viewport width. */},{passive:true});
