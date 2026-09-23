@@ -15340,7 +15340,17 @@ function seerviShowSaveSuccess(message){
       function isProgressSuppressed(){
         return progressSuppressedPanelIds.some(function(id){
           var el=document.getElementById(id);
-          return !!(el && el.classList.contains('show') && !el.hidden);
+          if(!el || el.hidden)return false;
+          var aria=el.getAttribute('aria-hidden');
+          if(aria==='true')return false;
+          /* These workspaces do not all use the same open-state mechanism:
+             Items uses hidden/aria-hidden, while the other admin workspaces
+             normally use the .show class. Treat either visible state as an
+             active full-screen workspace so the site's global golden bar is
+             never shown over these panels. */
+          var style=window.getComputedStyle(el);
+          return el.classList.contains('show') ||
+                 (style.display!=='none' && style.visibility!=='hidden' && Number(style.opacity||1)>0);
         });
       }
       function getProgressScroller(){
@@ -15402,7 +15412,7 @@ function seerviShowSaveSuccess(message){
         var panel=document.getElementById(id);
         if(!panel)return;
         var observer=new MutationObserver(function(){requestProgress();});
-        observer.observe(panel,{attributes:true,attributeFilter:['class','hidden','aria-hidden']});
+        observer.observe(panel,{attributes:true,attributeFilter:['class','hidden','aria-hidden','style']});
       });
       document.addEventListener('click',function(){requestAnimationFrame(bindCatalogueScroller);},true);
       window.addEventListener('hashchange',bindCatalogueScroller);
