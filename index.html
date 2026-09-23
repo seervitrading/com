@@ -3612,6 +3612,33 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
   nav .nav-dashboard-slot .top-account-actions{width:min(320px,72vw)!important;min-width:280px!important;}
 }
 </style>
+<style id="seervi-web-slide-drawer-final">
+@media(min-width:601px){
+  #seerviWebSlideDrawer{
+    position:fixed!important;left:0!important;top:0!important;bottom:0!important;
+    width:min(340px,34vw)!important;min-width:300px!important;height:100dvh!important;
+    z-index:100002!important;box-sizing:border-box!important;
+    padding:76px 14px 20px!important;
+    display:flex!important;flex-direction:column!important;gap:4px!important;
+    background:linear-gradient(180deg,#1b1f24 0%,#171a1f 55%,#13161a 100%)!important;
+    border-right:1px solid rgba(255,255,255,.10)!important;
+    box-shadow:18px 0 55px rgba(0,0,0,.35)!important;
+    transform:translateX(-102%)!important;transition:transform .24s cubic-bezier(.22,.61,.36,1)!important;
+    pointer-events:none!important;visibility:hidden!important;opacity:1!important;
+  }
+  #seerviWebSlideDrawer.seervi-web-drawer-open{transform:translateX(0)!important;pointer-events:auto!important;visibility:visible!important;}
+  #seerviWebSlideDrawer::before{content:'SEERVI TRADING';display:block;margin:0 8px 14px;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,.09);color:#f0c66a;font-size:12px;font-weight:800;letter-spacing:2px;}
+  #seerviWebSlideDrawer .seervi-web-drawer-btn{width:100%!important;height:44px!important;min-height:44px!important;padding:0 14px!important;border:0!important;border-radius:9px!important;background:transparent!important;color:#f1f3f5!important;font:600 13px/1.2 "Segoe UI",Inter,Arial,sans-serif!important;text-align:left!important;cursor:pointer!important;pointer-events:auto!important;}
+  #seerviWebSlideDrawer .seervi-web-drawer-btn:hover{background:rgba(255,255,255,.07)!important;}
+  #seerviWebSlideDrawer .seervi-web-drawer-divider{height:1px;background:rgba(255,255,255,.09);margin:8px 0;}
+  #seerviWebSlideDrawer .seervi-web-drawer-close{margin-top:auto!important;}
+  #seerviWebSlideDrawer .seervi-web-drawer-auth{color:#f0c66a!important;}
+  .seervi-web-drawer-open-state #seerviWebSlideDrawerBackdrop{opacity:1!important;visibility:visible!important;pointer-events:auto!important;}
+  #seerviWebSlideDrawerBackdrop{display:block!important;position:fixed!important;inset:0!important;z-index:100001!important;background:rgba(0,0,0,.28)!important;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s ease;}
+}
+@media(min-width:601px) and (max-width:900px){#seerviWebSlideDrawer{width:min(320px,72vw)!important;min-width:280px!important;}}
+@media(max-width:600px){#seerviWebSlideDrawer,#seerviWebSlideDrawerBackdrop{display:none!important;}}
+</style>
 <style id="seervi-mobile-topbar-bottombar-match-final">
 @media(max-width:600px){
   /* Keep the mobile topbar the same compact height as the bottom quick bar. */
@@ -3661,7 +3688,7 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
 </head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button></div></div><div class="seervi-mobile-topbar-brand" aria-label="Seervi Trading">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
-</button></div></nav><div class="seervi-mobile-account-menu-backdrop" id="seerviMobileAccountMenuBackdrop" aria-hidden="true"></div><main><section class="bw-hero" id="home"><div aria-hidden="true" class="bw-hero-image"></div><video aria-hidden="true" autoplay="" class="bw-hero-media-video" id="bwHeroVideo" loop="" muted="" playsinline="" preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br/><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
+</button></div></nav><div class="seervi-mobile-account-menu-backdrop" id="seerviMobileAccountMenuBackdrop" aria-hidden="true"></div><div id="seerviWebSlideDrawerBackdrop" aria-hidden="true"></div><aside id="seerviWebSlideDrawer" aria-label="Seervi Trading navigation"><button type="button" class="seervi-web-drawer-btn" data-action="home">Home</button><button type="button" class="seervi-web-drawer-btn" data-action="about">About</button><button type="button" class="seervi-web-drawer-btn" data-action="catalogue">Catalogue</button><button type="button" class="seervi-web-drawer-btn" data-action="products">Products</button><button type="button" class="seervi-web-drawer-btn" data-action="contact">Contact</button><button type="button" class="seervi-web-drawer-btn" data-action="quote">Get a Quote</button><button type="button" class="seervi-web-drawer-btn" data-action="cart">Cart</button><button type="button" class="seervi-web-drawer-btn" data-action="notifications">Notifications</button><div class="seervi-web-drawer-divider"></div><button type="button" class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="login">Log In</button><button type="button" class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="signup">Sign Up</button><button type="button" class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="dashboard">My Dashboard</button><button type="button" class="seervi-web-drawer-btn seervi-web-drawer-close" data-action="close">Close Menu</button></aside><main><section class="bw-hero" id="home"><div aria-hidden="true" class="bw-hero-image"></div><video aria-hidden="true" autoplay="" class="bw-hero-media-video" id="bwHeroVideo" loop="" muted="" playsinline="" preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br/><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
 <section aria-labelledby="homeCataloguesTitle" class="seervi-home-catalogue-section" id="homeCatalogues">
 <div class="wrap">
 <div class="seervi-home-catalogue-head">
@@ -4379,54 +4406,60 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
     const actions=document.getElementById('bwNavActions');
     const toggle=document.getElementById('seerviMobileAccountMenuToggle');
     const backdrop=document.getElementById('seerviMobileAccountMenuBackdrop');
+    const webDrawer=document.getElementById('seerviWebSlideDrawer');
+    const webBackdrop=document.getElementById('seerviWebSlideDrawerBackdrop');
     if(actions)actions.classList.remove('seervi-mobile-account-menu-open');
+    if(webDrawer)webDrawer.classList.remove('seervi-web-drawer-open');
+    if(webBackdrop)webBackdrop.classList.remove('seervi-web-drawer-open-state');
     if(toggle){toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open account menu');}
     if(backdrop)backdrop.classList.remove('seervi-mobile-account-menu-open');
-    document.body.classList.remove('seervi-mobile-account-drawer-open');
+    document.body.classList.remove('seervi-mobile-account-drawer-open','seervi-web-drawer-open-state');
   }
   window.seerviToggleMobileAccountMenu=function(e){
     if(e){e.preventDefault();e.stopPropagation();}
-    const actions=document.getElementById('bwNavActions');
     const toggle=document.getElementById('seerviMobileAccountMenuToggle');
+    if(!toggle)return;
+    if(window.innerWidth>600){
+      const drawer=document.getElementById('seerviWebSlideDrawer');
+      const backdrop=document.getElementById('seerviWebSlideDrawerBackdrop');
+      const open=!!drawer && !drawer.classList.contains('seervi-web-drawer-open');
+      if(drawer)drawer.classList.toggle('seervi-web-drawer-open',open);
+      if(backdrop)backdrop.classList.toggle('seervi-web-drawer-open-state',open);
+      toggle.setAttribute('aria-expanded',open?'true':'false');
+      toggle.setAttribute('aria-label',open?'Close navigation menu':'Open navigation menu');
+      document.body.classList.toggle('seervi-web-drawer-open-state',open);
+      return;
+    }
+    const actions=document.getElementById('bwNavActions');
     const backdrop=document.getElementById('seerviMobileAccountMenuBackdrop');
-    if(!actions||!toggle)return;
+    if(!actions)return;
     const open=actions.classList.toggle('seervi-mobile-account-menu-open');
     toggle.setAttribute('aria-expanded',open?'true':'false');
     toggle.setAttribute('aria-label',open?'Close account menu':'Open account menu');
     if(backdrop)backdrop.classList.toggle('seervi-mobile-account-menu-open',open);
     document.body.classList.toggle('seervi-mobile-account-drawer-open',open);
   };
-  document.addEventListener('click',function(e){
-    if(e.target.closest && e.target.closest('#bwNavActions button'))closeMenu();
-  },true);
   document.getElementById('seerviMobileAccountMenuBackdrop')?.addEventListener('click',closeMenu);
-  function buildWebDrawerNav(){
-    const actions=document.getElementById('bwNavActions');
-    if(!actions || actions.querySelector('.seervi-web-drawer-nav'))return;
-    const nav=document.createElement('div');
-    nav.className='seervi-web-drawer-nav';
-    const items=[
-      ['Home',()=>location.hash='home'],
-      ['About',()=>location.hash='about'],
-      ['Catalogue',()=>{if(typeof openCataloguePanel==='function')openCataloguePanel();}],
-      ['Products',()=>{document.getElementById('profiles')?.scrollIntoView({behavior:'smooth',block:'start'});}],
-      ['Contact',()=>location.hash='contact'],
-      ['Get a Quote',()=>location.hash='contact'],
-      ['Cart',()=>{if(typeof openCart==='function')openCart();}],
-      ['Notifications',()=>{if(typeof openNotifications==='function')openNotifications();}]
-    ];
-    items.forEach(([label,fn])=>{
-      const b=document.createElement('button');
-      b.type='button';b.textContent=label;
-      b.addEventListener('click',function(e){e.preventDefault();closeMenu();setTimeout(fn,0);});
-      nav.appendChild(b);
-    });
-    actions.insertBefore(nav,actions.firstChild);
-  }
-  buildWebDrawerNav();
-  document.addEventListener('DOMContentLoaded',buildWebDrawerNav,{once:true});
+  document.getElementById('seerviWebSlideDrawerBackdrop')?.addEventListener('click',closeMenu);
+  document.getElementById('seerviWebSlideDrawer')?.addEventListener('click',function(e){
+    const btn=e.target.closest && e.target.closest('.seervi-web-drawer-btn');
+    if(!btn)return;
+    const action=btn.getAttribute('data-action');
+    closeMenu();
+    if(action==='home')location.hash='home';
+    else if(action==='about')location.hash='about';
+    else if(action==='catalogue' && typeof openCataloguePanel==='function')openCataloguePanel();
+    else if(action==='products')document.getElementById('profiles')?.scrollIntoView({behavior:'smooth',block:'start'});
+    else if(action==='contact')location.hash='contact';
+    else if(action==='quote')location.hash='contact';
+    else if(action==='cart' && typeof openCart==='function')openCart();
+    else if(action==='notifications' && typeof openNotifications==='function')openNotifications();
+    else if(action==='login' && typeof openCustomerLogin==='function')openCustomerLogin();
+    else if(action==='signup' && typeof openPartySignup==='function')openPartySignup();
+    else if(action==='dashboard' && typeof openMyDashboard==='function')openMyDashboard();
+  });
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu();});
-  window.addEventListener('resize',function(){if(window.innerWidth<=600)closeMenu();},{passive:true});
+  window.addEventListener('resize',function(){closeMenu();},{passive:true});
 })();
 </script>
 <script id="seervi-nonblocking-alert-bridge">
