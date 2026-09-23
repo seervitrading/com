@@ -3695,6 +3695,10 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
   }
 }
 </style>
+
+<style id="seervi-visitor-stats-css">
+.seervi-visitor-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:13px}.seervi-visitor-stat{padding:11px 10px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.035)}.seervi-visitor-stat span{display:block;color:#8f99a4;font-size:9px;font-weight:900;letter-spacing:.12em}.seervi-visitor-stat strong{display:block;margin-top:5px;font-size:20px;line-height:1;color:#fff}@media(max-width:620px){.seervi-visitor-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
 </head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button></div></div><div class="seervi-mobile-topbar-brand" aria-label="Seervi Trading">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
@@ -6022,6 +6026,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+window.seerviAdminFirebaseAuth = auth;
+window.seerviAdminFirebaseDb = db;
 
 // Single authorised administrator account. Only this Firebase account may
 // enter the private Admin Panel / quotation workspace.
@@ -14698,7 +14704,7 @@ function seerviWrapActivity(name,module,action,description){const original=windo
 seerviWrapActivity('seerviCreateItem','items','item_created',r=>`Added product: ${r?.name||'New item'}`);seerviWrapActivity('seerviUpdateItem','items','item_updated',r=>`Updated product: ${r?.name||r?.id||'Item'}`);seerviWrapActivity('seerviDeleteItem','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviCreateItemCategory','categories','category_created',r=>`Added ${r?.type||'category'}: ${r?.name||'Category'}`);seerviWrapActivity('seerviUpdateItemCategory','categories','category_updated',r=>`Updated ${r?.type||'category'}: ${r?.name||r?.id||'Category'}`);seerviWrapActivity('seerviDeleteItemCategory','categories','category_deleted',(_,a)=>`Deleted category/subcategory: ${a?.[0]||'Category'}`);seerviWrapActivity('crmSaveParty','parties','party_saved',()=>`Saved party/customer: ${document.getElementById('crmPartyName')?.value||'Party'}`);seerviWrapActivity('crmSaveCurrentQuote','quotations','quotation_saved',()=>`Saved quotation`);seerviWrapActivity('crmSaveQuoteStatus','quotations','quotation_status_updated',()=>`Updated quotation status`);seerviWrapActivity('crmDeleteParty','parties','party_deleted',(_,a)=>`Deleted party/customer: ${a?.[0]||'Party'}`);seerviWrapActivity('crmEditInvoice','invoices','invoice_edit_opened',(_,a)=>`Editing invoice: ${a?.[0]||'Invoice'}`);seerviWrapActivity('crmDeleteInvoice','invoices','invoice_deleted',(_,a)=>`Deleted invoice: ${a?.[0]||'Invoice'}`);seerviWrapActivity('crmDeleteQuote','quotations','quotation_deleted',(_,a)=>`Deleted quotation: ${a?.[0]||'Quotation'}`);seerviWrapActivity('crmDeleteLedgerEntry','ledger','ledger_entry_deleted',(_,a)=>`Deleted ledger entry: ${a?.[0]||'Entry'}`);seerviWrapActivity('crmAddLedgerEntry','ledger','ledger_entry_added',()=>`Added payment/ledger entry`);seerviWrapActivity('submitNotificationPost','notifications','notification_posted',()=>`Posted notification`);seerviWrapActivity('seerviToggleItemActive','items','item_status_changed',(_,a)=>`Changed item active status: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviDuplicateItem','items','item_duplicated',(_,a)=>`Duplicated product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveItemForm','items','item_saved',()=>`Saved product from Items panel`);seerviWrapActivity('seerviDeleteItemConfirm','items','item_deleted',(_,a)=>`Deleted product: ${a?.[0]||'Item'}`);seerviWrapActivity('seerviSaveAdminSettings','settings','settings_updated',()=>`Updated global website settings`);seerviWrapActivity('seerviBackupItems','backup','items_backup',()=>`Created items backup`);seerviWrapActivity('seerviBackupCategories','backup','categories_backup',()=>`Created categories backup`);seerviWrapActivity('seerviBackupQuotationsWithParty','backup','quotations_backup',()=>`Created quotations backup`);seerviWrapActivity('setInventorySubcategoryStock','inventory','subcategory_stock_updated',(_,a)=>`Updated subcategory stock: ${a?.[1]||a?.[0]||'Subcategory'}`);seerviWrapActivity('setInventoryCategoryStock','inventory','category_stock_updated',(_,a)=>`Updated category stock: ${a?.[0]||'Category'}`);seerviWrapActivity('setInventoryQuantity','inventory','inventory_quantity_updated',(_,a)=>`Updated inventory quantity: ${a?.[0]||'Item'}`);seerviWrapActivity('setInventoryStock','inventory','inventory_stock_updated',(_,a)=>`Updated stock status: ${a?.[0]||'Item'}`);seerviWrapActivity('toggleInventoryStock','inventory','inventory_stock_toggled',()=>`Toggled inventory stock status`);seerviWrapActivity('seerviBulkImport','items','bulk_items_imported',()=>`Imported products in bulk`);seerviWrapActivity('seerviCategoryBulkImport','categories','bulk_categories_imported',()=>`Imported categories/subcategories in bulk`);
 seerviWrapActivity('saveCustomerCartRequest','quotations','quotation_requested',()=>`Requested a quotation`);seerviWrapActivity('customerSaveProfile','profile','profile_updated',()=>`Updated customer profile`);seerviWrapActivity('crmSignIn','auth','admin_signed_in',()=>`Admin signed in`);seerviWrapActivity('customerSignIn','auth','customer_signed_in',()=>`Customer signed in`);
 
-</script><div aria-hidden="true" class="crm-quote-view-modal" id="crmPartyLedgerViewModal"><div class="crm-quote-view-backdrop" onclick="crmClosePartyLedgerView()"></div><div aria-labelledby="crmPartyLedgerViewTitle" aria-modal="true" class="crm-quote-view-card crm-party-ledger-view-card" role="dialog"><div class="crm-quote-view-head"><div><div class="crm-kicker">PARTY LEDGER</div><h3 id="crmPartyLedgerViewTitle">Party Ledger</h3><div class="crm-quote-view-meta" id="crmPartyLedgerViewMeta"></div></div><button class="crm-close" onclick="crmClosePartyLedgerView()" type="button">×</button></div><div class="crm-ledger-view-toolbar"><div class="crm-ledger-filter-group"><button class="crm-ledger-filter active" data-range="all" onclick="crmSetPartyLedgerFilter('all')" type="button">ALL</button><button class="crm-ledger-filter" data-range="weekly" onclick="crmSetPartyLedgerFilter('weekly')" type="button">WEEKLY</button><button class="crm-ledger-filter" data-range="monthly" onclick="crmSetPartyLedgerFilter('monthly')" type="button">MONTHLY</button><button class="crm-ledger-filter" data-range="quarterly" onclick="crmSetPartyLedgerFilter('quarterly')" type="button">QUARTERLY</button><button class="crm-ledger-filter" data-range="yearly" onclick="crmSetPartyLedgerFilter('yearly')" type="button">YEARLY</button></div><button class="crm-primary small" id="crmPartyLedgerDownload" onclick="crmDownloadPartyLedger()" type="button">DOWNLOAD LEDGER</button></div><div class="crm-quote-view-body" id="crmPartyLedgerViewBody"></div></div></div><div aria-hidden="true" class="crm-quote-view-modal" id="crmQuoteViewModal"><div class="crm-quote-view-backdrop" onclick="crmCloseQuoteView()"></div><div aria-labelledby="crmQuoteViewTitle" aria-modal="true" class="crm-quote-view-card" role="dialog"><div class="crm-quote-view-head"><div><div class="crm-kicker">QUOTATION VIEW</div><h3 id="crmQuoteViewTitle">Quotation</h3><div class="crm-quote-view-meta" id="crmQuoteViewMeta"></div></div><button class="crm-close" onclick="crmCloseQuoteView()" type="button">×</button></div><div class="crm-quote-status-bar" id="crmQuoteViewStatusBar"><span>STATUS</span><select id="crmQuoteViewStatus"><option value="saved">SAVED</option><option value="sent">SENT</option><option value="confirmed">CONFIRMED</option><option value="cancelled">CANCELLED</option></select><button class="crm-secondary small" onclick="crmSaveQuoteStatus()" type="button">SAVE STATUS</button></div><div class="crm-quote-view-body" id="crmQuoteViewBody"></div><div class="crm-quote-view-actions"><button class="crm-secondary" onclick="crmCloseQuoteView()" type="button">CLOSE</button><button class="crm-primary" id="crmQuoteViewDownload" type="button">DOWNLOAD PDF</button></div></div></div><div aria-hidden="true" class="crm-modal" id="seerviActivityModal"><div class="crm-backdrop" onclick="closeAdminActivity()"></div><div aria-labelledby="seerviActivityTitle" aria-modal="true" class="crm-panel seervi-activity-panel" role="dialog"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / ACTIVITY</div><h3 id="seerviActivityTitle">Activity Log</h3><div class="crm-auth-status">Meaningful updates from admin and customers.</div></div><button class="crm-secondary admin-universal-back" onclick="seerviAdminBackToPrevious()" type="button">← BACK</button></div><div class="seervi-activity-toolbar"><div class="seervi-activity-filters"><button class="seervi-activity-filter active" data-activity-filter="all" onclick="seerviActivityFilter('all')" type="button">ALL</button><button class="seervi-activity-filter" data-activity-filter="admin" onclick="seerviActivityFilter('admin')" type="button">ADMIN</button><button class="seervi-activity-filter" data-activity-filter="customer" onclick="seerviActivityFilter('customer')" type="button">CUSTOMER</button></div><button class="crm-secondary small" onclick="loadAdminActivity()" type="button">↻ REFRESH</button></div><div id="seerviActivityAnalytics" style="display:none;margin:12px 0 14px;padding:14px;border:1px solid #ffffff18;border-radius:12px;background:#0d1116"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><div style="font-size:10px;letter-spacing:.14em;color:#d9ad54;font-weight:900">WEBSITE ANALYTICS</div><div style="margin-top:5px;color:#8f99a4;font-size:11px">Google Analytics 4 is tracking website visitors and page views.</div></div><button class="crm-secondary small" type="button" onclick="window.open('https://analytics.google.com/','_blank','noopener')">OPEN GOOGLE ANALYTICS ↗</button></div></div><div class="crm-muted" id="seerviActivityStatus"></div><div class="seervi-activity-list" id="seerviActivityList"></div></div></div>
+</script><div aria-hidden="true" class="crm-quote-view-modal" id="crmPartyLedgerViewModal"><div class="crm-quote-view-backdrop" onclick="crmClosePartyLedgerView()"></div><div aria-labelledby="crmPartyLedgerViewTitle" aria-modal="true" class="crm-quote-view-card crm-party-ledger-view-card" role="dialog"><div class="crm-quote-view-head"><div><div class="crm-kicker">PARTY LEDGER</div><h3 id="crmPartyLedgerViewTitle">Party Ledger</h3><div class="crm-quote-view-meta" id="crmPartyLedgerViewMeta"></div></div><button class="crm-close" onclick="crmClosePartyLedgerView()" type="button">×</button></div><div class="crm-ledger-view-toolbar"><div class="crm-ledger-filter-group"><button class="crm-ledger-filter active" data-range="all" onclick="crmSetPartyLedgerFilter('all')" type="button">ALL</button><button class="crm-ledger-filter" data-range="weekly" onclick="crmSetPartyLedgerFilter('weekly')" type="button">WEEKLY</button><button class="crm-ledger-filter" data-range="monthly" onclick="crmSetPartyLedgerFilter('monthly')" type="button">MONTHLY</button><button class="crm-ledger-filter" data-range="quarterly" onclick="crmSetPartyLedgerFilter('quarterly')" type="button">QUARTERLY</button><button class="crm-ledger-filter" data-range="yearly" onclick="crmSetPartyLedgerFilter('yearly')" type="button">YEARLY</button></div><button class="crm-primary small" id="crmPartyLedgerDownload" onclick="crmDownloadPartyLedger()" type="button">DOWNLOAD LEDGER</button></div><div class="crm-quote-view-body" id="crmPartyLedgerViewBody"></div></div></div><div aria-hidden="true" class="crm-quote-view-modal" id="crmQuoteViewModal"><div class="crm-quote-view-backdrop" onclick="crmCloseQuoteView()"></div><div aria-labelledby="crmQuoteViewTitle" aria-modal="true" class="crm-quote-view-card" role="dialog"><div class="crm-quote-view-head"><div><div class="crm-kicker">QUOTATION VIEW</div><h3 id="crmQuoteViewTitle">Quotation</h3><div class="crm-quote-view-meta" id="crmQuoteViewMeta"></div></div><button class="crm-close" onclick="crmCloseQuoteView()" type="button">×</button></div><div class="crm-quote-status-bar" id="crmQuoteViewStatusBar"><span>STATUS</span><select id="crmQuoteViewStatus"><option value="saved">SAVED</option><option value="sent">SENT</option><option value="confirmed">CONFIRMED</option><option value="cancelled">CANCELLED</option></select><button class="crm-secondary small" onclick="crmSaveQuoteStatus()" type="button">SAVE STATUS</button></div><div class="crm-quote-view-body" id="crmQuoteViewBody"></div><div class="crm-quote-view-actions"><button class="crm-secondary" onclick="crmCloseQuoteView()" type="button">CLOSE</button><button class="crm-primary" id="crmQuoteViewDownload" type="button">DOWNLOAD PDF</button></div></div></div><div aria-hidden="true" class="crm-modal" id="seerviActivityModal"><div class="crm-backdrop" onclick="closeAdminActivity()"></div><div aria-labelledby="seerviActivityTitle" aria-modal="true" class="crm-panel seervi-activity-panel" role="dialog"><div class="crm-head"><div><div class="crm-kicker">SEERVI TRADING / ACTIVITY</div><h3 id="seerviActivityTitle">Activity Log</h3><div class="crm-auth-status">Meaningful updates from admin and customers.</div></div><button class="crm-secondary admin-universal-back" onclick="seerviAdminBackToPrevious()" type="button">← BACK</button></div><div class="seervi-activity-toolbar"><div class="seervi-activity-filters"><button class="seervi-activity-filter active" data-activity-filter="all" onclick="seerviActivityFilter('all')" type="button">ALL</button><button class="seervi-activity-filter" data-activity-filter="admin" onclick="seerviActivityFilter('admin')" type="button">ADMIN</button><button class="seervi-activity-filter" data-activity-filter="customer" onclick="seerviActivityFilter('customer')" type="button">CUSTOMER</button></div><button class="crm-secondary small" onclick="loadAdminActivity()" type="button">↻ REFRESH</button></div><div id="seerviActivityAnalytics" style="display:none;margin:12px 0 14px;padding:14px;border:1px solid #ffffff18;border-radius:12px;background:#0d1116"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap"><div><div style="font-size:10px;letter-spacing:.14em;color:#d9ad54;font-weight:900">WEBSITE ANALYTICS</div><div style="margin-top:5px;color:#8f99a4;font-size:11px">Live site visitor counter — sessions recorded directly by Seervi Trading.</div></div><button class="crm-secondary small" type="button" onclick="window.open('https://analytics.google.com/','_blank','noopener')">OPEN GOOGLE ANALYTICS ↗</button></div><div class="seervi-visitor-stats" id="seerviVisitorStats"><div class="seervi-visitor-stat"><span>TODAY</span><strong id="seerviVisitorsToday">—</strong></div><div class="seervi-visitor-stat"><span>7 DAYS</span><strong id="seerviVisitors7">—</strong></div><div class="seervi-visitor-stat"><span>30 DAYS</span><strong id="seerviVisitors30">—</strong></div><div class="seervi-visitor-stat"><span>ALL TIME</span><strong id="seerviVisitorsTotal">—</strong></div></div><div id="seerviVisitorStatsStatus" style="margin-top:9px;color:#7f8994;font-size:10px"></div></div><div class="crm-muted" id="seerviActivityStatus"></div><div class="seervi-activity-list" id="seerviActivityList"></div></div></div>
 <script>document.addEventListener('DOMContentLoaded',()=>{try{updateAuthNav();}catch(e){}});</script><script id="seervi-smooth-loading-compat">
 (function(){
   'use strict';
@@ -15648,6 +15654,89 @@ function seerviShowSaveSuccess(message){
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initTopLevelMotion,{once:true});
   else initTopLevelMotion();
 })();
+</script>
+<script type="module" id="seervi-direct-visitor-counter">
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+import { getFirestore, doc, runTransaction, getDocs, collection, query, orderBy } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+const SEERVI_VISITOR_CONFIG={
+  apiKey:"AIzaSyADVOeZPRHQuj_6rktaCT390-RC3hDNBi8",
+  authDomain:"seervi-trading-crm.firebaseapp.com",
+  projectId:"seervi-trading-crm",
+  storageBucket:"seervi-trading-crm.firebasestorage.app",
+  messagingSenderId:"1001554087606",
+  appId:"1:1001554087606:web:5b12bac102e10014952017"
+};
+
+let visitorApp,visitorAuth,visitorDb;
+try{
+  visitorApp=getApps().find(a=>a.name==='seervi-direct-visitors')||initializeApp(SEERVI_VISITOR_CONFIG,'seervi-direct-visitors');
+  visitorAuth=getAuth(visitorApp);
+  visitorDb=getFirestore(visitorApp);
+}catch(e){console.warn('[Seervi] Visitor analytics init failed:',e);}
+
+function indiaDateKey(date=new Date()){
+  return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).format(date);
+}
+function sessionVisitKey(){return 'seerviVisitorSession:'+indiaDateKey();}
+async function recordVisit(){
+  if(!visitorAuth||!visitorDb)return;
+  try{
+    const key=sessionVisitKey();
+    if(sessionStorage.getItem(key)==='1')return;
+    const cred=visitorAuth.currentUser|| (await signInAnonymously(visitorAuth)).user;
+    if(!cred?.uid)return;
+    const date=indiaDateKey();
+    const ref=doc(visitorDb,'siteAnalytics','daily_'+date);
+    await runTransaction(visitorDb,async tx=>{
+      const snap=await tx.get(ref);
+      if(snap.exists()){
+        const current=Number(snap.data()?.visits||0);
+        tx.update(ref,{visits:current+1,updatedAt:new Date()});
+      }else{
+        tx.set(ref,{date,visits:1,updatedAt:new Date()});
+      }
+    });
+    sessionStorage.setItem(key,'1');
+  }catch(e){console.warn('[Seervi] Visitor count write failed:',e);}
+}
+function setVisitorStat(id,value){const el=document.getElementById(id);if(el)el.textContent=Number(value||0).toLocaleString('en-IN');}
+function renderVisitorStats(rows){
+  const today=indiaDateKey();
+  const now=new Date();
+  const dates=[];
+  for(let i=0;i<30;i++){const d=new Date(now.getTime()-i*86400000);dates.push(indiaDateKey(d));}
+  const map=new Map(rows.map(r=>[String(r.id||'').replace(/^daily_/,'') ,Number(r.data?.visits||0)]));
+  const total=rows.reduce((sum,r)=>sum+Number(r.data?.visits||0),0);
+  const seven=dates.slice(0,7).reduce((sum,d)=>sum+(map.get(d)||0),0);
+  const thirty=dates.reduce((sum,d)=>sum+(map.get(d)||0),0);
+  setVisitorStat('seerviVisitorsToday',map.get(today)||0);setVisitorStat('seerviVisitors7',seven);setVisitorStat('seerviVisitors30',thirty);setVisitorStat('seerviVisitorsTotal',total);
+}
+window.seerviLoadDirectVisitorStats=async function(){
+  if(!visitorDb)return;
+  const status=document.getElementById('seerviVisitorStatsStatus');
+  try{
+    const adminAuth=window.seerviAdminFirebaseAuth;
+    const admin=adminAuth?.currentUser;
+    if(!admin||String(admin.email||'').toLowerCase()!=='seervitrading@gmail.com'){return;}
+    const snap=await getDocs(query(collection(visitorDb,'siteAnalytics'),orderBy('date','asc')));
+    renderVisitorStats(snap.docs.map(d=>({id:d.id,data:d.data()})));
+    if(status)status.textContent='Visits are counted directly from website sessions. Data starts from this counter activation.';
+  }catch(e){
+    console.warn('[Seervi] Visitor stats read failed:',e);
+    if(status)status.textContent='Visitor counter needs Firebase Rules permission.';
+  }
+};
+
+const originalOpenAdminActivity=window.openAdminActivity;
+window.openAdminActivity=function(...args){
+  const result=typeof originalOpenAdminActivity==='function'?originalOpenAdminActivity.apply(this,args):undefined;
+  setTimeout(()=>window.seerviLoadDirectVisitorStats?.(),250);
+  return result;
+};
+
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>recordVisit(),{once:true});else recordVisit();
 </script>
 </body>
 </html>
