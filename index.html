@@ -3400,7 +3400,7 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
   }
 }
 
-@media(max-width:600px){body.seervi-mobile-account-drawer-open{overflow:hidden!important}}
+body.seervi-mobile-account-drawer-open{overflow:hidden!important}
 </style><style id="seervi-full-panel-background-fix">
 /* Keep dashboard utility panels flush to the viewport like Quotation/Invoice. */
 #adminBackupOptionsModal,
@@ -3482,6 +3482,55 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
   nav .nav-dashboard-slot .top-account-actions .bw-nav-login:hover,
   nav .nav-dashboard-slot .top-account-actions .bw-nav-signup:hover,
   nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard:hover{background:rgba(255,255,255,.07);opacity:1}
+}
+</style>
+<style id="seervi-web-account-menu-drawer-v1">
+/* Desktop/web: use the same left slide-out account drawer as mobile. */
+@media(min-width:601px){
+  nav>.wrap{position:relative!important;}
+  nav>.wrap>.nav-dashboard-slot{position:static!important;}
+  nav>.wrap>.nav-left-group{padding-left:52px!important;}
+  nav .seervi-mobile-account-menu-toggle{
+    display:flex!important;position:absolute!important;left:14px!important;top:50%;transform:translateY(-50%)!important;
+    width:40px!important;height:40px!important;min-height:40px!important;flex-direction:column!important;
+    align-items:center!important;justify-content:center!important;gap:5px!important;padding:0!important;
+    border:0!important;border-radius:9px!important;background:transparent!important;color:#f3f4f6!important;
+    cursor:pointer!important;-webkit-tap-highlight-color:transparent!important;z-index:100002!important;
+  }
+  nav .seervi-mobile-account-menu-toggle span{display:block!important;width:19px!important;height:2px!important;border-radius:2px!important;background:#f1f2f4!important;transition:transform .2s ease,opacity .16s ease!important;}
+  nav .seervi-mobile-account-menu-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)!important;}
+  nav .seervi-mobile-account-menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0!important;}
+  nav .seervi-mobile-account-menu-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)!important;}
+  .seervi-mobile-account-menu-backdrop{
+    display:block;position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.34);
+    opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s ease;
+  }
+  .seervi-mobile-account-menu-backdrop.seervi-mobile-account-menu-open{opacity:1;visibility:visible;pointer-events:auto;}
+  nav .nav-dashboard-slot .top-account-actions{
+    display:flex!important;position:fixed!important;left:0!important;top:0!important;bottom:0!important;right:auto!important;
+    z-index:100001!important;width:min(340px,82vw)!important;min-width:0!important;height:100dvh!important;box-sizing:border-box!important;
+    flex-direction:column!important;align-items:stretch!important;gap:4px!important;padding:82px 14px 18px!important;
+    margin:0!important;border:0!important;border-right:1px solid rgba(255,255,255,.10)!important;border-radius:0!important;
+    background:linear-gradient(180deg,#1b1f24 0%,#171a1f 55%,#13161a 100%)!important;
+    box-shadow:18px 0 55px rgba(0,0,0,.45)!important;
+    opacity:1!important;visibility:visible!important;pointer-events:none!important;transform:translateX(-102%)!important;
+    transform-origin:left center!important;transition:transform .24s cubic-bezier(.22,.61,.36,1)!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions.seervi-mobile-account-menu-open{pointer-events:auto!important;transform:translateX(0)!important;}
+  nav .nav-dashboard-slot .top-account-actions::before{
+    content:'SEERVI TRADING';display:block;margin:0 8px 22px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.09);
+    color:#f0c66a;font-size:11px;font-weight:800;letter-spacing:2px;
+  }
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard{
+    width:100%!important;height:46px!important;min-height:46px!important;justify-content:flex-start!important;padding:0 14px!important;
+    border:0!important;border-radius:9px!important;background:transparent!important;color:#f1f3f5!important;font-size:13px!important;
+    font-weight:600!important;letter-spacing:.1px!important;text-align:left!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login:hover,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup:hover,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard:hover{background:rgba(255,255,255,.07)!important;opacity:1!important;}
 }
 </style>
 <style id="seervi-mobile-topbar-bottombar-match-final">
@@ -4258,7 +4307,7 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
   }
   window.seerviToggleMobileAccountMenu=function(e){
     if(e){e.preventDefault();e.stopPropagation();}
-    if(window.innerWidth>600)return;
+    /* The same drawer is now available on desktop/web as well as mobile. */
     const actions=document.getElementById('bwNavActions');
     const toggle=document.getElementById('seerviMobileAccountMenuToggle');
     const backdrop=document.getElementById('seerviMobileAccountMenuBackdrop');
@@ -4274,7 +4323,7 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
   },true);
   document.getElementById('seerviMobileAccountMenuBackdrop')?.addEventListener('click',closeMenu);
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu();});
-  window.addEventListener('resize',function(){if(window.innerWidth>600)closeMenu();},{passive:true});
+  window.addEventListener('resize',function(){/* Drawer works at every viewport width. */},{passive:true});
 })();
 </script>
 <script id="seervi-nonblocking-alert-bridge">
