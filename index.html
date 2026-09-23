@@ -4457,6 +4457,7 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
     else if(action==='login' && typeof openCustomerLogin==='function')openCustomerLogin();
     else if(action==='signup' && typeof openPartySignup==='function')openPartySignup();
     else if(action==='dashboard' && typeof openMyDashboard==='function')openMyDashboard();
+    else if(action==='close')closeMenu();
   });
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu();});
   window.addEventListener('resize',function(){closeMenu();},{passive:true});
@@ -7228,6 +7229,14 @@ function updateAuthNav(){
   if(loginEl) loginEl.hidden=loggedIn || settingsForNav.customer?.loginEnabled===false;
   if(signupEl) signupEl.hidden=loggedIn || settingsForNav.customer?.signupEnabled===false;
   if(dashboardEl){ dashboardEl.hidden=!loggedIn; dashboardEl.textContent='My Dashboard'; }
+  /* Keep the desktop slide drawer on the exact same auth state:
+     logged out = Login + Sign Up only; logged in = My Dashboard only. */
+  const webDrawerLogin=document.querySelector('#seerviWebSlideDrawer [data-action=\"login\"]');
+  const webDrawerSignup=document.querySelector('#seerviWebSlideDrawer [data-action=\"signup\"]');
+  const webDrawerDashboard=document.querySelector('#seerviWebSlideDrawer [data-action=\"dashboard\"]');
+  if(webDrawerLogin) webDrawerLogin.hidden=loggedIn || settingsForNav.customer?.loginEnabled===false;
+  if(webDrawerSignup) webDrawerSignup.hidden=loggedIn || settingsForNav.customer?.signupEnabled===false;
+  if(webDrawerDashboard) webDrawerDashboard.hidden=!loggedIn;
   ['mobileNavLogin'].forEach(id=>{const el=$(id);if(el)el.hidden=loggedIn || settingsForNav.customer?.loginEnabled===false;});
   ['mobileNavSignup'].forEach(id=>{const el=$(id);if(el)el.hidden=loggedIn || settingsForNav.customer?.signupEnabled===false;});
   ['mobileNavDashboard'].forEach(id=>{const el=$(id);if(el){el.hidden=!loggedIn;el.textContent='My Dashboard';}});
@@ -14030,8 +14039,15 @@ function seerviApplySiteSettings(raw){
   const login=document.getElementById('bwNavLogin');
   const signup=document.getElementById('bwNavSignup');
   const bell=document.getElementById('notificationBell');
-  if(login && !crmUser && !customerUser) login.hidden=!seerviSiteSettings.customer.loginEnabled;
-  if(signup && !crmUser && !customerUser) signup.hidden=!seerviSiteSettings.customer.signupEnabled;
+  const authLoggedIn=!!(crmUser||customerUser);
+  if(login) login.hidden=authLoggedIn || !seerviSiteSettings.customer.loginEnabled;
+  if(signup) signup.hidden=authLoggedIn || !seerviSiteSettings.customer.signupEnabled;
+  const drawerLogin=document.querySelector('#seerviWebSlideDrawer [data-action=\"login\"]');
+  const drawerSignup=document.querySelector('#seerviWebSlideDrawer [data-action=\"signup\"]');
+  const drawerDashboard=document.querySelector('#seerviWebSlideDrawer [data-action=\"dashboard\"]');
+  if(drawerLogin) drawerLogin.hidden=authLoggedIn || !seerviSiteSettings.customer.loginEnabled;
+  if(drawerSignup) drawerSignup.hidden=authLoggedIn || !seerviSiteSettings.customer.signupEnabled;
+  if(drawerDashboard) drawerDashboard.hidden=!authLoggedIn;
   if(bell) bell.hidden=!seerviSiteSettings.notifications.enabled;
   root.dataset.seerviMaintenance=seerviSiteSettings.advanced.maintenanceMode?'1':'0';
   document.title=seerviSiteSettings.branding.companyName+' | Wholesale Imported Products in India';
