@@ -1,5 +1,15 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+<!-- SEERVI GA4 ANALYTICS -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1KMMYBSDJJ"></script>
+<script id="seervi-ga4-analytics">
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1KMMYBSDJJ');
+</script>
+<!-- END SEERVI GA4 ANALYTICS -->
+
 <script id="seervi-global-namespace-core">
 /* Canonical application namespace.
    Legacy window aliases remain available for existing inline handlers,
@@ -14736,7 +14746,7 @@ window.seerviInvalidateCache=function(prefix){
     document.querySelectorAll('img').forEach((img,index)=>{
       const hero=img.closest('.bw-hero,.hero,.home-hero,.hero-section');
       if(hero) return;
-      if(index>1) img.loading='lazy';
+      if(index>1){ img.loading='lazy'; img.fetchPriority='low'; }
       img.decoding='async';
     });
   }
@@ -14896,9 +14906,14 @@ function seerviShowSaveSuccess(message){
     resetSectionVisibility();
   };
 
+  let resizeFrame=0;
   window.addEventListener('resize',function(){
-    if(window.innerWidth>600)resetSectionVisibility();
-  });
+    if(resizeFrame)return;
+    resizeFrame=requestAnimationFrame(function(){
+      resizeFrame=0;
+      if(window.innerWidth>600)resetSectionVisibility();
+    });
+  },{passive:true});
 })();
 </script>
 <script id="seervi-topbar-home-only-script">
@@ -14999,7 +15014,9 @@ function seerviShowSaveSuccess(message){
         requestAnimationFrame(update);
       }
     },{passive:true});
-    window.addEventListener('resize',update);
+    window.addEventListener('resize',function(){
+      if(!ticking){ ticking=true; requestAnimationFrame(update); }
+    },{passive:true});
     update();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',setupStickyTopbar);
