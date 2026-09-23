@@ -11001,9 +11001,7 @@ let seerviInventoryItems=[];
 function inventoryNormaliseKey(v){
   return String(v||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,120);
 }
-function inventoryItemKey(type,model,spec){
-  return inventoryNormaliseKey([type,model,spec||''].join('|'));
-}
+
 function inventoryCategoryName(id){
   return seerviItemCategoriesCache.find(x=>x.id===id)?.name||'';
 }
@@ -11569,9 +11567,7 @@ window.submitNotificationPost=async function(e){
     if(submit){submit.disabled=false;submit.textContent='POST NOTIFICATION';}
   }
 };
-function seerviRefreshNotificationReadState(){
-  seerviLoadNotificationReads().then(seerviRenderNotificationList).catch(()=>{});
-}
+
 window.addEventListener('storage',e=>{
   if(e.key&&e.key.startsWith('seervi_notification_read_')) seerviRenderNotificationList();
 });
@@ -13364,27 +13360,7 @@ Seervi.expose('seerviPublicBackToCategories', seerviPublicBackToCategories);
 /* ===== END SEERVI CATEGORY-FIRST PUBLIC CATALOGUE / STEP 12 ===== */
 
 /* ===== SEERVI FIREBASE CART BRIDGE / STEP 9 ===== */
-function seerviFirebaseCartItem(item){
-  if(!item)return null;
-  return {
-    type:'Item',
-    firebaseItemId:item.id||item.firebaseItemId||'',
-    categoryId:item.categoryId||'',
-    subcategoryId:item.subcategoryId||'',
-    category:item.category||seerviPublicCategoryName?.(item.categoryId)||'',
-    subcategory:item.subcategory||seerviPublicCategoryName?.(item.subcategoryId)||'',
-    model:item.model||item.id||'',
-    name:item.name||item.model||'Item',
-    image:item.imageWebpUrl||item.image||'',
-    imageWebpUrl:item.imageWebpUrl||item.image||'',
-    description:item.description||'',
-    specifications:{...(item.specifications||{})},
-    colourVariant:item.colourVariant||'',
-    colourVariants:seerviNormaliseColourVariants(item.colourVariants||item.variants).map(v=>v.name),
-    specification:item.specification||Object.entries(item.specifications||{}).map(([k,v])=>`${k}: ${v}`).join(', '),
-    rate:Number(item.rate||0)
-  };
-}
+
 /* ===== END SEERVI FIREBASE CART BRIDGE / STEP 9 ===== */
 
 /* ===== SEERVI CATALOGUE STATE / STEP 10 ===== */
@@ -13404,11 +13380,7 @@ seerviPublicLoadCatalogue=async function(){
   }
 };
 
-function seerviPublicCatalogueStatusText(){
-  if(seerviPublicCatalogueError)return 'Catalogue temporarily unavailable.';
-  if(!seerviPublicCatalogueReady)return 'Catalogue is loading…';
-  return `${seerviPublicItems.length} live product${seerviPublicItems.length===1?'':'s'}.`;
-}
+
 /* ===== END SEERVI CATALOGUE STATE / STEP 10 ===== */
 
 /* ===== SEERVI FINAL FIREBASE PRODUCT SYSTEM / STEP 11 ===== */
