@@ -244,15 +244,6 @@ a:active,
   
   body.mobile-products-view #home{display:none!important}
 
-  body.mobile-products-view #profiles,
-  body.mobile-products-view #products,
-  body.mobile-products-view #applications{display:block!important}
-
-  body.mobile-products-view #how-seervi-works,
-  body.mobile-products-view #about,
-  body.mobile-products-view #why-seervi,
-  body.mobile-products-view #contact{display:none!important}
-
   body.mobile-products-view{scroll-padding-top:0!important}
   body.mobile-products-view #profiles{scroll-margin-top:0!important}
 }.product-category-btn.category-card{
@@ -2254,13 +2245,6 @@ nav > .wrap > .nav-dashboard-slot .bw-nav-dashboard {
     margin:0 0 0 auto !important;
   }
 
-  nav > .wrap > .nav-contact,
-  nav > .wrap > .cart-nav-btn,
-  nav > .wrap > .nav-quote,
-  nav > .wrap > .navlinks{
-    display:none !important;
-  }
-
   nav > .wrap > .nav-left-group{
     position:absolute !important;
     left:16px !important;
@@ -2958,7 +2942,6 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
     background-position:right center!important;
     background-repeat:no-repeat!important;
   }
-  #home.bw-hero .bw-hero-image.is-hidden{display:none!important;}
   #home.bw-hero .bw-hero-media-video:not(.is-active){display:none!important;}
   #home.bw-hero .bw-hero-wash,
   #home.bw-hero .bw-hero-vignette{
@@ -3097,7 +3080,6 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
 }.sourcing-hero-widget{display:block!important;margin-top:18px}.sourcing-board{display:none!important}.sourcing-steps{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}@media(max-width:800px){
   .sourcing-steps{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
 }@media(max-width:600px){
-  .sourcing-steps{grid-template-columns:1fr!important;gap:10px!important}
 }.importer-live-strip{
   width:min(1080px,calc(100% - 40px)) !important;
   max-width:1080px !important;
@@ -5368,7 +5350,6 @@ html.seervi-light-theme #home.bw-hero .bw-hero-copy h1,
 html.seervi-light-theme #home.bw-hero .bw-hero-copy h1 span{color:var(--sv-text)!important}
 html.seervi-light-theme #home.bw-hero .bw-hero-copy p{color:#5f6c78!important}
 html.seervi-light-theme #home.bw-hero .bw-cta{background:#17222d!important;color:#fff!important;border-color:#17222d!important}
-html.seervi-light-theme #home.bw-hero .bw-cta span{color:#fff!important}
 html.seervi-light-theme #home.bw-hero .bw-bottom-bar{color:#5f6c78!important;border-top-color:var(--sv-border)!important}
 html.seervi-light-theme #home.bw-hero .bw-bottom-bar span:nth-child(2),
 html.seervi-light-theme #home.bw-hero .bw-bottom-bar span:nth-child(3){border-left-color:var(--sv-border)!important}
@@ -5625,20 +5606,15 @@ html.seervi-light-theme #home.bw-hero .bw-hero-wash{
 html.seervi-light-theme #home.bw-hero .bw-hero-vignette{
   background:linear-gradient(180deg,rgba(255,255,255,.02),transparent 45%,rgba(255,255,255,.10))!important;
 }
-html.seervi-light-theme #home.bw-hero .bw-kicker{color:#b88624!important}
 html.seervi-light-theme #home.bw-hero .bw-hero-copy h1,
 html.seervi-light-theme #home.bw-hero .bw-hero-copy h1 span{color:#18222d!important;text-shadow:none!important}
-html.seervi-light-theme #home.bw-hero .bw-hero-copy p{color:#5f6b77!important}
 html.seervi-light-theme #home.bw-hero .bw-cta{
   background:#18222d!important;
   color:#fff!important;
   border-color:#18222d!important;
   box-shadow:0 10px 25px rgba(24,34,45,.12)!important;
 }
-html.seervi-light-theme #home.bw-hero .bw-cta span{color:#fff!important}
 html.seervi-light-theme #home.bw-hero .bw-bottom-bar{color:#53606c!important;border-top-color:#dfe4e9!important}
-html.seervi-light-theme #home.bw-hero .bw-bottom-bar span:nth-child(2),
-html.seervi-light-theme #home.bw-hero .bw-bottom-bar span:nth-child(3){border-left-color:#dfe4e9!important}
 
 /* Seervi AI Assistance: complete light skin for the full-screen mobile panel. */
 html.seervi-light-theme .support-modal .support-backdrop{
@@ -6334,11 +6310,6 @@ html.seervi-light-theme #home.bw-hero .bw-hero-copy{
 html.seervi-light-theme #home.bw-hero .bw-kicker{
   color:#f0c66a!important;
   text-shadow:0 2px 10px rgba(0,0,0,.65)!important;
-}
-html.seervi-light-theme #home.bw-hero .bw-hero-copy h1,
-html.seervi-light-theme #home.bw-hero .bw-hero-copy h1 span{
-  color:#fff!important;
-  text-shadow:0 3px 18px rgba(0,0,0,.72)!important;
 }
 html.seervi-light-theme #home.bw-hero .bw-hero-copy p{
   color:rgba(255,255,255,.95)!important;
@@ -16967,8 +16938,7 @@ function seerviShowSaveSuccess(message){
   else setupStickyTopbar();
 })();
 </script>
-<script id="mobile-latest-datetime-only">
-</script>
+
 <script id="seervi-public-item-qty-final">
 (function(){
   function getEntry(itemId){
@@ -17731,8 +17701,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   syncFromHash();
 })();
 </script>
-</body>
-</html>
+
 <style id="seervi-light-theme-final-consolidated">
 /* FINAL HERO CLARITY: Light theme keeps the source photo/video clear and natural. */
 html.seervi-light-theme #home.bw-hero .bw-hero-image,
@@ -18230,3 +18199,5 @@ html.seervi-light-theme #home.bw-hero .bw-hero-copy{
 
 
 
+</body>
+</html>
