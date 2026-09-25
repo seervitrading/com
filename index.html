@@ -3823,6 +3823,353 @@ html.seervi-light-theme .notification-bell{color:#171b20!important}
   }
 }
 </style>
+
+<style id="seervi-light-theme-global-final">
+/* SEERVI LIGHT MODE — COMPLETE SITE SYSTEM */
+html.seervi-light-theme{
+  --sv-bg:#f5f7f9;
+  --sv-surface:#ffffff;
+  --sv-surface-2:#f8fafb;
+  --sv-surface-3:#eef2f5;
+  --sv-text:#17212b;
+  --sv-muted:#66727e;
+  --sv-border:#d9e0e6;
+  --sv-gold:#b48727;
+  --sv-gold-soft:#f6edda;
+  --sv-navy:#182531;
+  --sv-shadow:0 10px 30px rgba(24,37,49,.08);
+}
+
+/* Global page surfaces */
+html.seervi-light-theme body,
+html.seervi-light-theme main,
+html.seervi-light-theme .page,
+html.seervi-light-theme .section,
+html.seervi-light-theme .panel,
+html.seervi-light-theme .workspace,
+html.seervi-light-theme .content,
+html.seervi-light-theme .container{
+  background:var(--sv-bg)!important;
+  color:var(--sv-text)!important;
+}
+html.seervi-light-theme p,
+html.seervi-light-theme li,
+html.seervi-light-theme label,
+html.seervi-light-theme .crm-muted,
+html.seervi-light-theme .crm-error,
+html.seervi-light-theme .crm-help,
+html.seervi-light-theme .admin-items-subtitle,
+html.seervi-light-theme .admin-settings-help{
+  color:var(--sv-muted)!important;
+}
+html.seervi-light-theme h1,
+html.seervi-light-theme h2,
+html.seervi-light-theme h3,
+html.seervi-light-theme h4,
+html.seervi-light-theme h5,
+html.seervi-light-theme h6,
+html.seervi-light-theme strong,
+html.seervi-light-theme b,
+html.seervi-light-theme .admin-section-title,
+html.seervi-light-theme .crm-section-title,
+html.seervi-light-theme .crm-kicker,
+html.seervi-light-theme .admin-items-title{
+  color:var(--sv-text)!important;
+}
+
+/* Public hero: image stays visible, content is light but not washed out */
+html.seervi-light-theme #home.bw-hero,
+html.seervi-light-theme .bw-hero{
+  background:#edf1f3!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-image,
+html.seervi-light-theme #home.bw-hero .bw-hero-media-video{
+  opacity:.92!important;
+  filter:contrast(1.02) saturate(.90)!important;
+  background:#dfe5e8!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-wash{
+  background:linear-gradient(90deg,rgba(255,255,255,.10),rgba(255,255,255,.02) 65%,rgba(255,255,255,.08))!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-vignette{
+  background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.03) 65%,rgba(24,37,49,.10))!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-content,
+html.seervi-light-theme .bw-hero-copy{
+  background:#f7f9fa!important;
+  color:var(--sv-text)!important;
+}
+html.seervi-light-theme .bw-hero-copy h1,
+html.seervi-light-theme .bw-hero-copy h2,
+html.seervi-light-theme .bw-hero-copy .hero-title{
+  color:#182531!important;
+}
+html.seervi-light-theme .bw-hero-copy p{color:#5d6974!important}
+
+/* Every dashboard / admin / CRM surface */
+html.seervi-light-theme .customer-dashboard,
+html.seervi-light-theme .customer-dashboard-head,
+html.seervi-light-theme .customer-dashboard-summary,
+html.seervi-light-theme .customer-dashboard-summary-card,
+html.seervi-light-theme .customer-profile-card,
+html.seervi-light-theme .crm-workspace,
+html.seervi-light-theme .crm-panel,
+html.seervi-light-theme .crm-login,
+html.seervi-light-theme .crm-login-grid,
+html.seervi-light-theme .crm-auth-status,
+html.seervi-light-theme .admin-global-panel,
+html.seervi-light-theme .admin-global-area,
+html.seervi-light-theme .admin-items-view,
+html.seervi-light-theme .admin-items-area,
+html.seervi-light-theme .admin-items-category-card,
+html.seervi-light-theme .admin-settings-scroll,
+html.seervi-light-theme .admin-settings-section,
+html.seervi-light-theme .admin-settings-grid,
+html.seervi-light-theme .admin-utility-panel,
+html.seervi-light-theme .admin-backup-options-panel,
+html.seervi-light-theme .account-dashboard-panel,
+html.seervi-light-theme #adminDashboardOptions,
+html.seervi-light-theme #customerDashboardOptions{
+  background:var(--sv-surface)!important;
+  color:var(--sv-text)!important;
+  border-color:var(--sv-border)!important;
+  box-shadow:none!important;
+}
+
+/* Dashboard option cards */
+html.seervi-light-theme .account-dashboard-option,
+html.seervi-light-theme .admin-items-category-card,
+html.seervi-light-theme .admin-global-row,
+html.seervi-light-theme .crm-row,
+html.seervi-light-theme .crm-list-item,
+html.seervi-light-theme .crm-party-card,
+html.seervi-light-theme .inventory-stock-card,
+html.seervi-light-theme .customer-quote-row,
+html.seervi-light-theme .customer-rate-history-card,
+html.seervi-light-theme .admin-kpi,
+html.seervi-light-theme .cart-totals-card{
+  background:#fff!important;
+  color:var(--sv-text)!important;
+  border-color:var(--sv-border)!important;
+  box-shadow:0 4px 18px rgba(24,37,49,.045)!important;
+}
+html.seervi-light-theme .account-dashboard-option:hover,
+html.seervi-light-theme .admin-items-category-card:hover{
+  background:#fbfcfd!important;
+  border-color:#cbb06a!important;
+}
+html.seervi-light-theme .account-dashboard-option h3,
+html.seervi-light-theme .account-dashboard-option strong,
+html.seervi-light-theme .account-dashboard-option .title,
+html.seervi-light-theme .admin-kpi strong,
+html.seervi-light-theme .admin-kpi .value{
+  color:var(--sv-text)!important;
+}
+html.seervi-light-theme .account-dashboard-option p,
+html.seervi-light-theme .account-dashboard-option .description{
+  color:var(--sv-muted)!important;
+}
+
+/* Admin headings / tabs / toolbars */
+html.seervi-light-theme .admin-global-head,
+html.seervi-light-theme .admin-items-head,
+html.seervi-light-theme .admin-items-toolbar,
+html.seervi-light-theme .admin-items-filter-wrap,
+html.seervi-light-theme .admin-items-search-wrap,
+html.seervi-light-theme .admin-items-tabs,
+html.seervi-light-theme .admin-settings-subnav,
+html.seervi-light-theme .crm-head,
+html.seervi-light-theme .crm-toolbar,
+html.seervi-light-theme .crm-tabs,
+html.seervi-light-theme .crm-ledger-view-toolbar{
+  background:#fff!important;
+  color:var(--sv-text)!important;
+  border-color:var(--sv-border)!important;
+}
+html.seervi-light-theme .admin-global-tab,
+html.seervi-light-theme .admin-items-tab,
+html.seervi-light-theme .crm-tab,
+html.seervi-light-theme .crm-ledger-filter{
+  background:#f4f6f8!important;
+  color:#687581!important;
+  border-color:var(--sv-border)!important;
+}
+html.seervi-light-theme .admin-global-tab.active,
+html.seervi-light-theme .admin-items-tab.active,
+html.seervi-light-theme .crm-tab.active,
+html.seervi-light-theme .crm-ledger-filter.active{
+  background:#fffdf7!important;
+  color:#8d6718!important;
+  border-color:#d2b45f!important;
+}
+
+/* Forms everywhere */
+html.seervi-light-theme input:not([type="checkbox"]):not([type="radio"]),
+html.seervi-light-theme select,
+html.seervi-light-theme textarea,
+html.seervi-light-theme .crm-party-select,
+html.seervi-light-theme .cart-party-select{
+  background:#fff!important;
+  color:#17212b!important;
+  border-color:#d3dce3!important;
+}
+html.seervi-light-theme input::placeholder,
+html.seervi-light-theme textarea::placeholder{color:#8a959f!important}
+html.seervi-light-theme input:focus,
+html.seervi-light-theme select:focus,
+html.seervi-light-theme textarea:focus{
+  border-color:#c6a24e!important;
+  box-shadow:0 0 0 3px rgba(198,162,78,.12)!important;
+  outline:none!important;
+}
+
+/* Login / signup / customer authentication */
+html.seervi-light-theme .customer-auth-visual,
+html.seervi-light-theme .customer-auth-visual-copy,
+html.seervi-light-theme .customer-login-actions,
+html.seervi-light-theme .customer-login-help,
+html.seervi-light-theme .party-signup-panel,
+html.seervi-light-theme .party-signup-form,
+html.seervi-light-theme .customer-portal-panel,
+html.seervi-light-theme .crm-login.party-signup-form{
+  background:#fff!important;
+  color:var(--sv-text)!important;
+  border-color:var(--sv-border)!important;
+}
+html.seervi-light-theme .customer-auth-visual-mark{
+  background:var(--sv-gold-soft)!important;
+  color:#8e681a!important;
+}
+html.seervi-light-theme .customer-auth-visual-title,
+html.seervi-light-theme .customer-auth-visual-kicker{
+  color:var(--sv-text)!important;
+}
+
+/* Modals / overlays / dialogs */
+html.seervi-light-theme .crm-modal,
+html.seervi-light-theme .crm-modal-card,
+html.seervi-light-theme .crm-modal-backdrop,
+html.seervi-light-theme .crm-delete-confirm-card,
+html.seervi-light-theme .crm-delete-confirm-modal,
+html.seervi-light-theme .crm-quote-view-card,
+html.seervi-light-theme .crm-quote-view-body,
+html.seervi-light-theme .crm-quote-view-head,
+html.seervi-light-theme .crm-quote-view-summary,
+html.seervi-light-theme .crm-qv-box,
+html.seervi-light-theme .crm-qv-totals,
+html.seervi-light-theme .seervi-items-modal-card{
+  background:#fff!important;
+  color:var(--sv-text)!important;
+  border-color:var(--sv-border)!important;
+}
+html.seervi-light-theme .crm-quote-view-meta,
+html.seervi-light-theme .crm-quote-view-note,
+html.seervi-light-theme .crm-qv-customer{color:var(--sv-muted)!important}
+
+/* Tables */
+html.seervi-light-theme table,
+html.seervi-light-theme .crm-party-ledger-table,
+html.seervi-light-theme .crm-quote-view-table,
+html.seervi-light-theme .crm-qv-table{
+  background:#fff!important;
+  color:var(--sv-text)!important;
+  border-color:var(--sv-border)!important;
+}
+html.seervi-light-theme th{background:#f1f4f6!important;color:#4f5d69!important}
+html.seervi-light-theme td{border-color:#e2e7eb!important;color:#35424e!important}
+
+/* Product / catalogue / cart */
+html.seervi-light-theme .home-product-card,
+html.seervi-light-theme .seervi-public-product-card,
+html.seervi-light-theme .firebase-public-catalog,
+html.seervi-light-theme .comparison-panel,
+html.seervi-light-theme .comparison-panel-top,
+html.seervi-light-theme .cart-panel,
+html.seervi-light-theme .cart-drawer,
+html.seervi-light-theme .cart-footer,
+html.seervi-light-theme .cart-item,
+html.seervi-light-theme .catalog-title{
+  background:#fff!important;
+  color:var(--sv-text)!important;
+  border-color:var(--sv-border)!important;
+}
+html.seervi-light-theme .cart-item p,
+html.seervi-light-theme .cart-party-help,
+html.seervi-light-theme .cart-party-admin-note{color:var(--sv-muted)!important}
+
+/* Buttons: consistent light-theme system */
+html.seervi-light-theme .crm-primary,
+html.seervi-light-theme .crm-save-btn,
+html.seervi-light-theme .gst-invoice-btn.primary,
+html.seervi-light-theme .admin-universal-back,
+html.seervi-light-theme .crm-secondary,
+html.seervi-light-theme .customer-dashboard-refresh,
+html.seervi-light-theme .gstin-get-btn,
+html.seervi-light-theme .gstin-import-btn{
+  border-color:#d0d8df!important;
+}
+html.seervi-light-theme .crm-primary,
+html.seervi-light-theme .crm-save-btn,
+html.seervi-light-theme .gst-invoice-btn.primary{
+  background:#182531!important;color:#fff!important;
+}
+html.seervi-light-theme .crm-secondary,
+html.seervi-light-theme .admin-universal-back,
+html.seervi-light-theme .customer-dashboard-refresh,
+html.seervi-light-theme .gstin-get-btn,
+html.seervi-light-theme .gstin-import-btn{
+  background:#fff!important;color:#34414d!important;
+}
+
+/* Home cards / sourcing sections */
+html.seervi-light-theme .comparison-panel,
+html.seervi-light-theme .supply-flow-section,
+html.seervi-light-theme .importer-home-section,
+html.seervi-light-theme .comparison-card,
+html.seervi-light-theme .check-card,
+html.seervi-light-theme .source-card,
+html.seervi-light-theme .home-card{
+  background:#fff!important;
+  color:var(--sv-text)!important;
+  border-color:var(--sv-border)!important;
+}
+
+/* Contact / footer */
+html.seervi-light-theme footer,
+html.seervi-light-theme .seervi-contact-footer,
+html.seervi-light-theme .contact-section{
+  background:#f8fafb!important;
+  color:var(--sv-text)!important;
+  border-color:var(--sv-border)!important;
+}
+html.seervi-light-theme footer *:not(.gold),
+html.seervi-light-theme .seervi-contact-footer *{color:inherit}
+
+/* Preserve gold accent */
+html.seervi-light-theme .gold,
+html.seervi-light-theme .seervi-gold,
+html.seervi-light-theme .crm-kicker,
+html.seervi-light-theme .admin-items-title,
+html.seervi-light-theme .catalog-title .kicker{
+  color:var(--sv-gold)!important;
+}
+
+/* Prevent legacy dark inline surfaces from visually dominating common components. */
+html.seervi-light-theme .account-dashboard-option,
+html.seervi-light-theme .crm-panel,
+html.seervi-light-theme .admin-global-panel,
+html.seervi-light-theme .admin-settings-panel,
+html.seervi-light-theme .customer-dashboard,
+html.seervi-light-theme .customer-portal-panel,
+html.seervi-light-theme .notification-panel,
+html.seervi-light-theme .gst-profile-panel,
+html.seervi-light-theme .seervi-activity-panel,
+html.seervi-light-theme .admin-utility-panel,
+html.seervi-light-theme .inventory-stock-grid{
+  background:#fff!important;
+  color:#17212b!important;
+}
+</style>
 </head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button type="button" id="seerviThemeToggleMobile" class="seervi-theme-toggle" aria-label="Switch to light mode" aria-pressed="false"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div></div></div><div class="seervi-mobile-topbar-brand" aria-label="Seervi Trading">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
@@ -16213,6 +16560,296 @@ html.seervi-light-theme .support-float,
 html.seervi-light-theme .seervi-ai-float{
   box-shadow:0 12px 28px rgba(20,31,43,.16)!important;
 }
+<style id="seervi-light-theme-complete">
+/* COMPLETE LIGHT THEME — unified across public pages, dashboards, CRM, admin and modal panels. */
+html.seervi-light-theme{
+  --sv-bg:#f4f6f8;
+  --sv-surface:#ffffff;
+  --sv-surface-2:#f8fafb;
+  --sv-surface-3:#eef2f5;
+  --sv-border:#d8e0e6;
+  --sv-border-soft:#e4e9ed;
+  --sv-text:#17212b;
+  --sv-muted:#66727d;
+  --sv-muted-2:#84909b;
+  --sv-gold:#b68622;
+  --sv-danger:#b94b4b;
+}
+
+/* Global light canvas and controls. */
+html.seervi-light-theme body,
+html.seervi-light-theme main,
+html.seervi-light-theme section,
+html.seervi-light-theme article{
+  color:var(--sv-text)!important;
+}
+html.seervi-light-theme body{background:var(--sv-bg)!important}
+html.seervi-light-theme input,
+html.seervi-light-theme textarea,
+html.seervi-light-theme select{
+  background:#fff!important;
+  color:var(--sv-text)!important;
+  border-color:var(--sv-border)!important;
+}
+html.seervi-light-theme input::placeholder,
+html.seervi-light-theme textarea::placeholder{color:#9aa5ae!important}
+
+/* Home hero: image stays visible; content becomes a soft editorial light section. */
+html.seervi-light-theme #home.bw-hero{
+  background:#eef1f4!important;
+  color:var(--sv-text)!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-image,
+html.seervi-light-theme #home.bw-hero .bw-hero-media-video{
+  background-color:#e8ecef!important;
+  filter:contrast(1.04) saturate(.92)!important;
+  opacity:.82!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-wash{
+  background:linear-gradient(90deg,rgba(255,255,255,.10),rgba(255,255,255,.02) 55%,rgba(255,255,255,.08))!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-vignette{
+  background:linear-gradient(180deg,rgba(255,255,255,.02),transparent 45%,rgba(255,255,255,.16))!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-content{
+  background:#f4f6f8!important;
+  color:var(--sv-text)!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-kicker{color:var(--sv-gold)!important}
+html.seervi-light-theme #home.bw-hero .bw-hero-copy h1,
+html.seervi-light-theme #home.bw-hero .bw-hero-copy h1 span{color:var(--sv-text)!important}
+html.seervi-light-theme #home.bw-hero .bw-hero-copy p{color:#5f6c78!important}
+html.seervi-light-theme #home.bw-hero .bw-cta{background:#17222d!important;color:#fff!important;border-color:#17222d!important}
+html.seervi-light-theme #home.bw-hero .bw-cta span{color:#fff!important}
+html.seervi-light-theme #home.bw-hero .bw-bottom-bar{color:#5f6c78!important;border-top-color:var(--sv-border)!important}
+html.seervi-light-theme #home.bw-hero .bw-bottom-bar span:nth-child(2),
+html.seervi-light-theme #home.bw-hero .bw-bottom-bar span:nth-child(3){border-left-color:var(--sv-border)!important}
+
+/* All CRM/admin/dashboard shells. */
+html.seervi-light-theme .crm-panel,
+html.seervi-light-theme .account-dashboard-panel,
+html.seervi-light-theme .seervi-invoice-input-card,
+html.seervi-light-theme .seervi-items-modal-card,
+html.seervi-light-theme .crm-delete-confirm-card{
+  background:#fff!important;
+  color:var(--sv-text)!important;
+  border-color:var(--sv-border)!important;
+  box-shadow:0 24px 70px rgba(26,39,51,.13)!important;
+}
+html.seervi-light-theme .crm-head,
+html.seervi-light-theme .seervi-invoice-input-head{
+  background:rgba(255,255,255,.96)!important;
+  color:var(--sv-text)!important;
+  border-bottom-color:var(--sv-border-soft)!important;
+}
+html.seervi-light-theme .crm-head h3,
+html.seervi-light-theme .seervi-invoice-input-head h3,
+html.seervi-light-theme .crm-section-title{color:var(--sv-text)!important}
+html.seervi-light-theme .crm-kicker{color:var(--sv-gold)!important}
+html.seervi-light-theme .crm-auth-status,
+html.seervi-light-theme .crm-muted,
+html.seervi-light-theme .crm-login p,
+html.seervi-light-theme .admin-settings-help,
+html.seervi-light-theme .seervi-invoice-input-note{color:var(--sv-muted)!important}
+html.seervi-light-theme .crm-close,
+html.seervi-light-theme .crm-secondary{
+  background:#f6f8fa!important;
+  color:#34414d!important;
+  border-color:var(--sv-border)!important;
+}
+html.seervi-light-theme .crm-primary{background:#17222d!important;color:#fff!important}
+html.seervi-light-theme .crm-secondary:hover{background:#17222d!important;color:#fff!important}
+html.seervi-light-theme .crm-primary:hover{background:#253545!important}
+html.seervi-light-theme .crm-error{color:#b94b4b!important}
+
+/* Dashboard menu cards — admin and customer. */
+html.seervi-light-theme .account-dashboard-option{
+  background:#fff!important;
+  color:var(--sv-text)!important;
+  border-color:var(--sv-border)!important;
+  box-shadow:0 6px 20px rgba(26,39,51,.045)!important;
+}
+html.seervi-light-theme .account-dashboard-option:hover{
+  background:#fbfcfd!important;
+  border-color:#c9a84d!important;
+  box-shadow:0 10px 28px rgba(26,39,51,.09)!important;
+}
+html.seervi-light-theme .account-dashboard-option strong{color:var(--sv-text)!important}
+html.seervi-light-theme .account-dashboard-option small{color:var(--sv-muted)!important}
+html.seervi-light-theme .account-dashboard-option span{color:var(--sv-gold)!important}
+html.seervi-light-theme .account-dashboard-option.danger span{color:#c45b5b!important}
+html.seervi-light-theme .account-dashboard-option.danger:hover{background:#fff7f7!important;border-color:#d9a2a2!important}
+
+/* CRM workspace, party, stats, lists and tables. */
+html.seervi-light-theme .crm-party-card,
+html.seervi-light-theme .crm-stat-grid>div,
+html.seervi-light-theme .crm-row,
+html.seervi-light-theme .admin-global-area,
+html.seervi-light-theme .admin-global-row,
+html.seervi-light-theme .admin-global-empty,
+html.seervi-light-theme .rate-history-card,
+html.seervi-light-theme .customer-home-profile,
+html.seervi-light-theme .customer-profile-edit,
+html.seervi-light-theme .customer-ledger-summary,
+html.seervi-light-theme .crm-party-ledger-summary>div,
+html.seervi-light-theme .crm-qv-box,
+html.seervi-light-theme .admin-kpi,
+html.seervi-light-theme .admin-settings-section{
+  background:#fff!important;
+  color:var(--sv-text)!important;
+  border-color:var(--sv-border)!important;
+}
+html.seervi-light-theme .crm-stat-grid span,
+html.seervi-light-theme .crm-party-ledger-summary small,
+html.seervi-light-theme .admin-kpi span,
+html.seervi-light-theme .rate-history-meta,
+html.seervi-light-theme .rate-history-count,
+html.seervi-light-theme .customer-home-profile-head p,
+html.seervi-light-theme .customer-ledger-summary,
+html.seervi-light-theme .crm-row span,
+html.seervi-light-theme .admin-global-head p{color:var(--sv-muted)!important}
+html.seervi-light-theme .crm-stat-grid strong,
+html.seervi-light-theme .crm-row strong,
+html.seervi-light-theme .crm-row .amount,
+html.seervi-light-theme .admin-kpi strong,
+html.seervi-light-theme .rate-history-product,
+html.seervi-light-theme .rate-history-latest,
+html.seervi-light-theme .customer-ledger-summary strong{color:var(--sv-text)!important}
+html.seervi-light-theme .crm-tabs,
+html.seervi-light-theme .admin-global-tabs,
+html.seervi-light-theme .crm-ledger-view-toolbar{border-bottom-color:var(--sv-border-soft)!important}
+html.seervi-light-theme .crm-tab,
+html.seervi-light-theme .admin-global-tab,
+html.seervi-light-theme .crm-ledger-filter{color:#66727d!important}
+html.seervi-light-theme .crm-tab.active,
+html.seervi-light-theme .admin-global-tab.active{color:var(--sv-text)!important;border-bottom-color:#c9a84d!important}
+html.seervi-light-theme .crm-ledger-filter{background:#f6f8fa!important;border-color:var(--sv-border)!important}
+html.seervi-light-theme .crm-ledger-filter.active{background:#17222d!important;color:#fff!important;border-color:#17222d!important}
+html.seervi-light-theme .crm-party-ledger-table th{color:#65717d!important}
+html.seervi-light-theme .crm-party-ledger-table td{border-bottom-color:var(--sv-border-soft)!important}
+html.seervi-light-theme .crm-party-ledger-table th{border-bottom-color:var(--sv-border)!important}
+html.seervi-light-theme .customer-home-profile-grid>div,
+html.seervi-light-theme .customer-profile-edit-grid input,
+html.seervi-light-theme .customer-profile-edit-grid textarea{background:#f8fafb!important;color:var(--sv-text)!important;border-color:var(--sv-border)!important}
+
+/* Admin/global controls and forms. */
+html.seervi-light-theme .admin-settings-grid label,
+html.seervi-light-theme .seervi-invoice-input-field label{color:#66727d!important}
+html.seervi-light-theme .admin-global-tabs{border-bottom-color:var(--sv-border-soft)!important}
+html.seervi-light-theme .admin-global-row{background:#f8fafb!important}
+html.seervi-light-theme .admin-global-row span{color:var(--sv-muted)!important}
+html.seervi-light-theme .admin-global-delete{background:#fff5f4!important;color:#b94b4b!important;border-color:#e4b2ad!important}
+html.seervi-light-theme .seervi-invoice-input-field input,
+html.seervi-light-theme .seervi-invoice-input-field textarea{background:#fff!important;color:var(--sv-text)!important;border-color:var(--sv-border)!important}
+html.seervi-light-theme .seervi-invoice-input-field input:focus,
+html.seervi-light-theme .seervi-invoice-input-field textarea:focus{border-color:#c9a84d!important;box-shadow:0 0 0 3px rgba(201,168,77,.12)!important}
+
+/* Public/home information cards and sourcing panels. */
+html.seervi-light-theme .importer-home-section,
+html.seervi-light-theme .supply-flow-section{background:#f4f6f8!important;color:var(--sv-text)!important}
+html.seervi-light-theme .sourcing-board,
+html.seervi-light-theme .sourcing-proof,
+html.seervi-light-theme .comparison-panel,
+html.seervi-light-theme .importer-pill,
+html.seervi-light-theme .trust-mini{
+  background:#fff!important;
+  color:var(--sv-text)!important;
+  border-color:var(--sv-border)!important;
+  box-shadow:0 8px 24px rgba(26,39,51,.045)!important;
+}
+html.seervi-light-theme .sourcing-board-kicker,
+html.seervi-light-theme .sourcing-step-icon,
+html.seervi-light-theme .sourcing-proof-title span,
+html.seervi-light-theme .importer-pill .pill-icon{color:var(--sv-gold)!important}
+html.seervi-light-theme .sourcing-step,
+html.seervi-light-theme .trust-mini{background:#f8fafb!important;border-color:var(--sv-border-soft)!important}
+html.seervi-light-theme .sourcing-step b,
+html.seervi-light-theme .sourcing-proof-title,
+html.seervi-light-theme .importer-pill b,
+html.seervi-light-theme .comparison-panel h3,
+html.seervi-light-theme .trust-mini strong{color:var(--sv-text)!important}
+html.seervi-light-theme .sourcing-step span,
+html.seervi-light-theme .sourcing-proof p,
+html.seervi-light-theme .importer-pill span,
+html.seervi-light-theme .comparison-panel>p,
+html.seervi-light-theme .trust-mini span{color:var(--sv-muted)!important}
+html.seervi-light-theme .sourcing-timeline{border-top-color:var(--sv-border-soft)!important}
+html.seervi-light-theme .sourcing-timeline strong{color:var(--sv-text)!important}
+html.seervi-light-theme .sourcing-timeline small{color:var(--sv-muted)!important}
+html.seervi-light-theme .source-chip{background:#fff!important;color:#52606c!important;border-color:var(--sv-border)!important}
+html.seervi-light-theme .quote-row{border-bottom-color:var(--sv-border-soft)!important}
+html.seervi-light-theme .quote-row b{color:var(--sv-text)!important}
+html.seervi-light-theme .quote-row span{color:var(--sv-muted)!important}
+
+/* Product/cart/catalogue utility cards. */
+html.seervi-light-theme .product-cart-control button,
+html.seervi-light-theme .cart-rate-input,
+html.seervi-light-theme .cart-gst-rate,
+html.seervi-light-theme .cart-pricing-box,
+html.seervi-light-theme .cart-item-image,
+html.seervi-light-theme .seervi-item-gallery-thumb{
+  background:#fff!important;color:var(--sv-text)!important;border-color:var(--sv-border)!important;
+}
+html.seervi-light-theme .product-cart-control .product-qty{background:#f7f9fa!important;color:var(--sv-text)!important;border-color:var(--sv-border)!important}
+html.seervi-light-theme .cart-rate-label,
+html.seervi-light-theme .cart-price-row,
+html.seervi-light-theme .cart-pricing-box{color:var(--sv-muted)!important}
+html.seervi-light-theme .cart-price-row strong,
+html.seervi-light-theme .cart-grand-total strong{color:var(--sv-text)!important}
+html.seervi-light-theme .cart-grand-total{border-top-color:var(--sv-border)!important}
+html.seervi-light-theme .quote-pdf-btn{background:#17222d!important;color:#fff!important;border-color:#17222d!important}
+
+/* Notifications and activity. */
+html.seervi-light-theme .notification-floating-toast,
+html.seervi-light-theme .notification-card,
+html.seervi-light-theme .notification-toolbar,
+html.seervi-light-theme .seervi-activity-row,
+html.seervi-light-theme .seervi-activity-card{
+  background:#fff!important;color:var(--sv-text)!important;border-color:var(--sv-border)!important;
+}
+html.seervi-light-theme .notification-floating-toast .notification-toast-message,
+html.seervi-light-theme .notification-card-message,
+html.seervi-light-theme .notification-card-date,
+html.seervi-light-theme .seervi-activity-time,
+html.seervi-light-theme .seervi-activity-main span{color:var(--sv-muted)!important}
+html.seervi-light-theme .notification-floating-toast .notification-toast-title,
+html.seervi-light-theme .notification-card-title,
+html.seervi-light-theme .seervi-activity-main strong{color:var(--sv-text)!important}
+
+/* Mobile bottom navigation. */
+@media(max-width:600px){
+  html.seervi-light-theme .mobile-bottom-bar{
+    background:rgba(255,255,255,.94)!important;
+    border-color:#d7dfe5!important;
+    box-shadow:0 14px 40px rgba(26,39,51,.14)!important;
+    backdrop-filter:blur(14px)!important;
+  }
+  html.seervi-light-theme .mobile-bottom-bar a,
+  html.seervi-light-theme .mobile-bottom-bar button{color:#6c7883!important}
+  html.seervi-light-theme .mobile-bottom-bar a>b,
+  html.seervi-light-theme .mobile-bottom-bar button>b{color:#25323e!important}
+}
+
+/* Light treatment for common modal backdrops. */
+html.seervi-light-theme .crm-backdrop{background:rgba(24,34,45,.20)!important}
+html.seervi-light-theme .crm-delete-confirm-modal{background:rgba(24,34,45,.20)!important}
+
+/* Customer authentication/dashboard content. */
+html.seervi-light-theme .customer-dashboard,
+html.seervi-light-theme .customer-auth-visual,
+html.seervi-light-theme .customer-auth-content{background:#fff!important;color:var(--sv-text)!important}
+html.seervi-light-theme .customer-dashboard *{border-color:var(--sv-border-soft)}
+
+/* Keep readable semantic states. */
+html.seervi-light-theme .crm-ledger-credit,
+html.seervi-light-theme .customer-ledger-type.credit,
+html.seervi-light-theme .customer-ledger-amount.credit{color:#18764a!important}
+html.seervi-light-theme .crm-ledger-debit,
+html.seervi-light-theme .customer-ledger-type.debit,
+html.seervi-light-theme .customer-ledger-amount.debit{color:#b13e3e!important}
+html.seervi-light-theme .crm-danger-btn{color:#b13e3e!important;border-color:#dca4a4!important}
+</style>
+
 </style>
 
 <style id="seervi-light-theme-ultimate">
@@ -16354,6 +16991,72 @@ html.seervi-light-theme .support-modal .ai-category-option:active{
 html.seervi-light-theme .importer-home-section:not(.seervi-contact-footer),
 html.seervi-light-theme .supply-flow-section{
   color:#18222d!important;
+}
+</style>
+<style id="seervi-light-theme-master-final">
+/* FINAL MASTER LIGHT PASS — intentionally last in the cascade. */
+html.seervi-light-theme #home.bw-hero .bw-hero-image,
+html.seervi-light-theme #home.bw-hero .bw-hero-media-video{
+  filter:contrast(1.10) saturate(.96)!important;
+  opacity:.72!important;
+  background-color:#dfe5e9!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-wash{
+  background:linear-gradient(90deg,rgba(255,255,255,.03),rgba(255,255,255,0) 58%,rgba(255,255,255,.04))!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-vignette{
+  background:linear-gradient(180deg,rgba(255,255,255,0),transparent 50%,rgba(24,34,45,.06))!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-content{
+  background:#f4f6f8!important;
+}
+
+/* Any remaining dark dashboard/admin surfaces are normalized here. */
+html.seervi-light-theme .account-dashboard-panel,
+html.seervi-light-theme #accountDashboardModal .account-dashboard-panel,
+html.seervi-light-theme #adminDashboardOptions,
+html.seervi-light-theme #customerDashboardOptions,
+html.seervi-light-theme .crm-workspace,
+html.seervi-light-theme .crm-login,
+html.seervi-light-theme .admin-settings-scroll,
+html.seervi-light-theme .admin-settings-section,
+html.seervi-light-theme .admin-settings-grid,
+html.seervi-light-theme .admin-settings-subnav{
+  background:#fff!important;
+  color:#17212b!important;
+}
+html.seervi-light-theme .admin-settings-subnav{
+  border-bottom-color:#e1e6ea!important;
+}
+html.seervi-light-theme .admin-settings-subnav button{
+  color:#65717d!important;
+  background:transparent!important;
+}
+html.seervi-light-theme .admin-settings-subnav button.active{
+  color:#17212b!important;
+  border-bottom-color:#b68622!important;
+}
+html.seervi-light-theme .crm-panel input,
+html.seervi-light-theme .crm-panel select,
+html.seervi-light-theme .crm-panel textarea,
+html.seervi-light-theme .admin-settings-grid input,
+html.seervi-light-theme .admin-settings-grid select,
+html.seervi-light-theme .admin-settings-grid textarea{
+  background:#fff!important;
+  color:#17212b!important;
+  border-color:#d8e0e6!important;
+}
+html.seervi-light-theme .crm-panel input:focus,
+html.seervi-light-theme .crm-panel select:focus,
+html.seervi-light-theme .crm-panel textarea:focus,
+html.seervi-light-theme .admin-settings-grid input:focus,
+html.seervi-light-theme .admin-settings-grid select:focus,
+html.seervi-light-theme .admin-settings-grid textarea:focus{
+  border-color:#c5a04a!important;
+  box-shadow:0 0 0 3px rgba(197,160,74,.12)!important;
+}
+html.seervi-light-theme .admin-settings-section + .admin-settings-section{
+  border-top-color:#e1e6ea!important;
 }
 </style>
 </body>
