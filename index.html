@@ -4191,6 +4191,37 @@ html.seervi-light-theme .bw-hero .bw-hero-copy p{width:100%!important;max-width:
 html.seervi-light-theme .bw-hero .bw-bottom-bar{z-index:4!important}
 }
 </style>
+
+<style id="seervi-light-hero-transparent-final">
+/* FINAL HERO: media must remain behind the copy; never create a white content panel. */
+html.seervi-light-theme #home.bw-hero,
+html.seervi-light-theme #home.bw-hero .bw-hero-content,
+html.seervi-light-theme #home.bw-hero .bw-hero-copy{
+  background:transparent!important;
+  background-color:transparent!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-content{
+  position:relative!important;
+  z-index:3!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-image,
+html.seervi-light-theme #home.bw-hero .bw-hero-media-video{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  opacity:1!important;
+  filter:none!important;
+  background:transparent!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-wash{
+  background:linear-gradient(90deg,rgba(0,0,0,.18),rgba(0,0,0,.04) 58%,rgba(0,0,0,.02))!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-vignette{
+  background:linear-gradient(180deg,rgba(0,0,0,.04),transparent 38%,rgba(0,0,0,.12))!important;
+}
+</style>
 </head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
