@@ -4203,6 +4203,156 @@ html.seervi-light-theme #home.bw-hero .bw-hero-vignette{
   background:linear-gradient(180deg,rgba(0,0,0,.04),transparent 38%,rgba(0,0,0,.12))!important;
 }
 </style>
+
+<style id="seervi-light-panels-final-fix">
+/* FINAL LIGHT-THEME FIX: remaining admin utility surfaces */
+html.seervi-light-theme #adminStockModal .crm-panel,
+html.seervi-light-theme #adminStockModal .inventory-stock-panel,
+html.seervi-light-theme #adminStockModal .inventory-stock-head,
+html.seervi-light-theme #adminStockModal .inventory-stock-tools,
+html.seervi-light-theme #adminStockModal .inventory-stock-category,
+html.seervi-light-theme #adminStockModal .inventory-category-grid{
+  background:#fff!important;
+  color:#17212b!important;
+  border-color:#d8e0e6!important;
+}
+html.seervi-light-theme #adminStockModal .inventory-stock-head{
+  border-bottom:1px solid #e2e7eb!important;
+}
+html.seervi-light-theme #adminStockModal .inventory-stock-meta,
+html.seervi-light-theme #adminStockModal .inventory-stock-model,
+html.seervi-light-theme #adminStockModal .inventory-category-state,
+html.seervi-light-theme #adminStockModal .inventory-stock-spec,
+html.seervi-light-theme #adminStockModal .inventory-stock-empty,
+html.seervi-light-theme #adminStockModal .inventory-stock-no-results span{
+  color:#66727d!important;
+}
+html.seervi-light-theme #adminStockModal .inventory-stock-name,
+html.seervi-light-theme #adminStockModal .inventory-stock-category h4,
+html.seervi-light-theme #adminStockModal .inventory-stock-category strong,
+html.seervi-light-theme #adminStockModal .inventory-stock-no-results strong{
+  color:#17212b!important;
+}
+html.seervi-light-theme #adminStockModal .inventory-stock-image,
+html.seervi-light-theme #adminStockModal .inventory-simple-check{
+  background:#f4f6f8!important;
+  border-color:#d8e0e6!important;
+}
+html.seervi-light-theme #adminStockModal .inventory-stock-search,
+html.seervi-light-theme #adminStockModal .inventory-stock-filter{
+  background:#fff!important;
+  color:#17212b!important;
+  border-color:#cfd7df!important;
+}
+html.seervi-light-theme #adminStockModal .inventory-stock-search::placeholder{
+  color:#9aa5ae!important;
+}
+html.seervi-light-theme #adminStockModal .inventory-stock-search-clear{
+  background:#f0f3f5!important;
+  color:#66727d!important;
+}
+html.seervi-light-theme #adminStockModal .inventory-filter-btn{
+  background:#fff!important;
+  color:#66727d!important;
+  border-color:#d1d9e0!important;
+}
+html.seervi-light-theme #adminStockModal .inventory-filter-btn.active{
+  background:#d8b45a!important;
+  color:#17212b!important;
+  border-color:#d8b45a!important;
+}
+html.seervi-light-theme #adminStockModal .inventory-stock-switch input:checked + .inventory-simple-check{
+  background:#d8b45a!important;
+  border-color:#d8b45a!important;
+  color:#17212b!important;
+}
+html.seervi-light-theme #adminStockModal .inventory-available-qty label{
+  color:#66727d!important;
+}
+html.seervi-light-theme #adminStockModal .inventory-available-qty input{
+  background:#fff!important;
+  color:#17212b!important;
+  border-color:#cfd7df!important;
+}
+
+/* Activity analytics and visitor cards had dark inline styles; force them into the light surface. */
+html.seervi-light-theme #seerviActivityModal .seervi-activity-toolbar{
+  border-bottom-color:#dfe5ea!important;
+}
+html.seervi-light-theme #seerviActivityModal .seervi-activity-filter{
+  background:#fff!important;
+  color:#5f6b76!important;
+  border-color:#d1d9e0!important;
+}
+html.seervi-light-theme #seerviActivityModal .seervi-activity-filter.active{
+  background:#d8b45a!important;
+  color:#17212b!important;
+  border-color:#d8b45a!important;
+}
+html.seervi-light-theme #seerviActivityAnalytics{
+  background:#fff!important;
+  border-color:#d8e0e6!important;
+  color:#17212b!important;
+  box-shadow:0 5px 18px rgba(23,33,43,.05)!important;
+}
+html.seervi-light-theme #seerviActivityAnalytics > div:first-child > div:first-child > div:last-child{
+  color:#66727d!important;
+}
+html.seervi-light-theme #seerviActivityAnalytics .seervi-visitor-stats .seervi-visitor-stat{
+  background:#f8fafb!important;
+  border-color:#d9e0e6!important;
+}
+html.seervi-light-theme #seerviActivityAnalytics .seervi-visitor-stat span{
+  color:#66727d!important;
+}
+html.seervi-light-theme #seerviActivityAnalytics .seervi-visitor-stat strong{
+  color:#17212b!important;
+}
+html.seervi-light-theme #seerviVisitorStatsStatus{
+  color:#66727d!important;
+}
+html.seervi-light-theme #seerviActivityModal .seervi-activity-item{
+  background:#f8fafb!important;
+  border-color:#d9e0e6!important;
+  color:#17212b!important;
+}
+html.seervi-light-theme #seerviActivityModal .seervi-activity-main strong{
+  color:#17212b!important;
+}
+html.seervi-light-theme #seerviActivityModal .seervi-activity-main span,
+html.seervi-light-theme #seerviActivityModal .seervi-activity-time,
+html.seervi-light-theme #seerviActivityModal .seervi-activity-empty{
+  color:#66727d!important;
+  opacity:1!important;
+}
+html.seervi-light-theme #seerviActivityModal .seervi-activity-badge.admin{
+  background:#fff0f3!important;
+  color:#b53f59!important;
+}
+html.seervi-light-theme #seerviActivityModal .seervi-activity-badge.customer{
+  background:#eef6ff!important;
+  color:#3974a8!important;
+}
+
+/* GST footer/status strip was still using the legacy dark skin. */
+html.seervi-light-theme #gstProfileModal .gst-profile-scroll{
+  background:#fff!important;
+}
+html.seervi-light-theme #gstProfileModal .gst-profile-footer{
+  background:#f8fafb!important;
+  border-top-color:#dfe5ea!important;
+}
+html.seervi-light-theme #gstProfileModal #gstProfileStatus{
+  color:#66727d!important;
+}
+
+/* Internal admin panels are full-screen views: never leave the public mobile taskbar over them. */
+@media(max-width:600px){
+  body.seervi-non-home-view:not(.mobile-products-view) .mobile-bottom-bar{
+    display:none!important;
+  }
+}
+</style>
 </head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
