@@ -4633,6 +4633,22 @@ html:not(.seervi-light-theme) nav .nav-dashboard-slot .top-account-actions .seer
 @keyframes seerviTaskbarIndicator{from{left:45%;right:45%;opacity:0}to{left:24%;right:24%;opacity:1}}
 @media(prefers-reduced-motion:reduce){.mobile-bottom-bar a.active,.mobile-bottom-bar button.active{animation:none!important}.mobile-bottom-bar a.active::after,.mobile-bottom-bar button.active::after{animation:none!important}}
 </style>
+
+<style id="seervi-final-hero-image-light-fix">
+/* Light theme: keep the configured hero photo visible. */
+html.seervi-light-theme #home.bw-hero .bw-hero-image:not(.is-hidden){
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  background-image:var(--seervi-hero-image)!important;
+  background-size:cover!important;
+  background-position:center center!important;
+  background-repeat:no-repeat!important;
+  background-color:transparent!important;
+  filter:none!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-image.is-hidden{display:none!important;}
+</style>
 </head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-settings" hidden="" id="mobileNavSettings" onclick="openAdminSettings()" type="button">Settings</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
@@ -7605,9 +7621,6 @@ function openSupportModal(){
   /* Do not focus the AI input automatically. On mobile this would open the
      system keyboard immediately when the assistant is opened. The user can
      tap the input whenever they are ready to type. */
-  if(window.visualViewport){
-    setTimeout(()=>window.visualViewport.dispatchEvent(new Event('resize')),140);
-  }
 }
 function closeSupportModal(){
   const m=document.getElementById('supportModal');
@@ -8099,42 +8112,174 @@ function aiReply(q){
   if(lang==='bn')return'বুঝেছি। Product-এর নাম, model, category বা specification পাঠান; live Seervi catalogue থেকে exact information খুঁজে দেব।';
   return'I understand. Tell me the product name, model, category, size or specification and I’ll search the live Seervi catalogue.';
 }
+function seerviNaturalConversation(q){
+  const x=String(q||'').trim();
+  const l=x.toLowerCase().replace(/\s+/g,' ');
+  const b=(typeof seerviSiteSettings!=='undefined'&&seerviSiteSettings?.branding)||{};
+  const h=(typeof seerviSiteSettings!=='undefined'&&seerviSiteSettings?.homepage)||{};
+  const company=b.companyName||'Seervi Trading';
+  const email=b.email||'seervitrading@gmail.com';
+  const address=h.contactAddress||b.contactAddress||'Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072, India';
+  const contact=typeof seerviContactDisplay==='function'?seerviContactDisplay():'KAILASH SEERVI | +91 70737 41650';
+  const pick=(arr)=>arr[Math.floor(Math.random()*arr.length)];
+
+  const groups=[
+    [/^(hi|hii|hello|helo|hey|namaste|namaskar|hai|hlo)[!., ]*$/i,[
+      `Hello! Welcome to ${company}. How can I help you today?`,
+      `Hi! I’m here. Tell me what you are looking for and I’ll help you.`
+    ]],
+    [/\b(good morning|gm)\b/i,[`Good morning! Welcome to ${company}. What would you like to check today?`,`Good morning. Tell me your requirement and I’ll help you find the right section or product.`]],
+    [/\b(good afternoon)\b/i,[`Good afternoon! How can I help you with ${company} today?`,`Good afternoon. You can ask me about products, catalogues, cart, account or contact details.`]],
+    [/\b(good evening)\b/i,[`Good evening! What would you like to explore on ${company}?`,`Good evening. Tell me what you need and I’ll guide you.`]],
+    [/(what is your name|whats your name|what's your name|your name|who are you|apka naam|aapka naam|aapka name|naam kya hai|naam kiya hai|kiya name hai|kiya names hai|tumhara naam|tumhara name)/i,[`My name is Seervi AI Assistance. I’m the website assistant for ${company}.`,`I’m Seervi AI Assistance. I can help you with the website, catalogue, products, cart and common customer questions.`]],
+    [/(how are you|how r u|how are u|kaise ho|kaisa ho|kya haal)/i,[`I’m doing well, thank you. I’m ready to help you with ${company}.`,`I’m good. Tell me what you want to find or know.`]],
+    [/(what can you do|what do you do|aap kya kar sakte|tum kya karte|help me|how can you help)/i,[`I can guide you around the website, search the live catalogue, explain Cart, Login, Sign Up and help with Seervi contact information.`,`You can talk to me normally. Ask about a product, model, category, catalogue, cart, account, quotation or the website itself.`]],
+    [/(thank you|thanks|thank u|thx|shukriya|dhanyavad)/i,[`You’re welcome! Ask me anything else you need.`,`Anytime. I’m here if you need help with the website or products.`]],
+    [/^(ok|okay|acha|accha|theek|thik|alright|fine|got it|samajh gaya|samajh gayi)[!. ]*$/i,[`Okay. Whenever you’re ready, tell me what you want to check.`,`Sure. Send me the next thing you want help with.`]],
+    [/(bye|goodbye|see you|take care|milte hain|phir milte)/i,[`Sure. Take care and come back whenever you need help.`,`Goodbye! I’ll be here when you need assistance.`]],
+    [/(who made you|who created you|are you ai|are you human|human ho|ai ho)/i,[`I’m an AI assistant created for the Seervi Trading website. I’m not a human, but I can chat naturally and guide you around the site.`,`I’m Seervi AI Assistance, a website AI. For product facts, I use the live catalogue information available on the site.`]],
+    [/(what is this site|what is this website|ye site kya|ye website kya|site kiski|website kiski)/i,[`${company} is the Seervi Trading website for browsing products and catalogues, using the cart and getting in touch with the business.`,`This is the ${company} website. You can explore products, catalogues, account features and contact options here.`]],
+    [/(seervi trading kya|seervi kya karta|what is seervi trading|about seervi)/i,[`${company} helps customers with product sourcing, factory comparison, imported products and related trading requirements.`,`Seervi Trading is focused on sourcing and supplying products for business and project requirements.`]],
+    [/(product|products) (kya|kaun|which)|what products|products do you have|kya products hai/i,[`You can browse the live Products section to see the products currently published by Seervi Trading.`,`Tell me a product name, model, category or specification and I’ll search the live catalogue.`]],
+    [/(catalogue|catalog|pdf) (kya|where|kahan|open|kaise)|where.*catalogue|catalogue.*open/i,[`Tap CATALOGUE in the bottom navigation to browse the available PDF catalogues.`,`The Catalogue section contains the published product PDFs. You can open a catalogue from there.`]],
+    [/(home|homepage).*(back|return|go)|home par|home pe|home kaha/i,[`Tap HOME in the bottom navigation to return to the main page.`,`You can always use HOME in the bottom taskbar to return to the website home.`]],
+    [/(products|product section).*(where|kahan|open|kaise)|products kaha|products kahan/i,[`Tap PRODUCTS in the bottom navigation to open the product section.`,`The Products section is available directly from the bottom taskbar.`]],
+    [/(cart).*(where|kahan|open|kaise)|cart kaha|cart kahan/i,[`Tap CART in the bottom navigation to review your selected items.`,`Your selected products and quantities are available in CART.`]],
+    [/(add.*cart|cart.*add)/i,[`Open the product and tap Add to Cart. The item will then appear in CART.`,`Choose the required product, add it to CART, and review the quantity there.`]],
+    [/(remove.*cart|cart.*remove|delete.*cart)/i,[`Open CART and use the remove control on the item you no longer need.`,`You can remove an unwanted item directly from CART.`]],
+    [/(quantity|qty).*(increase|decrease|change|update)|increase.*quantity|decrease.*quantity/i,[`Use the quantity controls in CART to increase or decrease the required quantity.`,`You can adjust the item quantity directly from the Cart section.`]],
+    [/(login|log in).*(where|how|kaise|kahan)|how.*login|login kaise/i,[`Open the account slide bar and choose LOGIN.`,`Existing customers can use LOGIN from the account slide bar.`]],
+    [/(sign ?up|signup|register).*(where|how|kaise|kahan)|create.*account|signup kaise/i,[`Open the account slide bar and choose SIGN UP to create a customer account.`,`If you are a new customer, use SIGN UP from the account slide bar.`]],
+    [/(forgot.*password|password.*forgot|password bhool)/i,[`Use the password recovery option on the Login screen. If you see an error, send me the exact message.`,`If you forgot your password, open Login and use the available recovery option.`]],
+    [/(contact details|contact info|contact number|whatsapp number|email id|how.*contact|contact.*seervi)/i,[`Current Seervi contact: ${contact}. Email: ${email}.`,`You can contact Seervi Trading through the WhatsApp contact shown on the website. The current email is ${email}.`]],
+    [/(address|location|office address|where is seervi|seervi kaha)/i,[`The website lists the address as ${address}.`,`Seervi Trading’s listed address is ${address}.`]],
+    [/(company name|business name|firm name)/i,[`The business name shown on the website is ${company}.`,`This website is for ${company}.`]],
+    [/(price|rate|cost).*(check|kaise|how|where)|price kya|rate kya/i,[`For an exact rate, send me the product name or model code and I’ll first identify the matching live catalogue item.`,`Tell me the exact product or model. I’ll search the live catalogue before giving product information.`]],
+    [/(moq|minimum order)/i,[`MOQ can vary by product. Send the product name or model and I’ll check the catalogue information available for it.`,`For MOQ, tell me the exact product first because the requirement can differ between products.`]],
+    [/(stock|available|availability).*(check|how|kaise|dekh)|stock hai|available hai/i,[`Send me the exact product name or model and I’ll check the live catalogue data available on the site.`,`Tell me which product you want to check for availability.`]],
+    [/(model|model number|model code).*(find|search|where|kahan)|model kaha/i,[`Send the model code here, even if it is incomplete. I’ll search the live catalogue for a match.`,`You can type the model number directly in this chat and I’ll look for it.`]],
+    [/(specification|specs|spec).*(product|item|model)|specification kya/i,[`Send the product or model name and I’ll show the specifications stored with the matching catalogue item.`,`For specifications, give me the product name or model so I can identify the exact item.`]],
+    [/(category|categories).*(where|kahan|show|open)|category kaha/i,[`Open PRODUCTS and browse the available categories. Then choose the relevant subcategory.`,`The product catalogue is organised by categories and subcategories.`]],
+    [/(subcategory|subcategories).*(where|kahan|open)|subcategory kaha/i,[`Choose a category first. Its available subcategories will appear in the product catalogue flow.`,`Open PRODUCTS, select a category and then choose its subcategory.`]],
+    [/(search|find).*(product|model|item)|product search|search kaise/i,[`You can search by product name, model, size, material or specification. You can also type your request here.`,`Send the product name or model in this chat and I’ll search the live catalogue.`]],
+    [/(quotation|quote).*(how|kaise|create|make|banana)|quotation kaise/i,[`Add the required products to CART, set the quantities and continue with the quotation flow.`,`For a quotation, select the required products first and then continue from CART.`]],
+    [/(order|place order).*(how|kaise|place|karna)|order kaise/i,[`Start by selecting the required products and quantities, add them to CART and continue through the available order or quotation flow.`,`Tell me the product you need first. The website lets you build the requirement through the product and Cart flow.`]],
+    [/(theme|light theme|dark theme|light mode|dark mode)/i,[`You can switch between Light and Dark theme from Appearance in the account slide bar.`,`Open the account slide bar and use Appearance to change the website theme.`]],
+    [/(slide bar|sidebar|account menu)/i,[`Open the account control at the top to use the slide bar. The available options depend on your account state.`,`The account slide bar contains the available Login, Sign Up, Dashboard and other account options.`]],
+    [/(settings).*(where|kahan|open|show)|settings kaha/i,[`Settings is available only to an authorised admin from the admin account slide bar.`,`Normal customers and logged-out visitors do not see the admin Settings option.`]],
+    [/(admin).*(settings|dashboard)/i,[`Admin tools are available after authorised admin login. Customer accounts do not receive the admin Settings option.`,`If you are the authorised admin, open the account slide bar and use the admin options there.`]],
+    [/(bottom (bar|taskbar)|navigation|switch section)/i,[`On mobile, the bottom taskbar lets you switch between HOME, CATALOGUE, PRODUCTS and CART.`,`The bottom navigation is designed for quick switching between the four main customer sections.`]],
+    [/(notification|notifications|bell)/i,[`The bell at the top is the website notification area for supported updates.`,`You can use the notification bell to check supported website notifications.`]],
+    [/(ai assistant|ai assistance|assistant)/i,[`You are chatting with Seervi AI Assistance. I can answer normal questions and help you navigate the Seervi Trading website.`,`I’m the Seervi AI Assistant. Ask me normally, just like you would ask a website support person.`]],
+    [/(website slow|site slow|site hang|website hang|loading slow)/i,[`If a page feels slow, refresh once and check your connection. If one specific panel is stuck, tell me its name.`,`If the site is slow, tell me which section is causing the problem and I’ll guide you through it.`]],
+    [/(good site|nice site|beautiful site|site acha|website acha|mast site)/i,[`Thank you. I’m glad the website is useful. What would you like to explore next?`,`Thanks. Tell me what you want to find and I’ll help you navigate it.`]],
+    [/(can i|may i|kya main).*(help|ask|question)/i,[`Of course. Ask me anything related to the website, products or your shopping flow.`,`Yes. Just type your question naturally and I’ll do my best to guide you.`]],
+    [/(where are you|where do you live|location of ai)/i,[`I’m part of the Seervi Trading website, so you can use me right here in the site.`,`I don’t have a physical location. I’m the AI assistant built into this website.`]],
+    [/(tell me something|say something|talk to me|baat karo)/i,[`Sure. Seervi Trading is set up so customers can browse products, catalogues and the Cart from one place. What would you like to explore?`,`Sure. We can chat normally. Tell me what you are interested in and I’ll respond accordingly.`]],
+    [/(i need help|mujhe help|help chahiye)/i,[`Of course. Tell me what you need—product, model, catalogue, cart, login, quotation or contact information.`,`Sure. Explain what you are trying to do and I’ll guide you step by step.`]],
+    [/(i am looking for|i need|mujhe chahiye|mujhe.*product)/i,[`Okay. Tell me the product name, model, size, material or specification and I’ll search the live catalogue.`,`Sure. Give me as much product detail as you know and I’ll try to match it with the live catalogue.`]],
+    [/(not working|doesn't work|doesnt work|nahi chal raha|kaam nahi kar raha)/i,[`Tell me which button or section is not working and what happens when you tap it. I’ll help you troubleshoot it.`,`Okay. Tell me the exact section and the problem you see, and I’ll guide you.`]],
+    [/(where is whatsapp|whatsapp kaha|whatsapp link)/i,[`The WhatsApp contact is available through the website’s contact area. You can also ask me for the current contact details.`,`Open the Contact area and use the WhatsApp button to start a conversation.`]],
+    [/(email kaha|email kya|email address)/i,[`The current website email is ${email}.`,`You can use ${email} for the Seervi Trading email contact shown in the site settings.`]],
+    [/(what is your job|your work|tumhara kaam)/i,[`My job is to help visitors understand and use the Seervi Trading website and find information from the live catalogue.`,`I help with website navigation, common questions and live catalogue searches.`]],
+    [/(remember me|do you remember|yaad)/i,[`I can use the information available in this current website conversation, but I don’t claim personal memory beyond what the site provides.`,`I can follow the current conversation while we are chatting here.`]],
+    [/(human support|real person|real human|person se baat)/i,[`If you need a human from Seervi Trading, use the WhatsApp or contact options on the website.`,`For direct human support, use the Seervi Trading contact details shown on the site.`]],
+    [/(language|english|hindi|hinglish)/i,[`You can write to me in English, Hindi or Hinglish and I’ll try to respond naturally.`,`Feel free to type in the language you are comfortable with.`]],
+    [/(good night|gn)/i,[`Good night. Take care, and you can come back whenever you need help.`,`Good night. I’ll be here on the website when you need assistance.`]],
+    [/(who is kailash|kailash seervi)/i,[`Kailash Seervi is listed on the website as a Seervi Trading contact. For direct business communication, use the contact details shown on the site.`]],
+    [/(who is shravan|shravan kumar)/i,[`Shravan Kumar is listed on the website as a Seervi Trading contact. For direct business communication, use the contact details shown on the site.`]],
+    [/(thanks for help|you helped|helpful)/i,[`You’re welcome. I’m here whenever you need help with the website or catalogue.`,`Glad I could help. Send the next question whenever you’re ready.`]],
+    [/(what should i ask|what can i ask)/i,[`You can ask about products, models, specifications, categories, catalogues, Cart, Login, Sign Up, quotation, contact details or website navigation.`]],
+    [/(start|lets start|let's start|shuru)/i,[`Sure. Let’s start. Tell me the product or requirement you have in mind.`,`Okay, let’s begin. What are you looking for today?`]],
+    [/(i don't know|i dont know|pata nahi)/i,[`No problem. Tell me what kind of product or requirement you have, even in simple words, and I’ll help narrow it down.`]],
+    [/(okay thanks|ok thanks)/i,[`You’re welcome. Let me know if you need anything else.`]],
+    [/(nice|great|awesome|excellent)/i,[`Thank you. What would you like to check next?`,`Good. Send me your next question.`]],
+    [/(yes|haan|ha|ji|yep|yeah)[!. ]*$/i,[`Okay. Tell me what you want to check next.`,`Sure. Go ahead with your question.`]],
+    [/(no|nahi|nahin)[!. ]*$/i,[`No problem. If you need anything later, just ask.`]],
+    [/(bye bye)/i,[`Bye! Take care and have a good day.`]],
+    [/(good day)/i,[`Thank you. Have a good day. What can I help you with?`]],
+    [/(what time|time kya)/i,[`I don’t provide a live clock here, but I can help you with the Seervi Trading website and catalogue.`]],
+    [/(where is product|product kaha hai)/i,[`Tap PRODUCTS in the bottom navigation, or tell me the product name here and I’ll search the live catalogue.`]],
+    [/(open product|product open)/i,[`Tell me the product name or model and I’ll try to find it in the live catalogue.`,`You can also open PRODUCTS from the bottom taskbar and browse manually.`]],
+    [/(open cart|cart open)/i,[`Tap CART in the bottom navigation to open your selected items.`]],
+    [/(open catalogue|catalogue open)/i,[`Tap CATALOGUE in the bottom navigation to open the catalogue section.`]],
+    [/(open home|home open)/i,[`Tap HOME in the bottom navigation to return to the main page.`]],
+    [/(open account|account open)/i,[`Tap the account/menu control in the top bar to open the account slide bar.`]],
+    [/(sign out|logout|log out)/i,[`Open the account slide bar and use SIGN OUT when you want to end the current account session.`]],
+    [/(customer|customer account)/i,[`Customer accounts can use Login, Sign Up and the customer dashboard features available on the website.`]],
+    [/(admin only|only admin)/i,[`Admin-only options are protected by authorised admin access and are not shown to normal customers.`]],
+    [/(cart empty|empty cart)/i,[`If your Cart is empty, go to PRODUCTS, select an item and add it to CART.`]],
+    [/(quotation pdf|quote pdf)/i,[`Quotation documents are generated through the quotation flow after you select the required items and quantities.`]],
+    [/(catalogue pdf|pdf download)/i,[`Open CATALOGUE and select the required PDF. The catalogue section handles the published documents.`]],
+    [/(product details|details of product)/i,[`Send me the product name or model and I’ll search the live catalogue for its details.`]],
+    [/(which category|which categories)/i,[`Tell me the product or model you are looking for and I can search the live catalogue or guide you to the relevant category.`]],
+    [/(which model|which product should)/i,[`Tell me your requirement, size, material or use case. I can search the published catalogue, but I won’t invent a product that is not there.`]],
+    [/(can you find|find for me|dhundho|dhoondo)/i,[`Yes. Send the product name, model, size, material or any specification you know and I’ll search the live catalogue.`]],
+    [/(show me|dikhao|dikhaiye)/i,[`Sure. Tell me exactly what you want me to show—product, category, subcategory or catalogue.`]],
+    [/(send me|bhejo|bhej do)/i,[`Tell me what you want sent or opened. For a product, send its name or model and I’ll try to locate it.`]],
+    [/(tell me|batao|bataiye)/i,[`Sure. What would you like to know about the Seervi Trading website or catalogue?`]],
+    [/(how does this work|ye kaise kaam)/i,[`Browse PRODUCTS or CATALOGUE, select what you need, use CART for selected items and use the account options when you need Login or Sign Up.`]],
+    [/(buy|purchase|kharidna)/i,[`Start by finding the product in PRODUCTS, add the required quantity to CART and continue with the available quotation or order flow.`]],
+    [/(import|sourcing|factory|china)/i,[`Seervi Trading focuses on sourcing and imported-product requirements. For a specific sourcing request, use the contact or WhatsApp option on the website.`]],
+    [/(trial order|sample order)/i,[`Trial or sample requirements can depend on the product. Tell me the exact item and I’ll check the available catalogue information; for commercial terms, contact Seervi Trading directly.`]],
+    [/(delivery|shipping|transport|freight)/i,[`Shipping and transport terms can depend on the product and order. For an exact commercial quote, contact Seervi Trading with the product and quantity requirement.`]],
+    [/(gst|invoice|tax invoice)/i,[`Invoice and GST information are handled through the business/admin systems. For a customer requirement, tell me what you need and I can guide you to the relevant flow.`]],
+    [/(bank|payment|upi|payment method)/i,[`Payment details are business-specific. For current payment instructions, use the official Seervi Trading contact channel rather than relying on a guessed detail.`]],
+    [/(privacy|data|safe)/i,[`For account or data questions, use the website’s account and privacy information. I won’t ask you to share passwords or OTPs here.`]],
+    [/(otp|password|pin)/i,[`Never share an OTP, password or PIN in this chat. If you have a login issue, tell me the error message and I’ll guide you.`]],
+    [/(thank|bye|okay)/i,[`Sure. I’m here if you need anything else.`]]
+  ];
+  for(const [re,replies] of groups){ if(re.test(l)) return pick(replies); }
+  return null;
+}
+
 async function sendAIMessage(e){
   if(e)e.preventDefault();
   const input=document.getElementById('supportMessage');
   const q=String(input?.value||'').trim();
   if(!q)return;
   addAIMessage('user',q);
-  if(input){input.value='';input.focus({preventScroll:true});}
+  if(input){input.value='';}
   const typing=document.getElementById('aiTyping');if(typing)typing.classList.add('show');
-
-  /* Website-support questions must never wait for the product catalogue.
-     This keeps Contact/Login/Cart/Quote replies instant even when Firebase
-     product data is slow or temporarily unavailable. Only product/category
-     questions trigger the full live catalogue read. */
-  const l=q.toLowerCase();
-  const needsCatalogue=/\b(product|products|item|items|model|profile|blade|cutting|mount|stand|auger|stock|available|size|material|spec|specification|aluminium|aluminum|screw|ladder|steel|iron|curtain|rod|tv|chair|table|catalogue|catalog|kya|kaunsa|chahiye|dikhao|show|find|search|need|want)\b/i.test(q);
-  if(needsCatalogue){
-    try{
-      if(typeof window.seerviEnsurePublicCatalogue==='function')await window.seerviEnsurePublicCatalogue();
-    }catch(err){
-      console.warn('AI catalogue readiness:',err);
+  try{
+    const l=q.toLowerCase();
+    const needsCatalogue=/\b(product|products|item|items|model|profile|blade|cutting|mount|stand|auger|stock|available|size|material|spec|specification|aluminium|aluminum|screw|ladder|steel|iron|curtain|rod|tv|chair|table|catalogue|catalog|kya|kaunsa|chahiye|dikhao|show|find|search|need|want)\b/i.test(q);
+    if(needsCatalogue && typeof window.seerviEnsurePublicCatalogue==='function'){
+      try{await window.seerviEnsurePublicCatalogue();}catch(err){console.warn('AI catalogue readiness:',err);}
+    }
+    await new Promise(r=>setTimeout(r,180));
+    let replied=false;
+    const natural=seerviNaturalConversation(q);
+    if(natural){addAIMessage('bot',natural);replied=true;}
+    if(!replied){
+      const before=document.getElementById('supportChat')?.children.length||0;
+      let reply=null;
+      try{reply=aiReply(q);}catch(err){console.error('AI reply error:',err);}
+      if(reply){addAIMessage('bot',reply);replied=true;}
+      if((document.getElementById('supportChat')?.children.length||0)<=before && needsCatalogue){
+        addAIMessage('bot','I can help with Seervi Trading products, models, specifications, categories, catalogue, Cart, Login, Sign Up, quotation and contact details. Tell me what you need.');
+        replied=true;
+      }
+    }
+  }catch(err){
+    console.error('Seervi AI error:',err);
+    addAIMessage('bot','I’m Seervi AI Assistance. I’m here to help with the Seervi Trading website, products and catalogue. Tell me what you need and I’ll guide you.');
+  }finally{
+    if(typing)typing.classList.remove('show');
+    if(window.innerWidth<=600){
+      setTimeout(()=>{const chat=document.getElementById('supportChat');if(chat)chat.scrollTop=chat.scrollHeight;},40);
     }
   }
-
-  await new Promise(r=>setTimeout(r,120));
-  if(typing)typing.classList.remove('show');
-  const before=document.getElementById('supportChat')?.children.length||0;
-  const reply=aiReply(q);if(reply)addAIMessage('bot',reply);
-  if((document.getElementById('supportChat')?.children.length||0)===before)
-    addAIMessage('bot','I’m here to help. Try a specific category, product name, model code, or ask about Contact, Cart, Login or Quotation.');
 }
+window.sendAIMessage=sendAIMessage;
+window.seerviNaturalConversation=seerviNaturalConversation;
 
 function aiQuick(q){
   const input=document.getElementById('supportMessage');if(!input)return;
-  input.value=q;input.focus({preventScroll:true});
+  input.value=q;
   sendAIMessage({preventDefault(){}});
 }
+window.aiQuick=aiQuick;
 
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSupportModal();});
 </script><script>
@@ -18723,16 +18868,3 @@ html.seervi-light-theme #home.bw-hero .bw-hero-copy{
 
 </body>
 </html>
-
-/* FINAL HERO IMAGE VISIBILITY FIX — preserve configured image in Light Theme. */
-html.seervi-light-theme #home.bw-hero .bw-hero-image:not(.is-hidden){
-  display:block!important;
-  visibility:visible!important;
-  opacity:1!important;
-  background-image:var(--seervi-hero-image)!important;
-  background-size:cover!important;
-  background-position:center center!important;
-  background-repeat:no-repeat!important;
-  background-color:transparent!important;
-}
-html.seervi-light-theme #home.bw-hero .bw-hero-image.is-hidden{display:none!important;}
