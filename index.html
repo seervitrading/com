@@ -16325,7 +16325,7 @@ function seerviApplySiteSettings(raw){
   if(hero){
     const imagePath=seerviSettingsEscapeCssUrl(seerviSiteSettings.homepage.heroImage);
     const videoPath=seerviSettingsEscapeCssUrl(seerviSiteSettings.homepage.heroVideo);
-    if(imagePath){hero.style.setProperty('background-image',`url('${imagePath}')`,'important');}else{hero.style.removeProperty('background-image');}
+    if(imagePath){hero.style.setProperty('background-image',`url('${imagePath}')`,'important');hero.style.setProperty('--seervi-hero-image',`url('${imagePath}')`,'important');}else{hero.style.removeProperty('background-image');hero.style.removeProperty('--seervi-hero-image');}
     hero.classList.toggle('is-hidden',heroMediaType==='video' && !!videoPath);
   }
   if(heroVideo){
@@ -18654,3 +18654,16 @@ html.seervi-light-theme #home.bw-hero .bw-hero-copy{
 
 </body>
 </html>
+
+/* FINAL HERO IMAGE VISIBILITY FIX — preserve configured image in Light Theme. */
+html.seervi-light-theme #home.bw-hero .bw-hero-image:not(.is-hidden){
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  background-image:var(--seervi-hero-image)!important;
+  background-size:cover!important;
+  background-position:center center!important;
+  background-repeat:no-repeat!important;
+  background-color:transparent!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-image.is-hidden{display:none!important;}
