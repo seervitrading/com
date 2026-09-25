@@ -4353,10 +4353,62 @@ html.seervi-light-theme #gstProfileModal #gstProfileStatus{
   }
 }
 </style>
-</head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
+
+<style id="seervi-settings-slidebar-light-final">
+/* Settings in the same slide-out account bar as Sign Out. */
+nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings{
+  color:#f0c66a!important;
+}
+nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings:hover{
+  background:rgba(240,198,106,.10)!important;
+}
+html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings{
+  color:#a97918!important;
+  background:transparent!important;
+}
+html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings:hover{
+  background:#eef2f5!important;
+}
+html.seervi-light-theme #seerviWebSlideDrawer .seervi-web-drawer-settings{
+  color:#a97918!important;
+}
+html.seervi-light-theme #seerviWebSlideDrawer .seervi-web-drawer-settings:hover{
+  background:#eef2f5!important;
+}
+
+/* Final Light Theme correction for Global Settings bottom area. */
+html.seervi-light-theme #adminSettingsModal .admin-settings-footer{
+  background:#f8fafb!important;
+  color:#273440!important;
+  border-top-color:#dfe4e9!important;
+}
+html.seervi-light-theme #adminSettingsModal #adminSettingsStatus{
+  color:#66727d!important;
+  background:#f8fafb!important;
+}
+html.seervi-light-theme #adminSettingsModal .admin-settings-actions{
+  background:transparent!important;
+}
+html.seervi-light-theme #adminSettingsModal .admin-settings-actions .crm-secondary{
+  background:#fff!important;
+  color:#34414d!important;
+  border-color:#d8e0e6!important;
+}
+html.seervi-light-theme #adminSettingsModal .admin-settings-actions .crm-secondary:hover{
+  background:#eef2f5!important;
+  color:#17212b!important;
+}
+html.seervi-light-theme #adminSettingsModal .admin-settings-actions .crm-primary{
+  background:#17222d!important;
+  color:#fff!important;
+  border-color:#17222d!important;
+}
+</style>
+
+</head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-settings" hidden="" id="mobileNavSettings" onclick="openAdminSettings()" type="button">Settings</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
-</button></div></nav><div aria-hidden="true" class="seervi-mobile-account-menu-backdrop" id="seerviMobileAccountMenuBackdrop"></div><div aria-hidden="true" id="seerviWebSlideDrawerBackdrop"></div><aside aria-label="Seervi Trading navigation" id="seerviWebSlideDrawer"><button class="seervi-web-drawer-btn" data-action="home" type="button">Home</button><button class="seervi-web-drawer-btn" data-action="catalogue" type="button">Catalogue</button><button class="seervi-web-drawer-btn" data-action="products" type="button">Products</button><button class="seervi-web-drawer-btn" data-action="contact" type="button">Contact</button><button class="seervi-web-drawer-btn" data-action="cart" type="button">Cart</button><div class="seervi-web-drawer-divider"></div><button class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="login" type="button">Log In</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="signup" type="button">Sign Up</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="dashboard" type="button">My Dashboard</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth seervi-web-drawer-signout" data-action="signout" type="button">Sign Out</button><div class="seervi-theme-control"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggle" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div></aside><main><section class="bw-hero" id="home"><div aria-hidden="true" class="bw-hero-image"></div><video aria-hidden="true" autoplay="" class="bw-hero-media-video" id="bwHeroVideo" loop="" muted="" playsinline="" preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br/><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
+</button></div></nav><div aria-hidden="true" class="seervi-mobile-account-menu-backdrop" id="seerviMobileAccountMenuBackdrop"></div><div aria-hidden="true" id="seerviWebSlideDrawerBackdrop"></div><aside aria-label="Seervi Trading navigation" id="seerviWebSlideDrawer"><button class="seervi-web-drawer-btn" data-action="home" type="button">Home</button><button class="seervi-web-drawer-btn" data-action="catalogue" type="button">Catalogue</button><button class="seervi-web-drawer-btn" data-action="products" type="button">Products</button><button class="seervi-web-drawer-btn" data-action="contact" type="button">Contact</button><button class="seervi-web-drawer-btn" data-action="cart" type="button">Cart</button><div class="seervi-web-drawer-divider"></div><button class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="login" type="button">Log In</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="signup" type="button">Sign Up</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="dashboard" type="button">My Dashboard</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth seervi-web-drawer-settings" data-action="settings" hidden="" type="button">Settings</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth seervi-web-drawer-signout" data-action="signout" type="button">Sign Out</button><div class="seervi-theme-control"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggle" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div></aside><main><section class="bw-hero" id="home"><div aria-hidden="true" class="bw-hero-image"></div><video aria-hidden="true" autoplay="" class="bw-hero-media-video" id="bwHeroVideo" loop="" muted="" playsinline="" preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br/><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
 <section aria-labelledby="homeCataloguesTitle" class="seervi-home-catalogue-section" id="homeCatalogues">
 <div class="wrap">
 <div class="seervi-home-catalogue-head">
@@ -5116,6 +5168,7 @@ html.seervi-light-theme #gstProfileModal #gstProfileStatus{
     else if(action==='login' && typeof openCustomerLogin==='function')openCustomerLogin();
     else if(action==='signup' && typeof openPartySignup==='function')openPartySignup();
     else if(action==='dashboard' && typeof openMyDashboard==='function')openMyDashboard();
+    else if(action==='settings' && typeof openAdminSettings==='function')openAdminSettings();
     else if(action==='signout' && typeof seerviSignOutFromSlideBar==='function')seerviSignOutFromSlideBar();
     else if(action==='close')closeMenu();
   });
@@ -9309,12 +9362,16 @@ function updateAuthNav(){
   if(webDrawerLogin) webDrawerLogin.hidden=loggedIn || settingsForNav.customer?.loginEnabled===false;
   if(webDrawerSignup) webDrawerSignup.hidden=loggedIn || settingsForNav.customer?.signupEnabled===false;
   if(webDrawerDashboard) webDrawerDashboard.hidden=!loggedIn;
+  const isAdminUser=!!(crmUser && isAuthorisedAdmin(crmUser));
+  const webDrawerSettings=document.querySelector('#seerviWebSlideDrawer [data-action=\"settings\"]');
+  if(webDrawerSettings) webDrawerSettings.hidden=!isAdminUser;
   const webDrawerSignout=document.querySelector('#seerviWebSlideDrawer [data-action=\"signout\"]');
   if(webDrawerSignout) webDrawerSignout.hidden=!loggedIn;
   ['mobileNavLogin'].forEach(id=>{const el=$(id);if(el)el.hidden=loggedIn || settingsForNav.customer?.loginEnabled===false;});
   ['mobileNavSignup'].forEach(id=>{const el=$(id);if(el)el.hidden=loggedIn || settingsForNav.customer?.signupEnabled===false;});
   ['mobileNavDashboard'].forEach(id=>{const el=$(id);if(el){el.hidden=!loggedIn;el.textContent='My Dashboard';}});
   const mobileNavSignOut=$('mobileNavSignOut'); if(mobileNavSignOut) mobileNavSignOut.hidden=!loggedIn;
+  const mobileNavSettings=$('mobileNavSettings'); if(mobileNavSettings) mobileNavSettings.hidden=!isAdminUser;
   const identity=$('bwAccountIdentity');
   if(identity){
     const email=(crmUser?.email||customerUser?.email||'seervitrading@gmail.com').trim();
@@ -16092,9 +16149,13 @@ function seerviApplySiteSettings(raw){
   const drawerLogin=document.querySelector('#seerviWebSlideDrawer [data-action=\"login\"]');
   const drawerSignup=document.querySelector('#seerviWebSlideDrawer [data-action=\"signup\"]');
   const drawerDashboard=document.querySelector('#seerviWebSlideDrawer [data-action=\"dashboard\"]');
+  const drawerSettings=document.querySelector('#seerviWebSlideDrawer [data-action=\"settings\"]');
   if(drawerLogin) drawerLogin.hidden=authLoggedIn || !seerviSiteSettings.customer.loginEnabled;
   if(drawerSignup) drawerSignup.hidden=authLoggedIn || !seerviSiteSettings.customer.signupEnabled;
   if(drawerDashboard) drawerDashboard.hidden=!authLoggedIn;
+  if(drawerSettings) drawerSettings.hidden=!(crmUser && isAuthorisedAdmin(crmUser));
+  const mobileSettings=document.getElementById('mobileNavSettings');
+  if(mobileSettings) mobileSettings.hidden=!(crmUser && isAuthorisedAdmin(crmUser));
   if(bell) bell.hidden=!seerviSiteSettings.notifications.enabled;
   root.dataset.seerviMaintenance=seerviSiteSettings.advanced.maintenanceMode?'1':'0';
   document.title=seerviSiteSettings.branding.companyName+' | Wholesale Imported Products in India';
