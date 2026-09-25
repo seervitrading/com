@@ -7602,15 +7602,9 @@ function openSupportModal(){
   if(chat && !chat.children.length){
     addAIMessage('bot','Hi! 👋 I’m Seervi AI Assistance.\nAsk me about our products, models, cart, login/sign-up, orders, stock availability or how to contact Seervi.');
   }
-  setTimeout(()=>{
-    const input=document.getElementById('supportMessage');
-    if(!input)return;
-    try{
-      input.focus({preventScroll:true});
-      const end=input.value.length;
-      if(typeof input.setSelectionRange==='function')input.setSelectionRange(end,end);
-    }catch(_){try{input.focus();}catch(__){}}
-  },60);
+  /* Do not focus the AI input automatically. On mobile this would open the
+     system keyboard immediately when the assistant is opened. The user can
+     tap the input whenever they are ready to type. */
   if(window.visualViewport){
     setTimeout(()=>window.visualViewport.dispatchEvent(new Event('resize')),140);
   }
@@ -7905,6 +7899,81 @@ function aiReply(q){
     :'Sure. Ask me about a product, model or requirement.';
 
   const data=aiGetCatalogue();
+
+  /* ---------------------------------------------------------------
+     NATURAL CONVERSATION LAYER
+     Keep common social/site questions conversational before catalogue
+     matching. These are deterministic local replies, so the assistant
+     remains fast and never invents catalogue data.
+  ---------------------------------------------------------------- */
+  const siteName=String(seerviSiteSettings?.branding?.companyName||'Seervi Trading');
+  const naturalReplies=[
+    {re:/^(hi|hello|hey|hii|helo|namaste|namaskar|good morning|good afternoon|good evening)[!. ,]*$/i,reply:()=>{
+      const hour=new Date().getHours();
+      const greeting=hour<12?'Good morning':hour<17?'Good afternoon':'Good evening';
+      return `${greeting!=='Good morning'&&/^good morning/i.test(x)?greeting:greeting}. Welcome to ${siteName}. How can I help you today?`;
+    }},
+    {re:/\b(good morning|morning)\b/i,reply:()=>`Good morning. Welcome to ${siteName}. Tell me what you are looking for and I’ll help you find it. `},
+    {re:/\b(good afternoon|afternoon)\b/i,reply:()=>`Good afternoon. How can I help you with ${siteName} today?`},
+    {re:/\b(good evening|evening)\b/i,reply:()=>`Good evening. What would you like to check on ${siteName}?`},
+    {re:/^(how are you|how r u|how are u|kaise ho|kaisa ho|kya haal)[?! .]*$/i,reply:()=>`I’m doing well, thank you. I’m here to help you with ${siteName}, products and the website.`},
+    {re:/\b(what is your name|your name|who are you|apka naam|aapka name|naam kya hai|tumhara naam)\b/i,reply:()=>`I’m Seervi AI Assistance, the website assistant for ${siteName}. You can ask me about products, catalogue, cart, account or contact details.`},
+    {re:/\b(what is this site|what is this website|ye site kya|ye website kya|site kiski hai|website kiski hai)\b/i,reply:()=>`${siteName} is a product-sourcing and trading website where you can browse products and catalogues, use the cart and contact Seervi Trading.`},
+    {re:/\b(what can you do|what do you do|aap kya kar sakte|tum kya kar sakte|help me)\b/i,reply:()=>`I can help you find products and models in the live catalogue, explain site features, guide you through Cart, Login, Sign Up and Quotation, and give Seervi contact information.`},
+    {re:/\b(thank you|thanks|thank u|dhanyavad|shukriya|thanks bhai)\b/i,reply:()=>`You’re welcome. If you need anything else from ${siteName}, just ask.`},
+    {re:/^(ok|okay|acha|accha|theek|thik|alright|got it|samajh gaya|samajh gayi)[!. ]*$/i,reply:()=>`Perfect. Whenever you’re ready, tell me what you want to check.`},
+    {re:/\b(bye|goodbye|see you|milte hain|phir milte|chalta hu|chalta hoon)\b/i,reply:()=>`Sure. Take care, and feel free to come back whenever you need help with ${siteName}.`},
+    {re:/\b(website slow|site slow|site hang|website hang|loading slow|site nahi chal|website nahi chal)\b/i,reply:()=>`If the site feels slow, first refresh the page and check your internet connection. If a specific panel is stuck, tell me its name and I’ll guide you.`},
+    {re:/\b(theme|light theme|dark theme|light mode|dark mode)\b/i,reply:()=>`You can switch the website between Light and Dark theme from the Appearance control in the account slide bar.`},
+    {re:/\b(catalogue|catalog|pdf)\b.*\b(where|kahan|open|kaise|how)\b|\b(where|kahan)\b.*\b(catalogue|catalog|pdf)\b/i,reply:()=>`Open the Catalogue section from the bottom navigation. You can browse the available catalogues and open the required PDF.`},
+    {re:/\b(home|homepage)\b.*\b(back|return|go)\b|\bhome par|home pe\b/i,reply:()=>`Use HOME in the bottom navigation to return to the main page.`},
+    {re:/\b(products|product section)\b.*\b(where|kahan|open|kaise|how)\b/i,reply:()=>`Use PRODUCTS in the bottom navigation to switch directly to the product section.`},
+    {re:/\b(cart)\b.*\b(where|kahan|open|kaise|how)\b/i,reply:()=>`Use CART in the bottom navigation. Your selected items and quantities are handled there.`},
+    {re:/\b(add.*cart|cart.*add)\b/i,reply:()=>`Open the product you want and use its Add to Cart control. You can then review and change quantities from CART.`},
+    {re:/\b(remove.*cart|cart.*remove|delete.*cart)\b/i,reply:()=>`Open CART and use the remove control on the item you no longer need.`},
+    {re:/\b(increase|decrease|change|update)\b.*\b(quantity|qty)\b/i,reply:()=>`In CART, use the quantity controls beside the product to increase or decrease the required quantity.`},
+    {re:/\b(login|log in)\b.*\b(where|how|kaise|kahan)\b|\bhow.*login\b/i,reply:()=>`Open the account slide bar and choose LOGIN. Existing customers can sign in there.`},
+    {re:/\b(sign ?up|signup|register)\b.*\b(where|how|kaise|kahan)\b|\bcreate.*account\b/i,reply:()=>`Open the account slide bar and choose SIGN UP to create a customer account.`},
+    {re:/\b(forgot.*password|password.*forgot|password bhool)\b/i,reply:()=>`Use the password-recovery option on the Login screen. If it does not work, send me the exact message shown on screen.`},
+    {re:/\b(contact|phone|whatsapp|email|address)\b.*\b(seervi|company|office)\b|\b(seervi|company|office)\b.*\b(contact|phone|whatsapp|email|address)\b/i,reply:()=>`Sure. I can give you the current Seervi Trading contact details from the website settings. Ask “contact details”.`},
+    {re:/\b(contact details|contact info|contact number|whatsapp number|email id)\b/i,reply:()=>`The current Seervi Trading contact details are: ${seerviContactDisplay()} | Email: ${seerviSiteSettings.branding.email}.`},
+    {re:/\b(company name|business name|firm name)\b/i,reply:()=>`The business name shown on this website is ${siteName}.`},
+    {re:/\b(location|address|office address|where is seervi|seervi kaha)\b/i,reply:()=>`The website lists the Seervi Trading address as ${seerviSiteSettings.homepage?.contactAddress||seerviSiteSettings.branding?.contactAddress||'Nagarbhavi Circle, Jannabharathi Main Road, Bengaluru – 566072, India'}.`},
+    {re:/\b(quote|quotation)\b.*\b(how|kaise|create|make|banana)\b/i,reply:()=>`For a quotation, add the required products to CART, set the quantities and continue with the quotation flow.`},
+    {re:/\b(order|place order)\b.*\b(how|kaise|place|karna)\b/i,reply:()=>`Start by selecting the required products and quantities. Add them to CART and continue through the available order or quotation flow.`},
+    {re:/\b(stock|available|availability)\b.*\b(check|kaise|how|dekh)\b/i,reply:()=>`Send me the exact product name or model. I’ll check the live catalogue data available to the website.`},
+    {re:/\b(price|rate|cost)\b.*\b(check|kaise|how|where)\b/i,reply:()=>`For an exact rate, send the product name or model code. I’ll first identify the exact item from the live catalogue.`},
+    {re:/\b(moq|minimum order)\b/i,reply:()=>`MOQ can depend on the specific product. Send the product name or model and I’ll check the available catalogue information.`},
+    {re:/\b(model|model number|model code)\b.*\b(where|find|search|kahan)\b/i,reply:()=>`Send the model code here, even if it is only part of the code. I’ll search the live catalogue for a matching product.`},
+    {re:/\b(specification|specs|spec)\b.*\b(product|item|model)\b/i,reply:()=>`Send the product or model name. I can show the specifications stored with the matching live catalogue item.`},
+    {re:/\b(category|categories)\b.*\b(where|kahan|show|open)\b/i,reply:()=>`Open PRODUCTS and browse the available categories. You can then move into the relevant subcategory.`},
+    {re:/\b(subcategory|subcategories)\b.*\b(where|kahan|open)\b/i,reply:()=>`Choose a category first; its available subcategories are shown in the product catalogue flow.`},
+    {re:/\b(search|find)\b.*\b(product|model|item)\b/i,reply:()=>`You can search by product name, model, size, material or other available specification. You can also type the request here and I’ll search the live catalogue.`},
+    {re:/\b(mobile|phone)\b.*\bnavigation\b|\bbottom (bar|taskbar)\b/i,reply:()=>`On mobile, the bottom navigation lets you switch quickly between HOME, CATALOGUE, PRODUCTS and CART.`},
+    {re:/\b(slide bar|sidebar|account menu)\b/i,reply:()=>`Open the account control at the top to use the slide bar. The available options depend on whether you are signed in and your account access.`},
+    {re:/\b(settings)\b.*\b(where|kahan|open|show)\b/i,reply:()=>`Settings is available from the admin account slide bar. It is not shown to normal customers or logged-out visitors.`},
+    {re:/\b(admin)\b.*\b(settings|dashboard)\b/i,reply:()=>`Admin-only tools are available after an authorised admin login. Customer accounts do not receive the admin Settings option.`},
+    {re:/\b(light theme|light mode)\b.*\b(how|kaise|switch)\b/i,reply:()=>`Open the account slide bar, go to Appearance and select Light. Your preference is saved locally in the browser.`},
+    {re:/\b(dark theme|dark mode)\b.*\b(how|kaise|switch)\b/i,reply:()=>`Open the account slide bar, go to Appearance and select Dark. Your preference is saved locally in the browser.`},
+    {re:/\b(notification|notifications)\b/i,reply:()=>`The website has a notification area for supported site updates. If you tell me what you want to check, I can explain the relevant section.`},
+    {re:/\b(ai assistant|ai assistance|assistant)\b.*\b(what|who|use|help)\b/i,reply:()=>`I’m the Seervi AI Assistant. I can chat naturally, guide you around the website and search the live product catalogue when you ask about products.`},
+    {re:/\b(real person|human|are you human|insaan)\b/i,reply:()=>`I’m an AI assistant, not a human. I’m here to help you navigate ${siteName} and answer questions using the website information available to me.`},
+    {re:/\b(joke|funny)\b/i,reply:()=>`I’ll keep the jokes short. First tell me what product you’re looking for.`},
+    {re:/\b(can you help|help karo|madad|madad karo)\b/i,reply:()=>`Of course. Tell me what you need—product, model, catalogue, cart, login, contact details or something else on the website.`},
+    {re:/\b(you remember|do you know me|mera naam)\b/i,reply:()=>`I can use the information available in this website conversation, but I won’t guess personal details that you haven’t provided here.`},
+    {re:/\b(nice|great|good|awesome|perfect)\b/i,reply:()=>`Thank you. Tell me what you’d like to do next.`},
+    {re:/\b(wait|one minute|ek minute)\b/i,reply:()=>`No problem. I’ll be here when you’re ready.`},
+    {re:/\b(yes|haan|ha|yep|yeah)\b/i,reply:()=>`Sure. Go ahead and tell me the next detail.`},
+    {re:/\b(no|nahi|nahin)\b/i,reply:()=>`No problem. Tell me what you want to do instead.`},
+    {re:/\b(where am i|mera location|my location)\b/i,reply:()=>`I can explain website locations such as the Seervi Trading address, but I won’t guess your physical location.`},
+    {re:/\b(what time|time kya)\b/i,reply:()=>`I’m focused on the website and product assistance. For the current local time, use your device clock.`},
+    {re:/\b(website owner|owner of site|who owns)\b/i,reply:()=>`${siteName} is the business identity presented on this website. For business contact information, ask “contact details”.`},
+    {re:/\b(import|sourcing|factory)\b.*\b(seervi|website|work)\b/i,reply:()=>`${siteName} presents itself around product sourcing, factory coordination and trading support. For a specific product, send its name or model.`},
+    {re:/\b(product list|products list|all products)\b/i,reply:()=>`I can search the live product catalogue. Ask for a category, product name or model, and I’ll show matching results.`},
+    {re:/\b(catalogue list|catalogue names|pdf list)\b/i,reply:()=>`Open CATALOGUE from the bottom navigation to browse the available PDF catalogues.`},
+    {re:/\b(browser|chrome|android)\b.*\b(issue|problem|keyboard)\b/i,reply:()=>`If the mobile keyboard or browser behaves unexpectedly, close the assistant and reopen it. The assistant no longer opens the keyboard automatically.`}
+  ];
+  for(const item of naturalReplies){if(item.re.test(x))return item.reply();}
 
   /* ---------------------------------------------------------------
      INTENT ROUTER
