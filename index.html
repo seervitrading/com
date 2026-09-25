@@ -4405,6 +4405,170 @@ html.seervi-light-theme #adminSettingsModal .admin-settings-actions .crm-primary
 }
 </style>
 
+
+<style id="seervi-account-slidebar-polished">
+/* Polished account slide bar: compact grouping, clear hierarchy, consistent controls. */
+@media(max-width:600px){
+  nav .nav-dashboard-slot .top-account-actions{
+    width:min(330px,86vw)!important;
+    max-width:330px!important;
+    padding:30px 18px 22px!important;
+    gap:6px!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+    background:#fff!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions::before{
+    content:'SEERVI TRADING';
+    margin:0 4px 18px!important;
+    padding:0 8px 16px!important;
+    border-bottom:1px solid #e1e6eb!important;
+    color:#a97918!important;
+    font-size:12px!important;
+    font-weight:800!important;
+    letter-spacing:2.2px!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{
+    position:relative!important;
+    display:flex!important;
+    align-items:center!important;
+    width:100%!important;
+    height:48px!important;
+    min-height:48px!important;
+    margin:0!important;
+    padding:0 14px 0 48px!important;
+    border:1px solid transparent!important;
+    border-radius:11px!important;
+    background:transparent!important;
+    color:#273440!important;
+    font-size:14px!important;
+    font-weight:700!important;
+    letter-spacing:.1px!important;
+    text-align:left!important;
+    box-sizing:border-box!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login::before,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup::before,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard::before,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings::before,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout::before{
+    position:absolute!important;
+    left:14px!important;
+    top:50%!important;
+    transform:translateY(-50%)!important;
+    width:22px!important;
+    height:22px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    border-radius:7px!important;
+    background:#f1f4f6!important;
+    color:#55616c!important;
+    font-size:13px!important;
+    font-weight:800!important;
+    line-height:1!important;
+  }
+  #bwNavLogin::before{content:'↪'}
+  #bwNavSignup::before{content:'+'}
+  #bwNavDashboard::before{content:'⌂'}
+  #mobileNavSettings::before{content:'⚙'}
+  #mobileNavSignOut::before{content:'↩'}
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login:hover,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup:hover,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard:hover,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings:hover{
+    background:#f3f6f8!important;
+    border-color:#e0e6eb!important;
+    opacity:1!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{
+    margin-top:8px!important;
+    border-color:#ead9dc!important;
+    background:#fff9fa!important;
+    color:#b23a45!important;
+  }
+  #mobileNavSignOut::before{
+    background:#fdecef!important;
+    color:#b23a45!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile{
+    order:20!important;
+    margin:16px 4px 0!important;
+    padding:16px 4px 0!important;
+    border-top:1px solid #e1e6eb!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:12px!important;
+    flex:0 0 auto!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile>span{
+    color:#68737d!important;
+    font-size:10px!important;
+    font-weight:800!important;
+    letter-spacing:1px!important;
+    text-transform:uppercase!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile .seervi-theme-toggle{
+    min-width:108px!important;
+    height:40px!important;
+    border-radius:10px!important;
+    background:#17222d!important;
+    border-color:#17222d!important;
+    color:#fff!important;
+  }
+}
+
+/* Same hierarchy for tablet/desktop slide-out account menu. */
+@media(min-width:601px){
+  nav .nav-dashboard-slot .top-account-actions{
+    width:min(340px,34vw)!important;
+    padding:30px 18px 22px!important;
+    gap:6px!important;
+    overflow-y:auto!important;
+    background:#fff!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions::before{
+    margin:0 4px 18px!important;
+    padding:0 8px 16px!important;
+    border-bottom:1px solid #e1e6eb!important;
+    color:#a97918!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{
+    position:relative!important;display:flex!important;align-items:center!important;
+    width:100%!important;height:48px!important;min-height:48px!important;
+    padding:0 14px 0 48px!important;border-radius:11px!important;
+    font-size:14px!important;font-weight:700!important;text-align:left!important;
+    box-sizing:border-box!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login::before,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup::before,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard::before,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings::before,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout::before{
+    position:absolute!important;left:14px!important;top:50%;transform:translateY(-50%)!important;
+    width:22px!important;height:22px!important;display:flex!important;align-items:center!important;justify-content:center!important;
+    border-radius:7px!important;background:#f1f4f6!important;color:#55616c!important;font-size:13px!important;font-weight:800!important;
+  }
+  #bwNavLogin::before{content:'↪'} #bwNavSignup::before{content:'+'} #bwNavDashboard::before{content:'⌂'}
+  #mobileNavSettings::before{content:'⚙'} #mobileNavSignOut::before{content:'↩'}
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{
+    margin-top:8px!important;border-color:#ead9dc!important;background:#fff9fa!important;color:#b23a45!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile{
+    order:20!important;margin:16px 4px 0!important;padding:16px 4px 0!important;
+    border-top:1px solid #e1e6eb!important;
+  }
+}
+</style>
 </head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-settings" hidden="" id="mobileNavSettings" onclick="openAdminSettings()" type="button">Settings</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
@@ -4513,7 +4677,6 @@ html.seervi-light-theme #adminSettingsModal .admin-settings-actions .crm-primary
 <button class="account-dashboard-option" onclick="accountDashboardStock()" type="button"><span>▤</span><strong>STOCK</strong><small>Control catalogue item availability</small></button>
 <button class="account-dashboard-option" onclick="openAdminCatalogues()" type="button"><span>▤</span><strong>CATALOGUES</strong><small>Manage customer-facing PDF catalogues</small></button>
 <button class="account-dashboard-option" onclick="accountDashboardNotificationPost()" type="button"><span>🔔</span><strong>NOTIFICATION POST</strong><small>Send an important notice to everyone</small></button>
-<button class="account-dashboard-option" onclick="openAdminSettings()" type="button"><span>⚙</span><strong>SETTINGS</strong><small>Control global website &amp; business settings</small></button>
 <button class="account-dashboard-option" onclick="openAdminActivity()" type="button"><span>◷</span><strong>ACTIVITY</strong><small>View meaningful admin &amp; customer activity</small></button>
 <button class="account-dashboard-option" onclick="openGstProfile()" type="button"><span>₹</span><strong>GST PROFILE</strong><small>Business details used on sale invoices</small></button>
 </div>
