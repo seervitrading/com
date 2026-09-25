@@ -18188,3 +18188,29 @@ html.seervi-light-theme #home.bw-hero .bw-hero-copy{
   html.seervi-light-theme #home.bw-hero .bw-bottom-bar{display:none!important;}
 }
 </style>
+
+<style id="seervi-light-products-view-final-lock">
+/* LIGHT THEME: Product view uses the exact same page flow as Dark theme.
+   Theme switching changes colours only; it must never re-enable Home. */
+@media(max-width:600px){
+  html.seervi-light-theme body.mobile-products-view #home,
+  html.seervi-light-theme body.seervi-non-home-view #home{
+    display:none!important;
+    visibility:hidden!important;
+    height:0!important;
+    min-height:0!important;
+    max-height:0!important;
+    overflow:hidden!important;
+    margin:0!important;
+    padding:0!important;
+  }
+  html.seervi-light-theme body.mobile-products-view #homeCatalogues,
+  html.seervi-light-theme body.seervi-non-home-view #homeCatalogues{
+    display:none!important;
+  }
+  html.seervi-light-theme body.mobile-products-view #profiles,
+  html.seervi-light-theme body.seervi-non-home-view #profiles{
+    display:block!important;
+  }
+}
+</style>
