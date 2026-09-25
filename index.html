@@ -3645,6 +3645,53 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
 @media(min-width:601px) and (max-width:900px){#seerviWebSlideDrawer{width:min(320px,72vw)!important;min-width:280px!important;}}
 @media(max-width:600px){#seerviWebSlideDrawer,#seerviWebSlideDrawerBackdrop{display:none!important;}}
 </style>
+
+<style id="seervi-theme-toggle">
+/* Local Light/Dark theme. Preference is stored only in this browser. */
+.seervi-theme-control{margin-top:auto;padding:14px 8px 0;border-top:1px solid rgba(255,255,255,.09);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.seervi-theme-control>span{color:#8f99a4;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
+.seervi-theme-toggle{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;width:auto!important;min-width:92px!important;height:36px!important;padding:0 11px!important;border:1px solid rgba(255,255,255,.16)!important;border-radius:9px!important;background:#11161c!important;color:#f1f3f5!important;font:700 10px/1 Inter,Arial,sans-serif!important;letter-spacing:.5px!important;cursor:pointer!important}
+.seervi-theme-toggle:hover{border-color:rgba(240,198,106,.65)!important;background:#171d23!important}
+.seervi-theme-icon{font-size:14px;line-height:1}.seervi-theme-label{line-height:1}
+.seervi-theme-control-mobile{margin-top:12px!important;padding-top:12px!important}
+html.seervi-light-theme{color-scheme:light}
+html.seervi-light-theme body{background:#f5f6f8!important;color:#171b20!important}
+html.seervi-light-theme nav{background:rgba(255,255,255,.94)!important;border-bottom-color:#dfe3e8!important;box-shadow:0 8px 28px rgba(30,40,50,.08)!important}
+html.seervi-light-theme .navlinks a,html.seervi-light-theme .nav-admin-link,html.seervi-light-theme .bw-account-identity-top{color:#343b43!important}
+html.seervi-light-theme .seervi-mobile-topbar-brand{color:#171b20!important;text-shadow:none!important}
+html.seervi-light-theme .bw-hero{background:#eef1f4!important;color:#171b20!important}
+html.seervi-light-theme .bw-hero-wash{background:linear-gradient(90deg,rgba(255,255,255,.72),rgba(255,255,255,.48))!important}
+html.seervi-light-theme .bw-hero-vignette{background:linear-gradient(180deg,rgba(255,255,255,.18),transparent 30%,rgba(255,255,255,.25))!important}
+html.seervi-light-theme .bw-hero-copy h1,html.seervi-light-theme .bw-hero-copy h1 span{color:#171b20!important;text-shadow:none!important}
+html.seervi-light-theme .bw-hero-copy p,html.seervi-light-theme .bw-bottom-bar{color:#505962!important}
+html.seervi-light-theme section{border-top-color:#e1e5e9!important}
+html.seervi-light-theme .section-head h2,html.seervi-light-theme h2,html.seervi-light-theme h3,html.seervi-light-theme h4{color:#171b20!important}
+html.seervi-light-theme .section-head p,html.seervi-light-theme .card p,html.seervi-light-theme .home-product-meta p{color:#606a74!important}
+html.seervi-light-theme .card,html.seervi-light-theme .home-product-card{background:#fff!important;border-color:#dfe3e8!important;box-shadow:0 12px 30px rgba(30,40,50,.08)!important}
+html.seervi-light-theme .home-product-thumb{background:#f1f3f5!important}
+html.seervi-light-theme .home-product-meta button{color:#9b711c!important}
+html.seervi-light-theme .quote{background:#fff!important;border-color:#dfe3e8!important}
+html.seervi-light-theme .seervi-web-drawer-btn,html.seervi-light-theme .seervi-web-drawer-auth{color:#252b31!important}
+html.seervi-light-theme #seerviWebSlideDrawer{background:#fff!important;border-right-color:#dfe3e8!important;box-shadow:18px 0 55px rgba(20,30,40,.16)!important}
+html.seervi-light-theme #seerviWebSlideDrawer::before{color:#9b711c!important;border-bottom-color:#e1e5e9!important}
+html.seervi-light-theme #seerviWebSlideDrawer .seervi-web-drawer-btn:hover{background:#f1f3f5!important}
+html.seervi-light-theme .seervi-theme-control{border-top-color:#e1e5e9!important}
+html.seervi-light-theme .seervi-theme-control>span{color:#68727c!important}
+html.seervi-light-theme .seervi-theme-toggle{background:#f3f5f7!important;color:#20262c!important;border-color:#d4d9df!important}
+html.seervi-light-theme .seervi-theme-toggle:hover{background:#e9edf1!important}
+html.seervi-light-theme .seervi-mobile-account-menu-backdrop,html.seervi-light-theme #seerviWebSlideDrawerBackdrop{background:rgba(20,25,30,.18)!important}
+html.seervi-light-theme .float-support{box-shadow:0 12px 35px rgba(20,30,40,.18),0 0 0 4px rgba(240,198,106,.16)!important}
+html.seervi-light-theme .seervi-home-catalogue-section,html.seervi-light-theme .firebase-public-catalog{color:#171b20}
+html.seervi-light-theme input,html.seervi-light-theme textarea,html.seervi-light-theme select{background:#fff!important;color:#171b20!important;border-color:#d5dbe1!important}
+html.seervi-light-theme .seervi-mobile-account-menu-toggle span{background:#171b20!important}
+html.seervi-light-theme .notification-bell{color:#171b20!important}
+@media(max-width:600px){
+  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions{background:#fff!important;border-right-color:#dfe3e8!important;box-shadow:18px 0 55px rgba(20,30,40,.16)!important}
+  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions::before{color:#9b711c!important;border-bottom-color:#e1e5e9!important}
+  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .bw-nav-login,html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .bw-nav-signup,html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard{color:#252b31!important}
+  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .bw-nav-login:hover,html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .bw-nav-signup:hover,html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard:hover{background:#f1f3f5!important}
+}
+</style>
 <style id="seervi-mobile-topbar-bottombar-match-final">
 @media(max-width:600px){
   /* Keep the mobile topbar the same compact height as the bottom quick bar. */
@@ -3776,10 +3823,10 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
   }
 }
 </style>
-</head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button></div></div><div class="seervi-mobile-topbar-brand" aria-label="Seervi Trading">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
+</head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button type="button" id="seerviThemeToggleMobile" class="seervi-theme-toggle" aria-label="Switch to light mode" aria-pressed="false"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div></div></div><div class="seervi-mobile-topbar-brand" aria-label="Seervi Trading">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
-</button></div></nav><div class="seervi-mobile-account-menu-backdrop" id="seerviMobileAccountMenuBackdrop" aria-hidden="true"></div><div id="seerviWebSlideDrawerBackdrop" aria-hidden="true"></div><aside id="seerviWebSlideDrawer" aria-label="Seervi Trading navigation"><button type="button" class="seervi-web-drawer-btn" data-action="home">Home</button><button type="button" class="seervi-web-drawer-btn" data-action="catalogue">Catalogue</button><button type="button" class="seervi-web-drawer-btn" data-action="products">Products</button><button type="button" class="seervi-web-drawer-btn" data-action="contact">Contact</button><button type="button" class="seervi-web-drawer-btn" data-action="cart">Cart</button><div class="seervi-web-drawer-divider"></div><button type="button" class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="login">Log In</button><button type="button" class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="signup">Sign Up</button><button type="button" class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="dashboard">My Dashboard</button></aside><main><section class="bw-hero" id="home"><div aria-hidden="true" class="bw-hero-image"></div><video aria-hidden="true" autoplay="" class="bw-hero-media-video" id="bwHeroVideo" loop="" muted="" playsinline="" preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br/><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
+</button></div></nav><div class="seervi-mobile-account-menu-backdrop" id="seerviMobileAccountMenuBackdrop" aria-hidden="true"></div><div id="seerviWebSlideDrawerBackdrop" aria-hidden="true"></div><aside id="seerviWebSlideDrawer" aria-label="Seervi Trading navigation"><button type="button" class="seervi-web-drawer-btn" data-action="home">Home</button><button type="button" class="seervi-web-drawer-btn" data-action="catalogue">Catalogue</button><button type="button" class="seervi-web-drawer-btn" data-action="products">Products</button><button type="button" class="seervi-web-drawer-btn" data-action="contact">Contact</button><button type="button" class="seervi-web-drawer-btn" data-action="cart">Cart</button><div class="seervi-web-drawer-divider"></div><button type="button" class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="login">Log In</button><button type="button" class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="signup">Sign Up</button><button type="button" class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="dashboard">My Dashboard</button><div class="seervi-theme-control"><span>Appearance</span><button type="button" id="seerviThemeToggle" class="seervi-theme-toggle" aria-label="Switch to light mode" aria-pressed="false"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div></aside><main><section class="bw-hero" id="home"><div aria-hidden="true" class="bw-hero-image"></div><video aria-hidden="true" autoplay="" class="bw-hero-media-video" id="bwHeroVideo" loop="" muted="" playsinline="" preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br/><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
 <section aria-labelledby="homeCataloguesTitle" class="seervi-home-catalogue-section" id="homeCatalogues">
 <div class="wrap">
 <div class="seervi-home-catalogue-head">
@@ -4552,6 +4599,157 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
   });
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu();});
   window.addEventListener('resize',function(){closeMenu();},{passive:true});
+})();
+</script>
+
+
+<style id="seervi-light-theme-professional">
+/* Professional light theme — visual overrides only. */
+html.seervi-light-theme{
+  --sv-bg:#f4f6f8;--sv-white:#fff;--sv-surface:#f8fafb;
+  --sv-ink:#18222d;--sv-muted:#66727e;--sv-line:#dfe4e9;
+  --sv-gold:#b88624;--sv-gold-bg:#f6edda;
+}
+html.seervi-light-theme body,
+html.seervi-light-theme main{background:var(--sv-bg)!important;color:var(--sv-ink)!important}
+html.seervi-light-theme section{background:var(--sv-bg)!important;border-top-color:var(--sv-line)!important}
+
+/* Topbar */
+html.seervi-light-theme nav,html.seervi-light-theme nav.nav-scrolled{
+ background:rgba(255,255,255,.97)!important;border-bottom:1px solid var(--sv-line)!important;
+ box-shadow:0 7px 24px rgba(20,31,43,.07)!important}
+html.seervi-light-theme nav>.wrap>.seervi-mobile-topbar-brand{
+ color:#17212b!important;opacity:1!important;animation:none!important;text-shadow:none!important}
+html.seervi-light-theme .notification-bell{color:#17212b!important}
+
+/* Hero */
+html.seervi-light-theme .bw-hero{background:#f7f8fa!important;color:var(--sv-ink)!important;border-bottom:1px solid var(--sv-line)!important}
+html.seervi-light-theme .bw-hero-image{opacity:.15!important;filter:grayscale(1) contrast(.9)!important}
+html.seervi-light-theme .bw-hero-media-video{opacity:.08!important;filter:grayscale(1)!important}
+html.seervi-light-theme .bw-hero-wash{background:linear-gradient(90deg,rgba(247,248,250,.99),rgba(247,248,250,.88) 48%,rgba(247,248,250,.58))!important}
+html.seervi-light-theme .bw-hero-vignette{background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 35%,rgba(255,255,255,.3))!important}
+html.seervi-light-theme .bw-kicker,.html.seervi-light-theme .tag,.html.seervi-light-theme .crm-kicker{color:var(--sv-gold)!important}
+html.seervi-light-theme .bw-hero-copy h1,html.seervi-light-theme .bw-hero-copy h1 span{
+ color:#17212b!important;text-shadow:none!important;opacity:1!important}
+html.seervi-light-theme .bw-hero-copy p{color:#586572!important;opacity:1!important}
+html.seervi-light-theme .bw-cta{background:#18222d!important;color:#fff!important;border-color:#18222d!important;box-shadow:0 10px 25px rgba(24,34,45,.14)!important}
+
+/* Home catalogue + product area */
+html.seervi-light-theme .seervi-home-catalogue-section{background:linear-gradient(180deg,#fff,#f7f8fa)!important;color:var(--sv-ink)!important}
+html.seervi-light-theme .seervi-home-catalogue-head h2,html.seervi-light-theme .firebase-public-catalog h2,html.seervi-light-theme .firebase-public-catalog h3{color:var(--sv-ink)!important}
+html.seervi-light-theme .seervi-home-catalogue-head p,html.seervi-light-theme .firebase-public-catalog .crm-auth-status{color:var(--sv-muted)!important}
+html.seervi-light-theme .seervi-home-catalogue-empty{background:#fff!important;border-color:var(--sv-line)!important;color:#77828d!important;box-shadow:0 14px 34px rgba(20,31,43,.06)!important}
+html.seervi-light-theme .seervi-home-catalogue-more{background:#18222d!important;color:#fff!important;border-color:#18222d!important}
+
+/* Product/category cards */
+html.seervi-light-theme .seervi-public-category-card,
+html.seervi-light-theme .seervi-public-subcategory-card,
+html.seervi-light-theme .home-product-card,
+html.seervi-light-theme .card{
+ background:#fff!important;color:var(--sv-ink)!important;border-color:var(--sv-line)!important;
+ box-shadow:0 12px 30px rgba(20,31,43,.07)!important}
+html.seervi-light-theme .seervi-public-category-card:hover{border-color:#c79b43!important;box-shadow:0 16px 34px rgba(20,31,43,.1)!important}
+html.seervi-light-theme .seervi-public-category-card-image,html.seervi-light-theme .seervi-public-subcategory-image,html.seervi-light-theme .home-product-thumb{background:#f1f3f5!important}
+html.seervi-light-theme .seervi-public-category-card-body strong,html.seervi-light-theme .seervi-public-subcategory-card strong{color:var(--sv-ink)!important}
+html.seervi-light-theme .seervi-public-category-card-body span,html.seervi-light-theme .seervi-public-category-card-image span,html.seervi-light-theme .seervi-public-subcategory-image span,html.seervi-light-theme .home-product-meta p,html.seervi-light-theme .card p,html.seervi-light-theme .seervi-public-category-line{color:var(--sv-muted)!important}
+html.seervi-light-theme .seervi-public-category-btn,html.seervi-light-theme .seervi-public-subcategory-btn{
+ background:#fff!important;color:#4c5864!important;border-color:#d8dee4!important}
+html.seervi-light-theme .seervi-public-category-btn.active,html.seervi-light-theme .seervi-public-subcategory-btn.active{
+ background:var(--sv-gold-bg)!important;color:#5c4213!important;border-color:#c79b43!important}
+html.seervi-light-theme .seervi-public-spec-chip{color:#596673!important;background:#f5f7f8!important;border-color:#e0e5e9!important}
+html.seervi-light-theme .seervi-public-search input,html.seervi-light-theme .seervi-public-sort select{
+ background:#fff!important;color:var(--sv-ink)!important;border-color:#d5dce2!important}
+html.seervi-light-theme .seervi-public-toolbar label>span{color:#697580!important}
+html.seervi-light-theme .product-cart-control button{background:#f7f8fa!important;color:#273440!important;border-color:#d7dde3!important}
+html.seervi-light-theme .product-cart-control .product-qty{background:#fff!important;color:#4e5b67!important;border-color:#d7dde3!important}
+
+/* Catalogue panel */
+html.seervi-light-theme #seerviCataloguePanel{background:#f4f6f8!important;color:var(--sv-ink)!important}
+html.seervi-light-theme .seervi-catalogue-card{background:linear-gradient(180deg,#fff,#f4f6f8)!important;color:var(--sv-ink)!important}
+html.seervi-light-theme .seervi-catalogue-head{background:linear-gradient(180deg,#fff 82%,rgba(255,255,255,0))!important}
+html.seervi-light-theme .seervi-catalogue-title,html.seervi-light-theme .seervi-catalogue-item-name{color:var(--sv-ink)!important}
+html.seervi-light-theme .seervi-catalogue-sub,html.seervi-light-theme .seervi-catalogue-item-file,html.seervi-light-theme .seervi-catalogue-note{color:#6c7782!important}
+html.seervi-light-theme .seervi-catalogue-item{background:#fff!important;color:var(--sv-ink)!important;border-color:var(--sv-line)!important;box-shadow:0 12px 30px rgba(20,31,43,.07)!important}
+html.seervi-light-theme .seervi-catalogue-preview{background:#f2f4f6!important;border-color:var(--sv-line)!important}
+html.seervi-light-theme .seervi-catalogue-item-kicker,html.seervi-light-theme .seervi-catalogue-group-title{color:var(--sv-gold)!important}
+html.seervi-light-theme .seervi-catalogue-item-open,html.seervi-light-theme .seervi-catalogue-close{background:#18222d!important;color:#fff!important;border-color:#18222d!important}
+html.seervi-light-theme .seervi-catalogue-item-open:hover,html.seervi-light-theme .seervi-catalogue-close:hover{background:#c99a3d!important;border-color:#c99a3d!important}
+html.seervi-light-theme .seervi-catalogue-category-bar label{color:#68737e!important}
+html.seervi-light-theme .seervi-catalogue-category-bar select{background:#fff!important;color:var(--sv-ink)!important;border-color:#d5dce2!important}
+
+/* Full-screen cart — override the legacy dark hardening */
+html.seervi-light-theme .cart-drawer .cart-backdrop{background:rgba(20,28,36,.28)!important}
+html.seervi-light-theme .cart-drawer .cart-panel{background:#f5f7f9!important;color:var(--sv-ink)!important;border-color:var(--sv-line)!important}
+html.seervi-light-theme .cart-drawer .cart-head{background:#fff!important;border-bottom-color:var(--sv-line)!important}
+html.seervi-light-theme .cart-drawer .cart-head h3,html.seervi-light-theme .cart-drawer .cart-title-row{color:var(--sv-ink)!important}
+html.seervi-light-theme .cart-drawer .cart-items,html.seervi-light-theme .cart-drawer .cart-empty{background:#f5f7f9!important}
+html.seervi-light-theme .cart-drawer .cart-table-head{color:#697580!important;background:#eef1f4!important;border-color:var(--sv-line)!important}
+html.seervi-light-theme .cart-drawer .cart-item{color:var(--sv-ink)!important;border-bottom-color:#e2e6ea!important}
+html.seervi-light-theme .cart-drawer .cart-item-type,html.seervi-light-theme .cart-drawer .cart-item-info strong,html.seervi-light-theme .cart-drawer .cart-empty h4{color:var(--sv-ink)!important}
+html.seervi-light-theme .cart-drawer .cart-item-spec,html.seervi-light-theme .cart-drawer .cart-item-meta,html.seervi-light-theme .cart-drawer .cart-empty,html.seervi-light-theme .cart-drawer .cart-empty p{color:#697580!important}
+html.seervi-light-theme .cart-drawer .cart-item-image{background:#fff!important;border-color:var(--sv-line)!important}
+html.seervi-light-theme .cart-drawer .cart-footer{background:#fff!important;border-top-color:var(--sv-line)!important}
+html.seervi-light-theme .cart-drawer .cart-process-btn{background:#eef1f4!important;color:#273440!important;border:1px solid #d7dde3!important}
+html.seervi-light-theme .cart-drawer .cart-process-btn.primary{background:#18222d!important;color:#fff!important}
+html.seervi-light-theme .cart-drawer .cart-tools-title{color:var(--sv-ink)!important}
+html.seervi-light-theme .cart-drawer .cart-tools-note{color:#697580!important}
+html.seervi-light-theme .cart-drawer .cart-totals-card{background:#f7f9fa!important;border-color:var(--sv-line)!important}
+html.seervi-light-theme .cart-drawer .cart-totals-card .cart-summary-line{color:#697580!important;border-bottom-color:#e2e6ea!important}
+html.seervi-light-theme .cart-drawer .cart-totals-card .cart-summary-line strong,html.seervi-light-theme .cart-drawer .cart-totals-card .cart-grand,html.seervi-light-theme .cart-drawer .cart-totals-card .cart-grand strong{color:var(--sv-ink)!important}
+html.seervi-light-theme .cart-drawer .cart-admin-area{background:#f0f3f5!important;border-top-color:var(--sv-line)!important}
+html.seervi-light-theme .cart-drawer .cart-item-qty .cart-qty-input{background:#fff!important;color:var(--sv-ink)!important;border-color:#d5dce2!important}
+html.seervi-light-theme .cart-drawer .cart-item-remove{color:#697580!important}
+html.seervi-light-theme .cart-drawer .clear-cart-btn{background:#fff!important;color:#596673!important;border-color:#d5dce2!important}
+html.seervi-light-theme .cart-drawer .whatsapp-order-btn{background:#20c463!important;color:#061108!important}
+
+/* Forms / common buttons */
+html.seervi-light-theme input,html.seervi-light-theme textarea,html.seervi-light-theme select{background:#fff!important;color:var(--sv-ink)!important;border-color:#d5dce2!important}
+html.seervi-light-theme input::placeholder,html.seervi-light-theme textarea::placeholder{color:#9aa4ad!important}
+html.seervi-light-theme .crm-secondary{background:#fff!important;color:#34414d!important;border-color:#d5dce2!important}
+html.seervi-light-theme .crm-secondary:hover{background:#f0f3f5!important}
+
+/* Mobile navigation */
+@media(max-width:600px){
+ html.seervi-light-theme .mobile-bottom-bar{
+  background:rgba(255,255,255,.97)!important;border-color:#d9dfe5!important;
+  box-shadow:0 14px 38px rgba(20,31,43,.16)!important;backdrop-filter:blur(16px)!important}
+ html.seervi-light-theme .mobile-bottom-bar a,html.seervi-light-theme .mobile-bottom-bar button{color:#697580!important}
+ html.seervi-light-theme .mobile-bottom-bar a>b,html.seervi-light-theme .mobile-bottom-bar button>b{color:#263440!important}
+ html.seervi-light-theme .mobile-bottom-bar a.active,html.seervi-light-theme .mobile-bottom-bar button.active{color:#18212b!important;background:#f0f3f5!important}
+ html.seervi-light-theme .mobile-bottom-bar a.active b,html.seervi-light-theme .mobile-bottom-bar button.active b{color:#b88624!important}
+ html.seervi-light-theme .float-support{box-shadow:0 12px 32px rgba(20,31,43,.16),0 0 0 4px rgba(184,134,36,.12)!important}
+}
+</style>
+
+<script id="seervi-local-theme-script">
+(function(){
+  const KEY='seerviThemePreference';
+  function getSaved(){try{return localStorage.getItem(KEY)}catch(_){return null}}
+  function save(value){try{localStorage.setItem(KEY,value)}catch(_){}
+  }
+  function applyTheme(theme){
+    const light=theme==='light';
+    document.documentElement.classList.toggle('seervi-light-theme',light);
+    document.querySelectorAll('#seerviThemeToggle,#seerviThemeToggleMobile').forEach(function(btn){
+      btn.setAttribute('aria-pressed',light?'true':'false');
+      btn.setAttribute('aria-label',light?'Switch to dark mode':'Switch to light mode');
+      const icon=btn.querySelector('.seervi-theme-icon');
+      const label=btn.querySelector('.seervi-theme-label');
+      if(icon)icon.textContent=light?'☾':'☀';
+      if(label)label.textContent=light?'Dark':'Light';
+    });
+  }
+  function toggleTheme(){
+    const next=document.documentElement.classList.contains('seervi-light-theme')?'dark':'light';
+    save(next);applyTheme(next);
+  }
+  applyTheme(getSaved()==='light'?'light':'dark');
+  document.addEventListener('click',function(e){
+    const btn=e.target.closest && e.target.closest('#seerviThemeToggle,#seerviThemeToggleMobile');
+    if(!btn)return;
+    e.preventDefault();e.stopPropagation();toggleTheme();
+  },true);
+  window.SeerviTheme={get:function(){return document.documentElement.classList.contains('seervi-light-theme')?'light':'dark'},set:function(theme){const t=theme==='light'?'light':'dark';save(t);applyTheme(t)}};
 })();
 </script>
 <script id="seervi-nonblocking-alert-bridge">
@@ -15815,5 +16013,348 @@ window.openAdminActivity=function(...args){
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>recordVisit(),{once:true});else recordVisit();
 </script>
+
+<style id="seervi-light-theme-final-overrides">
+/* Final light-theme pass: override legacy dark component skins that have higher/specific rules. */
+html.seervi-light-theme #notificationModal .crm-panel,
+html.seervi-light-theme #notificationPostModal .crm-panel{
+  background:#f6f8fa!important;color:#18222d!important;border-color:#dce2e7!important;
+  box-shadow:0 24px 70px rgba(20,31,43,.14)!important;
+}
+html.seervi-light-theme #notificationModal .crm-head,
+html.seervi-light-theme #notificationPostModal .crm-head{
+  background:rgba(255,255,255,.97)!important;color:#18222d!important;border-bottom-color:#dce2e7!important;
+}
+html.seervi-light-theme #notificationModal .crm-head h3,
+html.seervi-light-theme #notificationPostModal .crm-head h3{
+  color:#18222d!important;text-shadow:none!important;
+}
+html.seervi-light-theme #notificationModal .crm-kicker,
+html.seervi-light-theme #notificationPostModal .crm-kicker{color:#b88624!important}
+html.seervi-light-theme #notificationModal .crm-auth-status,
+html.seervi-light-theme #notificationPostModal .crm-auth-status,
+html.seervi-light-theme #notificationModal .notification-toolbar,
+html.seervi-light-theme #notificationPostModal .notification-toolbar{
+  color:#66727e!important;
+}
+html.seervi-light-theme #notificationModal .notification-toolbar,
+html.seervi-light-theme #notificationPostModal .notification-toolbar{
+  border-bottom-color:#dfe4e9!important;background:#f6f8fa!important;
+}
+html.seervi-light-theme #notificationModal .notification-list,
+html.seervi-light-theme #notificationPostModal .notification-list{background:#f6f8fa!important}
+html.seervi-light-theme #notificationModal .notification-empty,
+html.seervi-light-theme #notificationPostModal .notification-empty{
+  color:#66727e!important;border-color:#dfe4e9!important;background:#fff!important;
+}
+html.seervi-light-theme #notificationModal .notification-card,
+html.seervi-light-theme #notificationPostModal .notification-card{
+  background:#fff!important;color:#18222d!important;border-color:#dfe4e9!important;
+  box-shadow:0 10px 26px rgba(20,31,43,.06)!important;
+}
+html.seervi-light-theme #notificationModal .notification-card-title,
+html.seervi-light-theme #notificationPostModal .notification-card-title{color:#18222d!important}
+html.seervi-light-theme #notificationModal .notification-card-message,
+html.seervi-light-theme #notificationPostModal .notification-card-message,
+html.seervi-light-theme #notificationModal .notification-card-date,
+html.seervi-light-theme #notificationPostModal .notification-card-date{color:#66727e!important}
+
+/* Home sourcing/comparison cards */
+html.seervi-light-theme .sourcing-board,
+html.seervi-light-theme .sourcing-proof,
+html.seervi-light-theme .sourcing-step,
+html.seervi-light-theme .importer-pill,
+html.seervi-light-theme .source-match-widget,
+html.seervi-light-theme .comparison-panel,
+html.seervi-light-theme .trust-mini,
+html.seervi-light-theme .trust-banner,
+html.seervi-light-theme .importer-live-strip{
+  background:#fff!important;color:#18222d!important;border-color:#dfe4e9!important;
+  box-shadow:0 12px 30px rgba(20,31,43,.065)!important;
+}
+html.seervi-light-theme .sourcing-board-top,
+html.seervi-light-theme .comparison-panel-top{color:#18222d!important}
+html.seervi-light-theme .sourcing-step b,
+html.seervi-light-theme .importer-pill b,
+html.seervi-light-theme .comparison-panel h3,
+html.seervi-light-theme .comparison-panel .quote-row b,
+html.seervi-light-theme .trust-mini strong,
+html.seervi-light-theme .trust-banner b{color:#18222d!important}
+html.seervi-light-theme .sourcing-step span,
+html.seervi-light-theme .sourcing-step-no,
+html.seervi-light-theme .importer-pill span,
+html.seervi-light-theme .comparison-panel>p,
+html.seervi-light-theme .quote-row span,
+html.seervi-light-theme .trust-mini span,
+html.seervi-light-theme .trust-banner span,
+html.seervi-light-theme .live-route span,
+html.seervi-light-theme .importer-live-strip b{color:#66727e!important}
+html.seervi-light-theme .sourcing-step:not(:last-child):after{background:#fff!important;color:#b88624!important}
+html.seervi-light-theme .sourcing-step-icon,
+html.seervi-light-theme .importer-pill .pill-icon,
+html.seervi-light-theme .source-match-kicker,
+html.seervi-light-theme .source-match-flow strong,
+html.seervi-light-theme .source-match-arrow,
+html.seervi-light-theme .comparison-badge,
+html.seervi-light-theme .source-match-badge,
+html.seervi-light-theme .live-route em{color:#b88624!important}
+html.seervi-light-theme .sourcing-timeline,
+html.seervi-light-theme .quote-row,
+html.seervi-light-theme .trust-mini,
+html.seervi-light-theme .source-match-flow>div:not(.source-match-arrow){border-color:#e3e7eb!important}
+html.seervi-light-theme .sourcing-proof-title{color:#18222d!important}
+html.seervi-light-theme .sourcing-proof-title span{color:#b88624!important}
+html.seervi-light-theme .sourcing-proof p{color:#66727e!important}
+html.seervi-light-theme .sourcing-timeline strong{color:#18222d!important}
+html.seervi-light-theme .sourcing-timeline small{color:#7a858f!important}
+html.seervi-light-theme .source-chip{background:#fff!important;color:#53606c!important;border-color:#dfe4e9!important}
+html.seervi-light-theme .source-match-head h3{color:#18222d!important}
+html.seervi-light-theme .source-match-flow>div:not(.source-match-arrow){background:#f8fafb!important}
+html.seervi-light-theme .source-match-flow span{color:#66727e!important}
+html.seervi-light-theme .quote-row{border-bottom-color:#e5e9ed!important}
+html.seervi-light-theme .quote-row .quote-status{color:#66727e!important;border-color:#dfe4e9!important}
+html.seervi-light-theme .quote-row .quote-status.best{color:#28734b!important;border-color:#b9dec9!important;background:#eff9f3!important}
+html.seervi-light-theme .trust-banner-mark{background:#f3dfae!important;color:#18222d!important}
+html.seervi-light-theme .live-dot{background:#3a9b69!important;box-shadow:0 0 10px rgba(58,155,105,.22)!important}
+
+/* Keep all public home sections consistently light. */
+html.seervi-light-theme .importer-home-section .section-head h2,
+html.seervi-light-theme .importer-home-section .section-head p{color:#18222d!important}
+html.seervi-light-theme .importer-home-section .section-head p{color:#66727e!important}
+html.seervi-light-theme .importer-home-section .tag{color:#b88624!important}
+</style>
+
+<style id="seervi-light-theme-home-final">
+/* Final visual correction for public Home + Contact in Light Theme. */
+html.seervi-light-theme #home.bw-hero{
+  background:#f4f6f8!important;
+  color:#18222d!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-image{
+  filter:none!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-wash{
+  background:linear-gradient(90deg,rgba(255,255,255,.10),rgba(255,255,255,.02))!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-vignette{
+  background:linear-gradient(180deg,rgba(255,255,255,.04),transparent 28%,transparent 70%,rgba(255,255,255,.12))!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-kicker{color:#b88624!important}
+html.seervi-light-theme #home.bw-hero .bw-hero-copy h1,
+html.seervi-light-theme #home.bw-hero .bw-hero-copy h1 span{
+  color:#18222d!important;
+  text-shadow:none!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-copy p{color:#5f6b77!important}
+html.seervi-light-theme #home.bw-hero .bw-cta{
+  background:#18222d!important;
+  color:#fff!important;
+  border:1px solid #18222d!important;
+  box-shadow:0 10px 24px rgba(24,34,45,.14)!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-cta span{color:#fff!important}
+html.seervi-light-theme #home.bw-hero .bw-bottom-bar{
+  color:#53606c!important;
+  border-top-color:#dfe4e9!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-bottom-bar span:nth-child(2),
+html.seervi-light-theme #home.bw-hero .bw-bottom-bar span:nth-child(3){border-left-color:#dfe4e9!important}
+
+/* Legacy generic cards that otherwise retain the dark skin. */
+html.seervi-light-theme .card,
+html.seervi-light-theme .pill,
+html.seervi-light-theme .quote{
+  background:#fff!important;
+  color:#18222d!important;
+  border-color:#dfe4e9!important;
+  box-shadow:0 12px 30px rgba(20,31,43,.065)!important;
+}
+html.seervi-light-theme .card h3,
+html.seervi-light-theme .quote h2{color:#18222d!important}
+html.seervi-light-theme .card p,
+html.seervi-light-theme .quote p{color:#66727e!important}
+html.seervi-light-theme .icon{border-color:#d6dde3!important;color:#b88624!important}
+
+/* Contact footer: replace the legacy black footer skin completely. */
+html.seervi-light-theme #contact.seervi-contact-footer,
+html.seervi-light-theme #contact.seervi-contact-footer.importer-home-section{
+  background:#fff!important;
+  color:#18222d!important;
+  border-top:1px solid #dfe4e9!important;
+  border-bottom:1px solid #dfe4e9!important;
+  box-shadow:none!important;
+}
+html.seervi-light-theme #contact .seervi-contact-logo{color:#18222d!important}
+html.seervi-light-theme #contact .seervi-contact-rule{background:#dfe4e9!important}
+html.seervi-light-theme #contact .seervi-footer-heading{color:#18222d!important}
+html.seervi-light-theme #contact .seervi-contact-menu a{color:#34414d!important}
+html.seervi-light-theme #contact .seervi-contact-label{color:#7b8792!important}
+html.seervi-light-theme #contact .seervi-contact-main-info a,
+html.seervi-light-theme #contact .seervi-contact-main-info b{color:#18222d!important}
+html.seervi-light-theme #contact .seervi-contact-main-info a span,
+html.seervi-light-theme #contact .seervi-contact-main-info>a{color:#53606c!important}
+html.seervi-light-theme #contact .seervi-contact-address p{color:#66727e!important}
+html.seervi-light-theme #contact .seervi-address-block>span:last-child{color:#34414d!important}
+html.seervi-light-theme #contact .seervi-footer-wa{
+  color:#18222d!important;
+  border-color:#cfd7de!important;
+  background:#f8fafb!important;
+}
+html.seervi-light-theme #contact .seervi-footer-wa:hover{background:#18222d!important;color:#fff!important}
+html.seervi-light-theme #contact .seervi-footer-social-row{
+  color:#7b8792!important;
+  border-top-color:#e1e6ea!important;
+}
+html.seervi-light-theme #contact .seervi-footer-social-row i{background:#aeb7bf!important}
+
+/* Floating support button remains premium without dark halo. */
+html.seervi-light-theme .float-support,
+html.seervi-light-theme .support-float,
+html.seervi-light-theme .seervi-ai-float{
+  box-shadow:0 12px 28px rgba(20,31,43,.16)!important;
+}
+</style>
+
+<style id="seervi-light-theme-ultimate">
+/* ULTIMATE LIGHT THEME OVERRIDES — must come last so legacy mobile dark skins cannot win. */
+html.seervi-light-theme body{
+  background:#f5f7f9!important;
+  color:#18222d!important;
+}
+
+/* Home hero: remove the legacy mobile black content section. */
+html.seervi-light-theme #home.bw-hero,
+html.seervi-light-theme main #home.bw-hero{
+  background:#f5f7f9!important;
+  color:#18222d!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-content{
+  background:#f5f7f9!important;
+  color:#18222d!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-image{
+  background-color:#eef1f4!important;
+  filter:none!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-wash{
+  background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(255,255,255,0))!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-vignette{
+  background:linear-gradient(180deg,rgba(255,255,255,.02),transparent 45%,rgba(255,255,255,.10))!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-kicker{color:#b88624!important}
+html.seervi-light-theme #home.bw-hero .bw-hero-copy h1,
+html.seervi-light-theme #home.bw-hero .bw-hero-copy h1 span{color:#18222d!important;text-shadow:none!important}
+html.seervi-light-theme #home.bw-hero .bw-hero-copy p{color:#5f6b77!important}
+html.seervi-light-theme #home.bw-hero .bw-cta{
+  background:#18222d!important;
+  color:#fff!important;
+  border-color:#18222d!important;
+  box-shadow:0 10px 25px rgba(24,34,45,.12)!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-cta span{color:#fff!important}
+html.seervi-light-theme #home.bw-hero .bw-bottom-bar{color:#53606c!important;border-top-color:#dfe4e9!important}
+html.seervi-light-theme #home.bw-hero .bw-bottom-bar span:nth-child(2),
+html.seervi-light-theme #home.bw-hero .bw-bottom-bar span:nth-child(3){border-left-color:#dfe4e9!important}
+
+/* Seervi AI Assistance: complete light skin for the full-screen mobile panel. */
+html.seervi-light-theme .support-modal .support-backdrop{
+  background:rgba(24,34,45,.22)!important;
+  backdrop-filter:blur(5px)!important;
+}
+html.seervi-light-theme .support-modal .support-card{
+  background:#f7f9fb!important;
+  color:#18222d!important;
+  border-color:#dfe4e9!important;
+  box-shadow:0 30px 80px rgba(20,31,43,.16)!important;
+}
+html.seervi-light-theme .support-modal .support-head{
+  background:#fff!important;
+  color:#18222d!important;
+  border-bottom-color:#dfe4e9!important;
+}
+html.seervi-light-theme .support-modal .support-head-copy b{color:#18222d!important}
+html.seervi-light-theme .support-modal .support-head-copy span{color:#6b7782!important}
+html.seervi-light-theme .support-modal .support-head-icon{
+  background:linear-gradient(145deg,#fffdf6,#e8c96f)!important;
+  color:#18222d!important;
+  box-shadow:0 4px 12px rgba(184,134,36,.12)!important;
+}
+html.seervi-light-theme .support-modal .support-close{
+  background:#f5f7f9!important;
+  color:#34414d!important;
+  border-color:#d6dde3!important;
+}
+html.seervi-light-theme .support-modal .support-close:hover{background:#18222d!important;color:#fff!important;border-color:#18222d!important}
+html.seervi-light-theme .support-modal .support-chat{
+  background:#f7f9fb!important;
+}
+html.seervi-light-theme .support-modal .ai-msg.bot{
+  background:#fff!important;
+  color:#34414d!important;
+  border-color:#dfe4e9!important;
+  box-shadow:0 6px 18px rgba(20,31,43,.045)!important;
+}
+html.seervi-light-theme .support-modal .ai-msg.user{
+  background:#f0c66a!important;
+  color:#18222d!important;
+}
+html.seervi-light-theme .support-modal .ai-typing{color:#6b7782!important}
+html.seervi-light-theme .support-modal .support-quick{
+  background:#f7f9fb!important;
+}
+html.seervi-light-theme .support-modal .support-quick button{
+  background:#fff!important;
+  color:#53606c!important;
+  border-color:#dfe4e9!important;
+}
+html.seervi-light-theme .support-modal .support-quick button:hover{
+  color:#a77719!important;border-color:#cda94f!important;background:#fffdf7!important;
+}
+html.seervi-light-theme .support-modal .support-chat-form{
+  background:#fff!important;
+  border-top-color:#dfe4e9!important;
+}
+html.seervi-light-theme .support-modal .support-chat-input{
+  background:#f7f9fb!important;
+  color:#18222d!important;
+  border-color:#d6dde3!important;
+}
+html.seervi-light-theme .support-modal .support-chat-input::placeholder{color:#8a949e!important}
+html.seervi-light-theme .support-modal .support-chat-input:focus{
+  border-color:#c8a34b!important;
+  box-shadow:0 0 0 3px rgba(200,163,75,.12)!important;
+}
+html.seervi-light-theme .support-modal .support-chat-send{
+  background:#18222d!important;
+  color:#fff!important;
+}
+html.seervi-light-theme .support-modal .ai-product-result,
+html.seervi-light-theme .support-modal .ai-category-result{
+  background:#fff!important;
+  color:#34414d!important;
+  border-color:#e1c778!important;
+  box-shadow:0 6px 18px rgba(20,31,43,.045)!important;
+}
+html.seervi-light-theme .support-modal .ai-product-result strong,
+html.seervi-light-theme .support-modal .ai-category-result strong{color:#18222d!important}
+html.seervi-light-theme .support-modal .ai-product-result span,
+html.seervi-light-theme .support-modal .ai-category-result span{color:#66727e!important}
+html.seervi-light-theme .support-modal .ai-product-open{
+  background:#18222d!important;color:#fff!important;border-color:#18222d!important;
+}
+html.seervi-light-theme .support-modal .ai-category-option{
+  background:#fffdf7!important;color:#9a711c!important;border-color:#d8bd72!important;
+}
+html.seervi-light-theme .support-modal .ai-category-option:active{
+  background:#f0c66a!important;color:#18222d!important;
+}
+
+/* Any generic dark section immediately used by the public home remains light. */
+html.seervi-light-theme .importer-home-section:not(.seervi-contact-footer),
+html.seervi-light-theme .supply-flow-section{
+  color:#18222d!important;
+}
+</style>
 </body>
 </html>
