@@ -8230,7 +8230,53 @@ function seerviNaturalConversation(q){
     [/(thank|bye|okay)/i,[`Sure. I’m here if you need anything else.`]]
   ];
   for(const [re,replies] of groups){ if(re.test(l)) return pick(replies); }
-  return null;
+
+  /* ===== GUARANTEED NATURAL FALLBACK =====
+     Never leave a customer message without a reply. Unknown/free-form
+     sentences are routed to the closest conversational/site intent first,
+     then to a friendly clarification response. */
+  if(/kya haal|haal chal|kaisa chal|kaise chal|mauj|mast|badhiya|maz[e|a] mein|all good|doing good|feeling good/i.test(l)){
+    return pick([
+      `Bilkul badhiya! Main ready hoon. Aap batao, ${company} par kya dekhna hai?`,
+      `All good here. Aap bas apna question bolo, main help karta hoon.`,
+      `Mauj mein! Ab batao, product dekhna hai ya website ke baare mein kuch poochna hai?`
+    ]);
+  }
+  if(/seervi|website|site|company|business|trading|firm/i.test(l)){
+    return pick([
+      `${company} is focused on product sourcing, imported products and business/project requirements. Aap products, catalogue, cart ya contact ke baare mein pooch sakte ho.`,
+      `Ye ${company} ka website hai. Yahan aap Products, Catalogue, Cart aur account options use kar sakte ho.`,
+      `${company} par aap published products aur catalogues dekh sakte ho. Kisi specific requirement ke liye product name, model ya specification bhejo.`
+    ]);
+  }
+  if(/kya kar|kya karta|kaam|focus|purpose|role|work/i.test(l)){
+    return pick([
+      `Main Seervi AI Assistance hoon. Mera kaam website par aapko products, catalogue, Cart, account aur common questions mein help karna hai.`,
+      `Mera focus ${company} website ko use karne mein help karna aur live catalogue se relevant product information dhoondhna hai.`,
+      `Main website assistant hoon. Aap normal language mein baat karo; product, model, catalogue ya website ka question pooch sakte ho.`
+    ]);
+  }
+  if(/product|model|item|catalogue|catalog|spec|size|material|stock|available|rate|price|moq|order|cart/i.test(l)){
+    return pick([
+      `Samajh gaya. Exact answer ke liye product ka naam, model, size, material ya specification bhejo; main live Seervi catalogue se match karunga.`,
+      `Sure. Aap jo product ya requirement dhoondh rahe ho uska jitna detail pata hai bhejo. Main relevant catalogue information identify karne ki koshish karunga.`,
+      `Got it. Product-related question hai to model/name bhejo. Agar exact match available hua to main uski live catalogue information dikhaunga.`
+    ]);
+  }
+  if(/hello|hi|hey|namaste|good morning|good afternoon|good evening/i.test(l)){
+    return pick([
+      `Hello! Main Seervi AI Assistance hoon. Aaj ${company} par aapko kis cheez mein help chahiye?`,
+      `Hi! Good to see you here. Product, catalogue ya website ke baare mein jo poochna hai pooch sakte ho.`
+    ]);
+  }
+
+  // Absolute final response: the assistant must never silently stop.
+  return pick([
+    `Samajh gaya. Aap jo pooch rahe ho uska exact context thoda aur batao, main relevant answer dene ki koshish karunga.`,
+    `Got it. Aap apni baat normal language mein continue karo. Main Seervi AI Assistance hoon aur website se related help kar sakta hoon.`,
+    `I’m listening. Aap product, website, catalogue, Cart, account ya koi normal question pooch sakte ho—main uske according reply karunga.`,
+    `Sure, main yahin hoon. Aap apni requirement thodi detail mein batao, phir main usi ke according answer dunga.`
+  ]);
 }
 
 async function sendAIMessage(e){
