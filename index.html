@@ -3471,6 +3471,9 @@ body.seervi-ai-open .float-support{display:none!important}.support-chat-form,
   nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard:hover{background:rgba(255,255,255,.07);opacity:1}
 }
 </style>
+<style id="seervi-admin-settings-visibility">
+#mobileNavSettings[hidden],#seerviWebSlideDrawer .seervi-web-drawer-settings[hidden]{display:none!important;visibility:hidden!important;pointer-events:none!important;}
+</style>
 <style id="seervi-web-slide-menu">
 /* Desktop web slide menu: same account drawer flow as mobile, without changing existing actions. */
 @media(min-width:601px){
@@ -9508,6 +9511,14 @@ window.seerviSignOutFromSlideBar=async function(){
   }catch(e){ console.error('Customer sign-out failed:',e); }
 };
 
+function seerviSyncAdminSettingsVisibility(){
+  const admin=!!(crmUser && isAuthorisedAdmin(crmUser));
+  const mobile=document.getElementById('mobileNavSettings');
+  const web=document.querySelector('#seerviWebSlideDrawer [data-action="settings"]');
+  if(mobile) mobile.hidden=!admin;
+  if(web) web.hidden=!admin;
+}
+
 function updateAuthNav(){
   hideGlobalActionLoader();
   const loggedIn=!!(crmUser||customerUser);
@@ -9535,6 +9546,7 @@ function updateAuthNav(){
   ['mobileNavDashboard'].forEach(id=>{const el=$(id);if(el){el.hidden=!loggedIn;el.textContent='My Dashboard';}});
   const mobileNavSignOut=$('mobileNavSignOut'); if(mobileNavSignOut) mobileNavSignOut.hidden=!loggedIn;
   const mobileNavSettings=$('mobileNavSettings'); if(mobileNavSettings) mobileNavSettings.hidden=!isAdminUser;
+  seerviSyncAdminSettingsVisibility();
   const identity=$('bwAccountIdentity');
   if(identity){
     const email=(crmUser?.email||customerUser?.email||'seervitrading@gmail.com').trim();
@@ -16410,8 +16422,10 @@ function seerviRequireSettingsAdmin(){
 
 window.openAdminSettings=function(){
   try{seerviRequireSettingsAdmin();}catch(e){seerviToastAlert(e.message||'Admin access required.');return;}
-  seerviAdminReturnTarget='dashboard';
-  seerviAdminOpenedFromDashboard=true;
+  // Settings now lives outside My Dashboard in the account slide bar.
+  // Opening it must therefore not mark the Dashboard as the return target.
+  seerviAdminReturnTarget='home';
+  seerviAdminOpenedFromDashboard=false;
   closeAccountDashboard();
   const modal=document.getElementById('adminSettingsModal');
   if(!modal)return;
