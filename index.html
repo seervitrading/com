@@ -17672,6 +17672,56 @@ html.seervi-light-theme #home.bw-hero .bw-cta{
   html.seervi-light-theme #home.bw-hero .bw-hero-copy{width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
 }
 </style>
+
+<style id="seervi-mobile-product-view-hard-lock">
+/* MOBILE PRODUCTS: Product view must never carry the Home hero/copy with it. */
+@media(max-width:600px){
+  body.mobile-products-view #home{
+    display:none!important;
+    visibility:hidden!important;
+    height:0!important;
+    min-height:0!important;
+    max-height:0!important;
+    overflow:hidden!important;
+    margin:0!important;
+    padding:0!important;
+  }
+  body.mobile-products-view #homeCatalogues,
+  body.mobile-products-view #how-seervi-works,
+  body.mobile-products-view #about,
+  body.mobile-products-view #why-seervi,
+  body.mobile-products-view #contact{
+    display:none!important;
+  }
+}
+</style>
+<script id="seervi-mobile-product-view-hard-lock-script">
+(function(){
+  function enterProducts(e){
+    if(window.innerWidth>600)return;
+    if(e)e.preventDefault();
+    document.body.classList.add('mobile-products-view');
+    document.body.classList.add('seervi-non-home-view');
+    requestAnimationFrame(function(){window.scrollTo(0,0);});
+  }
+  function syncFromHash(){
+    if(window.innerWidth<=600 && location.hash==='#profiles'){
+      document.body.classList.add('mobile-products-view','seervi-non-home-view');
+      requestAnimationFrame(function(){window.scrollTo(0,0);});
+    }
+  }
+  document.addEventListener('click',function(e){
+    var a=e.target.closest && e.target.closest('a[href="#profiles"]');
+    if(!a)return;
+    enterProducts(e);
+  },true);
+  window.addEventListener('hashchange',syncFromHash);
+  window.addEventListener('resize',function(){
+    if(window.innerWidth>600)document.body.classList.remove('mobile-products-view');
+  });
+  syncFromHash();
+})();
+</script>
 </body>
 </html>
 <style id="seervi-light-hero-clarity-final">
