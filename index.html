@@ -17946,12 +17946,85 @@ html.seervi-light-theme #home.bw-hero .bw-hero-copy p{color:rgba(255,255,255,.94
 @media(max-width:800px){html.seervi-light-theme #home.bw-hero .bw-hero-content{padding:34px 20px 110px!important}html.seervi-light-theme #home.bw-hero .bw-hero-copy{width:100%!important;max-width:520px!important;padding-left:0!important}}
 </style>
 
-
-<style id="seervi-light-hero-position-v12">
-/* Light theme: keep Hero copy in the exact vertical zone used by the dark theme. */
-@media (max-width:600px){
+<style id="seervi-light-hero-exact-dark-geometry-final">
+/* FINAL: Light mode uses the exact same Hero geometry/position as Dark mode.
+   Only visual colors/media treatment differ. */
+html.seervi-light-theme #home.bw-hero{
+  position:relative!important;
+  min-height:780px!important;
+  height:100vh!important;
+  max-height:900px!important;
+  overflow:hidden!important;
+  display:block!important;
+  width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-image,
+html.seervi-light-theme #home.bw-hero .bw-hero-media-video{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  min-width:100%!important;
+  min-height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  display:block!important;
+  object-fit:cover!important;
+  transform:none!important;
+  opacity:1!important;
+  filter:none!important;
+  z-index:0!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-content{
+  position:relative!important;
+  z-index:3!important;
+  width:100%!important;
+  max-width:none!important;
+  height:100%!important;
+  min-height:100%!important;
+  margin:0!important;
+  padding:38px 20px 0!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  background:transparent!important;
+  background-color:transparent!important;
+}
+html.seervi-light-theme #home.bw-hero .bw-hero-copy{
+  width:88%!important;
+  max-width:650px!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  background-color:transparent!important;
+}
+@media(max-width:900px) and (min-width:601px){
+  html.seervi-light-theme #home.bw-hero .bw-hero-content{
+    padding:38px 20px 0!important;
+  }
   html.seervi-light-theme #home.bw-hero .bw-hero-copy{
-    transform:translateY(48px)!important;
+    width:88%!important;
+    max-width:650px!important;
+    padding:0!important;
+  }
+}
+</style>
+
+<style id="seervi-light-hero-responsive-position-lock">
+/* Light/Dark position lock at the tablet/mobile-browser width used by the site:
+   geometry only; no theme-dependent movement. */
+@media(max-width:900px) and (min-width:601px){
+  html.seervi-light-theme #home.bw-hero .bw-hero-content{
+    padding:90px 20px 0!important;
+  }
+  html.seervi-light-theme #home.bw-hero .bw-hero-copy{
+    width:88%!important;
+    max-width:650px!important;
+    margin:0!important;
+    padding:0!important;
   }
 }
 </style>
