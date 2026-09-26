@@ -18881,6 +18881,7 @@ zh:{'Home':'首页','About':'关于我们','Catalogue':'目录','Catalogues':'�
     window.seerviLanguage=lang;
     window.dispatchEvent(new CustomEvent('seerviLanguageChanged',{detail:{language:lang}}));
   }
+  window.seerviSetLanguage=setLanguage;
   document.addEventListener('change',e=>{if(e.target && e.target.classList.contains('seervi-language-select')) setLanguage(e.target.value)});
   const observer=new MutationObserver(muts=>{
     const lang=localStorage.getItem('seerviLanguage')||'en'; if(lang==='en') return;
@@ -18913,6 +18914,41 @@ window.addEventListener('seerviLanguageChanged',()=>setTimeout(applyPack,0));
 setTimeout(applyPack,250);
 })();
 </script>
+</script>
+<script id="seervi-language-hard-fix-v14">
+(function(){
+  'use strict';
+  const KEY='seerviLanguage';
+  const MANUAL_KEY='seerviManualLanguage';
+  const valid=new Set(['en','hi','zh','mwr','kn','mr','gu','te','ta']);
+  function selects(){return Array.from(document.querySelectorAll('.seervi-language-select'));}
+  function apply(lang){
+    if(!valid.has(lang)) lang='en';
+    try{localStorage.setItem(KEY,lang);localStorage.setItem(MANUAL_KEY,lang);}catch(_){ }
+    const fn=window.seerviSetLanguage;
+    if(typeof fn==='function'){
+      try{fn(lang);return;}catch(e){console.warn('Seervi language apply failed:',e);}
+    }
+    selects().forEach(s=>{s.value=lang;});
+    window.dispatchEvent(new CustomEvent('seerviLanguageChanged',{detail:{language:lang}}));
+  }
+  function bind(){
+    selects().forEach(s=>{
+      if(s.dataset.seerviLangHardBound==='1')return;
+      s.dataset.seerviLangHardBound='1';
+      s.addEventListener('change',function(e){
+        e.stopImmediatePropagation();
+        apply(String(s.value||'en'));
+      },true);
+    });
+    let saved='en';
+    try{saved=localStorage.getItem(KEY)||localStorage.getItem(MANUAL_KEY)||'en';}catch(_){ }
+    if(valid.has(saved)) apply(saved);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});
+  else bind();
+  new MutationObserver(()=>bind()).observe(document.documentElement,{childList:true,subtree:true});
+})();
 </script>
 </body>
 </html>
