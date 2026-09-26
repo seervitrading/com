@@ -4597,6 +4597,162 @@ html.seervi-light-theme #home.bw-hero .bw-hero-image:not(.is-hidden){
 }
 html.seervi-light-theme #home.bw-hero .bw-hero-image.is-hidden{display:none!important;}
 </style>
+<style id="seervi-sidebar-professional-v11">
+/* V11 — Professional account sidebar polish. Visual-only: no behaviour changes. */
+@media(max-width:600px){
+  nav .nav-dashboard-slot .top-account-actions{
+    width:min(342px,88vw)!important;
+    max-width:342px!important;
+    padding:24px 16px 18px!important;
+    gap:5px!important;
+    background:linear-gradient(180deg,#171d24 0%,#12171d 68%,#10151a 100%)!important;
+    border-right:1px solid rgba(255,255,255,.07)!important;
+    box-shadow:20px 0 60px rgba(0,0,0,.48)!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions::before{
+    content:'SEERVI TRADING'!important;
+    display:block!important;
+    margin:0 2px 14px!important;
+    padding:3px 8px 17px!important;
+    border-bottom:1px solid rgba(214,177,82,.18)!important;
+    color:#e8c56a!important;
+    font-size:12px!important;
+    font-weight:900!important;
+    letter-spacing:2.6px!important;
+    text-align:left!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{
+    height:50px!important;
+    min-height:50px!important;
+    margin:1px 0!important;
+    padding:0 14px 0 52px!important;
+    border:1px solid transparent!important;
+    border-radius:13px!important;
+    letter-spacing:.1px!important;
+    transition:background .2s ease,border-color .2s ease,transform .2s ease,box-shadow .2s ease!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login::before,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup::before,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard::before,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings::before,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout::before{
+    left:14px!important;
+    width:26px!important;
+    height:26px!important;
+    border-radius:9px!important;
+    font-size:14px!important;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.035)!important;
+  }
+  html:not(.seervi-light-theme) nav .nav-dashboard-slot .top-account-actions .bw-nav-login:hover,
+  html:not(.seervi-light-theme) nav .nav-dashboard-slot .top-account-actions .bw-nav-signup:hover,
+  html:not(.seervi-light-theme) nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard:hover,
+  html:not(.seervi-light-theme) nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings:hover{
+    background:linear-gradient(90deg,rgba(214,177,82,.09),rgba(255,255,255,.025))!important;
+    border-color:rgba(214,177,82,.16)!important;
+    transform:translateX(2px)!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings{
+    color:#f0c66a!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{
+    margin-top:12px!important;
+    background:rgba(139,43,53,.10)!important;
+    border-color:rgba(229,103,114,.22)!important;
+    color:#ff9aa2!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout:hover{
+    background:rgba(139,43,53,.18)!important;
+    border-color:rgba(229,103,114,.34)!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile,
+  nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{
+    margin-left:2px!important;
+    margin-right:2px!important;
+    padding:15px 4px 0!important;
+    border-top:1px solid rgba(255,255,255,.07)!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:12px!important;
+    flex:0 0 auto!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile{
+    margin-top:15px!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{
+    margin-top:9px!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile>span,
+  nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile>span{
+    color:#8995a1!important;
+    font-size:10px!important;
+    font-weight:900!important;
+    letter-spacing:1.15px!important;
+    text-transform:uppercase!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-toggle{
+    min-width:116px!important;
+    height:42px!important;
+    border-radius:11px!important;
+    background:#0c1116!important;
+    border:1px solid #303b46!important;
+    color:#f1f3f5!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-language-select{
+    width:150px!important;
+    min-width:150px!important;
+    height:42px!important;
+    padding:0 34px 0 13px!important;
+    border:1px solid #303b46!important;
+    border-radius:11px!important;
+    background:#0c1116!important;
+    color:#f1f3f5!important;
+    font-size:13px!important;
+    font-weight:700!important;
+    outline:none!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-language-select:focus,
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-toggle:focus-visible{
+    border-color:#d6b152!important;
+    box-shadow:0 0 0 3px rgba(214,177,82,.12)!important;
+  }
+}
+@media(max-width:600px) and (prefers-reduced-motion:no-preference){
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{will-change:transform}
+}
+/* Light theme: same hierarchy, with a clean light surface. */
+@media(max-width:600px){
+  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions{
+    background:linear-gradient(180deg,#ffffff 0%,#f8fafb 100%)!important;
+    border-right-color:#e2e7eb!important;
+    box-shadow:20px 0 55px rgba(24,34,44,.14)!important;
+  }
+  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions::before{
+    color:#a97918!important;
+    border-bottom-color:#eadfbe!important;
+  }
+  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile,
+  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{
+    border-top-color:#e1e6eb!important;
+  }
+  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-theme-toggle,
+  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-language-select{
+    background:#f7f9fa!important;
+    border-color:#d9e0e5!important;
+    color:#17212b!important;
+  }
+}
+</style>
 </head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-settings" hidden="" id="mobileNavSettings" onclick="openAdminSettings()" type="button">Settings</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div><div class="seervi-language-control seervi-language-control-mobile"><span>Language</span><select aria-label="Select language" class="seervi-language-select" id="seerviLanguageSelectMobile"><option value="en">English</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="mwr">मारवाड़ी</option><option value="kn">ಕನ್ನಡ</option><option value="mr">मराठी</option><option value="gu">ગુજરાતી</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option></select></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
@@ -18901,5 +19057,29 @@ setTimeout(applyPack,250);
 })();
 </script>
 </script>
+
+<style id="seervi-sidebar-halfpage-business-v12">
+/* V12 - Half-page professional business sidebar. Visual-only. */
+@media(max-width:600px){
+  nav .nav-dashboard-slot .top-account-actions{
+    top:0!important;bottom:auto!important;height:50dvh!important;max-height:50dvh!important;min-height:0!important;
+    width:min(334px,88vw)!important;max-width:334px!important;padding:18px 15px 14px!important;
+    overflow-y:auto!important;overscroll-behavior:contain!important;
+    border-right:1px solid rgba(214,177,82,.20)!important;border-bottom:1px solid rgba(214,177,82,.18)!important;
+    border-bottom-right-radius:18px!important;background:linear-gradient(180deg,#151b21 0%,#11171d 100%)!important;
+    box-shadow:16px 18px 42px rgba(0,0,0,.42)!important;scrollbar-width:thin!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions::before{margin:0 2px 9px!important;padding:2px 7px 12px!important;font-size:11px!important;letter-spacing:2.2px!important;border-bottom-color:rgba(214,177,82,.20)!important;}
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login,nav .nav-dashboard-slot .top-account-actions .bw-nav-signup,nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard,nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings,nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{height:42px!important;min-height:42px!important;margin:1px 0!important;border-radius:10px!important;font-size:13px!important;}
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login::before,nav .nav-dashboard-slot .top-account-actions .bw-nav-signup::before,nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard::before,nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings::before,nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout::before{width:23px!important;height:23px!important;border-radius:7px!important;left:13px!important;font-size:12px!important;}
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{margin-top:7px!important;}
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile,nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{margin-left:1px!important;margin-right:1px!important;padding:10px 2px 0!important;gap:8px!important;}
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile{margin-top:8px!important;}nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{margin-top:6px!important;}
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile>span,nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile>span{font-size:9px!important;letter-spacing:1px!important;}
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-toggle{min-width:105px!important;height:36px!important;border-radius:9px!important;font-size:12px!important;}
+  nav .nav-dashboard-slot .top-account-actions .seervi-language-select{width:142px!important;min-width:142px!important;height:36px!important;border-radius:9px!important;font-size:12px!important;}
+}
+@media(max-width:600px){html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions{background:linear-gradient(180deg,#ffffff 0%,#f5f7f9 100%)!important;border-right-color:#dfc987!important;border-bottom-color:#eadfbe!important;box-shadow:16px 18px 42px rgba(24,34,44,.16)!important;}}
+</style>
 </body>
 </html>
