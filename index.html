@@ -18838,11 +18838,24 @@ zh:{'Home':'首页','About':'关于我们','Catalogue':'目录','Catalogues':'�
   function englishOf(node){ if(!nodeOriginal.has(node)) nodeOriginal.set(node,node.nodeValue); return nodeOriginal.get(node); }
   function translateTextNode(node,lang){
     if(!node || !node.parentElement || skipParents.has(node.parentElement.tagName)) return;
-    const original=englishOf(node); const clean=original.replace(/\s+/g,' ').trim(); if(!clean) return;
-    const tr=lang==='en'?clean:(maps[lang]&&maps[lang][clean]);
-    if(!tr) return;
-    const leading=original.match(/^\s*/)?.[0]||'', trailing=original.match(/\s*$/)?.[0]||'';
-    node.nodeValue=leading+tr+trailing;
+    const original=englishOf(node);
+    if(lang==='en'){ node.nodeValue=original; return; }
+    const map=maps[lang]||{};
+    const clean=original.replace(/\s+/g,' ').trim(); if(!clean) return;
+    const exact=map[clean];
+    if(exact){
+      const leading=original.match(/^\s*/)?.[0]||'', trailing=original.match(/\s*$/)?.[0]||'';
+      node.nodeValue=leading+exact+trailing; return;
+    }
+    // Translate mapped phrases inside longer UI strings too. This is important
+    // for headings such as "SEERVI TRADING / CATALOGUES" and combined labels.
+    let out=original;
+    const keys=Object.keys(map).filter(k=>k && k.length>1).sort((a,b)=>b.length-a.length);
+    for(const key of keys){
+      if(!out.includes(key)) continue;
+      out=out.split(key).join(map[key]);
+    }
+    if(out!==original) node.nodeValue=out;
   }
   function translateRoot(root,lang){
     if(!root) return;
@@ -18855,7 +18868,13 @@ zh:{'Home':'首页','About':'关于我们','Catalogue':'目录','Catalogues':'�
         if(!el.hasAttribute(a)) return;
         let rec=attrOriginal.get(el); if(!rec){rec={};attrOriginal.set(el,rec)}
         if(rec[a]===undefined) rec[a]=el.getAttribute(a);
-        const v=rec[a]; const tr=lang==='en'?v:(maps[lang]&&maps[lang][v]); if(tr) el.setAttribute(a,tr);
+        const v=rec[a];
+        if(lang==='en'){el.setAttribute(a,v);return;}
+        const map=maps[lang]||{};
+        if(map[v]){el.setAttribute(a,map[v]);return;}
+        let out=v;
+        Object.keys(map).filter(k=>k&&k.length>1).sort((x,y)=>y.length-x.length).forEach(k=>{if(out.includes(k))out=out.split(k).join(map[k]);});
+        if(out!==v)el.setAttribute(a,out);
       });
     });
   }
