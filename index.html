@@ -4598,86 +4598,24 @@ html.seervi-light-theme #home.bw-hero .bw-hero-image:not(.is-hidden){
 html.seervi-light-theme #home.bw-hero .bw-hero-image.is-hidden{display:none!important;}
 </style>
 
-<style id="seervi-slidebar-professional-v11-safe">
-/* Professional slidebar visual refinement — does not modify language JS or control behavior. */
-#seerviMobileAccountMenuBackdrop{
-  background:rgba(5,8,12,.54)!important;
-  backdrop-filter:blur(5px)!important;
-  -webkit-backdrop-filter:blur(5px)!important;
-}
+<style id="seervi-v13-slidebar-professional">
+/* V13: visual-only slidebar polish. The existing full language engine is untouched. */
 @media(max-width:600px){
-  nav .nav-dashboard-slot .top-account-actions{
-    width:min(362px,88vw)!important; max-width:362px!important;
-    height:100dvh!important; min-height:100dvh!important;
-    padding:28px 18px 26px!important; gap:5px!important;
-    border-radius:0 22px 22px 0!important;
-    border-right:1px solid rgba(214,177,82,.20)!important;
-    box-shadow:20px 0 70px rgba(0,0,0,.46)!important;
-    scrollbar-width:thin!important;
-  }
-  nav .nav-dashboard-slot .top-account-actions::before{
-    margin:0 2px 20px!important; padding:0 10px 18px!important;
-    border-bottom:1px solid rgba(214,177,82,.20)!important;
-    color:#f0c66a!important; font-size:13px!important; letter-spacing:2.5px!important;
-  }
-  nav .nav-dashboard-slot .top-account-actions .bw-nav-login,
-  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup,
+  #seerviMobileAccountMenuBackdrop,#seerviWebSlideDrawerBackdrop{backdrop-filter:blur(5px)!important;-webkit-backdrop-filter:blur(5px)!important;}
+  nav .nav-dashboard-slot .top-account-actions{border-radius:0 22px 22px 0!important;box-shadow:18px 0 55px rgba(0,0,0,.38)!important;border-right:1px solid rgba(214,177,82,.18)!important;}
   nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard,
-  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings,
-  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{
-    height:52px!important; min-height:52px!important; padding:0 14px 0 54px!important;
-    margin:1px 0!important; border-radius:14px!important; letter-spacing:.15px!important;
-    transition:background .2s ease,border-color .2s ease,transform .2s ease!important;
-  }
-  nav .nav-dashboard-slot .top-account-actions .bw-nav-login::before,
-  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup::before,
-  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard::before,
-  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings::before,
-  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout::before{
-    left:15px!important; width:25px!important; height:25px!important; border-radius:8px!important; font-size:14px!important;
-  }
-  nav .nav-dashboard-slot .top-account-actions .bw-nav-login:hover,
-  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup:hover,
-  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard:hover,
-  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings:hover{transform:translateX(2px)!important;}
-  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings{margin-top:2px!important;}
-  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{margin-top:14px!important;height:54px!important;min-height:54px!important;}
-  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile{
-    margin:18px 2px 0!important; padding:15px 4px 14px!important; border-radius:13px!important; gap:12px!important;
-    border-top:1px solid rgba(214,177,82,.18)!important;
-  }
-  nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{
-    margin:5px 2px 0!important; padding:12px 4px 14px!important; border-radius:13px!important; gap:12px!important;
-    border-top:1px solid rgba(255,255,255,.06)!important;
-  }
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup{border-radius:12px!important;min-height:48px!important;}
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile{margin-top:18px!important;padding-top:16px!important;border-top:1px solid rgba(214,177,82,.18)!important;}
+  nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{margin-top:6px!important;padding-top:13px!important;border-top:1px solid rgba(255,255,255,.07)!important;}
   nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile>span,
-  nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile>span{
-    font-size:10px!important; letter-spacing:1.25px!important; font-weight:800!important;
-  }
-  /* Keep the existing language select's dimensions/interaction intact; only visual polish. */
-  nav .nav-dashboard-slot .top-account-actions .seervi-language-select{
-    border-radius:12px!important; box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 4px 14px rgba(0,0,0,.12)!important;
-  }
+  nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile>span{font-weight:800!important;letter-spacing:1.15px!important;}
+  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{border-top-color:#e1e5e9!important;}
 }
 @media(min-width:601px){
-  nav .nav-dashboard-slot .top-account-actions{
-    width:min(370px,35vw)!important; padding:30px 20px 24px!important;
-    border-radius:0 20px 20px 0!important; border-right:1px solid rgba(214,177,82,.20)!important;
-    box-shadow:20px 0 70px rgba(0,0,0,.42)!important;
-  }
-  nav .nav-dashboard-slot .top-account-actions::before{
-    margin:0 4px 20px!important; padding:0 10px 18px!important;
-    border-bottom:1px solid rgba(214,177,82,.20)!important; color:#f0c66a!important;
-    font-size:13px!important; letter-spacing:2.5px!important;
-  }
+  nav .nav-dashboard-slot .top-account-actions{border-radius:0 20px 20px 0!important;box-shadow:20px 0 70px rgba(0,0,0,.38)!important;border-right:1px solid rgba(214,177,82,.18)!important;}
 }
-html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions{
-  background:linear-gradient(180deg,#ffffff 0%,#f7f9fb 100%)!important;
-  border-right-color:rgba(180,135,39,.22)!important; box-shadow:20px 0 70px rgba(24,37,49,.16)!important;
-}
-html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions::before{color:#a97918!important;border-bottom-color:rgba(180,135,39,.20)!important;}
 </style>
-
 </head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-settings" hidden="" id="mobileNavSettings" onclick="openAdminSettings()" type="button">Settings</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div><div class="seervi-language-control seervi-language-control-mobile"><span>Language</span><select aria-label="Select language" class="seervi-language-select" id="seerviLanguageSelectMobile"><option value="en">English</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="mwr">मारवाड़ी</option><option value="kn">ಕನ್ನಡ</option><option value="mr">मराठी</option><option value="gu">ગુજરાતી</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option></select></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
@@ -18879,13 +18817,7 @@ html.seervi-light-theme #home.bw-hero .bw-hero-copy{
 }
 </style>
 
-<script id="seervi-manual-language-control">(function(){
-  const KEY='seerviManualLanguage';
-  const selects=[document.getElementById('seerviLanguageSelect'),document.getElementById('seerviLanguageSelectMobile')].filter(Boolean);
-  if(!selects.length)return;
-  const saved=localStorage.getItem(KEY)||'en';
-  selects.forEach(el=>{el.value=saved;el.addEventListener('change',function(){localStorage.setItem(KEY,this.value);selects.forEach(other=>{other.value=this.value;});});});
-})();</script><script id="seervi-full-language-system">
+<!-- V13: language selection is handled only by the existing full language system below. No duplicate change listener. --><script id="seervi-full-language-system">
 (function(){
   'use strict';
   const maps={
