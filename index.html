@@ -4862,10 +4862,22 @@ html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-mob
   }
 }
 </style>
-</head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-settings" hidden="" id="mobileNavSettings" onclick="openAdminSettings()" type="button">Settings</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div><div class="seervi-language-control seervi-language-control-mobile"><span>Language</span><select aria-label="Select language" class="seervi-language-select" id="seerviLanguageSelectMobile"><option value="en">English</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="mwr">मारवाड़ी</option><option value="kn">ಕನ್ನಡ</option><option value="mr">मराठी</option><option value="gu">ગુજરાતી</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option></select></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
+<style id="seervi-customer-profile-order-drawer-style">
+@media(max-width:600px){
+  #mobileNavProfile,#mobileNavOrder{display:block;width:100%;margin-top:6px!important;}
+  #mobileNavProfile[hidden],#mobileNavOrder[hidden]{display:none!important;}
+  #mobileNavProfile::before{content:'♙';}
+  #mobileNavOrder::before{content:'▣';}
+  #mobileNavProfile::before,#mobileNavOrder::before{display:inline-flex;width:28px;height:28px;margin-right:10px;align-items:center;justify-content:center;border-radius:8px;background:#eef2f5;color:#66737f;font-size:14px;vertical-align:middle;}
+  html.seervi-light-theme #mobileNavProfile::before,html.seervi-light-theme #mobileNavOrder::before{background:#f0f3f6;color:#5c6975;}
+}
+#seerviWebSlideDrawer .seervi-web-drawer-customer{color:#f0c66a!important;}
+html.seervi-light-theme #seerviWebSlideDrawer .seervi-web-drawer-customer{color:#9a7219!important;}
+</style>
+</head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-customer-profile" hidden="" id="mobileNavProfile" onclick="accountDashboardEditProfile()" type="button">My Profile</button><button class="bw-nav-dashboard seervi-mobile-customer-order" hidden="" id="mobileNavOrder" onclick="accountDashboardMyOrder()" type="button">Order</button><button class="bw-nav-dashboard seervi-mobile-settings" hidden="" id="mobileNavSettings" onclick="openAdminSettings()" type="button">Settings</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div><div class="seervi-language-control seervi-language-control-mobile"><span>Language</span><select aria-label="Select language" class="seervi-language-select" id="seerviLanguageSelectMobile"><option value="en">English</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="mwr">मारवाड़ी</option><option value="kn">ಕನ್ನಡ</option><option value="mr">मराठी</option><option value="gu">ગુજરાતી</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option></select></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
-</button></div></nav><div aria-hidden="true" class="seervi-mobile-account-menu-backdrop" id="seerviMobileAccountMenuBackdrop"></div><div aria-hidden="true" id="seerviWebSlideDrawerBackdrop"></div><aside aria-label="Seervi Trading navigation" id="seerviWebSlideDrawer"><button class="seervi-web-drawer-btn" data-action="home" type="button">Home</button><button class="seervi-web-drawer-btn" data-action="catalogue" type="button">Catalogue</button><button class="seervi-web-drawer-btn" data-action="products" type="button">Products</button><button class="seervi-web-drawer-btn" data-action="contact" type="button">Contact</button><button class="seervi-web-drawer-btn" data-action="cart" type="button">Cart</button><div class="seervi-web-drawer-divider"></div><button class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="login" type="button">Log In</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="signup" type="button">Sign Up</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="dashboard" type="button">My Dashboard</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth seervi-web-drawer-settings" data-action="settings" hidden="" type="button">Settings</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth seervi-web-drawer-signout" data-action="signout" type="button">Sign Out</button><div class="seervi-theme-control"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggle" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div><div class="seervi-language-control"><span>Language</span><select aria-label="Select language" class="seervi-language-select" id="seerviLanguageSelect"><option value="en">English</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="mwr">मारवाड़ी</option><option value="kn">ಕನ್ನಡ</option><option value="mr">मराठी</option><option value="gu">ગુજરાતી</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option></select></div></aside><main><section class="bw-hero" id="home"><div aria-hidden="true" class="bw-hero-image"></div><video aria-hidden="true" autoplay="" class="bw-hero-media-video" id="bwHeroVideo" loop="" muted="" playsinline="" preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br/><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
+</button></div></nav><div aria-hidden="true" class="seervi-mobile-account-menu-backdrop" id="seerviMobileAccountMenuBackdrop"></div><div aria-hidden="true" id="seerviWebSlideDrawerBackdrop"></div><aside aria-label="Seervi Trading navigation" id="seerviWebSlideDrawer"><button class="seervi-web-drawer-btn" data-action="home" type="button">Home</button><button class="seervi-web-drawer-btn" data-action="catalogue" type="button">Catalogue</button><button class="seervi-web-drawer-btn" data-action="products" type="button">Products</button><button class="seervi-web-drawer-btn" data-action="contact" type="button">Contact</button><button class="seervi-web-drawer-btn" data-action="cart" type="button">Cart</button><div class="seervi-web-drawer-divider"></div><button class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="login" type="button">Log In</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="signup" type="button">Sign Up</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth" data-action="dashboard" type="button">My Dashboard</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth seervi-web-drawer-customer" data-action="profile" hidden="" type="button">My Profile</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth seervi-web-drawer-customer" data-action="order" hidden="" type="button">Order</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth seervi-web-drawer-settings" data-action="settings" hidden="" type="button">Settings</button><button class="seervi-web-drawer-btn seervi-web-drawer-auth seervi-web-drawer-signout" data-action="signout" type="button">Sign Out</button><div class="seervi-theme-control"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggle" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div><div class="seervi-language-control"><span>Language</span><select aria-label="Select language" class="seervi-language-select" id="seerviLanguageSelect"><option value="en">English</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="mwr">मारवाड़ी</option><option value="kn">ಕನ್ನಡ</option><option value="mr">मराठी</option><option value="gu">ગુજરાતી</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option></select></div></aside><main><section class="bw-hero" id="home"><div aria-hidden="true" class="bw-hero-image"></div><video aria-hidden="true" autoplay="" class="bw-hero-media-video" id="bwHeroVideo" loop="" muted="" playsinline="" preload="metadata"></video><div class="bw-hero-wash"></div><div class="bw-hero-vignette"></div><div class="wrap bw-hero-content"><div class="bw-hero-copy"><div class="bw-kicker">SEERVI TRADING / FACTORY SOURCING &amp; IMPORT</div><h1>YOU NEED IT.<br/><span>WE SOURCE IT.</span></h1><p>We connect your requirement with suitable factories, compare sourcing options, negotiate the deal and help you start with a trial order.</p><a class="bw-cta" href="#profiles">Request a Product <span>↗</span></a></div></div><div class="bw-bottom-bar"></div></section>
 <section aria-labelledby="homeCataloguesTitle" class="seervi-home-catalogue-section" id="homeCatalogues">
 <div class="wrap">
 <div class="seervi-home-catalogue-head">
@@ -19163,6 +19175,68 @@ zh:{'Home':'首页','About':'关于我们','Catalogue':'目录','Catalogues':'�
     setLanguage(saved);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true}); else init();
+})();
+</script>
+
+<script id="seervi-customer-drawer-profile-order-patch">
+(function(){
+  'use strict';
+  function syncCustomerDrawer(){
+    const isCustomer=!!customerUser && !(crmUser && typeof isAuthorisedAdmin==='function' && isAuthorisedAdmin(crmUser));
+    const isLogged=!!(customerUser||crmUser);
+    const dashboard=document.getElementById('bwNavDashboard');
+    const profile=document.getElementById('mobileNavProfile');
+    const order=document.getElementById('mobileNavOrder');
+    if(profile) profile.hidden=!isCustomer;
+    if(order) order.hidden=!isCustomer;
+    if(dashboard && isCustomer) dashboard.hidden=true;
+    const webDashboard=document.querySelector('#seerviWebSlideDrawer [data-action="dashboard"]');
+    const webProfile=document.querySelector('#seerviWebSlideDrawer [data-action="profile"]');
+    const webOrder=document.querySelector('#seerviWebSlideDrawer [data-action="order"]');
+    if(webProfile) webProfile.hidden=!isCustomer;
+    if(webOrder) webOrder.hidden=!isCustomer;
+    if(webDashboard && isCustomer) webDashboard.hidden=true;
+    if(!isLogged){
+      if(profile)profile.hidden=true;
+      if(order)order.hidden=true;
+      if(webProfile)webProfile.hidden=true;
+      if(webOrder)webOrder.hidden=true;
+    }
+  }
+  const originalUpdate=window.updateAuthNav;
+  if(typeof originalUpdate==='function'){
+    window.updateAuthNav=function(){
+      const r=originalUpdate.apply(this,arguments);
+      syncCustomerDrawer();
+      return r;
+    };
+  }
+  document.getElementById('seerviWebSlideDrawer')?.addEventListener('click',function(e){
+    const btn=e.target.closest && e.target.closest('.seervi-web-drawer-customer');
+    if(!btn)return;
+    const action=btn.getAttribute('data-action');
+    if(action==='profile' && typeof window.accountDashboardEditProfile==='function')window.accountDashboardEditProfile();
+    if(action==='order' && typeof window.accountDashboardMyOrder==='function')window.accountDashboardMyOrder();
+  });
+  syncCustomerDrawer();
+})();
+</script>
+
+<script id="seervi-profile-order-language-aliases">
+(function(){
+  const labels={
+    en:{profile:'My Profile',order:'Order'},hi:{profile:'मेरी प्रोफाइल',order:'ऑर्डर'},zh:{profile:'我的资料',order:'订单'},mwr:{profile:'म्हारी प्रोफाइल',order:'ऑर्डर'},kn:{profile:'ನನ್ನ ಪ್ರೊಫೈಲ್',order:'ಆರ್ಡರ್'},mr:{profile:'माझी प्रोफाइल',order:'ऑर्डर'},gu:{profile:'મારી પ્રોફાઇલ',order:'ઓર્ડર'},te:{profile:'నా ప్రొఫైల్',order:'ఆర్డర్'},ta:{profile:'என் சுயவிவரம்',order:'ஆர்டர்'}
+  };
+  function apply(){
+    const lang=window.seerviLanguage||localStorage.getItem('seerviLanguage')||'en';
+    const x=labels[lang]||labels.en;
+    ['mobileNavProfile'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=x.profile;});
+    ['mobileNavOrder'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=x.order;});
+    const p=document.querySelector('#seerviWebSlideDrawer [data-action="profile"]'); if(p)p.textContent=x.profile;
+    const o=document.querySelector('#seerviWebSlideDrawer [data-action="order"]'); if(o)o.textContent=x.order;
+  }
+  window.addEventListener('seerviLanguageChanged',apply);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});else apply();
 })();
 </script>
 </body>
