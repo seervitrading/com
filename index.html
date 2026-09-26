@@ -4597,25 +4597,6 @@ html.seervi-light-theme #home.bw-hero .bw-hero-image:not(.is-hidden){
 }
 html.seervi-light-theme #home.bw-hero .bw-hero-image.is-hidden{display:none!important;}
 </style>
-
-<style id="seervi-v13-slidebar-professional">
-/* V13: visual-only slidebar polish. The existing full language engine is untouched. */
-@media(max-width:600px){
-  #seerviMobileAccountMenuBackdrop,#seerviWebSlideDrawerBackdrop{backdrop-filter:blur(5px)!important;-webkit-backdrop-filter:blur(5px)!important;}
-  nav .nav-dashboard-slot .top-account-actions{border-radius:0 22px 22px 0!important;box-shadow:18px 0 55px rgba(0,0,0,.38)!important;border-right:1px solid rgba(214,177,82,.18)!important;}
-  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard,
-  nav .nav-dashboard-slot .top-account-actions .bw-nav-login,
-  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup{border-radius:12px!important;min-height:48px!important;}
-  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile{margin-top:18px!important;padding-top:16px!important;border-top:1px solid rgba(214,177,82,.18)!important;}
-  nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{margin-top:6px!important;padding-top:13px!important;border-top:1px solid rgba(255,255,255,.07)!important;}
-  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile>span,
-  nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile>span{font-weight:800!important;letter-spacing:1.15px!important;}
-  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{border-top-color:#e1e5e9!important;}
-}
-@media(min-width:601px){
-  nav .nav-dashboard-slot .top-account-actions{border-radius:0 20px 20px 0!important;box-shadow:20px 0 70px rgba(0,0,0,.38)!important;border-right:1px solid rgba(214,177,82,.18)!important;}
-}
-</style>
 </head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-settings" hidden="" id="mobileNavSettings" onclick="openAdminSettings()" type="button">Settings</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div><div class="seervi-language-control seervi-language-control-mobile"><span>Language</span><select aria-label="Select language" class="seervi-language-select" id="seerviLanguageSelectMobile"><option value="en">English</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="mwr">मारवाड़ी</option><option value="kn">ಕನ್ನಡ</option><option value="mr">मराठी</option><option value="gu">ગુજરાતી</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option></select></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
@@ -18817,7 +18798,13 @@ html.seervi-light-theme #home.bw-hero .bw-hero-copy{
 }
 </style>
 
-<!-- V13: language selection is handled only by the existing full language system below. No duplicate change listener. --><script id="seervi-full-language-system">
+<script id="seervi-manual-language-control">(function(){
+  const KEY='seerviManualLanguage';
+  const selects=[document.getElementById('seerviLanguageSelect'),document.getElementById('seerviLanguageSelectMobile')].filter(Boolean);
+  if(!selects.length)return;
+  const saved=localStorage.getItem(KEY)||'en';
+  selects.forEach(el=>{el.value=saved;el.addEventListener('change',function(){localStorage.setItem(KEY,this.value);selects.forEach(other=>{other.value=this.value;});});});
+})();</script><script id="seervi-full-language-system">
 (function(){
   'use strict';
   const maps={
@@ -18881,7 +18868,6 @@ zh:{'Home':'首页','About':'关于我们','Catalogue':'目录','Catalogues':'�
     window.seerviLanguage=lang;
     window.dispatchEvent(new CustomEvent('seerviLanguageChanged',{detail:{language:lang}}));
   }
-  window.seerviSetLanguage=setLanguage;
   document.addEventListener('change',e=>{if(e.target && e.target.classList.contains('seervi-language-select')) setLanguage(e.target.value)});
   const observer=new MutationObserver(muts=>{
     const lang=localStorage.getItem('seerviLanguage')||'en'; if(lang==='en') return;
@@ -18914,41 +18900,6 @@ window.addEventListener('seerviLanguageChanged',()=>setTimeout(applyPack,0));
 setTimeout(applyPack,250);
 })();
 </script>
-</script>
-<script id="seervi-language-hard-fix-v14">
-(function(){
-  'use strict';
-  const KEY='seerviLanguage';
-  const MANUAL_KEY='seerviManualLanguage';
-  const valid=new Set(['en','hi','zh','mwr','kn','mr','gu','te','ta']);
-  function selects(){return Array.from(document.querySelectorAll('.seervi-language-select'));}
-  function apply(lang){
-    if(!valid.has(lang)) lang='en';
-    try{localStorage.setItem(KEY,lang);localStorage.setItem(MANUAL_KEY,lang);}catch(_){ }
-    const fn=window.seerviSetLanguage;
-    if(typeof fn==='function'){
-      try{fn(lang);return;}catch(e){console.warn('Seervi language apply failed:',e);}
-    }
-    selects().forEach(s=>{s.value=lang;});
-    window.dispatchEvent(new CustomEvent('seerviLanguageChanged',{detail:{language:lang}}));
-  }
-  function bind(){
-    selects().forEach(s=>{
-      if(s.dataset.seerviLangHardBound==='1')return;
-      s.dataset.seerviLangHardBound='1';
-      s.addEventListener('change',function(e){
-        e.stopImmediatePropagation();
-        apply(String(s.value||'en'));
-      },true);
-    });
-    let saved='en';
-    try{saved=localStorage.getItem(KEY)||localStorage.getItem(MANUAL_KEY)||'en';}catch(_){ }
-    if(valid.has(saved)) apply(saved);
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});
-  else bind();
-  new MutationObserver(()=>bind()).observe(document.documentElement,{childList:true,subtree:true});
-})();
 </script>
 </body>
 </html>
