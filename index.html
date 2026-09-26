@@ -4597,183 +4597,188 @@ html.seervi-light-theme #home.bw-hero .bw-hero-image:not(.is-hidden){
 }
 html.seervi-light-theme #home.bw-hero .bw-hero-image.is-hidden{display:none!important;}
 </style>
-<style id="seervi-sidebar-professional-v11">
-/* V11 — Professional account sidebar polish. Visual-only: no behaviour changes. */
+
+<style id="seervi-slidebar-professional-v11">
+/* SEERVI PROFESSIONAL ACCOUNT SLIDEBAR — visual-only refinement.
+   Existing actions, IDs, JS and language/theme controls remain unchanged. */
+#seerviMobileAccountMenuBackdrop{
+  background:rgba(5,8,12,.54)!important;
+  backdrop-filter:blur(5px)!important;
+  -webkit-backdrop-filter:blur(5px)!important;
+}
 @media(max-width:600px){
   nav .nav-dashboard-slot .top-account-actions{
-    width:min(342px,88vw)!important;
-    max-width:342px!important;
-    padding:24px 16px 18px!important;
+    width:min(362px,88vw)!important;
+    max-width:362px!important;
+    height:100dvh!important;
+    min-height:100dvh!important;
+    padding:28px 18px 26px!important;
     gap:5px!important;
-    background:linear-gradient(180deg,#171d24 0%,#12171d 68%,#10151a 100%)!important;
-    border-right:1px solid rgba(255,255,255,.07)!important;
-    box-shadow:20px 0 60px rgba(0,0,0,.48)!important;
+    border-radius:0 22px 22px 0!important;
+    border-right:1px solid rgba(214,177,82,.20)!important;
+    box-shadow:20px 0 70px rgba(0,0,0,.46)!important;
+    scrollbar-width:thin!important;
   }
   nav .nav-dashboard-slot .top-account-actions::before{
-    content:'SEERVI TRADING'!important;
-    display:block!important;
-    margin:0 2px 14px!important;
-    padding:3px 8px 17px!important;
-    border-bottom:1px solid rgba(214,177,82,.18)!important;
-    color:#e8c56a!important;
-    font-size:12px!important;
-    font-weight:900!important;
-    letter-spacing:2.6px!important;
-    text-align:left!important;
+    margin:0 2px 20px!important;
+    padding:0 10px 18px!important;
+    border-bottom:1px solid rgba(214,177,82,.20)!important;
+    color:#f0c66a!important;
+    font-size:13px!important;
+    letter-spacing:2.5px!important;
   }
   nav .nav-dashboard-slot .top-account-actions .bw-nav-login,
   nav .nav-dashboard-slot .top-account-actions .bw-nav-signup,
   nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard,
   nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings,
   nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{
-    height:50px!important;
-    min-height:50px!important;
+    height:52px!important;
+    min-height:52px!important;
+    padding:0 14px 0 54px!important;
     margin:1px 0!important;
-    padding:0 14px 0 52px!important;
-    border:1px solid transparent!important;
-    border-radius:13px!important;
-    letter-spacing:.1px!important;
-    transition:background .2s ease,border-color .2s ease,transform .2s ease,box-shadow .2s ease!important;
+    border-radius:14px!important;
+    letter-spacing:.15px!important;
+    transition:background .2s ease,border-color .2s ease,transform .2s ease!important;
   }
   nav .nav-dashboard-slot .top-account-actions .bw-nav-login::before,
   nav .nav-dashboard-slot .top-account-actions .bw-nav-signup::before,
   nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard::before,
   nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings::before,
   nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout::before{
-    left:14px!important;
-    width:26px!important;
-    height:26px!important;
-    border-radius:9px!important;
+    left:15px!important;
+    width:25px!important;
+    height:25px!important;
+    border-radius:8px!important;
     font-size:14px!important;
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.035)!important;
   }
-  html:not(.seervi-light-theme) nav .nav-dashboard-slot .top-account-actions .bw-nav-login:hover,
-  html:not(.seervi-light-theme) nav .nav-dashboard-slot .top-account-actions .bw-nav-signup:hover,
-  html:not(.seervi-light-theme) nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard:hover,
-  html:not(.seervi-light-theme) nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings:hover{
-    background:linear-gradient(90deg,rgba(214,177,82,.09),rgba(255,255,255,.025))!important;
-    border-color:rgba(214,177,82,.16)!important;
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-login:hover,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-signup:hover,
+  nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard:hover,
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings:hover{
     transform:translateX(2px)!important;
   }
   nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings{
-    color:#f0c66a!important;
+    margin-top:2px!important;
   }
   nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{
-    margin-top:12px!important;
-    background:rgba(139,43,53,.10)!important;
-    border-color:rgba(229,103,114,.22)!important;
-    color:#ff9aa2!important;
+    margin-top:14px!important;
+    height:54px!important;
+    min-height:54px!important;
   }
-  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout:hover{
-    background:rgba(139,43,53,.18)!important;
-    border-color:rgba(229,103,114,.34)!important;
-  }
+
   nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile,
   nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{
     margin-left:2px!important;
     margin-right:2px!important;
-    padding:15px 4px 0!important;
-    border-top:1px solid rgba(255,255,255,.07)!important;
-    display:flex!important;
-    align-items:center!important;
-    justify-content:space-between!important;
+    padding:14px 4px!important;
+    border-radius:13px!important;
     gap:12px!important;
-    flex:0 0 auto!important;
   }
   nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile{
-    margin-top:15px!important;
+    margin-top:18px!important;
+    padding-top:15px!important;
+    border-top:1px solid rgba(214,177,82,.18)!important;
   }
   nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{
-    margin-top:9px!important;
+    margin-top:5px!important;
+    padding-top:12px!important;
+    border-top:1px solid rgba(255,255,255,.06)!important;
   }
   nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile>span,
   nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile>span{
-    color:#8995a1!important;
     font-size:10px!important;
-    font-weight:900!important;
-    letter-spacing:1.15px!important;
-    text-transform:uppercase!important;
+    letter-spacing:1.25px!important;
+    font-weight:800!important;
   }
-  nav .nav-dashboard-slot .top-account-actions .seervi-theme-toggle{
-    min-width:116px!important;
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-toggle,
+  nav .nav-dashboard-slot .top-account-actions .seervi-language-select{
+    min-width:142px!important;
+    width:142px!important;
     height:42px!important;
-    border-radius:11px!important;
-    background:#0c1116!important;
-    border:1px solid #303b46!important;
-    color:#f1f3f5!important;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+    border-radius:12px!important;
+    font-size:11px!important;
+    border:1px solid rgba(214,177,82,.34)!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 4px 14px rgba(0,0,0,.12)!important;
   }
   nav .nav-dashboard-slot .top-account-actions .seervi-language-select{
-    width:150px!important;
-    min-width:150px!important;
-    height:42px!important;
-    padding:0 34px 0 13px!important;
-    border:1px solid #303b46!important;
-    border-radius:11px!important;
-    background:#0c1116!important;
-    color:#f1f3f5!important;
-    font-size:13px!important;
-    font-weight:700!important;
-    outline:none!important;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
-  }
-  nav .nav-dashboard-slot .top-account-actions .seervi-language-select:focus,
-  nav .nav-dashboard-slot .top-account-actions .seervi-theme-toggle:focus-visible{
-    border-color:#d6b152!important;
-    box-shadow:0 0 0 3px rgba(214,177,82,.12)!important;
+    padding:0 12px!important;
   }
 }
-@media(max-width:600px) and (prefers-reduced-motion:no-preference){
+@media(min-width:601px){
+  nav .nav-dashboard-slot .top-account-actions{
+    width:min(370px,35vw)!important;
+    padding:30px 20px 24px!important;
+    border-radius:0 20px 20px 0!important;
+    border-right:1px solid rgba(214,177,82,.20)!important;
+    box-shadow:20px 0 70px rgba(0,0,0,.42)!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions::before{
+    margin:0 4px 20px!important;
+    padding:0 10px 18px!important;
+    border-bottom:1px solid rgba(214,177,82,.20)!important;
+    color:#f0c66a!important;
+    font-size:13px!important;
+    letter-spacing:2.5px!important;
+  }
   nav .nav-dashboard-slot .top-account-actions .bw-nav-login,
   nav .nav-dashboard-slot .top-account-actions .bw-nav-signup,
   nav .nav-dashboard-slot .top-account-actions .bw-nav-dashboard,
   nav .nav-dashboard-slot .top-account-actions .seervi-mobile-settings,
-  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{will-change:transform}
-}
-/* Light theme: same hierarchy, with a clean light surface. */
-@media(max-width:600px){
-  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions{
-    background:linear-gradient(180deg,#ffffff 0%,#f8fafb 100%)!important;
-    border-right-color:#e2e7eb!important;
-    box-shadow:20px 0 55px rgba(24,34,44,.14)!important;
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{
+    height:52px!important;
+    min-height:52px!important;
+    padding-left:54px!important;
+    border-radius:14px!important;
   }
-  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions::before{
-    color:#a97918!important;
-    border-bottom-color:#eadfbe!important;
+  nav .nav-dashboard-slot .top-account-actions .seervi-mobile-signout{
+    margin-top:14px!important;
+    height:54px!important;
   }
-  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile,
-  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{
-    border-top-color:#e1e6eb!important;
-  }
-  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-theme-toggle,
-  html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-language-select{
-    background:#f7f9fa!important;
-    border-color:#d9e0e5!important;
-    color:#17212b!important;
+  nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile{
+    margin-top:18px!important;
+    padding-top:15px!important;
+    border-top:1px solid rgba(214,177,82,.18)!important;
   }
 }
-</style>
-
-<style id="seervi-v12-half-page-business-sidebar">
-/* V12 — half-page professional business sidebar; visual-only */
-@media (max-width: 900px){
-  .seervi-slide-menu,
-  #seerviWebSlideMenu,
-  .web-slide-menu,
-  .slide-menu{
-    width: min(52vw, 430px) !important;
-    max-width: 52vw !important;
-    min-width: 0 !important;
-  }
+/* Dark mode language control */
+html:not(.seervi-light-theme) nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{
+  border-top-color:rgba(255,255,255,.06)!important;
 }
-@media (min-width: 901px){
-  .seervi-slide-menu,
-  #seerviWebSlideMenu,
-  .web-slide-menu,
-  .slide-menu{
-    width: min(460px, 50vw) !important;
-    max-width: 50vw !important;
-  }
+html:not(.seervi-light-theme) nav .nav-dashboard-slot .top-account-actions .seervi-language-select{
+  background:#0d1217!important;
+  color:#f1f3f5!important;
+  border-color:rgba(214,177,82,.34)!important;
+}
+html:not(.seervi-light-theme) nav .nav-dashboard-slot .top-account-actions .seervi-language-select:hover,
+html:not(.seervi-light-theme) nav .nav-dashboard-slot .top-account-actions .seervi-language-select:focus{
+  border-color:#d6b152!important;
+  background:#151c23!important;
+}
+/* Light mode companion */
+html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions{
+  background:linear-gradient(180deg,#ffffff 0%,#f7f9fb 100%)!important;
+  border-right-color:rgba(180,135,39,.22)!important;
+  box-shadow:20px 0 70px rgba(24,37,49,.16)!important;
+}
+html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions::before{
+  color:#a97918!important;
+  border-bottom-color:rgba(180,135,39,.20)!important;
+}
+html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-theme-control-mobile{
+  border-top-color:rgba(180,135,39,.18)!important;
+}
+html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-language-control-mobile{
+  border-top-color:#e5e9ed!important;
+}
+html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-language-select{
+  background:#fff!important;
+  color:#273440!important;
+  border-color:rgba(180,135,39,.34)!important;
+}
+html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-language-select:hover,
+html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-language-select:focus{
+  border-color:#b48727!important;
+  background:#fafbfc!important;
 }
 </style>
 
