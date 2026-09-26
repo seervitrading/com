@@ -18902,5 +18902,20 @@ zh:{'Home':'首页','About':'关于我们','Catalogue':'目录','Catalogues':'�
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true}); else init();
 })();
 </script>
+<style id="seervi-dashboard-drawer-spacing-fix">
+/* Keep hidden auth controls out of the mobile drawer flow. Existing JS controls the hidden state. */
+@media(max-width:600px){
+  nav .nav-dashboard-slot .top-account-actions #bwNavLogin[hidden],
+  nav .nav-dashboard-slot .top-account-actions #bwNavSignup[hidden],
+  nav .nav-dashboard-slot .top-account-actions #bwNavDashboard[hidden],
+  nav .nav-dashboard-slot .top-account-actions #mobileNavSettings[hidden],
+  nav .nav-dashboard-slot .top-account-actions #mobileNavSignOut[hidden]{
+    display:none!important;
+  }
+  nav .nav-dashboard-slot .top-account-actions{
+    gap:6px!important;
+  }
+}
+</style>
 </body>
 </html>
