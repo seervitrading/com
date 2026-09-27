@@ -17231,30 +17231,6 @@ function seerviNormaliseSettings(raw){
   return s;
 }
 
-let seerviMaintenanceTemporaryAccess=false;
-let seerviMaintenanceTapCount=0;
-let seerviMaintenanceTapTimer=null;
-
-function seerviGrantTemporaryMaintenanceAccess(){
-  seerviMaintenanceTemporaryAccess=true;
-  seerviMaintenanceTapCount=0;
-  if(seerviMaintenanceTapTimer){clearTimeout(seerviMaintenanceTapTimer);seerviMaintenanceTapTimer=null;}
-  if(typeof window.SeerviRefreshMaintenance==='function') window.SeerviRefreshMaintenance();
-  if(typeof seerviToastAlert==='function') seerviToastAlert('Temporary access granted for this visit. Refresh the page to return to Maintenance Mode.');
-}
-
-function seerviHandleMaintenanceTap(event){
-  if(seerviMaintenanceTemporaryAccess)return;
-  const overlay=event.target?.closest?.('#seerviMaintenanceOverlay');
-  if(!overlay || overlay.hidden)return;
-  seerviMaintenanceTapCount++;
-  if(seerviMaintenanceTapTimer)clearTimeout(seerviMaintenanceTapTimer);
-  seerviMaintenanceTapTimer=setTimeout(()=>{seerviMaintenanceTapCount=0;seerviMaintenanceTapTimer=null;},2500);
-  if(seerviMaintenanceTapCount>=10) seerviGrantTemporaryMaintenanceAccess();
-}
-
-document.addEventListener('pointerup',seerviHandleMaintenanceTap,{passive:true});
-
 function seerviApplySiteSettings(raw){
   seerviSiteSettings=seerviNormaliseSettings(raw);
   window.SeerviSiteSettings=seerviSiteSettings;
@@ -17350,7 +17326,7 @@ function seerviApplySiteSettings(raw){
   const footerBrand=document.querySelector('footer .wrap span:first-child');
   if(footerBrand) footerBrand.textContent='© 2026 '+seerviSiteSettings.branding.companyName+'. All rights reserved.';
   let maintenance=document.getElementById('seerviMaintenanceOverlay');
-  if(seerviSiteSettings.advanced.maintenanceMode && !seerviMaintenanceTemporaryAccess && !(crmUser && isAuthorisedAdmin(crmUser))){
+  if(seerviSiteSettings.advanced.maintenanceMode && !(crmUser && isAuthorisedAdmin(crmUser))){
     if(!maintenance){
       maintenance=document.createElement('div');maintenance.id='seerviMaintenanceOverlay';maintenance.innerHTML="<div class='seervi-maintenance-card'><div class='crm-kicker'>SEERVI TRADING</div><h2>WE'LL BE BACK SOON</h2><p></p></div>";document.body.appendChild(maintenance);
     }
@@ -17376,7 +17352,7 @@ function seerviSettingsEscapeCssUrl(value){return String(value||'').replace(/[\\
 window.SeerviRefreshMaintenance=function(){
   const settings=window.SeerviSiteSettings||seerviSiteSettings;
   let maintenance=document.getElementById('seerviMaintenanceOverlay');
-  if(settings.advanced?.maintenanceMode && !seerviMaintenanceTemporaryAccess && !(crmUser && isAuthorisedAdmin(crmUser))){
+  if(settings.advanced?.maintenanceMode && !(crmUser && isAuthorisedAdmin(crmUser))){
     if(!maintenance){maintenance=document.createElement('div');maintenance.id='seerviMaintenanceOverlay';maintenance.innerHTML="<div class='seervi-maintenance-card'><div class='crm-kicker'>SEERVI TRADING</div><h2>WE'LL BE BACK SOON</h2><p></p></div>";document.body.appendChild(maintenance);}
     const msg=maintenance.querySelector('p');if(msg)msg.textContent=settings.advanced.maintenanceMessage||'';
     maintenance.hidden=false;
@@ -17887,7 +17863,6 @@ window.seerviResetAdminSettings=function(){
   seerviSettingsFillForm();
   const status=seerviSettingsField('adminSettingsStatus');if(status)status.textContent='Changes not saved. Current Firebase settings restored.';
 };
-
 window.seerviSettingsLoadFresh=async function(){
   try{seerviRequireSettingsAdmin();}catch(e){return;}
   const status=seerviSettingsField('adminSettingsStatus');if(status)status.textContent='Loading…';
