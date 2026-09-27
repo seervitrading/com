@@ -7915,7 +7915,36 @@ document.addEventListener('keydown',function(e){
     if(typeof closeProfile==='function') closeProfile();
   }
 });
-</script><button aria-label="Open Seervi AI Assistance" class="float-support" onclick="openSupportModal()" type="button"><span aria-hidden="true" class="support-icon">✦</span><span class="float-support-label">AI Assistance</span></button><div aria-label="Mobile quick navigation" class="mobile-bottom-bar"><a href="#home" onclick="showMobileHome(event)"><b>⌂</b><span>HOME</span></a><button aria-label="Open catalogues" onclick="openCataloguePanel()" type="button"><b>▤</b><span>CATALOGUE</span></button><a href="#profiles" onclick="showMobileProducts(event)"><b>▦</b><span>PRODUCTS</span></a><button onclick="openCart()" type="button"><b>🛒</b><span>CART</span></button></div><script>
+</script><button aria-label="Open Seervi AI Assistance" class="float-support" onclick="openSupportModal()" type="button"><span aria-hidden="true" class="support-icon">✦</span><span class="float-support-label">AI Assistance</span></button>
+<style id="seervi-mobile-taskbar-gold-active-line">
+@media (max-width:600px){
+  .mobile-bottom-bar{position:relative;overflow:hidden;}
+  .mobile-bottom-bar::after{
+    content:"";
+    position:absolute;
+    left:6px;
+    bottom:3px;
+    width:calc((100% - 12px) / 4);
+    height:2px;
+    border-radius:999px;
+    background:linear-gradient(90deg,rgba(190,145,48,.25),#caa84f,rgba(190,145,48,.25));
+    box-shadow:0 0 8px rgba(202,168,79,.28);
+    transform:translateX(0);
+    transition:transform .42s cubic-bezier(.22,.61,.36,1);
+    pointer-events:none;
+    z-index:4;
+  }
+  .mobile-bottom-bar:has(> :nth-child(2).active)::after{transform:translateX(100%);}
+  .mobile-bottom-bar:has(> :nth-child(3).active)::after{transform:translateX(200%);}
+  .mobile-bottom-bar:has(> :nth-child(4).active)::after{transform:translateX(300%);}
+  .mobile-bottom-bar a.active,.mobile-bottom-bar button.active{position:relative;}
+}
+html.seervi-light-theme .mobile-bottom-bar::after{
+  background:linear-gradient(90deg,rgba(169,125,34,.22),#b48a2f,rgba(169,125,34,.22));
+  box-shadow:0 0 8px rgba(180,138,47,.22);
+}
+</style>
+<div aria-label="Mobile quick navigation" class="mobile-bottom-bar"><a href="#home" onclick="showMobileHome(event)"><b>⌂</b><span>HOME</span></a><button aria-label="Open catalogues" onclick="openCataloguePanel()" type="button"><b>▤</b><span>CATALOGUE</span></button><a href="#profiles" onclick="showMobileProducts(event)"><b>▦</b><span>PRODUCTS</span></a><button onclick="openCart()" type="button"><b>🛒</b><span>CART</span></button></div><script>
 /* ===== V42 UX ENHANCEMENTS ===== */
 (function(){
   const input = document.querySelector('.catalog-search input');
