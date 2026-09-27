@@ -5118,6 +5118,229 @@ html.seervi-light-theme nav>.wrap>.seervi-mobile-account-menu-toggle:hover{
   nav>.wrap>.seervi-mobile-topbar-brand::after{width:64px!important;}
 }
 </style>
+
+<style id="seervi-mobile-taskbar-premium-v23">
+/* V23 — mobile taskbar visual-only enhancement. Navigation JS intentionally untouched. */
+@media (max-width:600px){
+  .mobile-bottom-bar{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:4px!important;
+    padding:5px!important;
+    border-radius:18px!important;
+    backdrop-filter:blur(18px) saturate(1.12)!important;
+    -webkit-backdrop-filter:blur(18px) saturate(1.12)!important;
+    transition:box-shadow .22s ease,border-color .22s ease,background .22s ease!important;
+  }
+  .mobile-bottom-bar a,.mobile-bottom-bar button{
+    position:relative!important;
+    height:48px!important;
+    min-height:48px!important;
+    border-radius:13px!important;
+    gap:2px!important;
+    padding:4px 2px!important;
+    transition:transform .18s cubic-bezier(.2,.8,.2,1),background .18s ease,color .18s ease,box-shadow .18s ease!important;
+    -webkit-tap-highlight-color:transparent!important;
+  }
+  .mobile-bottom-bar a>b,.mobile-bottom-bar button>b{
+    position:relative!important;
+    width:27px!important;height:27px!important;
+    min-width:27px!important;min-height:27px!important;
+    border-radius:9px!important;
+    transition:transform .18s cubic-bezier(.2,.8,.2,1),color .18s ease!important;
+  }
+  .mobile-bottom-bar a>span,.mobile-bottom-bar button>span{
+    position:relative!important;z-index:1!important;
+    font-size:7px!important;
+    font-weight:700!important;
+    letter-spacing:.55px!important;
+    transition:transform .18s ease,color .18s ease,font-weight .18s ease!important;
+  }
+  /* Active state: soft pill + gold indicator + micro lift. */
+  .mobile-bottom-bar a.active,.mobile-bottom-bar button.active{
+    background:rgba(214,177,82,.105)!important;
+    color:#f1d27d!important;
+    box-shadow:inset 0 0 0 1px rgba(214,177,82,.13),0 4px 16px rgba(0,0,0,.10)!important;
+    transform:translateY(-1px)!important;
+  }
+  .mobile-bottom-bar a.active::after,.mobile-bottom-bar button.active::after{
+    content:""!important;
+    position:absolute!important;
+    left:50%!important;
+    bottom:2px!important;
+    width:18px!important;
+    height:2px!important;
+    border-radius:999px!important;
+    transform:translateX(-50%) scaleX(.55)!important;
+    transform-origin:center!important;
+    background:#d6b152!important;
+    box-shadow:0 0 9px rgba(214,177,82,.30)!important;
+    animation:seerviTaskbarGoldIn .2s ease-out both!important;
+  }
+  .mobile-bottom-bar a.active b,.mobile-bottom-bar button.active b{
+    color:#f1d27d!important;
+    transform:translateY(-1px) scale(1.035)!important;
+  }
+  .mobile-bottom-bar a.active>span,.mobile-bottom-bar button.active>span{
+    color:#f1d27d!important;
+    font-weight:800!important;
+    transform:translateY(-.2px)!important;
+  }
+  @keyframes seerviTaskbarGoldIn{
+    from{opacity:0;transform:translateX(-50%) scaleX(.15)}
+    to{opacity:1;transform:translateX(-50%) scaleX(1)}
+  }
+  /* Tap feedback without changing navigation behaviour. */
+  .mobile-bottom-bar a:active,.mobile-bottom-bar button:active{
+    transform:translateY(0) scale(.975)!important;
+  }
+  .mobile-bottom-bar a:active b,.mobile-bottom-bar button:active b{
+    transform:scale(.94)!important;
+  }
+  /* Cart gets a restrained one-tap emphasis; no continuous animation. */
+  .mobile-bottom-bar button[onclick*="openCart"]:active b{
+    animation:seerviTaskbarCartPulse .28s ease-out!important;
+  }
+  @keyframes seerviTaskbarCartPulse{
+    0%{transform:scale(.94)}
+    55%{transform:scale(1.12)}
+    100%{transform:scale(1)}
+  }
+  /* Light theme: vanilla/ivory treatment. */
+  html.seervi-light-theme .mobile-bottom-bar{
+    background:rgba(255,253,248,.94)!important;
+    border-color:rgba(139,113,69,.18)!important;
+    box-shadow:0 14px 36px rgba(76,61,39,.16),0 0 0 1px rgba(214,177,82,.06)!important;
+  }
+  html.seervi-light-theme .mobile-bottom-bar a,
+  html.seervi-light-theme .mobile-bottom-bar button{color:#756d61!important}
+  html.seervi-light-theme .mobile-bottom-bar a>b,
+  html.seervi-light-theme .mobile-bottom-bar button>b{color:#403b34!important}
+  html.seervi-light-theme .mobile-bottom-bar a.active,
+  html.seervi-light-theme .mobile-bottom-bar button.active{
+    background:rgba(214,177,82,.13)!important;
+    color:#6d521e!important;
+    box-shadow:inset 0 0 0 1px rgba(184,134,36,.18),0 4px 14px rgba(76,61,39,.08)!important;
+  }
+  html.seervi-light-theme .mobile-bottom-bar a.active b,
+  html.seervi-light-theme .mobile-bottom-bar button.active b,
+  html.seervi-light-theme .mobile-bottom-bar a.active>span,
+  html.seervi-light-theme .mobile-bottom-bar button.active>span{color:#a87516!important}
+  /* Respect reduced-motion preferences. */
+  @media (prefers-reduced-motion:reduce){
+    .mobile-bottom-bar a,.mobile-bottom-bar button,.mobile-bottom-bar a>b,.mobile-bottom-bar button>b,.mobile-bottom-bar a>span,.mobile-bottom-bar button>span{transition:none!important}
+    .mobile-bottom-bar a.active::after,.mobile-bottom-bar button.active::after,.mobile-bottom-bar button[onclick*="openCart"]:active b{animation:none!important}
+  }
+}
+</style>
+
+<style id="seervi-mobile-taskbar-v24-final">
+/* V24 — reliable active-state presentation for the existing mobile taskbar.
+   Navigation remains controlled by the existing application logic. */
+@media (max-width:600px){
+  .mobile-bottom-bar{
+    padding:6px!important;
+    gap:5px!important;
+    border-radius:20px!important;
+    background:rgba(17,22,28,.92)!important;
+    border:1px solid rgba(255,255,255,.12)!important;
+    box-shadow:0 16px 42px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.04)!important;
+  }
+  .mobile-bottom-bar a,.mobile-bottom-bar button{
+    position:relative!important;
+    overflow:visible!important;
+    border-radius:14px!important;
+    transition:transform .18s ease,background .18s ease,color .18s ease,box-shadow .18s ease!important;
+  }
+  .mobile-bottom-bar a[data-seervi-active="1"],
+  .mobile-bottom-bar button[data-seervi-active="1"]{
+    background:rgba(214,177,82,.12)!important;
+    color:#f0cf7a!important;
+    box-shadow:inset 0 0 0 1px rgba(214,177,82,.18),0 5px 16px rgba(0,0,0,.16)!important;
+    transform:translateY(-1px)!important;
+  }
+  .mobile-bottom-bar a[data-seervi-active="1"]::after,
+  .mobile-bottom-bar button[data-seervi-active="1"]::after{
+    content:""!important;
+    position:absolute!important;
+    left:50%!important;
+    bottom:2px!important;
+    width:22px!important;
+    height:2px!important;
+    border-radius:999px!important;
+    transform:translateX(-50%)!important;
+    background:#d6b152!important;
+    box-shadow:0 0 8px rgba(214,177,82,.35)!important;
+  }
+  .mobile-bottom-bar a[data-seervi-active="1"] b,
+  .mobile-bottom-bar button[data-seervi-active="1"] b{
+    color:#f4d681!important;
+    transform:translateY(-1px) scale(1.05)!important;
+  }
+  .mobile-bottom-bar a[data-seervi-active="1"]>span,
+  .mobile-bottom-bar button[data-seervi-active="1"]>span{
+    color:#f4d681!important;
+    font-weight:800!important;
+  }
+  .mobile-bottom-bar a:active,.mobile-bottom-bar button:active{transform:scale(.97)!important}
+  html.seervi-light-theme .mobile-bottom-bar{
+    background:rgba(255,253,248,.95)!important;
+    border-color:rgba(139,113,69,.20)!important;
+    box-shadow:0 14px 36px rgba(76,61,39,.16),inset 0 1px 0 rgba(255,255,255,.8)!important;
+  }
+  html.seervi-light-theme .mobile-bottom-bar a[data-seervi-active="1"],
+  html.seervi-light-theme .mobile-bottom-bar button[data-seervi-active="1"]{
+    background:rgba(214,177,82,.15)!important;
+    color:#8a641d!important;
+    box-shadow:inset 0 0 0 1px rgba(184,134,36,.22),0 5px 16px rgba(76,61,39,.08)!important;
+  }
+  html.seervi-light-theme .mobile-bottom-bar a[data-seervi-active="1"] b,
+  html.seervi-light-theme .mobile-bottom-bar button[data-seervi-active="1"] b,
+  html.seervi-light-theme .mobile-bottom-bar a[data-seervi-active="1"]>span,
+  html.seervi-light-theme .mobile-bottom-bar button[data-seervi-active="1"]>span{color:#a87516!important}
+}
+</style>
+<script id="seervi-mobile-taskbar-v24-state">
+(function(){
+  'use strict';
+  function items(){return Array.from(document.querySelectorAll('.mobile-bottom-bar a,.mobile-bottom-bar button'));}
+  function mark(view){
+    items().forEach(function(el){
+      el.removeAttribute('data-seervi-active');
+      el.classList.remove('active');
+    });
+    var target=null;
+    var v=String(view||'home');
+    if(v==='home') target=items().find(function(el){return /\bhome\b/i.test((el.textContent||'').trim())});
+    else if(v==='catalogue') target=items().find(function(el){return /catalogue/i.test((el.textContent||''))});
+    else if(v==='products') target=items().find(function(el){return /products/i.test((el.textContent||''))});
+    else if(v==='cart') target=items().find(function(el){return /cart/i.test((el.textContent||''))});
+    if(target){target.setAttribute('data-seervi-active','1');target.classList.add('active');}
+  }
+  function bind(){
+    var bar=document.querySelector('.mobile-bottom-bar');
+    if(!bar||bar.dataset.v24Bound==='1')return;
+    bar.dataset.v24Bound='1';
+    bar.addEventListener('click',function(e){
+      var el=e.target.closest&&e.target.closest('a,button');
+      if(!el||!bar.contains(el))return;
+      var t=(el.textContent||'').trim().toLowerCase();
+      if(t.includes('catalogue'))mark('catalogue');
+      else if(t.includes('products'))mark('products');
+      else if(t.includes('cart'))mark('cart');
+      else if(t.includes('home'))mark('home');
+    },true);
+    mark('home');
+  }
+  function init(){bind();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});
+  else init();
+  window.addEventListener('popstate',function(){setTimeout(function(){
+    var s=history.state;
+    mark(s&&s.seerviUniversalNav?s.view:'home');
+  },30);});
+  window.addEventListener('resize',function(){if(window.innerWidth<=600)mark((history.state&&history.state.seerviUniversalNav&&history.state.view)||'home');});
+})();
+</script>
 </head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-settings" hidden="" id="mobileNavSettings" onclick="openAdminSettings()" type="button">Settings</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div><div class="seervi-language-control seervi-language-control-mobile"><span>Language</span><select aria-label="Select language" class="seervi-language-select" id="seerviLanguageSelectMobile"><option value="en">English</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="mwr">मारवाड़ी</option><option value="kn">ಕನ್ನಡ</option><option value="mr">मराठी</option><option value="gu">ગુજરાતી</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option></select></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
@@ -7915,36 +8138,7 @@ document.addEventListener('keydown',function(e){
     if(typeof closeProfile==='function') closeProfile();
   }
 });
-</script><button aria-label="Open Seervi AI Assistance" class="float-support" onclick="openSupportModal()" type="button"><span aria-hidden="true" class="support-icon">✦</span><span class="float-support-label">AI Assistance</span></button>
-<style id="seervi-mobile-taskbar-gold-active-line">
-@media (max-width:600px){
-  .mobile-bottom-bar{position:relative;overflow:hidden;}
-  .mobile-bottom-bar::after{
-    content:"";
-    position:absolute;
-    left:6px;
-    bottom:3px;
-    width:calc((100% - 12px) / 4);
-    height:2px;
-    border-radius:999px;
-    background:linear-gradient(90deg,rgba(190,145,48,.25),#caa84f,rgba(190,145,48,.25));
-    box-shadow:0 0 8px rgba(202,168,79,.28);
-    transform:translateX(0);
-    transition:transform .42s cubic-bezier(.22,.61,.36,1);
-    pointer-events:none;
-    z-index:4;
-  }
-  .mobile-bottom-bar:has(> :nth-child(2).active)::after{transform:translateX(100%);}
-  .mobile-bottom-bar:has(> :nth-child(3).active)::after{transform:translateX(200%);}
-  .mobile-bottom-bar:has(> :nth-child(4).active)::after{transform:translateX(300%);}
-  .mobile-bottom-bar a.active,.mobile-bottom-bar button.active{position:relative;}
-}
-html.seervi-light-theme .mobile-bottom-bar::after{
-  background:linear-gradient(90deg,rgba(169,125,34,.22),#b48a2f,rgba(169,125,34,.22));
-  box-shadow:0 0 8px rgba(180,138,47,.22);
-}
-</style>
-<div aria-label="Mobile quick navigation" class="mobile-bottom-bar"><a href="#home" onclick="showMobileHome(event)"><b>⌂</b><span>HOME</span></a><button aria-label="Open catalogues" onclick="openCataloguePanel()" type="button"><b>▤</b><span>CATALOGUE</span></button><a href="#profiles" onclick="showMobileProducts(event)"><b>▦</b><span>PRODUCTS</span></a><button onclick="openCart()" type="button"><b>🛒</b><span>CART</span></button></div><script>
+</script><button aria-label="Open Seervi AI Assistance" class="float-support" onclick="openSupportModal()" type="button"><span aria-hidden="true" class="support-icon">✦</span><span class="float-support-label">AI Assistance</span></button><div aria-label="Mobile quick navigation" class="mobile-bottom-bar"><a href="#home" onclick="showMobileHome(event)"><b>⌂</b><span>HOME</span></a><button aria-label="Open catalogues" onclick="openCataloguePanel()" type="button"><b>▤</b><span>CATALOGUE</span></button><a href="#profiles" onclick="showMobileProducts(event)"><b>▦</b><span>PRODUCTS</span></a><button onclick="openCart()" type="button"><b>🛒</b><span>CART</span></button></div><script>
 /* ===== V42 UX ENHANCEMENTS ===== */
 (function(){
   const input = document.querySelector('.catalog-search input');
@@ -19451,25 +19645,5 @@ zh:{'Home':'首页','About':'关于我们','Catalogue':'目录','Catalogues':'�
 })();
 </script>
 <style id="seervi-light-theme-vanilla-ivory-final">\n/* SEERVI LIGHT THEME — VANILLA / IVORY PREMIUM PALETTE\n   Visual-only override. Dark theme and JavaScript are untouched. */\nhtml.seervi-light-theme{\n  --sv-bg:#f6f1e7!important;\n  --sv-surface:#fffdf8!important;\n  --sv-surface-2:#faf5eb!important;\n  --sv-surface-3:#f1eadc!important;\n  --sv-text:#20252b!important;\n  --sv-muted:#6d6a63!important;\n  --sv-border:#ddd3c2!important;\n  --sv-gold:#a77a20!important;\n  --sv-gold-soft:#f3e5c7!important;\n  --sv-navy:#202a33!important;\n  --sv-shadow:0 12px 32px rgba(75,61,38,.09)!important;\n}\nhtml.seervi-light-theme body,\nhtml.seervi-light-theme main,\nhtml.seervi-light-theme section,\nhtml.seervi-light-theme .page,\nhtml.seervi-light-theme .section,\nhtml.seervi-light-theme .panel,\nhtml.seervi-light-theme .workspace,\nhtml.seervi-light-theme .content,\nhtml.seervi-light-theme .container{\n  background:var(--sv-bg)!important;color:var(--sv-text)!important;\n}\nhtml.seervi-light-theme nav,\nhtml.seervi-light-theme nav.nav-scrolled{\n  background:rgba(255,253,248,.97)!important;\n  border-bottom:1px solid var(--sv-border)!important;\n  box-shadow:0 6px 22px rgba(75,61,38,.08)!important;\n}\nhtml.seervi-light-theme nav>.wrap>.seervi-mobile-topbar-brand{color:#20252b!important;text-shadow:none!important}\n\n/* Hero keeps its media natural while the copy area uses warm ivory. */\nhtml.seervi-light-theme #home.bw-hero .bw-hero-content,\nhtml.seervi-light-theme .bw-hero-copy{background:#fbf6ec!important;color:var(--sv-text)!important}\nhtml.seervi-light-theme .bw-hero-copy h1,\nhtml.seervi-light-theme .bw-hero-copy h2,\nhtml.seervi-light-theme .bw-hero-copy .hero-title{color:#20252b!important}\nhtml.seervi-light-theme .bw-hero-copy p{color:#69655e!important}\nhtml.seervi-light-theme .bw-kicker,\nhtml.seervi-light-theme .tag,\nhtml.seervi-light-theme .crm-kicker{color:var(--sv-gold)!important}\n\n/* Cards / catalogue / product surfaces */\nhtml.seervi-light-theme .seervi-home-catalogue-section,\nhtml.seervi-light-theme .firebase-public-catalog{background:#faf5eb!important;color:var(--sv-text)!important}\nhtml.seervi-light-theme .seervi-public-category-card,\nhtml.seervi-light-theme .seervi-public-subcategory-card,\nhtml.seervi-light-theme .home-product-card,\nhtml.seervi-light-theme .card,\nhtml.seervi-light-theme .account-dashboard-option,\nhtml.seervi-light-theme .admin-items-category-card,\nhtml.seervi-light-theme .admin-global-row,\nhtml.seervi-light-theme .crm-row,\nhtml.seervi-light-theme .crm-list-item,\nhtml.seervi-light-theme .crm-party-card,\nhtml.seervi-light-theme .inventory-stock-card,\nhtml.seervi-light-theme .customer-quote-row,\nhtml.seervi-light-theme .customer-rate-history-card,\nhtml.seervi-light-theme .admin-kpi,\nhtml.seervi-light-theme .cart-totals-card{\n  background:#fffdf8!important;color:var(--sv-text)!important;\n  border-color:var(--sv-border)!important;\n  box-shadow:0 8px 24px rgba(75,61,38,.065)!important;\n}\nhtml.seervi-light-theme .seervi-public-category-card:hover,\nhtml.seervi-light-theme .account-dashboard-option:hover,\nhtml.seervi-light-theme .admin-items-category-card:hover{\n  background:#fffaf0!important;border-color:#c8a45b!important;\n}\nhtml.seervi-light-theme .seervi-public-category-card-image,\nhtml.seervi-light-theme .seervi-public-subcategory-image,\nhtml.seervi-light-theme .home-product-thumb{background:#f2ecdf!important}\n\n/* Internal admin / CRM panels */\nhtml.seervi-light-theme #crmModal .crm-panel,\nhtml.seervi-light-theme #crmModal .crm-head,\nhtml.seervi-light-theme #crmModal .crm-workspace,\nhtml.seervi-light-theme #crmModal .crm-login,\nhtml.seervi-light-theme #crmModal .crm-toolbar,\nhtml.seervi-light-theme #crmModal .crm-tab-panel,\nhtml.seervi-light-theme #crmModal .crm-party-card,\nhtml.seervi-light-theme #crmModal .admin-global-area,\nhtml.seervi-light-theme #crmModal .inventory-stock-panel,\nhtml.seervi-light-theme #crmModal .rate-history-card,\nhtml.seervi-light-theme #crmModal .crm-list,\nhtml.seervi-light-theme #crmModal .crm-ledger-add,\nhtml.seervi-light-theme #crmModal .crm-party-select-wrap,\nhtml.seervi-light-theme .customer-dashboard,\nhtml.seervi-light-theme .customer-dashboard-head,\nhtml.seervi-light-theme .customer-dashboard-summary,\nhtml.seervi-light-theme .customer-dashboard-summary-card,\nhtml.seervi-light-theme .customer-profile-card,\nhtml.seervi-light-theme .crm-workspace,\nhtml.seervi-light-theme .crm-panel,\nhtml.seervi-light-theme .admin-global-panel,\nhtml.seervi-light-theme .admin-global-area,\nhtml.seervi-light-theme .admin-items-view,\nhtml.seervi-light-theme .admin-items-area,\nhtml.seervi-light-theme .admin-settings-scroll,\nhtml.seervi-light-theme .admin-settings-section,\nhtml.seervi-light-theme .admin-settings-grid,\nhtml.seervi-light-theme .admin-utility-panel,\nhtml.seervi-light-theme .admin-backup-options-panel,\nhtml.seervi-light-theme .account-dashboard-panel{\n  background:#fffdf8!important;color:var(--sv-text)!important;border-color:var(--sv-border)!important;\n}\n\n/* Inputs / selects */\nhtml.seervi-light-theme input,\nhtml.seervi-light-theme select,\nhtml.seervi-light-theme textarea{\n  background:#fffdf8!important;color:#20252b!important;border-color:#d5cbb9!important;color-scheme:light!important;\n}\nhtml.seervi-light-theme input::placeholder,\nhtml.seervi-light-theme textarea::placeholder{color:#938d82!important}\nhtml.seervi-light-theme option{background:#fffdf8!important;color:#20252b!important}\n\n/* Primary controls: deep warm charcoal + gold accents */\nhtml.seervi-light-theme .bw-cta,\nhtml.seervi-light-theme .seervi-home-catalogue-more,\nhtml.seervi-light-theme .crm-primary{\n  background:#202a33!important;color:#fffdf8!important;border-color:#202a33!important;\n}\nhtml.seervi-light-theme .seervi-public-category-btn.active,\nhtml.seervi-light-theme .seervi-public-subcategory-btn.active{\n  background:#f3e5c7!important;color:#5d4518!important;border-color:#c8a45b!important;\n}\n\n/* Premium drawer / bottom navigation in light mode */\nhtml.seervi-light-theme .seervi-web-slide-drawer,\nhtml.seervi-light-theme .seervi-slide-drawer,\nhtml.seervi-light-theme .web-slide-drawer,\nhtml.seervi-light-theme .mobile-account-menu,\nhtml.seervi-light-theme .mobile-bottom-bar{\n  background:rgba(255,253,248,.97)!important;\n  border-color:var(--sv-border)!important;\n  color:var(--sv-text)!important;\n  box-shadow:0 18px 55px rgba(75,61,38,.12)!important;\n}\nhtml.seervi-light-theme .seervi-slide-drawer button,\nhtml.seervi-light-theme .seervi-slide-drawer a,\nhtml.seervi-light-theme .web-slide-drawer button,\nhtml.seervi-light-theme .web-slide-drawer a{color:var(--sv-text)!important}\n\n/* Gold rules / dividers */\nhtml.seervi-light-theme .seervi-slide-drawer hr,\nhtml.seervi-light-theme .web-slide-drawer hr,\nhtml.seervi-light-theme .mobile-account-menu hr{border-color:#e2d7c5!important}\n\n/* Tables and secondary surfaces */\nhtml.seervi-light-theme table{background:#fffdf8!important;color:var(--sv-text)!important}\nhtml.seervi-light-theme th{background:#f1eadc!important;color:#5e574d!important}\nhtml.seervi-light-theme td{border-color:#e4dbcc!important}\n\n/* Softer text hierarchy */\nhtml.seervi-light-theme p,\nhtml.seervi-light-theme li,\nhtml.seervi-light-theme label,\nhtml.seervi-light-theme .crm-muted,\nhtml.seervi-light-theme .crm-help,\nhtml.seervi-light-theme .admin-items-subtitle,\nhtml.seervi-light-theme .admin-settings-help{color:#6d6a63!important}\nhtml.seervi-light-theme h1,\nhtml.seervi-light-theme h2,\nhtml.seervi-light-theme h3,\nhtml.seervi-light-theme h4,\nhtml.seervi-light-theme h5,\nhtml.seervi-light-theme h6,\nhtml.seervi-light-theme strong,\nhtml.seervi-light-theme b{color:#20252b!important}\n</style>
-
-<style id="seervi-taskbar-visibility-final-fix">
-/* Keep the mobile quick-navigation visible on public site views.
-   Full-screen/admin overlays still keep it hidden when an overlay is open. */
-@media(max-width:600px){
-  body:not(.seervi-ai-open) .mobile-bottom-bar{display:grid!important;}
-  body:has(#crmModal.show) .mobile-bottom-bar,
-  body:has(#adminSettingsModal.show) .mobile-bottom-bar,
-  body:has(#adminCataloguesModal.show) .mobile-bottom-bar,
-  body:has(#adminBackupOptionsModal.show) .mobile-bottom-bar,
-  body:has(#seerviItemsModal.show) .mobile-bottom-bar,
-  body:has(#seerviActivityModal.show) .mobile-bottom-bar,
-  body:has(#gstProfileModal.show) .mobile-bottom-bar,
-  body:has(#productModal.show) .mobile-bottom-bar,
-  body:has(#seerviPublicItemModal.show) .mobile-bottom-bar,
-  body:has(#cartDrawer.show) .mobile-bottom-bar,
-  body:has(#seerviCataloguePanel.show) .mobile-bottom-bar,
-  body.seervi-ai-open .mobile-bottom-bar{display:none!important;}
-}
-</style>
 </body>
 </html>
