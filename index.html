@@ -17325,10 +17325,22 @@ function seerviApplySiteSettings(raw){
   const addressBlock=document.querySelector('#contact .seervi-address-block > span:last-child'); if(addressBlock){const a=homeContact.contactAddress||SEERVI_SITE_SETTINGS_DEFAULTS.homepage.contactAddress;addressBlock.innerHTML=seerviEscHtml(a).replace(/,\s*/g,',<br>');}
   const footerBrand=document.querySelector('footer .wrap span:first-child');
   if(footerBrand) footerBrand.textContent='© 2026 '+seerviSiteSettings.branding.companyName+'. All rights reserved.';
+  window.seerviMaintenanceTemporaryAccess=window.seerviMaintenanceTemporaryAccess===true;
   let maintenance=document.getElementById('seerviMaintenanceOverlay');
-  if(seerviSiteSettings.advanced.maintenanceMode && !(crmUser && isAuthorisedAdmin(crmUser))){
+  if(seerviSiteSettings.advanced.maintenanceMode && !seerviMaintenanceTemporaryAccess && !(crmUser && isAuthorisedAdmin(crmUser))){
     if(!maintenance){
       maintenance=document.createElement('div');maintenance.id='seerviMaintenanceOverlay';maintenance.innerHTML="<div class='seervi-maintenance-card'><div class='crm-kicker'>SEERVI TRADING</div><h2>WE'LL BE BACK SOON</h2><p></p></div>";document.body.appendChild(maintenance);
+      const card=maintenance.querySelector('.seervi-maintenance-card');
+      if(card){
+        let secretClicks=0;
+        card.addEventListener('click',function(){
+          secretClicks++;
+          if(secretClicks===10){
+            seerviMaintenanceTemporaryAccess=true;
+            maintenance.hidden=true;
+          }
+        });
+      }
     }
     const msg=maintenance.querySelector('p');if(msg)msg.textContent=seerviSiteSettings.advanced.maintenanceMessage;
     maintenance.hidden=false;
@@ -17344,6 +17356,7 @@ function seerviApplySiteSettings(raw){
   }
   window.dispatchEvent(new CustomEvent('seervi:global-settings-ready',{detail:seerviSiteSettings}));
 }
+let seerviMaintenanceTemporaryAccess=false;
 function seerviEscHtml(value){
   return String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 }
@@ -17352,8 +17365,21 @@ function seerviSettingsEscapeCssUrl(value){return String(value||'').replace(/[\\
 window.SeerviRefreshMaintenance=function(){
   const settings=window.SeerviSiteSettings||seerviSiteSettings;
   let maintenance=document.getElementById('seerviMaintenanceOverlay');
-  if(settings.advanced?.maintenanceMode && !(crmUser && isAuthorisedAdmin(crmUser))){
-    if(!maintenance){maintenance=document.createElement('div');maintenance.id='seerviMaintenanceOverlay';maintenance.innerHTML="<div class='seervi-maintenance-card'><div class='crm-kicker'>SEERVI TRADING</div><h2>WE'LL BE BACK SOON</h2><p></p></div>";document.body.appendChild(maintenance);}
+  if(settings.advanced?.maintenanceMode && !seerviMaintenanceTemporaryAccess && !(crmUser && isAuthorisedAdmin(crmUser))){
+    if(!maintenance){
+      maintenance=document.createElement('div');maintenance.id='seerviMaintenanceOverlay';maintenance.innerHTML="<div class='seervi-maintenance-card'><div class='crm-kicker'>SEERVI TRADING</div><h2>WE'LL BE BACK SOON</h2><p></p></div>";document.body.appendChild(maintenance);
+      const card=maintenance.querySelector('.seervi-maintenance-card');
+      if(card){
+        let secretClicks=0;
+        card.addEventListener('click',function(){
+          secretClicks++;
+          if(secretClicks===10){
+            seerviMaintenanceTemporaryAccess=true;
+            maintenance.hidden=true;
+          }
+        });
+      }
+    }
     const msg=maintenance.querySelector('p');if(msg)msg.textContent=settings.advanced.maintenanceMessage||'';
     maintenance.hidden=false;
   }else if(maintenance){maintenance.hidden=true;}
