@@ -4954,6 +4954,68 @@ html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-mob
   }
 }
 </style>
+
+<style id="seervi-dark-theme-trending-final">
+/* SEERVI DARK MODE — GRAPHITE / SLATE / WARM GOLD */
+html:not(.seervi-light-theme){
+  --bg:#101214!important;
+  --panel:#171a1e!important;
+  --line:#2b3036!important;
+  --text:#eef0f2!important;
+  --muted:#a5abb2!important;
+  --accent:#f2f3f4!important;
+  --accent2:#d8b45a!important;
+}
+html:not(.seervi-light-theme) body{
+  background:radial-gradient(circle at 82% 0%,rgba(216,180,90,.07),transparent 32%),linear-gradient(180deg,#111417 0%,#0d0f11 100%)!important;
+  color:#eef0f2!important;
+}
+html:not(.seervi-light-theme) nav{
+  background:rgba(18,21,24,.88)!important;
+  border-bottom-color:rgba(216,180,90,.16)!important;
+  backdrop-filter:blur(18px)!important;
+}
+html:not(.seervi-light-theme) .panel,
+html:not(.seervi-light-theme) .workspace,
+html:not(.seervi-light-theme) .content,
+html:not(.seervi-light-theme) .admin-panel,
+html:not(.seervi-light-theme) .settings-panel,
+html:not(.seervi-light-theme) .crm-panel{
+  background:#171a1e!important;
+  border-color:#2b3036!important;
+}
+html:not(.seervi-light-theme) input,
+html:not(.seervi-light-theme) select,
+html:not(.seervi-light-theme) textarea{
+  background:#1b1f24!important;
+  color:#eef0f2!important;
+  border-color:#343a42!important;
+}
+html:not(.seervi-light-theme) input::placeholder,
+html:not(.seervi-light-theme) textarea::placeholder{color:#858c94!important}
+html:not(.seervi-light-theme) .navlinks,
+html:not(.seervi-light-theme) .nav-admin-link{color:#c9ced3!important}
+html:not(.seervi-light-theme) .navlinks a:hover,
+html:not(.seervi-light-theme) .nav-admin-link:hover{color:#e0bd68!important}
+html:not(.seervi-light-theme) .kicker,
+html:not(.seervi-light-theme) .crm-kicker{color:#d8b45a!important}
+html:not(.seervi-light-theme) .btn.alt{background:#1a1e23!important;border-color:#3a4048!important;color:#eef0f2!important}
+html:not(.seervi-light-theme) .btn:not(.alt){background:#e9e7e1!important;color:#17191c!important;border-color:#e9e7e1!important}
+html:not(.seervi-light-theme) .mobile-bottom-bar,
+html:not(.seervi-light-theme) .mobile-account-menu,
+html:not(.seervi-light-theme) .seervi-web-slide-drawer{
+  background:rgba(22,25,29,.94)!important;
+  border-color:#30363d!important;
+  backdrop-filter:blur(20px)!important;
+}
+html:not(.seervi-light-theme) .mobile-bottom-bar{box-shadow:0 12px 40px rgba(0,0,0,.28)!important}
+html:not(.seervi-light-theme) table{background:#15181c!important;color:#e8ebee!important}
+html:not(.seervi-light-theme) th{background:#1d2126!important;color:#b9c0c7!important}
+html:not(.seervi-light-theme) td{border-color:#2b3036!important}
+html:not(.seervi-light-theme) .card,
+html:not(.seervi-light-theme) .product-card,
+html:not(.seervi-light-theme) .catalogue-card{background:#181c20!important;border-color:#2b3036!important}
+</style>
 </head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-settings" hidden="" id="mobileNavSettings" onclick="openAdminSettings()" type="button">Settings</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div><div class="seervi-language-control seervi-language-control-mobile"><span>Language</span><select aria-label="Select language" class="seervi-language-select" id="seerviLanguageSelectMobile"><option value="en">English</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="mwr">मारवाड़ी</option><option value="kn">ಕನ್ನಡ</option><option value="mr">मराठी</option><option value="gu">ગુજરાતી</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option></select></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
@@ -19257,5 +19319,5 @@ zh:{'Home':'首页','About':'关于我们','Catalogue':'目录','Catalogues':'�
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true}); else init();
 })();
 </script>
-</body>
+\n<style id="seervi-light-theme-vanilla-ivory-final">\n/* SEERVI LIGHT THEME — VANILLA / IVORY PREMIUM PALETTE\n   Visual-only override. Dark theme and JavaScript are untouched. */\nhtml.seervi-light-theme{\n  --sv-bg:#f6f1e7!important;\n  --sv-surface:#fffdf8!important;\n  --sv-surface-2:#faf5eb!important;\n  --sv-surface-3:#f1eadc!important;\n  --sv-text:#20252b!important;\n  --sv-muted:#6d6a63!important;\n  --sv-border:#ddd3c2!important;\n  --sv-gold:#a77a20!important;\n  --sv-gold-soft:#f3e5c7!important;\n  --sv-navy:#202a33!important;\n  --sv-shadow:0 12px 32px rgba(75,61,38,.09)!important;\n}\nhtml.seervi-light-theme body,\nhtml.seervi-light-theme main,\nhtml.seervi-light-theme section,\nhtml.seervi-light-theme .page,\nhtml.seervi-light-theme .section,\nhtml.seervi-light-theme .panel,\nhtml.seervi-light-theme .workspace,\nhtml.seervi-light-theme .content,\nhtml.seervi-light-theme .container{\n  background:var(--sv-bg)!important;color:var(--sv-text)!important;\n}\nhtml.seervi-light-theme nav,\nhtml.seervi-light-theme nav.nav-scrolled{\n  background:rgba(255,253,248,.97)!important;\n  border-bottom:1px solid var(--sv-border)!important;\n  box-shadow:0 6px 22px rgba(75,61,38,.08)!important;\n}\nhtml.seervi-light-theme nav>.wrap>.seervi-mobile-topbar-brand{color:#20252b!important;text-shadow:none!important}\n\n/* Hero keeps its media natural while the copy area uses warm ivory. */\nhtml.seervi-light-theme #home.bw-hero .bw-hero-content,\nhtml.seervi-light-theme .bw-hero-copy{background:#fbf6ec!important;color:var(--sv-text)!important}\nhtml.seervi-light-theme .bw-hero-copy h1,\nhtml.seervi-light-theme .bw-hero-copy h2,\nhtml.seervi-light-theme .bw-hero-copy .hero-title{color:#20252b!important}\nhtml.seervi-light-theme .bw-hero-copy p{color:#69655e!important}\nhtml.seervi-light-theme .bw-kicker,\nhtml.seervi-light-theme .tag,\nhtml.seervi-light-theme .crm-kicker{color:var(--sv-gold)!important}\n\n/* Cards / catalogue / product surfaces */\nhtml.seervi-light-theme .seervi-home-catalogue-section,\nhtml.seervi-light-theme .firebase-public-catalog{background:#faf5eb!important;color:var(--sv-text)!important}\nhtml.seervi-light-theme .seervi-public-category-card,\nhtml.seervi-light-theme .seervi-public-subcategory-card,\nhtml.seervi-light-theme .home-product-card,\nhtml.seervi-light-theme .card,\nhtml.seervi-light-theme .account-dashboard-option,\nhtml.seervi-light-theme .admin-items-category-card,\nhtml.seervi-light-theme .admin-global-row,\nhtml.seervi-light-theme .crm-row,\nhtml.seervi-light-theme .crm-list-item,\nhtml.seervi-light-theme .crm-party-card,\nhtml.seervi-light-theme .inventory-stock-card,\nhtml.seervi-light-theme .customer-quote-row,\nhtml.seervi-light-theme .customer-rate-history-card,\nhtml.seervi-light-theme .admin-kpi,\nhtml.seervi-light-theme .cart-totals-card{\n  background:#fffdf8!important;color:var(--sv-text)!important;\n  border-color:var(--sv-border)!important;\n  box-shadow:0 8px 24px rgba(75,61,38,.065)!important;\n}\nhtml.seervi-light-theme .seervi-public-category-card:hover,\nhtml.seervi-light-theme .account-dashboard-option:hover,\nhtml.seervi-light-theme .admin-items-category-card:hover{\n  background:#fffaf0!important;border-color:#c8a45b!important;\n}\nhtml.seervi-light-theme .seervi-public-category-card-image,\nhtml.seervi-light-theme .seervi-public-subcategory-image,\nhtml.seervi-light-theme .home-product-thumb{background:#f2ecdf!important}\n\n/* Internal admin / CRM panels */\nhtml.seervi-light-theme #crmModal .crm-panel,\nhtml.seervi-light-theme #crmModal .crm-head,\nhtml.seervi-light-theme #crmModal .crm-workspace,\nhtml.seervi-light-theme #crmModal .crm-login,\nhtml.seervi-light-theme #crmModal .crm-toolbar,\nhtml.seervi-light-theme #crmModal .crm-tab-panel,\nhtml.seervi-light-theme #crmModal .crm-party-card,\nhtml.seervi-light-theme #crmModal .admin-global-area,\nhtml.seervi-light-theme #crmModal .inventory-stock-panel,\nhtml.seervi-light-theme #crmModal .rate-history-card,\nhtml.seervi-light-theme #crmModal .crm-list,\nhtml.seervi-light-theme #crmModal .crm-ledger-add,\nhtml.seervi-light-theme #crmModal .crm-party-select-wrap,\nhtml.seervi-light-theme .customer-dashboard,\nhtml.seervi-light-theme .customer-dashboard-head,\nhtml.seervi-light-theme .customer-dashboard-summary,\nhtml.seervi-light-theme .customer-dashboard-summary-card,\nhtml.seervi-light-theme .customer-profile-card,\nhtml.seervi-light-theme .crm-workspace,\nhtml.seervi-light-theme .crm-panel,\nhtml.seervi-light-theme .admin-global-panel,\nhtml.seervi-light-theme .admin-global-area,\nhtml.seervi-light-theme .admin-items-view,\nhtml.seervi-light-theme .admin-items-area,\nhtml.seervi-light-theme .admin-settings-scroll,\nhtml.seervi-light-theme .admin-settings-section,\nhtml.seervi-light-theme .admin-settings-grid,\nhtml.seervi-light-theme .admin-utility-panel,\nhtml.seervi-light-theme .admin-backup-options-panel,\nhtml.seervi-light-theme .account-dashboard-panel{\n  background:#fffdf8!important;color:var(--sv-text)!important;border-color:var(--sv-border)!important;\n}\n\n/* Inputs / selects */\nhtml.seervi-light-theme input,\nhtml.seervi-light-theme select,\nhtml.seervi-light-theme textarea{\n  background:#fffdf8!important;color:#20252b!important;border-color:#d5cbb9!important;color-scheme:light!important;\n}\nhtml.seervi-light-theme input::placeholder,\nhtml.seervi-light-theme textarea::placeholder{color:#938d82!important}\nhtml.seervi-light-theme option{background:#fffdf8!important;color:#20252b!important}\n\n/* Primary controls: deep warm charcoal + gold accents */\nhtml.seervi-light-theme .bw-cta,\nhtml.seervi-light-theme .seervi-home-catalogue-more,\nhtml.seervi-light-theme .crm-primary{\n  background:#202a33!important;color:#fffdf8!important;border-color:#202a33!important;\n}\nhtml.seervi-light-theme .seervi-public-category-btn.active,\nhtml.seervi-light-theme .seervi-public-subcategory-btn.active{\n  background:#f3e5c7!important;color:#5d4518!important;border-color:#c8a45b!important;\n}\n\n/* Premium drawer / bottom navigation in light mode */\nhtml.seervi-light-theme .seervi-web-slide-drawer,\nhtml.seervi-light-theme .seervi-slide-drawer,\nhtml.seervi-light-theme .web-slide-drawer,\nhtml.seervi-light-theme .mobile-account-menu,\nhtml.seervi-light-theme .mobile-bottom-bar{\n  background:rgba(255,253,248,.97)!important;\n  border-color:var(--sv-border)!important;\n  color:var(--sv-text)!important;\n  box-shadow:0 18px 55px rgba(75,61,38,.12)!important;\n}\nhtml.seervi-light-theme .seervi-slide-drawer button,\nhtml.seervi-light-theme .seervi-slide-drawer a,\nhtml.seervi-light-theme .web-slide-drawer button,\nhtml.seervi-light-theme .web-slide-drawer a{color:var(--sv-text)!important}\n\n/* Gold rules / dividers */\nhtml.seervi-light-theme .seervi-slide-drawer hr,\nhtml.seervi-light-theme .web-slide-drawer hr,\nhtml.seervi-light-theme .mobile-account-menu hr{border-color:#e2d7c5!important}\n\n/* Tables and secondary surfaces */\nhtml.seervi-light-theme table{background:#fffdf8!important;color:var(--sv-text)!important}\nhtml.seervi-light-theme th{background:#f1eadc!important;color:#5e574d!important}\nhtml.seervi-light-theme td{border-color:#e4dbcc!important}\n\n/* Softer text hierarchy */\nhtml.seervi-light-theme p,\nhtml.seervi-light-theme li,\nhtml.seervi-light-theme label,\nhtml.seervi-light-theme .crm-muted,\nhtml.seervi-light-theme .crm-help,\nhtml.seervi-light-theme .admin-items-subtitle,\nhtml.seervi-light-theme .admin-settings-help{color:#6d6a63!important}\nhtml.seervi-light-theme h1,\nhtml.seervi-light-theme h2,\nhtml.seervi-light-theme h3,\nhtml.seervi-light-theme h4,\nhtml.seervi-light-theme h5,\nhtml.seervi-light-theme h6,\nhtml.seervi-light-theme strong,\nhtml.seervi-light-theme b{color:#20252b!important}\n</style>\n</body>
 </html>
