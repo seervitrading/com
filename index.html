@@ -5016,6 +5016,108 @@ html:not(.seervi-light-theme) .card,
 html:not(.seervi-light-theme) .product-card,
 html:not(.seervi-light-theme) .catalogue-card{background:#181c20!important;border-color:#2b3036!important}
 </style>
+
+<style id="seervi-v22-premium-topbar">
+/* V22 — PREMIUM TOPBAR ONLY. No JavaScript/functionality changes. */
+nav{
+  background:rgba(18,22,27,.90)!important;
+  border-bottom:1px solid rgba(255,255,255,.08)!important;
+  box-shadow:0 6px 24px rgba(0,0,0,.12)!important;
+  backdrop-filter:blur(18px) saturate(1.08)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(1.08)!important;
+}
+nav>.wrap{position:relative!important;}
+nav>.wrap>.seervi-mobile-topbar-brand{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  transform:translate(-50%,-50%)!important;
+  display:block!important;
+  padding:0 0 9px!important;
+  color:#f4f5f6!important;
+  font-size:15px!important;
+  font-weight:850!important;
+  letter-spacing:2px!important;
+  line-height:1!important;
+  text-shadow:0 1px 12px rgba(0,0,0,.28)!important;
+}
+nav>.wrap>.seervi-mobile-topbar-brand::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:0;
+  width:74px;
+  height:1.5px;
+  transform:translateX(-50%);
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,#d6b152 22%,#e4c878 50%,#d6b152 78%,transparent);
+  box-shadow:0 0 10px rgba(214,177,82,.22);
+}
+nav>.wrap>.notification-bell{
+  position:relative!important;
+  width:44px!important;
+  height:44px!important;
+  min-width:44px!important;
+  min-height:44px!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  border-radius:12px!important;
+  background:rgba(255,255,255,.055)!important;
+  box-shadow:0 6px 18px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.06)!important;
+  transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+}
+nav>.wrap>.notification-bell:hover{
+  transform:translateY(-1px)!important;
+  background:rgba(214,177,82,.10)!important;
+  border-color:rgba(214,177,82,.42)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.18),0 0 16px rgba(214,177,82,.08)!important;
+}
+nav>.wrap>.notification-bell:active{transform:translateY(0)!important;}
+nav>.wrap>.seervi-mobile-account-menu-toggle{
+  width:44px!important;
+  height:44px!important;
+  min-width:44px!important;
+  min-height:44px!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  border-radius:12px!important;
+  background:rgba(255,255,255,.045)!important;
+  transition:background .18s ease,border-color .18s ease,transform .18s ease!important;
+}
+nav>.wrap>.seervi-mobile-account-menu-toggle:hover{
+  background:rgba(214,177,82,.09)!important;
+  border-color:rgba(214,177,82,.34)!important;
+}
+html.seervi-light-theme nav{
+  background:rgba(249,246,238,.94)!important;
+  border-bottom-color:rgba(92,78,52,.12)!important;
+  box-shadow:0 6px 24px rgba(76,64,44,.08)!important;
+}
+html.seervi-light-theme nav>.wrap>.seervi-mobile-topbar-brand{
+  color:#293039!important;
+  text-shadow:0 1px 10px rgba(255,255,255,.8)!important;
+}
+html.seervi-light-theme nav>.wrap>.notification-bell{
+  border-color:rgba(92,78,52,.18)!important;
+  background:rgba(255,255,255,.58)!important;
+  box-shadow:0 6px 18px rgba(76,64,44,.08),inset 0 1px 0 rgba(255,255,255,.75)!important;
+}
+html.seervi-light-theme nav>.wrap>.notification-bell:hover{
+  background:#f7efd9!important;
+  border-color:rgba(180,135,39,.42)!important;
+  box-shadow:0 8px 22px rgba(76,64,44,.10),0 0 16px rgba(180,135,39,.10)!important;
+}
+html.seervi-light-theme nav>.wrap>.seervi-mobile-account-menu-toggle{
+  border-color:rgba(92,78,52,.16)!important;
+  background:rgba(255,255,255,.52)!important;
+}
+html.seervi-light-theme nav>.wrap>.seervi-mobile-account-menu-toggle:hover{
+  background:#f7efd9!important;
+  border-color:rgba(180,135,39,.36)!important;
+}
+@media(max-width:600px){
+  nav>.wrap>.seervi-mobile-topbar-brand{font-size:15px!important;letter-spacing:1.8px!important;padding-bottom:8px!important;}
+  nav>.wrap>.seervi-mobile-topbar-brand::after{width:64px!important;}
+}
+</style>
 </head><body><div aria-live="polite" class="cloud-connected-badge" id="cloudConnectedBadge"><span class="cloud-connected-dot"></span><span>CONNECTED</span></div><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-settings" hidden="" id="mobileNavSettings" onclick="openAdminSettings()" type="button">Settings</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div><div class="seervi-language-control seervi-language-control-mobile"><span>Language</span><select aria-label="Select language" class="seervi-language-select" id="seerviLanguageSelectMobile"><option value="en">English</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="mwr">मारवाड़ी</option><option value="kn">ಕನ್ನಡ</option><option value="mr">मराठी</option><option value="gu">ગુજરાતી</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option></select></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
