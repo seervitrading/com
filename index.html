@@ -4862,57 +4862,52 @@ html.seervi-light-theme nav .nav-dashboard-slot .top-account-actions .seervi-mob
   }
 }
 </style>
-<style id="seervi-v16-web-slidebar-button-fix">
-/* V16 — restore desktop web slide-bar trigger only. Existing JS/actions untouched. */
-@media(min-width:601px){
-  nav>.wrap>.nav-dashboard-slot{
-    position:absolute!important;
-    left:18px!important;
-    top:50%!important;
-    transform:translateY(-50%)!important;
-    width:42px!important;
-    height:42px!important;
-    margin:0!important;
-    z-index:100!important;
+<style id="seervi-v16-desktop-slidebar-trigger-fix">
+/* V16 — restore desktop web slidebar trigger only. Existing JS/actions untouched. */
+@media (min-width:601px){
+  nav > .wrap > .nav-dashboard-slot{
     display:flex!important;
+    visibility:visible!important;
+    opacity:1!important;
+    width:44px!important;
+    height:44px!important;
+    min-width:44px!important;
+    min-height:44px!important;
+    flex:0 0 44px!important;
+    position:static!important;
+    order:1!important;
     align-items:center!important;
-    justify-content:center!important;
+    justify-content:flex-start!important;
   }
-  nav .seervi-mobile-account-menu-toggle{
+  nav > .wrap > .nav-dashboard-slot > #seerviMobileAccountMenuToggle{
     display:flex!important;
+    visibility:visible!important;
+    opacity:1!important;
     width:42px!important;
     height:42px!important;
+    min-width:42px!important;
     min-height:42px!important;
+    margin:0!important;
+    padding:0!important;
     flex-direction:column!important;
     align-items:center!important;
     justify-content:center!important;
     gap:5px!important;
-    padding:0!important;
-    border:1px solid rgba(255,255,255,.12)!important;
-    border-radius:10px!important;
-    background:rgba(255,255,255,.035)!important;
-    color:#f3f4f6!important;
+    border:0!important;
+    border-radius:9px!important;
+    background:transparent!important;
     cursor:pointer!important;
   }
-  nav .seervi-mobile-account-menu-toggle span{
+  nav > .wrap > .nav-dashboard-slot > #seerviMobileAccountMenuToggle span{
     display:block!important;
-    width:19px!important;
+    width:20px!important;
     height:2px!important;
+    min-height:2px!important;
     border-radius:2px!important;
     background:#f1f2f4!important;
   }
-  nav .seervi-mobile-account-menu-toggle:hover{
-    border-color:rgba(240,198,106,.42)!important;
-    background:rgba(240,198,106,.08)!important;
-  }
-  html.seervi-light-theme nav .seervi-mobile-account-menu-toggle{
-    border-color:#d7dde3!important;
-    background:rgba(23,33,43,.035)!important;
-  }
-  html.seervi-light-theme nav .seervi-mobile-account-menu-toggle span{background:#27313a!important;}
-  html.seervi-light-theme nav .seervi-mobile-account-menu-toggle:hover{
-    border-color:rgba(196,151,42,.42)!important;
-    background:rgba(216,180,90,.10)!important;
+  html.seervi-light-theme nav > .wrap > .nav-dashboard-slot > #seerviMobileAccountMenuToggle span{
+    background:#171b20!important;
   }
 }
 </style>
