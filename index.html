@@ -17352,7 +17352,7 @@ function seerviApplySiteSettings(raw){
   let maintenance=document.getElementById('seerviMaintenanceOverlay');
   if(seerviSiteSettings.advanced.maintenanceMode && !seerviMaintenanceTemporaryAccess && !(crmUser && isAuthorisedAdmin(crmUser))){
     if(!maintenance){
-      maintenance=document.createElement('div');maintenance.id='seerviMaintenanceOverlay';maintenance.innerHTML="<div class='seervi-maintenance-card'><div class='crm-kicker'>SEERVI TRADING</div><h2>WE'LL BE BACK SOON</h2><p></p><small style='display:block;margin-top:14px;color:#66717d;font-size:10px;letter-spacing:.05em'>Temporary access: tap 10 times</small></div>";document.body.appendChild(maintenance);
+      maintenance=document.createElement('div');maintenance.id='seerviMaintenanceOverlay';maintenance.innerHTML="<div class='seervi-maintenance-card'><div class='crm-kicker'>SEERVI TRADING</div><h2>WE'LL BE BACK SOON</h2><p></p></div>";document.body.appendChild(maintenance);
     }
     const msg=maintenance.querySelector('p');if(msg)msg.textContent=seerviSiteSettings.advanced.maintenanceMessage;
     maintenance.hidden=false;
@@ -17377,7 +17377,7 @@ window.SeerviRefreshMaintenance=function(){
   const settings=window.SeerviSiteSettings||seerviSiteSettings;
   let maintenance=document.getElementById('seerviMaintenanceOverlay');
   if(settings.advanced?.maintenanceMode && !seerviMaintenanceTemporaryAccess && !(crmUser && isAuthorisedAdmin(crmUser))){
-    if(!maintenance){maintenance=document.createElement('div');maintenance.id='seerviMaintenanceOverlay';maintenance.innerHTML="<div class='seervi-maintenance-card'><div class='crm-kicker'>SEERVI TRADING</div><h2>WE'LL BE BACK SOON</h2><p></p><small style='display:block;margin-top:14px;color:#66717d;font-size:10px;letter-spacing:.05em'>Temporary access: tap 10 times</small></div>";document.body.appendChild(maintenance);}
+    if(!maintenance){maintenance=document.createElement('div');maintenance.id='seerviMaintenanceOverlay';maintenance.innerHTML="<div class='seervi-maintenance-card'><div class='crm-kicker'>SEERVI TRADING</div><h2>WE'LL BE BACK SOON</h2><p></p></div>";document.body.appendChild(maintenance);}
     const msg=maintenance.querySelector('p');if(msg)msg.textContent=settings.advanced.maintenanceMessage||'';
     maintenance.hidden=false;
   }else if(maintenance){maintenance.hidden=true;}
