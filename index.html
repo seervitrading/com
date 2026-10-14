@@ -7709,7 +7709,7 @@ async function seerviQuotationPdfImage(item){
       const ids=[item?.firebaseItemId,item?.itemId,item?.productId,item?.id,item?.catalogueItemId].filter(Boolean).map(String);
       const keys=[item?.model,item?.name,item?.productName,item?.title].filter(Boolean).map(v=>String(v).trim().toLowerCase());
       const match=all.find(x=>ids.includes(String(x.id||x.firebaseItemId||''))) || all.find(x=>keys.includes(String(x.model||'').trim().toLowerCase()) || keys.includes(String(x.name||'').trim().toLowerCase()));
-      src=String(match?.imageWebpUrl||match?.imageUrl||match?.image||match?.photo||'').trim();
+      src=String(match?.imageWebpUrl||match?.imageUrl||match?.image||match?.photo||(Array.isArray(match?.galleryImages)?match.galleryImages[0]:'')||'').trim();
     }catch(e){console.warn('[Seervi] Catalogue image lookup failed',e);}
   }
   if(!src)return '';
@@ -7812,7 +7812,7 @@ async function downloadCartPDF(){
       Math.max(24,(right-left)*43/180)
     );
     const rowLines=Math.min(productLines.length,3);
-    const rowHeight=Math.max(18,rowLines*pdfLayout.rowLine+pdfLayout.rowPad+5);
+    const rowHeight=Math.max(14,rowLines*pdfLayout.rowLine+pdfLayout.rowPad+2);
 
     if(y+rowHeight>H-pdfLayout.bottomMargin-36){
       doc.addPage();
@@ -8258,14 +8258,13 @@ document.addEventListener('keydown',function(e){
 })();
 </script><script>
 (function(){
+  // V33: keep the Cart PDF button wired to the actual PDF builder. The builder
+  // performs its own customer/rate validation and reports PDF-engine errors.
   const originalDownload = window.downloadCartPDF;
   if(typeof originalDownload === 'function'){
     window.downloadCartPDF = function(){
-      if(typeof isQuotationMode==='function' && !isQuotationMode()){
-        seerviToastAlert('Quotation Mode is locked.');
-        return;
-      }
-      return originalDownload();
+      try { return originalDownload.apply(this, arguments); }
+      catch(e){ console.error('[Seervi] Cart quotation PDF failed:',e); seerviToastAlert('PDF could not be generated. Please check the browser console and try again.'); }
     };
   }
 })();
@@ -11955,7 +11954,10 @@ window.crmEditQuote=async function(id){
     hsnCode:x.hsnCode||x.hsn||'',
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
-    image:'',
+    image:x.imageWebpUrl||x.imageUrl||x.image||x.photo||'',
+    imageWebpUrl:x.imageWebpUrl||x.imageUrl||x.image||x.photo||'',
+    galleryImages:Array.isArray(x.galleryImages)?x.galleryImages:[],
+    firebaseItemId:x.firebaseItemId||x.itemId||x.productId||'',
     manual:!!x.manual,
     colourVariant:x.colourVariant||x.color||x.selectedColour||x.selectedColor||'',
     colourVariants:Array.isArray(x.colourVariants)?x.colourVariants.map(v=>String(v?.name??v??'').trim()).filter(Boolean):[]
@@ -12481,7 +12483,7 @@ window.crmDownloadQuote=async function(id){
         Math.max(24,(right-left)*43/180)
       );
       const rowLines=Math.min(productLines.length,3);
-      const rowHeight=Math.max(18,rowLines*pdfLayout.rowLine+pdfLayout.rowPad+5);
+      const rowHeight=Math.max(14,rowLines*pdfLayout.rowLine+pdfLayout.rowPad+2);
 
       if(y+rowHeight>H-pdfLayout.bottomMargin-36){
         footer();
@@ -13605,7 +13607,10 @@ window.crmEditInvoice=async function(id){
     hsnCode:x.hsnCode||x.hsn||'',
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
-    image:'',
+    image:x.imageWebpUrl||x.imageUrl||x.image||x.photo||'',
+    imageWebpUrl:x.imageWebpUrl||x.imageUrl||x.image||x.photo||'',
+    galleryImages:Array.isArray(x.galleryImages)?x.galleryImages:[],
+    firebaseItemId:x.firebaseItemId||x.itemId||x.productId||'',
     manual:!!x.manual,
     colourVariant:x.colourVariant||x.color||x.selectedColour||x.selectedColor||'',
     colourVariants:Array.isArray(x.colourVariants)?x.colourVariants.map(v=>String(v?.name??v??'').trim()).filter(Boolean):[]
@@ -13910,6 +13915,10 @@ window.crmSaveCurrentQuote = async function(){
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
     amount:getLineTotal(x),
+    image:x.imageWebpUrl||x.imageUrl||x.image||x.photo||'',
+    imageWebpUrl:x.imageWebpUrl||x.imageUrl||x.image||x.photo||'',
+    galleryImages:Array.isArray(x.galleryImages)?x.galleryImages:[],
+    firebaseItemId:x.firebaseItemId||x.itemId||x.productId||'',
     manual:!!x.manual,
     colourVariant:x.colourVariant||x.color||x.selectedColour||x.selectedColor||'',
     colourVariants:Array.isArray(x.colourVariants)?x.colourVariants.map(v=>String(v?.name??v??'').trim()).filter(Boolean):[]
