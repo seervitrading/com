@@ -7698,10 +7698,34 @@ function quotationNumber(){
   return 'SVQ-'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'-'+pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds());
 }
 
-/* V30: reusable CORS-safe product image loader for quotation PDFs. */
+/* V31: resolve product images from saved quote fields OR the live catalogue. */
+let __seerviQuoteCataloguePromise=null;
+async function seerviQuotationResolveImageSource(item){
+  const direct=String(item?.imageWebpUrl||item?.image||item?.imageUrl||item?.photo||'').trim();
+  if(direct)return direct;
+  try{
+    const catalogue=window.seerviGetPublicCatalogue?.();
+    const publicItems=Array.isArray(catalogue?.items)?catalogue.items:[];
+    const id=String(item?.firebaseItemId||item?.itemId||item?.productId||item?.id||'').trim();
+    const model=String(item?.model||'').trim().toLowerCase();
+    const name=String(item?.name||'').trim().toLowerCase();
+    let match=(id&&publicItems.find(x=>String(x.id||'')===id)) ||
+      (model&&publicItems.find(x=>String(x.model||'').trim().toLowerCase()===model)) ||
+      (name&&publicItems.find(x=>String(x.name||'').trim().toLowerCase()===name));
+    if(!match && typeof window.seerviGetItems==='function'){
+      if(!__seerviQuoteCataloguePromise) __seerviQuoteCataloguePromise=window.seerviGetItems({limit:1000}).catch(()=>[]);
+      const all=await __seerviQuoteCataloguePromise;
+      match=(id&&all.find(x=>String(x.id||'')===id)) ||
+        (model&&all.find(x=>String(x.model||'').trim().toLowerCase()===model)) ||
+        (name&&all.find(x=>String(x.name||'').trim().toLowerCase()===name));
+    }
+    return String(match?.imageWebpUrl||match?.image||'').trim();
+  }catch(e){console.warn('[Seervi] Could not resolve quotation item from catalogue:',e);return '';}
+}
 async function seerviQuotationPdfImage(item){
-  const src=String(item?.imageWebpUrl||item?.image||item?.imageUrl||item?.photo||'').trim();
-  if(!src || /^data:image\//i.test(src)) return /^data:image\//i.test(src)?src:'';
+  const src=await seerviQuotationResolveImageSource(item);
+  if(!src)return '';
+  if(/^data:image\//i.test(src))return src;
   try{
     const img=new Image(); img.crossOrigin='anonymous';
     await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=src;});
@@ -7782,7 +7806,7 @@ async function downloadCartPDF(){
   doc.setFontSize(pdfLayout.tableFont);
   doc.setTextColor(30,35,40);
   doc.text('SR',X(18),tableTop);
-  doc.text('PHOTO / PRODUCT / MODEL',X(30),tableTop);
+  doc.text('PRODUCT / MODEL',X(39),tableTop);
   doc.text('COLOUR',X(85),tableTop);
   doc.text('HSN',X(109),tableTop);
   doc.text('QTY',X(132),tableTop);
@@ -12445,7 +12469,7 @@ window.crmDownloadQuote=async function(id){
       doc.setFontSize(pdfLayout.tableFont);
       doc.setTextColor(30,35,40);
       doc.text('SR',X(18),y);
-      doc.text('PHOTO / PRODUCT / MODEL + SUBCATEGORY',X(30),y);
+      doc.text('PRODUCT / MODEL + SUBCATEGORY',X(39),y);
       doc.text('COLOUR',X(85),y);
       doc.text('HSN',X(109),y);
       doc.text('QTY',X(132),y);
@@ -12685,7 +12709,7 @@ window.customerDownloadQuote=async function(id){
       doc.setFontSize(pdfLayout.tableFont);
       doc.setTextColor(30,35,40);
       doc.text('SR',X(18),y);
-      doc.text('PHOTO / PRODUCT / MODEL + SUBCATEGORY',X(30),y);
+      doc.text('PRODUCT / MODEL + SUBCATEGORY',X(39),y);
       doc.text('COLOUR',X(85),y);
       doc.text('HSN',X(109),y);
       doc.text('QTY',X(132),y);
