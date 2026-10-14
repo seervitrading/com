@@ -7698,44 +7698,32 @@ function quotationNumber(){
   return 'SVQ-'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'-'+pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds());
 }
 
-/* V31: resolve product images from saved quote fields OR the live catalogue. */
-let __seerviQuoteCataloguePromise=null;
-async function seerviQuotationResolveImageSource(item){
-  const direct=String(item?.imageWebpUrl||item?.image||item?.imageUrl||item?.photo||'').trim();
-  if(direct)return direct;
-  try{
-    const catalogue=window.seerviGetPublicCatalogue?.();
-    const publicItems=Array.isArray(catalogue?.items)?catalogue.items:[];
-    const id=String(item?.firebaseItemId||item?.itemId||item?.productId||item?.id||'').trim();
-    const model=String(item?.model||'').trim().toLowerCase();
-    const name=String(item?.name||'').trim().toLowerCase();
-    let match=(id&&publicItems.find(x=>String(x.id||'')===id)) ||
-      (model&&publicItems.find(x=>String(x.model||'').trim().toLowerCase()===model)) ||
-      (name&&publicItems.find(x=>String(x.name||'').trim().toLowerCase()===name));
-    if(!match && typeof window.seerviGetItems==='function'){
-      if(!__seerviQuoteCataloguePromise) __seerviQuoteCataloguePromise=window.seerviGetItems({limit:1000}).catch(()=>[]);
-      const all=await __seerviQuoteCataloguePromise;
-      match=(id&&all.find(x=>String(x.id||'')===id)) ||
-        (model&&all.find(x=>String(x.model||'').trim().toLowerCase()===model)) ||
-        (name&&all.find(x=>String(x.name||'').trim().toLowerCase()===name));
-    }
-    return String(match?.imageWebpUrl||match?.image||'').trim();
-  }catch(e){console.warn('[Seervi] Could not resolve quotation item from catalogue:',e);return '';}
-}
+/* V32: robust quotation image lookup. Never call admin-only catalogue APIs for public users. */
 async function seerviQuotationPdfImage(item){
-  const src=await seerviQuotationResolveImageSource(item);
+  const direct=[item?.imageWebpUrl,item?.imageUrl,item?.image,item?.photo,item?.thumbnail,item?.imageURL].find(v=>typeof v==='string'&&v.trim());
+  let src=direct?direct.trim():'';
+  if(!src){
+    try{
+      const cat=window.seerviGetPublicCatalogue?.();
+      const all=Array.isArray(cat?.items)?cat.items:[];
+      const ids=[item?.firebaseItemId,item?.itemId,item?.productId,item?.id,item?.catalogueItemId].filter(Boolean).map(String);
+      const keys=[item?.model,item?.name,item?.productName,item?.title].filter(Boolean).map(v=>String(v).trim().toLowerCase());
+      const match=all.find(x=>ids.includes(String(x.id||x.firebaseItemId||''))) || all.find(x=>keys.includes(String(x.model||'').trim().toLowerCase()) || keys.includes(String(x.name||'').trim().toLowerCase()));
+      src=String(match?.imageWebpUrl||match?.imageUrl||match?.image||match?.photo||'').trim();
+    }catch(e){console.warn('[Seervi] Catalogue image lookup failed',e);}
+  }
   if(!src)return '';
-  if(/^data:image\//i.test(src))return src;
+  if(/^data:image\/(jpeg|jpg|png)$/i.test(src))return src;
   try{
-    const img=new Image(); img.crossOrigin='anonymous';
-    await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=src;});
+    const img=new Image();
+    await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error('Image URL could not load'));img.src=src;});
     if(!img.naturalWidth||!img.naturalHeight)return '';
     const canvas=document.createElement('canvas');
-    const max=320,scale=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));
+    const scale=Math.min(1,320/Math.max(img.naturalWidth,img.naturalHeight));
     canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
     const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);
-    return canvas.toDataURL('image/jpeg',.86);
-  }catch(e){console.warn('[Seervi] Quotation product image unavailable:',src,e);return '';}
+    return canvas.toDataURL('image/jpeg',.88);
+  }catch(e){console.warn('[Seervi] Product photo could not be embedded. Check image URL/CORS:',e);return '';}
 }
 
 async function downloadCartPDF(){
@@ -7806,7 +7794,7 @@ async function downloadCartPDF(){
   doc.setFontSize(pdfLayout.tableFont);
   doc.setTextColor(30,35,40);
   doc.text('SR',X(18),tableTop);
-  doc.text('PRODUCT / MODEL',X(39),tableTop);
+  doc.text('PHOTO / PRODUCT',X(39),tableTop);
   doc.text('COLOUR',X(85),tableTop);
   doc.text('HSN',X(109),tableTop);
   doc.text('QTY',X(132),tableTop);
@@ -7821,7 +7809,7 @@ async function downloadCartPDF(){
 
     const productLines=doc.splitTextToSize(
       String(seerviQuotationItemLabel(item)||'').replace(/[^\x20-\x7E₹–—]/g,' '),
-      Math.max(25,(right-left)*45/180)
+      Math.max(24,(right-left)*43/180)
     );
     const rowLines=Math.min(productLines.length,3);
     const rowHeight=Math.max(18,rowLines*pdfLayout.rowLine+pdfLayout.rowPad+5);
@@ -7838,7 +7826,7 @@ async function downloadCartPDF(){
 
     doc.text(String(i+1),X(18),y);
     const itemImage=await seerviQuotationPdfImage(item);
-    if(itemImage){try{doc.addImage(itemImage,'JPEG',X(25),y-5,12,12,undefined,'FAST');}catch(e){console.warn('Cart quotation image skipped:',e);}}
+    if(itemImage){try{doc.addImage(itemImage,'JPEG',X(25),y-5,11,11,undefined,'FAST');}catch(e){console.warn('Cart quotation photo skipped:',e);}}
     doc.text(productLines.slice(0,3),X(39),y);
     doc.text(String(seerviQuotationItemColour(item)||'—').slice(0,18),X(85),y);
     doc.text(String(item.hsnCode||item.hsn||'—').slice(0,12),X(109),y);
@@ -12469,7 +12457,7 @@ window.crmDownloadQuote=async function(id){
       doc.setFontSize(pdfLayout.tableFont);
       doc.setTextColor(30,35,40);
       doc.text('SR',X(18),y);
-      doc.text('PRODUCT / MODEL + SUBCATEGORY',X(39),y);
+      doc.text('PHOTO / PRODUCT',X(39),y);
       doc.text('COLOUR',X(85),y);
       doc.text('HSN',X(109),y);
       doc.text('QTY',X(132),y);
@@ -12490,7 +12478,7 @@ window.crmDownloadQuote=async function(id){
       doc.setFontSize(pdfLayout.tableFont);
       const productLines=doc.splitTextToSize(
         safeText(seerviQuotationItemLabel(item)),
-        Math.max(25,(right-left)*45/180)
+        Math.max(24,(right-left)*43/180)
       );
       const rowLines=Math.min(productLines.length,3);
       const rowHeight=Math.max(18,rowLines*pdfLayout.rowLine+pdfLayout.rowPad+5);
@@ -12507,7 +12495,7 @@ window.crmDownloadQuote=async function(id){
       doc.setTextColor(45,50,56);
       doc.text(String(i+1),X(18),y);
       const itemImage=await seerviQuotationPdfImage(item);
-      if(itemImage){try{doc.addImage(itemImage,'JPEG',X(25),y-5,12,12,undefined,'FAST');}catch(e){console.warn('Saved quotation image skipped:',e);}}
+      if(itemImage){try{doc.addImage(itemImage,'JPEG',X(25),y-5,11,11,undefined,'FAST');}catch(e){console.warn('Saved quotation photo skipped:',e);}}
       doc.text(productLines.slice(0,3),X(39),y);
       doc.text(safeText(seerviQuotationItemColour(item)||'—').slice(0,18),X(85),y);
       doc.text(safeText(item.hsnCode||item.hsn||'—').slice(0,12),X(109),y);
@@ -12709,7 +12697,7 @@ window.customerDownloadQuote=async function(id){
       doc.setFontSize(pdfLayout.tableFont);
       doc.setTextColor(30,35,40);
       doc.text('SR',X(18),y);
-      doc.text('PRODUCT / MODEL + SUBCATEGORY',X(39),y);
+      doc.text('PRODUCT / MODEL + SUBCATEGORY',X(30),y);
       doc.text('COLOUR',X(85),y);
       doc.text('HSN',X(109),y);
       doc.text('QTY',X(132),y);
