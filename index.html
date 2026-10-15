@@ -7726,6 +7726,24 @@ async function seerviQuotationPdfImage(item){
   }catch(e){console.warn('[Seervi] Product photo could not be embedded. Check image URL/CORS:',e);return '';}
 }
 
+/* V36 FIX: keep the PDF layout preset available in the same script scope as Cart PDF generation.
+   The previous version defined it in a later script, so Cart could call it before that definition ran. */
+function seerviPdfLayoutPreset(type){
+  const key=type==='invoice'?'invoiceLayout':'quotationLayout';
+  const settings=(typeof seerviSiteSettings!=='undefined'&&seerviSiteSettings)||window.seerviSiteSettings||{};
+  const defaults=(typeof SEERVI_SITE_SETTINGS_DEFAULTS!=='undefined'&&SEERVI_SITE_SETTINGS_DEFAULTS)||window.SEERVI_SITE_SETTINGS_DEFAULTS||{};
+  const mode=settings.pdf?.[key]||'standard';
+  if(mode==='custom'){
+    const c=settings.pdf?.[type]||defaults.pdf?.[type]||{};
+    const left=Math.max(5,Math.min(50,Number(c.marginLeft)||15));
+    const right=Math.max(left+80,210-Math.max(5,Math.min(50,Number(c.marginRight)||15)));
+    return {mode,left,right,width:right-left,topMargin:Number(c.marginTop)||17,bottomMargin:Number(c.marginBottom)||10,startY:Number(c.marginTop)||17,headerFont:Number(c.headerFont)||22,bodyFont:Number(c.bodyFont)||8.5,tableFont:Number(c.tableFont)||8,totalFont:Number(c.totalFont)||9,grandFont:Number(c.grandFont)||12,footerFont:Number(c.footerFont)||8,rowMin:Number(c.rowMin)||8,rowLine:Number(c.rowLine)||4.3,rowPad:Number(c.rowPad)||3,headerH:type==='invoice'?(Number(c.headerH)||36):0,billH:type==='invoice'?(Number(c.billH)||33):0};
+  }
+  if(mode==='compact')return {mode,left:15,right:195,width:180,topMargin:type==='invoice'?10:15,bottomMargin:10,startY:type==='invoice'?10:15,headerFont:type==='invoice'?12.5:20,bodyFont:type==='invoice'?6.7:8.5,tableFont:type==='invoice'?7.1:8,totalFont:type==='invoice'?7.8:9,grandFont:type==='invoice'?10.5:12,footerFont:type==='invoice'?7.4:8,rowMin:type==='invoice'?5:7,rowLine:type==='invoice'?2.7:3.8,rowPad:type==='invoice'?1:2.5,headerH:type==='invoice'?33:0,billH:type==='invoice'?31:0};
+  if(mode==='spacious')return {mode,left:15,right:195,width:180,topMargin:type==='invoice'?14:20,bottomMargin:10,startY:type==='invoice'?14:20,headerFont:type==='invoice'?14:24,bodyFont:type==='invoice'?7.2:9,tableFont:type==='invoice'?8:8.8,totalFont:type==='invoice'?8.5:10,grandFont:type==='invoice'?11.5:13,footerFont:type==='invoice'?8:8.5,rowMin:type==='invoice'?7:9,rowLine:type==='invoice'?3.5:4.8,rowPad:type==='invoice'?2:3.5,headerH:type==='invoice'?40:0,billH:type==='invoice'?35:0};
+  return {mode:'standard',left:15,right:195,width:180,topMargin:type==='invoice'?12:17,bottomMargin:10,startY:type==='invoice'?12:17,headerFont:type==='invoice'?12.5:22,bodyFont:type==='invoice'?6.7:8.5,tableFont:type==='invoice'?7.1:8,totalFont:type==='invoice'?7.8:9,grandFont:type==='invoice'?10.5:12,footerFont:type==='invoice'?7.4:8,rowMin:type==='invoice'?6:8,rowLine:type==='invoice'?3.1:4.3,rowPad:type==='invoice'?1.5:3,headerH:type==='invoice'?36:0,billH:type==='invoice'?33:0};
+}
+
 async function downloadCartPDF(){
   if(!seerviCart.length){openCart();return;}
   if(!validateQuoteCustomer() || !validateQuoteRates()) return;
