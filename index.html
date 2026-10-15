@@ -7709,7 +7709,7 @@ async function seerviQuotationPdfImage(item){
       const ids=[item?.firebaseItemId,item?.itemId,item?.productId,item?.id,item?.catalogueItemId].filter(Boolean).map(String);
       const keys=[item?.model,item?.name,item?.productName,item?.title].filter(Boolean).map(v=>String(v).trim().toLowerCase());
       const match=all.find(x=>ids.includes(String(x.id||x.firebaseItemId||''))) || all.find(x=>keys.includes(String(x.model||'').trim().toLowerCase()) || keys.includes(String(x.name||'').trim().toLowerCase()));
-      src=String(match?.imageWebpUrl||match?.imageUrl||match?.image||match?.photo||(Array.isArray(match?.galleryImages)?match.galleryImages[0]:'')||'').trim();
+      src=String(match?.imageWebpUrl||match?.imageUrl||match?.image||match?.photo||'').trim();
     }catch(e){console.warn('[Seervi] Catalogue image lookup failed',e);}
   }
   if(!src)return '';
@@ -7837,7 +7837,7 @@ async function downloadCartPDF(){
     doc.text(pdfINR(getLineTotal(item)),X(174),y);
 
     doc.setDrawColor(225,228,231);
-    doc.line(left,y+rowHeight-3,right,y+rowHeight-3);
+    doc.line(left,y+rowHeight-2,right,y+rowHeight-2);
     y+=rowHeight;
   }
 
@@ -8258,14 +8258,25 @@ document.addEventListener('keydown',function(e){
 })();
 </script><script>
 (function(){
-  // V33: keep the Cart PDF button wired to the actual PDF builder. The builder
-  // performs its own customer/rate validation and reports PDF-engine errors.
+  // V34: Do not let a stale quotation-mode check silently block the Cart PDF button.
+  // Keep the existing validation inside downloadCartPDF and surface unexpected errors.
   const originalDownload = window.downloadCartPDF;
-  if(typeof originalDownload === 'function'){
-    window.downloadCartPDF = function(){
-      try { return originalDownload.apply(this, arguments); }
-      catch(e){ console.error('[Seervi] Cart quotation PDF failed:',e); seerviToastAlert('PDF could not be generated. Please check the browser console and try again.'); }
+  if(typeof originalDownload === 'function' && !originalDownload.__seerviV34Wrapped){
+    const safeDownload = async function(){
+      try {
+        if(typeof window.SeerviAssets?.ensurePdf === 'function') {
+          await window.SeerviAssets.ensurePdf();
+        }
+        return await originalDownload();
+      } catch (err) {
+        console.error('[Seervi] Cart quotation PDF failed:', err);
+        const message = err && err.message ? err.message : 'Unknown PDF error';
+        if(typeof seerviToastAlert === 'function') seerviToastAlert('PDF could not be generated: ' + message);
+        else alert('PDF could not be generated: ' + message);
+      }
     };
+    safeDownload.__seerviV34Wrapped = true;
+    window.downloadCartPDF = safeDownload;
   }
 })();
 </script>
@@ -11942,26 +11953,44 @@ window.crmEditQuote=async function(id){
   if(!q.partyId){seerviToastAlert('This quotation has no linked party.');return;}
 
   crmEditingQuoteId=id;
-  seerviCart=(q.items||[]).map(x=>({
-    type:x.type||'',
-    name:x.name||x.model||'',
-    model:x.model||x.name||'',
-    categoryId:x.categoryId||'',
-    category:x.category||'',
-    subcategoryId:x.subcategoryId||'',
-    subcategory:x.subcategory||'',
-    thickness:x.spec||x.thickness||'',
-    hsnCode:x.hsnCode||x.hsn||'',
-    qty:Number(x.qty||0),
-    rate:Number(x.rate||0),
-    image:x.imageWebpUrl||x.imageUrl||x.image||x.photo||'',
-    imageWebpUrl:x.imageWebpUrl||x.imageUrl||x.image||x.photo||'',
-    galleryImages:Array.isArray(x.galleryImages)?x.galleryImages:[],
-    firebaseItemId:x.firebaseItemId||x.itemId||x.productId||'',
-    manual:!!x.manual,
-    colourVariant:x.colourVariant||x.color||x.selectedColour||x.selectedColor||'',
-    colourVariants:Array.isArray(x.colourVariants)?x.colourVariants.map(v=>String(v?.name??v??'').trim()).filter(Boolean):[]
-  }));
+  // V35: quotation snapshots may not carry image URLs. Resolve photos from
+  // the saved snapshot first, then match the current catalogue by stable ID,
+  // model, or name before rebuilding the cart. Preserve the URL on cart items.
+  let quoteCatalogue=Array.isArray(seerviItemsCache)?seerviItemsCache:[];
+  if(!quoteCatalogue.length){
+    try{ quoteCatalogue=await seerviGetItems({limit:1000}); if(Array.isArray(quoteCatalogue)) seerviItemsCache=quoteCatalogue; }
+    catch(e){ console.warn('[Seervi] Could not load catalogue while editing quotation:',e); }
+  }
+  const quoteNorm=v=>String(v||'').trim().toLowerCase().replace(/\s+/g,' ');
+  seerviCart=(q.items||[]).map(x=>{
+    const ids=[x.firebaseItemId,x.itemId,x.productId,x.id,x.catalogueItemId].filter(Boolean).map(String);
+    const model=quoteNorm(x.model||x.name||x.productName);
+    const name=quoteNorm(x.name||x.productName||x.model);
+    const match=quoteCatalogue.find(p=>ids.includes(String(p.id||p.firebaseItemId||'')))
+      ||quoteCatalogue.find(p=>model && quoteNorm(p.model)===model)
+      ||quoteCatalogue.find(p=>name && quoteNorm(p.name)===name);
+    const photo=String(x.imageWebpUrl||x.imageUrl||x.image||x.photo||x.thumbnail||match?.imageWebpUrl||match?.imageUrl||match?.image||match?.photo||'').trim();
+    return {
+      ...x,
+      type:x.type||'',
+      name:x.name||x.model||'',
+      model:x.model||x.name||'',
+      firebaseItemId:x.firebaseItemId||x.itemId||x.productId||match?.id||'',
+      categoryId:x.categoryId||match?.categoryId||'',
+      category:x.category||'',
+      subcategoryId:x.subcategoryId||match?.subcategoryId||'',
+      subcategory:x.subcategory||'',
+      thickness:x.spec||x.thickness||'',
+      hsnCode:x.hsnCode||x.hsn||match?.hsnCode||match?.hsn||'',
+      qty:Number(x.qty||0),
+      rate:Number(x.rate||0),
+      image:photo,
+      imageWebpUrl:photo,
+      manual:!!x.manual,
+      colourVariant:x.colourVariant||x.color||x.selectedColour||x.selectedColor||'',
+      colourVariants:Array.isArray(x.colourVariants)?x.colourVariants.map(v=>String(v?.name??v??'').trim()).filter(Boolean):[]
+    };
+  });
   localStorage.setItem('seerviCart',JSON.stringify(seerviCart));
 
   const gstEnabled=$('gstEnabled');
@@ -12506,7 +12535,7 @@ window.crmDownloadQuote=async function(id){
       doc.text(inr(amount),X(174),y);
 
       doc.setDrawColor(225,228,231);
-      doc.line(left,y+rowHeight-3,right,y+rowHeight-3);
+      doc.line(left,y+rowHeight-2,right,y+rowHeight-2);
       y+=rowHeight;
     }
 
@@ -12744,7 +12773,7 @@ window.customerDownloadQuote=async function(id){
       doc.text(inr(amount),X(174),y);
 
       doc.setDrawColor(225,228,231);
-      doc.line(left,y+rowHeight-3,right,y+rowHeight-3);
+      doc.line(left,y+rowHeight-2,right,y+rowHeight-2);
       y+=rowHeight;
     }
 
@@ -13607,10 +13636,7 @@ window.crmEditInvoice=async function(id){
     hsnCode:x.hsnCode||x.hsn||'',
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
-    image:x.imageWebpUrl||x.imageUrl||x.image||x.photo||'',
-    imageWebpUrl:x.imageWebpUrl||x.imageUrl||x.image||x.photo||'',
-    galleryImages:Array.isArray(x.galleryImages)?x.galleryImages:[],
-    firebaseItemId:x.firebaseItemId||x.itemId||x.productId||'',
+    image:'',
     manual:!!x.manual,
     colourVariant:x.colourVariant||x.color||x.selectedColour||x.selectedColor||'',
     colourVariants:Array.isArray(x.colourVariants)?x.colourVariants.map(v=>String(v?.name??v??'').trim()).filter(Boolean):[]
@@ -13915,10 +13941,6 @@ window.crmSaveCurrentQuote = async function(){
     qty:Number(x.qty||0),
     rate:Number(x.rate||0),
     amount:getLineTotal(x),
-    image:x.imageWebpUrl||x.imageUrl||x.image||x.photo||'',
-    imageWebpUrl:x.imageWebpUrl||x.imageUrl||x.image||x.photo||'',
-    galleryImages:Array.isArray(x.galleryImages)?x.galleryImages:[],
-    firebaseItemId:x.firebaseItemId||x.itemId||x.productId||'',
     manual:!!x.manual,
     colourVariant:x.colourVariant||x.color||x.selectedColour||x.selectedColor||'',
     colourVariants:Array.isArray(x.colourVariants)?x.colourVariants.map(v=>String(v?.name??v??'').trim()).filter(Boolean):[]
