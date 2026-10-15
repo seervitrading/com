@@ -7831,6 +7831,8 @@ async function downloadCartPDF(){
     );
     const rowLines=Math.min(productLines.length,3);
     const rowHeight=Math.max(14,rowLines*pdfLayout.rowLine+pdfLayout.rowPad+2);
+    const contentY=y+Math.max(2,(rowHeight-rowLines*pdfLayout.rowLine)/2);
+    const photoY=y+(rowHeight-11)/2;
 
     if(y+rowHeight>H-pdfLayout.bottomMargin-36){
       doc.addPage();
@@ -7842,17 +7844,17 @@ async function downloadCartPDF(){
     doc.setFontSize(pdfLayout.tableFont);
     doc.setTextColor(45,50,56);
 
-    doc.text(String(i+1),X(18),y);
+    doc.text(String(i+1),X(18),contentY);
     const itemImage=await seerviQuotationPdfImage(item);
-    if(itemImage){try{doc.addImage(itemImage,'JPEG',X(25),y-5,11,11,undefined,'FAST');}catch(e){console.warn('Cart quotation photo skipped:',e);}}
-    doc.text(productLines.slice(0,3),X(39),y);
-    doc.text(String(seerviQuotationItemColour(item)||'—').slice(0,18),X(85),y);
-    doc.text(String(item.hsnCode||item.hsn||'—').slice(0,12),X(109),y);
-    doc.text(String(item.qty||0),X(132),y);
+    if(itemImage){try{doc.addImage(itemImage,'JPEG',X(25),photoY,11,11,undefined,'FAST');}catch(e){console.warn('Cart quotation photo skipped:',e);}}
+    doc.text(productLines.slice(0,3),X(39),contentY);
+    doc.text(String(seerviQuotationItemColour(item)||'—').slice(0,18),X(85),contentY);
+    doc.text(String(item.hsnCode||item.hsn||'—').slice(0,12),X(109),contentY);
+    doc.text(String(item.qty||0),X(132),contentY);
 
     // IMPORTANT: use ASCII "INR" instead of ₹ to avoid jsPDF Helvetica glyph glitches.
-    doc.text(pdfINR(item.rate),X(151),y);
-    doc.text(pdfINR(getLineTotal(item)),X(174),y);
+    doc.text(pdfINR(item.rate),X(151),contentY);
+    doc.text(pdfINR(getLineTotal(item)),X(174),contentY);
 
     doc.setDrawColor(225,228,231);
     doc.line(left,y+rowHeight-2,right,y+rowHeight-2);
@@ -12485,7 +12487,8 @@ window.crmDownloadQuote=async function(id){
     if(gstin) doc.text('GSTIN: '+safeText(gstin).slice(0,45),X(105),y);
     y+=5;
 
-    const addrLines=doc.splitTextToSize('Address: '+safeText(address),right-left);
+    const addressColumnWidth=Math.max(55, X(101)-left-3); // keep address inside the left customer-details column
+    const addrLines=doc.splitTextToSize('Address: '+safeText(address),addressColumnWidth);
     doc.text(addrLines,left,y);
     y+=Math.max(7,addrLines.length*4.3);
 
@@ -12531,6 +12534,8 @@ window.crmDownloadQuote=async function(id){
       );
       const rowLines=Math.min(productLines.length,3);
       const rowHeight=Math.max(14,rowLines*pdfLayout.rowLine+pdfLayout.rowPad+2);
+      const contentY=y+Math.max(2,(rowHeight-rowLines*pdfLayout.rowLine)/2);
+      const photoY=y+(rowHeight-11)/2;
 
       if(y+rowHeight>H-pdfLayout.bottomMargin-36){
         footer();
@@ -12542,15 +12547,15 @@ window.crmDownloadQuote=async function(id){
       }
 
       doc.setTextColor(45,50,56);
-      doc.text(String(i+1),X(18),y);
+      doc.text(String(i+1),X(18),contentY);
       const itemImage=await seerviQuotationPdfImage(item);
-      if(itemImage){try{doc.addImage(itemImage,'JPEG',X(25),y-5,11,11,undefined,'FAST');}catch(e){console.warn('Saved quotation photo skipped:',e);}}
-      doc.text(productLines.slice(0,3),X(39),y);
-      doc.text(safeText(seerviQuotationItemColour(item)||'—').slice(0,18),X(85),y);
-      doc.text(safeText(item.hsnCode||item.hsn||'—').slice(0,12),X(109),y);
-      doc.text(String(qty),X(132),y);
-      doc.text(inr(rate),X(151),y);
-      doc.text(inr(amount),X(174),y);
+      if(itemImage){try{doc.addImage(itemImage,'JPEG',X(25),photoY,11,11,undefined,'FAST');}catch(e){console.warn('Saved quotation photo skipped:',e);}}
+      doc.text(productLines.slice(0,3),X(39),contentY);
+      doc.text(safeText(seerviQuotationItemColour(item)||'—').slice(0,18),X(85),contentY);
+      doc.text(safeText(item.hsnCode||item.hsn||'—').slice(0,12),X(109),contentY);
+      doc.text(String(qty),X(132),contentY);
+      doc.text(inr(rate),X(151),contentY);
+      doc.text(inr(amount),X(174),contentY);
 
       doc.setDrawColor(225,228,231);
       doc.line(left,y+rowHeight-2,right,y+rowHeight-2);
@@ -12725,7 +12730,8 @@ window.customerDownloadQuote=async function(id){
     if(gstin) doc.text('GSTIN: '+safeText(gstin).slice(0,45),X(105),y);
     y+=5;
 
-    const addrLines=doc.splitTextToSize('Address: '+safeText(address),right-left);
+    const addressColumnWidth=Math.max(55, X(101)-left-3); // keep address inside the left customer-details column
+    const addrLines=doc.splitTextToSize('Address: '+safeText(address),addressColumnWidth);
     doc.text(addrLines,left,y);
     y+=Math.max(7,addrLines.length*4.3);
 
