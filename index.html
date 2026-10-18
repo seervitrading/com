@@ -5344,6 +5344,29 @@ html.seervi-light-theme nav>.wrap>.seervi-mobile-account-menu-toggle:hover{
 #home .bw-hero-next-slide{top:20%!important;}
 @media(max-width:600px){#home .bw-hero-next-slide{top:19%!important;}}
 </style>
+
+<style id="seervi-v44-hero-premium-transition">
+/* V44: premium, non-autoplay hero media transition; keep arrow position unchanged. */
+@keyframes seerviHeroMediaReveal{
+  0%{opacity:.35;transform:scale(1.045);filter:blur(5px)}
+  65%{opacity:.92;filter:blur(0)}
+  100%{opacity:1;transform:scale(1);filter:blur(0)}
+}
+#home .bw-hero-image:not(.is-hidden){animation:seerviHeroMediaReveal .72s cubic-bezier(.2,.75,.25,1) both;will-change:opacity,transform,filter}
+#home .bw-hero-media-video.is-active{animation:seerviHeroMediaReveal .72s cubic-bezier(.2,.75,.25,1) both;will-change:opacity,transform,filter}
+#home .bw-hero-next-slide{
+  top:20%!important;right:22px;width:46px;height:58px;border:1px solid rgba(255,255,255,.56);
+  border-radius:999px;background:rgba(12,18,24,.28);color:#fff;
+  box-shadow:0 8px 26px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.18);
+  backdrop-filter:blur(12px) saturate(150%);-webkit-backdrop-filter:blur(12px) saturate(150%);
+  opacity:.92;transition:background .22s ease,border-color .22s ease,box-shadow .22s ease,transform .22s ease,opacity .22s ease;
+}
+#home .bw-hero-next-slide:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.9);box-shadow:0 10px 30px rgba(0,0,0,.3),0 0 0 4px rgba(255,255,255,.08);transform:translateY(-50%) scale(1.07);opacity:1}
+#home .bw-hero-next-slide:active{transform:translateY(-50%) scale(.94)}
+#home .bw-hero-next-slide:focus-visible{outline:2px solid rgba(255,255,255,.95);outline-offset:4px}
+@media(max-width:600px){#home .bw-hero-next-slide{right:12px;width:40px;height:50px;top:19%!important}}
+@media(prefers-reduced-motion:reduce){#home .bw-hero-image:not(.is-hidden),#home .bw-hero-media-video.is-active{animation:none!important}#home .bw-hero-next-slide{transition:none!important}}
+</style>
 </head><body><nav><div class="wrap" style="width:100%;display:flex;align-items:center;justify-content:space-between"><div class="nav-left-group"><div aria-label="Account" class="bw-account-identity bw-account-identity-top" id="bwAccountIdentity"><span id="topLoginEmail">seervitrading@gmail.com</span></div></div><div class="navlinks"><a class="nav-home" href="#home">Home</a><a class="nav-about" href="#about">About</a><a class="nav-catalogue" href="#homeCatalogues">Catalogue</a><a class="nav-products" href="#profiles">Products</a></div><div class="nav-dashboard-slot"><button aria-expanded="false" aria-label="Open account menu" class="seervi-mobile-account-menu-toggle" id="seerviMobileAccountMenuToggle" onclick="seerviToggleMobileAccountMenu(event)" type="button"><span></span><span></span><span></span></button><div class="top-account-actions" id="bwNavActions"><button class="bw-nav-login" id="bwNavLogin" onclick="openCustomerLogin()" type="button">Log In</button><button class="bw-nav-signup" id="bwNavSignup" onclick="openPartySignup()" type="button">Sign Up</button><button class="bw-nav-dashboard" hidden="" id="bwNavDashboard" onclick="openMyDashboard()" type="button">My Dashboard</button><button class="bw-nav-dashboard seervi-mobile-settings" hidden="" id="mobileNavSettings" onclick="openAdminSettings()" type="button">Settings</button><button class="bw-nav-dashboard seervi-mobile-signout" hidden="" id="mobileNavSignOut" onclick="seerviSignOutFromSlideBar()" type="button">Sign Out</button><div class="seervi-theme-control seervi-theme-control-mobile"><span>Appearance</span><button aria-label="Switch to light mode" aria-pressed="false" class="seervi-theme-toggle" id="seerviThemeToggleMobile" type="button"><span class="seervi-theme-icon">☀</span><span class="seervi-theme-label">Light</span></button></div><div class="seervi-language-control seervi-language-control-mobile"><span>Language</span><select aria-label="Select language" class="seervi-language-select" id="seerviLanguageSelectMobile"><option value="en">English</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="mwr">मारवाड़ी</option><option value="kn">ಕನ್ನಡ</option><option value="mr">मराठी</option><option value="gu">ગુજરાતી</option><option value="te">తెలుగు</option><option value="ta">தமிழ்</option></select></div></div></div><div aria-label="Seervi Trading" class="seervi-mobile-topbar-brand">SEERVI TRADING</div><a class="nav-contact" href="#contact">Contact</a><a class="btn nav-quote" href="#contact">Get a Quote</a><button aria-label="Open cart" class="cart-nav-btn" onclick="openCart()" type="button">
  CART <span id="cartCount">0</span></button><button aria-controls="notificationModal" aria-haspopup="dialog" aria-label="Open notifications" class="notification-bell" id="notificationBell" onclick="openNotifications()" type="button">
 <span class="notification-bell-icon">🔔</span><span class="notification-unread-badge" hidden="" id="notificationUnreadBadge">0</span>
@@ -19969,118 +19992,6 @@ html.seervi-light-theme .seervi-public-category-btn.active,html.seervi-light-the
 html.seervi-dark-theme .seervi-public-category-btn.active,html.seervi-dark-theme .seervi-public-subcategory-btn.active{background:rgba(63,167,163,.16)!important;color:#76c4be!important;border-color:rgba(63,167,163,.42)!important}
 .mobile-bottom-bar a.active::after,.mobile-bottom-bar button.active::after{background:#3fa7a3!important;box-shadow:0 0 8px rgba(63,167,163,.45)!important}
 .mobile-bottom-bar a.active b,.mobile-bottom-bar button.active b{filter:drop-shadow(0 2px 5px rgba(63,167,163,.28))!important}
-</style>
-
-<style id="seervi-v44-premium-hero-slides">
-/* Premium manual hero transitions and modern glass slide control */
-#home.bw-hero .bw-hero-image,
-#home.bw-hero .bw-hero-media-video{
-  will-change:opacity,transform;
-  backface-visibility:hidden;
-}
-#home.bw-hero .bw-hero-image.seervi-slide-enter{
-  animation:seerviHeroImageReveal .82s cubic-bezier(.18,.72,.2,1) both;
-}
-#home.bw-hero .bw-hero-media-video.seervi-slide-enter{
-  animation:seerviHeroVideoReveal .82s cubic-bezier(.18,.72,.2,1) both;
-}
-@keyframes seerviHeroImageReveal{
-  from{opacity:.35;transform:scale(1.075);filter:blur(3px)}
-  to{opacity:1;transform:scale(1.015);filter:blur(0)}
-}
-@keyframes seerviHeroVideoReveal{
-  from{opacity:.35;transform:scale(1.045);filter:blur(2px)}
-  to{opacity:1;transform:scale(1);filter:blur(0)}
-}
-#home .bw-hero-next-slide{
-  width:54px!important;height:54px!important;right:clamp(14px,2.6vw,34px)!important;
-  top:50%!important;transform:translateY(-50%)!important;border-radius:50%!important;
-  border:1px solid rgba(255,255,255,.58)!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.22),rgba(255,255,255,.06))!important;
-  color:#fff!important;font:300 39px/1 Arial,sans-serif!important;
-  box-shadow:0 8px 28px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.24)!important;
-  backdrop-filter:blur(16px) saturate(145%)!important;-webkit-backdrop-filter:blur(16px) saturate(145%)!important;
-  opacity:.9!important;transition:opacity .22s ease,transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s ease,background .28s ease!important;
-}
-#home .bw-hero-next-slide:hover{
-  opacity:1!important;transform:translateY(-50%) scale(1.09)!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.34),rgba(255,255,255,.12))!important;
-  box-shadow:0 12px 34px rgba(0,0,0,.3),0 0 0 5px rgba(255,255,255,.07),inset 0 1px 0 rgba(255,255,255,.34)!important;
-}
-#home .bw-hero-next-slide:active{transform:translateY(-50%) scale(.94)!important}
-#home .bw-hero-next-slide:focus-visible{outline:2px solid #fff!important;outline-offset:5px!important}
-#home .bw-hero-next-slide[hidden]{display:none!important}
-@media(max-width:600px){#home .bw-hero-next-slide{width:44px!important;height:44px!important;font-size:32px!important;right:12px!important}}
-@media(prefers-reduced-motion:reduce){
- #home.bw-hero .bw-hero-image.seervi-slide-enter,#home.bw-hero .bw-hero-media-video.seervi-slide-enter{animation:none!important}
- #home .bw-hero-next-slide{transition:none!important}
-}
-</style>
-<script id="seervi-v44-hero-transition-hook">
-(function(){
-  if(window.__seerviV44HeroTransitionHook)return;
-  window.__seerviV44HeroTransitionHook=true;
-  const original=window.seerviRenderHeroSlide;
-  if(typeof original!=='function')return;
-  window.seerviRenderHeroSlide=function(){
-    const hero=document.querySelector('#home .bw-hero-image');
-    const video=document.getElementById('bwHeroVideo');
-    const beforeVideo=!!(video&&video.classList.contains('is-active'));
-    const beforeImage=!!(hero&&!hero.classList.contains('is-hidden'));
-    original.apply(this,arguments);
-    const afterVideo=!!(video&&video.classList.contains('is-active'));
-    const afterImage=!!(hero&&!hero.classList.contains('is-hidden'));
-    if(beforeVideo!==afterVideo||beforeImage!==afterImage){
-      const target=afterVideo?video:hero;
-      if(target){target.classList.remove('seervi-slide-enter');void target.offsetWidth;target.classList.add('seervi-slide-enter');}
-      if(target)target.addEventListener('animationend',()=>target.classList.remove('seervi-slide-enter'),{once:true});
-    }
-  };
-})();
-</script>
-
-
-<style id="seervi-v45-hero-arrow-position-lock">
-/* Keep the premium next-slide control pinned to the media area's right edge, vertically centered. */
-#home.bw-hero{position:relative!important;}
-#home.bw-hero #bwHeroNextSlide{
-  position:absolute!important;
-  top:50%!important;
-  right:clamp(14px,2.6vw,34px)!important;
-  left:auto!important;
-  bottom:auto!important;
-  margin:0!important;
-  transform:translateY(-50%)!important;
-  z-index:30!important;
-}
-#home.bw-hero #bwHeroNextSlide:hover{transform:translateY(-50%) scale(1.09)!important;}
-#home.bw-hero #bwHeroNextSlide:active{transform:translateY(-50%) scale(.94)!important;}
-@media(max-width:600px){#home.bw-hero #bwHeroNextSlide{right:12px!important;top:50%!important;}}
-</style>
-
-
-<style id="seervi-v46-hero-arrow-true-media-center">
-/* V46: pin the slide arrow to the full-bleed hero media itself, not the text/content column. */
-#home.bw-hero{position:relative!important;isolation:isolate!important;}
-#home.bw-hero > #bwHeroNextSlide{
-  position:absolute!important;
-  inset-inline-start:auto!important;
-  inset-inline-end:clamp(14px,2.4vw,32px)!important;
-  top:50%!important;
-  bottom:auto!important;
-  margin:0!important;
-  translate:0 -50%!important;
-  transform:translateY(-50%)!important;
-  z-index:50!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  pointer-events:auto!important;
-}
-#home.bw-hero > #bwHeroNextSlide:hover{transform:translateY(-50%) scale(1.09)!important;}
-#home.bw-hero > #bwHeroNextSlide:active{transform:translateY(-50%) scale(.94)!important;}
-#home.bw-hero > #bwHeroNextSlide[hidden]{display:none!important;}
-@media(max-width:600px){#home.bw-hero > #bwHeroNextSlide{inset-inline-end:12px!important;top:50%!important;}}
 </style>
 </body>
 </html>
