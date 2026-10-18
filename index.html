@@ -17362,6 +17362,27 @@ document.addEventListener('DOMContentLoaded',function(){
   if(!video||!button)return;
   ['volumechange','play','loadedmetadata'].forEach(type=>video.addEventListener(type,window.seerviSyncHeroAudioToggle));
   seerviSyncHeroAudioToggle();
+  // Audio is allowed only while the hero video itself is visible. Scrolling away
+  // mutes immediately; returning to the hero does not automatically unmute it.
+  if('IntersectionObserver' in window){
+    const heroVideoVisibilityObserver=new IntersectionObserver(entries=>{
+      for(const entry of entries){
+        if(entry.target!==video)continue;
+        if(!entry.isIntersecting || entry.intersectionRatio<0.2){
+          if(!video.muted){video.muted=true;seerviSyncHeroAudioToggle();}
+        }
+      }
+    },{threshold:[0,0.2,0.5]});
+    heroVideoVisibilityObserver.observe(video);
+  }else{
+    const muteWhenHeroLeavesView=()=>{
+      const rect=video.getBoundingClientRect();
+      const visible=rect.bottom>0 && rect.top<window.innerHeight && rect.right>0 && rect.left<window.innerWidth;
+      if(!visible && !video.muted){video.muted=true;seerviSyncHeroAudioToggle();}
+    };
+    window.addEventListener('scroll',muteWhenHeroLeavesView,{passive:true});
+    window.addEventListener('resize',muteWhenHeroLeavesView,{passive:true});
+  }
 });
 
 // Manual hero slideshow: in ALL mode, visitors click the right-side arrow to switch image/video.
