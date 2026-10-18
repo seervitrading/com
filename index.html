@@ -20058,5 +20058,29 @@ html.seervi-dark-theme .seervi-public-category-btn.active,html.seervi-dark-theme
 @media(max-width:600px){#home.bw-hero #bwHeroNextSlide{right:12px!important;top:50%!important;}}
 </style>
 
+
+<style id="seervi-v46-hero-arrow-true-media-center">
+/* V46: pin the slide arrow to the full-bleed hero media itself, not the text/content column. */
+#home.bw-hero{position:relative!important;isolation:isolate!important;}
+#home.bw-hero > #bwHeroNextSlide{
+  position:absolute!important;
+  inset-inline-start:auto!important;
+  inset-inline-end:clamp(14px,2.4vw,32px)!important;
+  top:50%!important;
+  bottom:auto!important;
+  margin:0!important;
+  translate:0 -50%!important;
+  transform:translateY(-50%)!important;
+  z-index:50!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  pointer-events:auto!important;
+}
+#home.bw-hero > #bwHeroNextSlide:hover{transform:translateY(-50%) scale(1.09)!important;}
+#home.bw-hero > #bwHeroNextSlide:active{transform:translateY(-50%) scale(.94)!important;}
+#home.bw-hero > #bwHeroNextSlide[hidden]{display:none!important;}
+@media(max-width:600px){#home.bw-hero > #bwHeroNextSlide{inset-inline-end:12px!important;top:50%!important;}}
+</style>
 </body>
 </html>
