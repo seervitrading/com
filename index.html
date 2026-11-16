@@ -14318,6 +14318,9 @@ function seerviItemsBackToDashboard(){
 }
 
 window.accountDashboardItems=function(){
+  // Close the dashboard first and allow the browser to paint that state.
+  // Opening the Items modal in the same tap frame can leave the dashboard's
+  // blurred backdrop/composited layer visible on mobile until the next touch.
   closeAccountDashboard();
 
   if(!crmUser || !isAuthorisedAdmin(crmUser)){
@@ -14328,9 +14331,15 @@ window.accountDashboardItems=function(){
     return;
   }
 
-  // IMPORTANT: Items is a completely separate admin workspace.
-  // Do not open, show, or initialize the generic Admin Panel here.
-  seerviOpenItemsPanel();
+  // Items is a separate workspace. Open it after the dashboard-close paint,
+  // matching the frame separation already used by other dashboard actions.
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      if(crmUser && isAuthorisedAdmin(crmUser)){
+        seerviOpenItemsPanel();
+      }
+    });
+  });
 };
 
 window.seerviOpenItemsPanel=function(){
