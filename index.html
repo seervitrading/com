@@ -15167,6 +15167,22 @@ window.seerviOpenItemsPanel=function(){
   document.body.classList.add('seervi-items-open');
   area.hidden=false;
 
+  // Force the newly displayed full-screen workspace to paint immediately.
+  // This avoids the initial blurred/stale compositing frame seen on some
+  // mobile browsers until the first touch interaction.
+  modal.getBoundingClientRect();
+  area.getBoundingClientRect();
+  requestAnimationFrame(()=>{
+    modal.getBoundingClientRect();
+    area.getBoundingClientRect();
+    requestAnimationFrame(()=>{
+      if(!modal.hidden){
+        modal.style.visibility='visible';
+        void modal.offsetHeight;
+      }
+    });
+  });
+
   seerviItemsTab('all');
   seerviItemsLoadCategories().catch(e=>{
     seerviItemsSetStatus(e?.message||'Unable to load categories.',true);
@@ -19992,6 +20008,36 @@ html.seervi-light-theme .seervi-public-category-btn.active,html.seervi-light-the
 html.seervi-dark-theme .seervi-public-category-btn.active,html.seervi-dark-theme .seervi-public-subcategory-btn.active{background:rgba(63,167,163,.16)!important;color:#76c4be!important;border-color:rgba(63,167,163,.42)!important}
 .mobile-bottom-bar a.active::after,.mobile-bottom-bar button.active::after{background:#3fa7a3!important;box-shadow:0 0 8px rgba(63,167,163,.45)!important}
 .mobile-bottom-bar a.active b,.mobile-bottom-bar button.active b{filter:drop-shadow(0 2px 5px rgba(63,167,163,.28))!important}
+</style>
+
+<style id="seervi-items-mobile-paint-fix">
+/* Prevent stale/blurred first-frame rendering in the full-screen Items workspace. */
+#seerviItemsModal{
+  isolation:isolate!important;
+  transform:translateZ(0)!important;
+  -webkit-transform:translateZ(0)!important;
+  filter:none!important;
+  -webkit-filter:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+#seerviItemsModal .seervi-items-modal-card,
+#seerviItemsModal #adminItemsArea{
+  filter:none!important;
+  -webkit-filter:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  transform:translateZ(0);
+  -webkit-transform:translateZ(0);
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+#seerviItemsModal .seervi-items-modal-card{
+  background-color:#0d1217;
+}
+html.seervi-light-theme #seerviItemsModal .seervi-items-modal-card{
+  background-color:#fff!important;
+}
 </style>
 </body>
 </html>
