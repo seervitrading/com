@@ -14348,20 +14348,11 @@ window.seerviOpenItemsPanel=function(){
   document.body.classList.add('seervi-items-open');
   area.hidden=false;
 
-  // Force the newly displayed full-screen workspace to paint immediately.
-  // This avoids the initial blurred/stale compositing frame seen on some
-  // mobile browsers until the first touch interaction.
-  modal.getBoundingClientRect();
-  area.getBoundingClientRect();
+  // Let the browser complete the first normal layout/paint without forcing
+  // GPU transforms or repeated synchronous layout reads.
+  modal.style.visibility='visible';
   requestAnimationFrame(()=>{
-    modal.getBoundingClientRect();
-    area.getBoundingClientRect();
-    requestAnimationFrame(()=>{
-      if(!modal.hidden){
-        modal.style.visibility='visible';
-        void modal.offsetHeight;
-      }
-    });
+    if(!modal.hidden) area.style.visibility='visible';
   });
 
   seerviItemsTab('all');
@@ -17786,16 +17777,21 @@ function seerviShowSaveSuccess(message){
     'seerviCataloguePanel'
   ];
   function isOpen(el){
-    if(!el) return false;
-    if(el.id==='cartDrawer') return el.classList.contains('show');
-    if(el.classList.contains('show')) return true;
+    if(!el || !el.isConnected || el.hidden) return false;
     const aria=el.getAttribute('aria-hidden');
-    if(aria==='false') return true;
+    if(aria==='true') return false;
+    if(el.id==='cartDrawer') return el.classList.contains('show');
     const cs=getComputedStyle(el);
-    return cs.display!=='none' && cs.visibility!=='hidden' && cs.opacity!=='0';
+    if(cs.display==='none' || cs.visibility==='hidden' || Number.parseFloat(cs.opacity||'1')<=0.02) return false;
+    const rect=el.getBoundingClientRect();
+    if(rect.width<=0 || rect.height<=0) return false;
+    return el.classList.contains('show') || aria==='false' || (cs.display!=='none' && cs.visibility!=='hidden');
   }
   function hasOpenCrmModal(){
-    return Array.from(document.querySelectorAll('.crm-modal')).some(isOpen);
+    return Array.from(document.querySelectorAll('.crm-modal')).some(function(el){
+      // Ignore modal shells that exist in the DOM but are not actually presented.
+      return isOpen(el);
+    });
   }
   function syncTopbarHomeOnly(){
     // The top bar is a Home-only component. Do not maintain a fragile list of
@@ -17813,7 +17809,14 @@ function seerviShowSaveSuccess(message){
     document.body.classList.toggle('seervi-public-taskbar-view', publicTaskbarView);
   }
   function init(){
+    // Run after initial layout as well as immediately. On a cold visit, hidden
+    // modal shells can briefly report stale visibility before CSS/layout settles.
     syncTopbarHomeOnly();
+    requestAnimationFrame(function(){
+      syncTopbarHomeOnly();
+      requestAnimationFrame(syncTopbarHomeOnly);
+    });
+    window.addEventListener('pageshow',function(){requestAnimationFrame(syncTopbarHomeOnly);});
     document.addEventListener('click',()=>requestAnimationFrame(syncTopbarHomeOnly),true);
     window.addEventListener('popstate',syncTopbarHomeOnly);
     window.seerviSyncTopbarHomeOnly=syncTopbarHomeOnly;
@@ -19398,15 +19401,18 @@ html.seervi-dark-theme .seervi-public-category-btn.active,html.seervi-dark-theme
 </style>
 
 <style id="seervi-items-mobile-paint-fix">
-/* Prevent stale/blurred first-frame rendering in the full-screen Items workspace. */
+/* Keep the Items workspace on the browser's normal text-rendering path.
+   Avoid forced GPU transforms/backface layers that can blur the first frame
+   on mobile Chrome/WebView until the next touch repaint. */
 #seerviItemsModal{
-  isolation:isolate!important;
-  transform:translateZ(0)!important;
-  -webkit-transform:translateZ(0)!important;
+  isolation:auto!important;
+  transform:none!important;
+  -webkit-transform:none!important;
   filter:none!important;
   -webkit-filter:none!important;
   backdrop-filter:none!important;
   -webkit-backdrop-filter:none!important;
+  opacity:1!important;
 }
 #seerviItemsModal .seervi-items-modal-card,
 #seerviItemsModal #adminItemsArea{
@@ -19414,13 +19420,17 @@ html.seervi-dark-theme .seervi-public-category-btn.active,html.seervi-dark-theme
   -webkit-filter:none!important;
   backdrop-filter:none!important;
   -webkit-backdrop-filter:none!important;
-  transform:translateZ(0);
-  -webkit-transform:translateZ(0);
-  backface-visibility:hidden;
-  -webkit-backface-visibility:hidden;
+  transform:none!important;
+  -webkit-transform:none!important;
+  backface-visibility:visible!important;
+  -webkit-backface-visibility:visible!important;
+  will-change:auto!important;
+  opacity:1!important;
 }
 #seerviItemsModal .seervi-items-modal-card{
   background-color:#0d1217;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:auto;
 }
 html.seervi-light-theme #seerviItemsModal .seervi-items-modal-card{
   background-color:#fff!important;
