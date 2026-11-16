@@ -7403,7 +7403,7 @@ function seerviReadCartStorage(){
 
 function seerviPersistCart(){
   try{
-    window.seerviPersistCart();
+    window.localStorage.setItem('seerviCart',JSON.stringify(seerviCart));
     return true;
   }catch(error){
     console.warn('[Seervi] Cart remains available for this session but could not be saved to this browser.',error);
@@ -19087,8 +19087,8 @@ html.seervi-light-theme #home.bw-hero .bw-hero-copy{
   const KEY='seerviManualLanguage';
   const selects=[document.getElementById('seerviLanguageSelect'),document.getElementById('seerviLanguageSelectMobile')].filter(Boolean);
   if(!selects.length)return;
-  const saved=localStorage.getItem(KEY)||'en';
-  selects.forEach(el=>{el.value=saved;el.addEventListener('change',function(){localStorage.setItem(KEY,this.value);selects.forEach(other=>{other.value=this.value;});});});
+  let saved='en';try{saved=localStorage.getItem(KEY)||'en';}catch(_){}
+  selects.forEach(el=>{el.value=saved;el.addEventListener('change',function(){try{localStorage.setItem(KEY,this.value);}catch(_){}selects.forEach(other=>{other.value=this.value;});});});
 })();</script><script id="seervi-full-language-system">
 (function(){
   'use strict';
@@ -19163,9 +19163,12 @@ zh:{'Home':'首页','About':'关于我们','Catalogue':'目录','Catalogues':'�
       });
     });
   }
+  function readSavedLanguage(){
+    try{return localStorage.getItem('seerviLanguage')||'en';}catch(_){return 'en';}
+  }
   function setLanguage(lang){
     if(!maps[lang] && lang!=='en') lang='en';
-    localStorage.setItem('seerviLanguage',lang);
+    try{localStorage.setItem('seerviLanguage',lang);}catch(error){console.warn('[Seervi] Language preference could not be saved.',error);}
     document.documentElement.setAttribute('lang',lang==='zh'?'zh-CN':(lang==='mwr'?'mwr':lang));
     document.querySelectorAll('.seervi-language-select').forEach(s=>{if(s.value!==lang)s.value=lang});
     translateRoot(document.body,lang);
@@ -19173,12 +19176,34 @@ zh:{'Home':'首页','About':'关于我们','Catalogue':'目录','Catalogues':'�
     window.dispatchEvent(new CustomEvent('seerviLanguageChanged',{detail:{language:lang}}));
   }
   document.addEventListener('change',e=>{if(e.target && e.target.classList.contains('seervi-language-select')) setLanguage(e.target.value)});
+  let translationFrame=0;
+  const pendingTranslationRoots=new Set();
+  function queueTranslation(node,lang){
+    if(!node || (node.nodeType!==1 && node.nodeType!==3))return;
+    if(node.nodeType===1 && /^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA|INPUT|OPTION)$/i.test(node.tagName))return;
+    pendingTranslationRoots.add(node);
+    if(translationFrame)return;
+    translationFrame=requestAnimationFrame(()=>{
+      translationFrame=0;
+      const currentLang=readSavedLanguage();
+      const roots=Array.from(pendingTranslationRoots);
+      pendingTranslationRoots.clear();
+      if(currentLang==='en')return;
+      // If a parent and its child were both added in the same frame, translating
+      // the parent is sufficient and avoids walking the same subtree twice.
+      const elements=roots.filter(n=>n.nodeType===1);
+      const topElements=elements.filter(node=>!elements.some(other=>other!==node && other.contains(node)));
+      topElements.forEach(node=>translateRoot(node,currentLang));
+      roots.filter(n=>n.nodeType===3 && !n.parentElement).forEach(node=>translateTextNode(node,currentLang));
+      roots.filter(n=>n.nodeType===3 && n.parentElement && !topElements.some(root=>root.contains(n))).forEach(node=>translateTextNode(node,currentLang));
+    });
+  }
   const observer=new MutationObserver(muts=>{
-    const lang=localStorage.getItem('seerviLanguage')||'en'; if(lang==='en') return;
-    muts.forEach(m=>m.addedNodes.forEach(n=>{if(n.nodeType===1)translateRoot(n,lang);else if(n.nodeType===3)translateTextNode(n,lang)}));
+    const lang=readSavedLanguage(); if(lang==='en')return;
+    muts.forEach(m=>m.addedNodes.forEach(n=>queueTranslation(n,lang)));
   });
   function init(){
-    const saved=localStorage.getItem('seerviLanguage')||'en';
+    const saved=readSavedLanguage();
     observer.observe(document.body,{childList:true,subtree:true});
     setLanguage(saved);
   }
