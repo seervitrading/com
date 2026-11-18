@@ -16167,14 +16167,42 @@ window.seerviEditItem=async function(itemId){
       btn.setAttribute('aria-selected',active?'true':'false');
     });
 
-    seerviItemsRenderSelectValue('seerviItemCategory',item.categoryId);
-    seerviItemCategoryChanged();
-    seerviItemsRenderSelectValue('seerviItemSubcategory',item.subcategoryId);
-    // Re-apply the stored category pair after any async/select refresh.
+    // Resolve the saved taxonomy against the current category cache. Older item
+    // records may contain category/subcategory names instead of document IDs.
     const categorySelect=$('seerviItemCategory');
     const subcategorySelect=$('seerviItemSubcategory');
-    if(categorySelect && item.categoryId)categorySelect.value=item.categoryId;
-    if(subcategorySelect && item.subcategoryId)subcategorySelect.value=item.subcategoryId;
+    const categoryRows=seerviItemCategoriesCache.filter(x=>x.type==='category');
+    const subcategoryRows=seerviItemCategoriesCache.filter(x=>x.type==='subcategory');
+    const savedCategory=String(item.categoryId||item.category||'').trim();
+    const savedSubcategory=String(item.subcategoryId||item.subcategory||'').trim();
+    const matchedSubcategory=subcategoryRows.find(x=>String(x.id)===savedSubcategory || String(x.name||'').trim().toLowerCase()===savedSubcategory.toLowerCase());
+    const matchedCategory=categoryRows.find(x=>String(x.id)===savedCategory || String(x.name||'').trim().toLowerCase()===savedCategory.toLowerCase())
+      || (matchedSubcategory ? categoryRows.find(x=>String(x.id)===String(matchedSubcategory.parentId||'')) : null);
+    const resolvedCategoryId=matchedCategory?.id || savedCategory;
+    const resolvedSubcategoryId=matchedSubcategory?.id || savedSubcategory;
+
+    if(categorySelect){
+      if(resolvedCategoryId && ![...categorySelect.options].some(o=>o.value===String(resolvedCategoryId))){
+        const fallback=document.createElement('option');
+        fallback.value=String(resolvedCategoryId);
+        fallback.textContent=matchedCategory?.name || String(item.categoryName||item.category||'Saved Category');
+        categorySelect.appendChild(fallback);
+      }
+      categorySelect.value=String(resolvedCategoryId||'');
+    }
+    // Rebuild subcategories for the resolved parent, then restore the saved
+    // subcategory. If the taxonomy record is missing, retain the saved value
+    // rather than silently clearing it from the edit form.
+    seerviItemCategoryChanged();
+    if(subcategorySelect){
+      if(resolvedSubcategoryId && ![...subcategorySelect.options].some(o=>o.value===String(resolvedSubcategoryId))){
+        const fallback=document.createElement('option');
+        fallback.value=String(resolvedSubcategoryId);
+        fallback.textContent=matchedSubcategory?.name || String(item.subcategoryName||item.subcategory||'Saved Subcategory');
+        subcategorySelect.appendChild(fallback);
+      }
+      subcategorySelect.value=String(resolvedSubcategoryId||'');
+    }
     $('seerviItemId').value=item.id;
     $('seerviItemName').value=item.name||'';
     $('seerviItemModel').value=item.model||'';
