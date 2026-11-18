@@ -14241,19 +14241,9 @@ function seerviItemsPopulateCategorySelects(){
   const category=$('seerviItemCategory');
   const sub=$('seerviItemSubcategory');
   if(!category||!sub) return;
-
-  // Preserve the current selection when categories are refreshed. This also
-  // protects edit-form values from overlapping category-load requests.
-  const previousCategory=category.value;
-  const previousSubcategory=sub.value;
   const categories=seerviItemCategoriesCache.filter(x=>x.type==='category');
   category.innerHTML='<option value="">Select Category</option>'+categories.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
-
-  const categoryStillExists=categories.some(x=>String(x.id)===String(previousCategory));
-  category.value=categoryStillExists?previousCategory:'';
-  const rows=seerviItemCategoriesCache.filter(x=>x.type==='subcategory' && x.parentId===category.value);
-  sub.innerHTML='<option value="">Select Subcategory</option>'+rows.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
-  sub.value=rows.some(x=>String(x.id)===String(previousSubcategory))?previousSubcategory:'';
+  sub.innerHTML='<option value="">Select Subcategory</option>';
 }
 
 function seerviItemCategoryChanged(){
@@ -14317,9 +14307,7 @@ function seerviItemsTab(tab){
   if(tab==='all'){
     seerviItemsLoadAll().catch(e=>seerviItemsSetStatus(e?.message||'Unable to load items.',true));
   }else if(tab==='add'){
-    // Edit flow loads categories before filling the form. Avoid starting a
-    // second asynchronous refresh that could overwrite its selected values.
-    if(!seerviItemsEditingId) seerviItemsLoadCategories().catch(()=>{});
+    seerviItemsLoadCategories().catch(()=>{});
     if(!seerviItemsEditingId) seerviAddSpecificationRowIfEmpty();
   }else if(tab==='categories'){
     seerviItemsLoadCategories().catch(e=>{
@@ -16160,9 +16148,33 @@ window.seerviEditItem=async function(itemId){
     seerviItemsEditingId=item.id;
     await seerviItemsLoadCategories();
     seerviItemsTab('add');
+
+    // Explicitly reveal the Add/Edit view. The Items tab controller is wrapped
+    // by later bulk-management code; keep the edit form visible regardless of
+    // the order in which the original and wrapped tab handlers execute.
+    const itemsArea=$('adminItemsArea');
+    const addView=$('seerviItemsAddView');
+    const itemsModal=$('seerviItemsModal');
+    if(itemsModal){itemsModal.hidden=false;itemsModal.setAttribute('aria-hidden','false');itemsModal.style.visibility='visible';}
+    if(itemsArea){itemsArea.hidden=false;itemsArea.style.display='block';itemsArea.style.visibility='visible';}
+    if(addView){addView.hidden=false;addView.removeAttribute('hidden');addView.style.display='block';addView.style.visibility='visible';addView.setAttribute('aria-hidden','false');}
+    document.querySelectorAll('#adminItemsArea .admin-items-view').forEach(view=>{
+      if(view!==addView){view.hidden=true;view.style.display='none';view.setAttribute('aria-hidden','true');}
+    });
+    document.querySelectorAll('#adminItemsArea .admin-items-tab').forEach(btn=>{
+      const active=btn.dataset.itemsTab==='add';
+      btn.classList.toggle('active',active);
+      btn.setAttribute('aria-selected',active?'true':'false');
+    });
+
     seerviItemsRenderSelectValue('seerviItemCategory',item.categoryId);
     seerviItemCategoryChanged();
     seerviItemsRenderSelectValue('seerviItemSubcategory',item.subcategoryId);
+    // Re-apply the stored category pair after any async/select refresh.
+    const categorySelect=$('seerviItemCategory');
+    const subcategorySelect=$('seerviItemSubcategory');
+    if(categorySelect && item.categoryId)categorySelect.value=item.categoryId;
+    if(subcategorySelect && item.subcategoryId)subcategorySelect.value=item.subcategoryId;
     $('seerviItemId').value=item.id;
     $('seerviItemName').value=item.name||'';
     $('seerviItemModel').value=item.model||'';
