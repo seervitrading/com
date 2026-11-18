@@ -14241,9 +14241,19 @@ function seerviItemsPopulateCategorySelects(){
   const category=$('seerviItemCategory');
   const sub=$('seerviItemSubcategory');
   if(!category||!sub) return;
+
+  // Preserve the current selection when categories are refreshed. This also
+  // protects edit-form values from overlapping category-load requests.
+  const previousCategory=category.value;
+  const previousSubcategory=sub.value;
   const categories=seerviItemCategoriesCache.filter(x=>x.type==='category');
   category.innerHTML='<option value="">Select Category</option>'+categories.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
-  sub.innerHTML='<option value="">Select Subcategory</option>';
+
+  const categoryStillExists=categories.some(x=>String(x.id)===String(previousCategory));
+  category.value=categoryStillExists?previousCategory:'';
+  const rows=seerviItemCategoriesCache.filter(x=>x.type==='subcategory' && x.parentId===category.value);
+  sub.innerHTML='<option value="">Select Subcategory</option>'+rows.map(x=>`<option value="${seerviItemsEsc(x.id)}">${seerviItemsEsc(x.name)}</option>`).join('');
+  sub.value=rows.some(x=>String(x.id)===String(previousSubcategory))?previousSubcategory:'';
 }
 
 function seerviItemCategoryChanged(){
@@ -14307,7 +14317,9 @@ function seerviItemsTab(tab){
   if(tab==='all'){
     seerviItemsLoadAll().catch(e=>seerviItemsSetStatus(e?.message||'Unable to load items.',true));
   }else if(tab==='add'){
-    seerviItemsLoadCategories().catch(()=>{});
+    // Edit flow loads categories before filling the form. Avoid starting a
+    // second asynchronous refresh that could overwrite its selected values.
+    if(!seerviItemsEditingId) seerviItemsLoadCategories().catch(()=>{});
     if(!seerviItemsEditingId) seerviAddSpecificationRowIfEmpty();
   }else if(tab==='categories'){
     seerviItemsLoadCategories().catch(e=>{
