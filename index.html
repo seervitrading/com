@@ -9739,18 +9739,7 @@ function goHomeAfterAuth(){
   }catch(e){console.warn('Home navigation after auth failed',e);}
 }
 window.hasAnyAuthenticatedUser=function(){return !!(crmUser||customerUser);};
-function updateTopDateTime(){
-  const g=$('topGreeting'), dt=$('topDateTime');
-  if(!g || !dt) return;
-  const now=new Date();
-  const h=now.getHours();
-  g.textContent=h<12?'Good Morning':(h<17?'Good Afternoon':'Good Evening');
-  const date=now.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
-  const time=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
-  dt.textContent=date+' • '+time;
-}
-setInterval(updateTopDateTime,1000);
-document.addEventListener('DOMContentLoaded',updateTopDateTime);
+/* Removed obsolete live date/time updater: no background 1-second timer. */
 
 window.seerviSignOutFromSlideBar=async function(){
   try{
@@ -14155,13 +14144,7 @@ window.submitNotificationPost=async function(e){
 window.addEventListener('storage',e=>{
   if(e.key&&e.key.startsWith('seervi_notification_read_')) seerviRenderNotificationList();
 });
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',()=>{
-    seerviRequestActivityLocationPermission().catch(()=>{});
-  },{once:true});
-}else{
-  seerviRequestActivityLocationPermission().catch(()=>{});
-}
+/* Geolocation is requested only when an activity is actually logged. */
 
 /* ===== SEERVI ITEMS PANEL / STEP 3 ===== */
 let seerviItemsCache=[];
@@ -14328,12 +14311,9 @@ window.accountDashboardItems=function(){
     return;
   }
 
-  // The dashboard uses a backdrop-filter layer. On Android Chrome, opening
-  // another fixed modal in the same frame can leave that old composited layer
-  // visually cached until the next touch. Allow the close to paint first.
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    if(!document.hidden) seerviOpenItemsPanel();
-  }));
+  // IMPORTANT: Items is a completely separate admin workspace.
+  // Do not open, show, or initialize the generic Admin Panel here.
+  seerviOpenItemsPanel();
 };
 
 window.seerviOpenItemsPanel=function(){
@@ -14346,23 +14326,17 @@ window.seerviOpenItemsPanel=function(){
   const global=$('adminGlobalArea');
   if(global)global.hidden=true;
 
-  // Stage the panel invisibly, commit its layout, then reveal it on the next
-  // frame. This avoids inheriting a stale dashboard backdrop/compositor frame.
-  modal.style.visibility='hidden';
-  area.style.visibility='hidden';
   modal.hidden=false;
   modal.setAttribute('aria-hidden','false');
   document.body.classList.add('seervi-items-open');
   area.hidden=false;
-  void modal.offsetHeight;
-  void area.getBoundingClientRect();
 
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    if(modal.hidden)return;
-    void modal.getBoundingClientRect();
-    modal.style.visibility='visible';
-    area.style.visibility='visible';
-  }));
+  // Let the browser complete the first normal layout/paint without forcing
+  // GPU transforms or repeated synchronous layout reads.
+  modal.style.visibility='visible';
+  requestAnimationFrame(()=>{
+    if(!modal.hidden) area.style.visibility='visible';
+  });
 
   seerviItemsTab('all');
   seerviItemsLoadCategories().catch(e=>{
@@ -17461,16 +17435,6 @@ async function seerviGetActivityNetwork(){
   }
   return seerviActivityNetwork;
 }
-async function seerviRequestActivityLocationPermission(){
-  try{
-    if(!navigator.geolocation)return;
-    if(navigator.permissions?.query){
-      const permission=await navigator.permissions.query({name:'geolocation'});
-      if(permission.state==='granted')return;
-    }
-    await new Promise((resolve)=>navigator.geolocation.getCurrentPosition(resolve,()=>resolve(),{enableHighAccuracy:true,timeout:8000,maximumAge:0}));
-  }catch(e){}
-}
 async function seerviGetActivityLocation(){
   if(seerviActivityLocation)return seerviActivityLocation;
   const fallback={locationPermission:'unavailable'};
@@ -19443,6 +19407,58 @@ html.seervi-dark-theme .seervi-public-category-btn.active,html.seervi-dark-theme
 }
 html.seervi-light-theme #seerviItemsModal .seervi-items-modal-card{
   background-color:#fff!important;
+}
+</style>
+
+<style id="seervi-mobile-rendering-optimization-v1">
+/* Performance-only overrides: retain layout, colours, navigation and interactions. */
+@media (max-width: 760px) {
+  /* Mobile backdrop filters create extra compositing work. Keep the existing
+     translucent backgrounds, but let the browser paint them without blur. */
+  nav,
+  .mobile-bottom-bar,
+  .product-modal,
+  .cart-backdrop,
+  .seervi-invoice-input-modal,
+  .seervi-invoice-input-head,
+  .crm-delete-confirm-modal,
+  .crm-backdrop,
+  .crm-head,
+  .crm-quote-view-backdrop,
+  .seervi-catalogue-preview::after,
+  .seervi-doc-editor-head,
+  #customerLoginModal,
+  #partySignupModal,
+  #home .bw-hero-next-slide {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* Avoid keeping large elements permanently promoted to GPU layers. */
+  .seervi-magnetic,
+  .seervi-public-product-card,
+  .bw-hero-image,
+  .bw-hero-media-video {
+    will-change: auto !important;
+  }
+
+  /* Decorative, continuously repeating effects only; preserve one-shot
+     entrances, modal transitions and the requested mobile taskbar feedback. */
+  .live-dot,
+  .bw-hero-wash,
+  .importer-live-strip::after {
+    animation: none !important;
+  }
+}
+
+/* Honour the device accessibility preference without changing functionality. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 </style>
 </body>
